@@ -97,28 +97,6 @@ importers:
         specifier: ^4.0.4
         version: 4.0.4(@types/node@24.9.1)(jsdom@27.1.0)
 
-  ../tuber-shared:
-    dependencies:
-      preact:
-        specifier: ^10.27.2
-        version: 10.27.2
-    devDependencies:
-      '@mui/material':
-        specifier: ^7.3.4
-        version: 7.3.4(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react@19.2.0))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@types/node':
-        specifier: ^24.9.1
-        version: 24.9.1
-      '@types/react':
-        specifier: ^19.2.2
-        version: 19.2.2
-      '@types/react-dom':
-        specifier: ^19.2.2
-        version: 19.2.2(@types/react@19.2.2)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
 packages:
 
   '@acemir/cssom@0.9.19':

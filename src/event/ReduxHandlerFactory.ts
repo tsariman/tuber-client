@@ -10,7 +10,7 @@ import {
   pre
 } from '../business.logic';
 import {
-  type IStateKeys,
+  type TStateKeys,
   type TStatePathnames,
   type TThemeMode,
   type IHandleDirective,
@@ -48,7 +48,7 @@ export default class ReduxHandlerFactory {
     const { app, pathnames, net } = getState();
     this.__origin ??= get_origin_ending_fixed(app.origin);
     this.__headers ??= new StateNet(net).headers;
-    this.__pathnames ??= pathnames as TStatePathnames;
+    this.__pathnames ??= pathnames;
   }
 
   private _pathnamesNotDefined(): never {
@@ -79,7 +79,7 @@ export default class ReduxHandlerFactory {
    * Indicates whether the state fragment has already been retrieved from
    * server.
    */
-  private _isAlreadyLoaded(r: IRedux, stateName: string, key: string) {
+  private _isAlreadyLoaded(r: IRedux, stateName: TStateKeys, key: string) {
     const registry = r.store.getState().dynamicRegistry;
     return typeof registry[`${stateName}.${key}`] === 'number';
   }
@@ -87,15 +87,15 @@ export default class ReduxHandlerFactory {
   /** Loads a single state fragment */
   private async _loadSingleStateFragment(
     r: IRedux,
-    stateName: IStateKeys,
+    statename: TStateKeys,
     key: string
   ): Promise<TNetState | undefined> {
-    if (this._isAlreadyLoaded(r, stateName, key)) {
+    if (this._isAlreadyLoaded(r, statename, key)) {
       return undefined;
     }
     const { store: { dispatch, getState } } = r;
     const rootState = getState();
-    const pathname = (rootState.pathnames as TStatePathnames)[stateName];
+    const pathname = rootState.pathnames[statename];
     const url = `${rootState.app.origin}${pathname}`;
     const response = await post_fetch(url, {
       key,
@@ -112,7 +112,7 @@ export default class ReduxHandlerFactory {
     dispatch(net_patch_state(stateFragment));
     // Register state fragment as already loaded.
     dispatch(actions.dynamicRegistryAdd({
-      prop: `${stateName}.${key}`,
+      prop: `${statename}.${key}`,
       value: Date.now
     }));
     return stateFragment;
@@ -121,14 +121,14 @@ export default class ReduxHandlerFactory {
   /** Loads multiple state fragments */
   private async _loadMultipleStateFragments(
     r: IRedux,
-    stateName: IStateKeys,
+    statename: TStateKeys,
     keyList: string[]
   ): Promise<TNetState[]> {
-    const pathname = this._pathnames[stateName];
+    const pathname = this._pathnames[statename];
     const url = `${this._origin}${pathname}`;
      // [TODO] Upgrade the server so it can handle an array of keys as request.
     const statePromises = keyList.map(async key => {
-      if (this._isAlreadyLoaded(r, stateName, key)) {
+      if (this._isAlreadyLoaded(r, statename, key)) {
         return undefined;
       }
       const response = await post_fetch(url, {
@@ -147,7 +147,7 @@ export default class ReduxHandlerFactory {
         store.dispatch(net_patch_state(state));
         // Register state fragment as already loaded.
         store.dispatch(actions.dynamicRegistryAdd({
-          prop: `${stateName}.${key}`,
+          prop: `${statename}.${key}`,
           value: Date.now
         }));
       }
@@ -164,13 +164,21 @@ export default class ReduxHandlerFactory {
     const loadDetail = this._directive.load;
     if (!loadDetail) { return; }
     Object.entries(loadDetail).forEach(async detail => {
-      const [ stateName, stateId ] = detail;
+      const [ statename, stateId ] = detail;
       switch (typeof stateId) {
         case 'string':
-          await this._loadSingleStateFragment(r, stateName as IStateKeys, stateId);
+          await this._loadSingleStateFragment(
+            r,
+            statename as TStateKeys,
+            stateId
+          );
           break;
         case 'object':
-          await this._loadMultipleStateFragments(r, stateName as IStateKeys, stateId);
+          await this._loadMultipleStateFragments(
+            r,
+            statename as TStateKeys,
+            stateId
+          );
           break;
         default:
           ler('_performLoadingTask(): State load id type invalid');

@@ -1,17 +1,17 @@
 import AbstractState from './AbstractState';
-import type { IStatePathnames } from '@tuber/shared';
+import type { TStatePathnames } from '@tuber/shared';
 import State from './State';
 import { get_state } from '../state';
 
 export default class StatePathnames extends AbstractState {
-  private _pathnamesState: IStatePathnames;
+  private _state: TStatePathnames;
   private _parent?: State;
-  constructor(pathnamesState: IStatePathnames, parent?: State) {
+  constructor(state: TStatePathnames, parent?: State) {
     super();
-    this._pathnamesState = pathnamesState;
+    this._state = state;
     this._parent = parent;
   }
-  get state(): IStatePathnames { return this._pathnamesState; }
+  get state(): TStatePathnames { return this._state; }
   get parent(): State {
     return this._parent ?? (this._parent = State.fromRootState(get_state()));
   }

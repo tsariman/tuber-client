@@ -3,7 +3,7 @@ import { redux, type AppDispatch, type IRedux, type RootState } from '../../../s
 import { StateJsxAdornment } from './state.jsx.input.adornment';
 import {type StateFormItem, StateFormsData } from '../../../controllers';
 import { useDispatch, useSelector } from 'react-redux';
-import { NAME_NOT_SET, typeMap, type IFormItemDataError } from '@tuber/shared';
+import { NAME_NOT_SET, typeMap, type IStateFormItemError } from '@tuber/shared';
 import StateJsxTextfieldInputProps from './state.jsx.textfield.input.props';
 import {
   useCallback,
@@ -18,7 +18,7 @@ type TOnFocus = FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 type TOnKeyDown = (redux: IRedux) => KeyboardEventHandler<HTMLDivElement>;
 type TOnChange = (textfield: StateFormItem) => React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 type TOnBlur = (textfield: StateFormItem,
-  e: IFormItemDataError
+  e: IStateFormItemError
 ) => FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 
 export default function StateJsxTextfield({ def: textfield }: IJsonTextfieldProps) {

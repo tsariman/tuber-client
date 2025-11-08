@@ -15,7 +15,7 @@ import {
   LOCALIZED,
   STACK,
   DIV,
-  type IFormItemDataError,
+  type IStateFormItemError,
   type THandleName,
 } from '@tuber/shared';
 import type { IStateFormItem, IStateFormItemCustom } from '../localized/interfaces';
@@ -29,7 +29,7 @@ export interface IFormItemHandle {
   dispatch: unknown;
   form: StateForm;
   input: StateFormItem;
-  inputError?: IFormItemDataError;
+  inputError?: IStateFormItemError;
 }
 
 export default class StateFormItem<P = StateForm, T = unknown>
