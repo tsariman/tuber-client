@@ -3,11 +3,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import { useSelector } from 'react-redux';
-import { TBoolVal } from '../../../common.types';
-import { NAME_NOT_SET } from '../../../constants.client';
+import { NAME_NOT_SET, type TBoolVal } from '@tuber/shared';
 import { type StateFormItemSwitch, StateFormsData } from '../../../controllers';
 import { type RootState } from '../../../state';
 import { to_bool_val } from '../_form.common.logic';
+import type { TSwitchEventHandlerFactory } from './_items.common.logic';
 
 interface IJsonSingleSwitch {
   def: StateFormItemSwitch;
@@ -54,7 +54,7 @@ export default function StateJsxSingleSwitch({
             {...$witch.props}
             disabled={disabled === true}
             checked={to_bool_val(getValue())}
-            onChange={handleChange(name, getValue())}
+            onChange={(handleChange as TSwitchEventHandlerFactory)(name, getValue())}
             value={name}
             inputProps={{ 'aria-label': $witch.label }}
           />

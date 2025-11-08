@@ -1,21 +1,22 @@
+import type { IDummyEvent } from '@tuber/shared';
+import type { IStateForm } from '../localized/interfaces';
+import type { PaperProps } from '@mui/material';
 import StateAllForms from './StateAllForms';
 import AbstractState from './AbstractState';
 import StateFormItem from './StateFormItem';
-import IStateForm from '../interfaces/IStateForm';
-import { CSSProperties } from 'react';
-import { IDummyEvent } from 'src/common.types';
-import { PaperProps } from '@mui/material';
+import type { CSSProperties } from 'react';
 
 export default class StateForm extends AbstractState implements IStateForm {
+  private _formState: IStateForm;
+  private _parent: StateAllForms;
   private _formItems?: StateFormItem[];
   private _ePoint?: string;
   private _fname: string;
 
-  constructor (private _formState: IStateForm,
-    private _parent: StateAllForms
-  ) {
+  constructor (_formState: IStateForm, parent: StateAllForms) {
     super();
     this._formState = _formState;
+    this._parent = parent;
     if (this._parent instanceof StateAllForms) {
       this._fname = this.parent.getLastFormName();
     } else {

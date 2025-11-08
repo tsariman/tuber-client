@@ -5,7 +5,7 @@ import { get_val } from '../../../business.logic/utility';
 import { get_state_form_name } from '../../../business.logic/parsing';
 import { FORM_FACEBOOK_NEW_ID } from '../tuber.config';
 import { facebook_parse_iframe } from '../_tuber.common.logic';
-import { IBookmark } from '../tuber.interfaces';
+import type { IBookmark } from '../tuber.interfaces';
 import { error_id } from 'src/business.logic/errors';
 import FormValidationPolicy from 'src/business.logic/FormValidationPolicy';
 import { get_dialog_form_endpoint } from './_callbacks.common.logic';

@@ -1,5 +1,5 @@
 import AbstractState from './AbstractState';
-import { ILoadedPagesRange, IStateDataPagesRange } from '../interfaces/IState';
+import type { ILoadedPagesRange, IStateDataPagesRange } from '@tuber/shared';
 import State from './State';
 import { get_state } from '../state';
 
@@ -15,16 +15,18 @@ const EMPTY_PAGES_RANGE: ILoadedPagesRange = {
 };
 
 export default class StateDataPagesRange extends AbstractState {
+  private _pagesRangeState: IStateDataPagesRange;
+  private _parent?: State;
   private _maxLoadedPages?: number;
   private _endpoint?: string;
   private _pageSize?: number;
   private _pageToBeDropped?: string;
   private _newPageRange?: ILoadedPagesRange;
 
-  constructor(private _pagesRangeState: IStateDataPagesRange,
-    private _parent?: State
-  ) {
+  constructor(pagesRangeState: IStateDataPagesRange, parent?: State) {
     super();
+    this._pagesRangeState = pagesRangeState;
+    this._parent = parent;
   }
 
   get state(): unknown { return this._pagesRangeState; }
@@ -46,6 +48,10 @@ export default class StateDataPagesRange extends AbstractState {
       return this.die('StateDataPagesRange: pageSize not set.', 0);
     }
     return this._pageSize;
+  }
+
+  getPageSize(): number {
+    return this._getPageSize();
   }
 
   getMaxLoadedPages(): number {
@@ -82,6 +88,10 @@ export default class StateDataPagesRange extends AbstractState {
   private _getLoadedPageTotal(): number | false {
     const { first, last } = this._getPageRange();
     return parseInt(last) - parseInt(first) + 1;
+  }
+
+  getLoadedPageTotal(): number | false {
+    return this._getLoadedPageTotal();
   }
 
   get firstPage(): number {

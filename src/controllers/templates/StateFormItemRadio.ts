@@ -1,8 +1,8 @@
-import { FormControlProps, FormLabelProps } from '@mui/material';
-import { IStateFormItemRadioButton } from '../../interfaces/IFormChoices';
+import type { FormControlProps, FormLabelProps } from '@mui/material';
 import type StateForm from '../StateForm';
 import StateFormItem from '../StateFormItem';
 import StateFormItemRadioCustom from './StateFormItemRadioCustom';
+import type { IFormChoices } from '../../localized/interfaces';
 
 export type TRadioStyle = 'default' | 'row';
 
@@ -21,7 +21,7 @@ export interface IRadioConfig {
  */
 export default class StateFormItemRadio extends StateFormItem<
   StateForm,
-  IStateFormItemRadioButton
+  IFormChoices
 > {
   private itemRadioHas?: StateFormItemRadioCustom;
   get has(): StateFormItemRadioCustom {

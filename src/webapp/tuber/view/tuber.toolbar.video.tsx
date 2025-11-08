@@ -8,8 +8,8 @@ import {
   StatePagesData
 } from 'src/controllers';
 import Link from 'src/mui/link';
-import { IResearchToolbarProps } from '../tuber.interfaces';
-import { IRedux, type RootState } from 'src/state';
+import type { IResearchToolbarProps } from '../tuber.interfaces';
+import type { IRedux, RootState } from 'src/state';
 import { ENDPOINT, PLAYER_OPEN, SHOW_THUMBNAIL } from '../tuber.config';
 import { useMediaQuery, useTheme } from '@mui/material';
 

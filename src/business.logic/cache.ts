@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 /**
  * Holds the last rendered content so that if a new one was not provided,
  * that one can be used.

@@ -1,12 +1,16 @@
 import { get_state } from '../state';
-import { TObj } from '../common.types';
+import type { TObj } from '@tuber/shared';
 import AbstractState from './AbstractState';
 import State from './State';
 
 export default class StateFormsData extends AbstractState {
+  private _formsDataState: TObj;
+  private _parent?: State;
 
-  constructor (private _formsDataState: TObj, private _parent?: State) {
+  constructor (formsDataState: TObj, parent?: State) {
     super();
+    this._formsDataState = formsDataState;
+    this._parent = parent;
   }
 
   get state(): TObj { return this._formsDataState; }

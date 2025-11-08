@@ -6,7 +6,7 @@ import StateTmp from 'src/controllers/StateTmp';
 import { type IRedux } from 'src/state';
 import { error_id } from 'src/business.logic/errors';
 import { patch_req_state } from 'src/state/net.actions';
-import { IBookmark } from '../tuber.interfaces';
+import type { IBookmark } from '../tuber.interfaces';
 import FormValidationPolicy from 'src/business.logic/FormValidationPolicy';
 import { pre, msg, ler } from '../../../business.logic/logging';
 

@@ -1,21 +1,25 @@
 import AbstractState from './AbstractState';
 import StateLink from './StateLink';
 import type State from './State';
-import IStateDrawer from '../interfaces/IStateDrawer';
-import { DrawerProps } from '@mui/material';
-import { TWithRequired } from '../common.types';
-import { CSSProperties } from 'react';
+import type { TWithRequired } from '@tuber/shared';
+import type { IStateDrawer } from '../localized/interfaces';
+import type { DrawerProps } from '@mui/material';
+import type { CSSProperties } from 'react';
 
 export default class StateDrawer<P = State>
   extends AbstractState
   implements IStateDrawer
 {
+  protected drawerState: IStateDrawer;
+  protected parentDef: P;
   /** Default drawer width */
   static DEFAULT_WIDTH: number = 300;
   protected drawerItems?: StateLink<StateDrawer<P>>[];
 
-  constructor (protected drawerState: IStateDrawer, protected parentDef: P) {
+  constructor (drawerState: IStateDrawer, parent: P) {
     super();
+    this.drawerState = drawerState;
+    this.parentDef = parent;
   }
 
   get state(): IStateDrawer { return this.drawerState; }

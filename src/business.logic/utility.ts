@@ -1,32 +1,70 @@
-// WARNING: Do not import anything here.
-//          Only pure, dependency-free utility functions belong in this module.
-//          If you need to import or reference other modules, the function does not belong here.
-//          This helps avoid circular dependencies and keeps this file focused on generic helpers.
+/* 
+  WARNING: Do not import anything here.
+  Only pure, dependency-free utility functions belong in this module.
+  If you need to import or reference other modules, the function does not
+  belong here. This helps avoid circular dependencies and keeps this file
+  focused on generic helpers.
+*/
+
+type TU = unknown;
+
+/** Get as an object */
+export const o_ = (obj: TU) => obj as object | undefined
+/** Sets the value type to `string` */
+export const s_ = (str: TU, fallback = '') => (str ?? fallback) as string
+/** Sets the value type to `number` */
+export const n_ = (num: TU) => num as number | undefined
+/** Sets the value type to a record object */
+export const r_ = <T = TU>(obj: TU) => obj as Record<string, T> | undefined
 
 /** Checks the argument is an `object`. Returns `true` if it is. */
-export const is_object = (obj: unknown): obj is object => {
-  return typeof obj === 'object' && obj !== null && !Array.isArray(obj);
+export const is_object = (obj: TU): obj is object => {
+  return typeof obj === 'object' && obj !== null && !Array.isArray(obj)
 }
 
 /** Checks if the argument is an `object` with `string` indexes. Returns `true` if it is. */
-export const is_record = <T>(obj: unknown): obj is Record<string, T> => {
-  return obj !==null && typeof obj === 'object' && !Array.isArray(obj);
+export const is_record = <T>(obj: TU): obj is Record<string, T> => {
+  return obj !==null && typeof obj === 'object' && !Array.isArray(obj)
 }
 
 /** Checks if the argument is an `object` or an `array`. Returns `true` if it is. */
-export const is_struct = <T=object>(obj: unknown): obj is T => {
-  return obj !== null && typeof obj === 'object';
+export const is_struct = <T=object>(obj: TU): obj is T => {
+  return obj !== null && typeof obj === 'object'
 }
 
 /** Checks if the argument is a `string`. Returns `true` if it is. */
-export const is_string = (arg: unknown): arg is string => {
-  return typeof arg === 'string';
+export const is_string = (arg: TU): arg is string => {
+  return typeof arg === 'string' && arg.length > 0
 }
 
 /** Checks if the argument is a `string`. Returns `true` if it is. */
-export const is_number = (arg: unknown): arg is number => {
-  return typeof arg === 'number';
+export const is_number = (arg: TU): arg is number => {
+  return typeof arg === 'number'
 }
+
+/** Checks if the argument is `undefined`. Returns `true` if it is. */
+export const is_undefined = (arg: TU): arg is undefined => {
+  return typeof arg === 'undefined'
+}
+
+interface IReadme {
+  is: {
+    no: { value: boolean }
+    valid: boolean
+    not: { defined: boolean }
+    undefined: boolean
+  }
+}
+
+/** Read the code already */
+export const readme = (val: TU): IReadme => ({
+  is: {
+    no: { value: !val },
+    valid: !!val,
+    not: { defined: !val },
+    undefined: !val
+  }
+})
 
 /**
  * Safely get a value from an object by dot-notation path
@@ -34,7 +72,7 @@ export const is_number = (arg: unknown): arg is number => {
  * @param path - Dot notation path to the property (e.g., 'user.address.street')
  * @returns The value at the specified path or undefined if not found
  */
-export function get_val<T = unknown>(obj: unknown, path: string): T | undefined {
+export function get_val<T = TU>(obj: TU, path: string): T | undefined {
   // Handle invalid inputs
   if (obj === null || obj === undefined || typeof obj !== 'object') {
     return undefined;
@@ -54,7 +92,7 @@ export function get_val<T = unknown>(obj: unknown, path: string): T | undefined 
     return undefined;
   }
   
-  let current: unknown = obj;
+  let current: TU = obj;
   
   // Traverse the object according to the path
   for (let i = 0; i < parts.length; i++) {
@@ -82,7 +120,7 @@ export function get_val<T = unknown>(obj: unknown, path: string): T | undefined 
     } else {
       // For objects, access the property using index notation
       // This avoids TypeScript errors about dynamic property access
-      current = (current as Record<string, unknown>)[key];
+      current = (current as Record<string, TU>)[key];
     }
   }
   
@@ -98,8 +136,8 @@ export function get_val<T = unknown>(obj: unknown, path: string): T | undefined 
  * @param _default default value
  * @returns value or default value
  */
-export function safely_get_as<T=unknown>(
-  obj: unknown,
+export function safely_get_as<T = TU>(
+  obj: TU,
   path = '',
   _default: T
 ): T {
@@ -121,10 +159,11 @@ export function safely_get_as<T=unknown>(
  * 
  * @deprecated Not in use!
  */
-export function get_global_var<T=unknown>(varName: string): T {
+export function get_global_var<T= TU>(varName: string): T {
   try {
     return window[varName] as T;
   } catch (e) {
+    void e;
     const message = `Global variable "${varName}" does not exist.`;
     console.error(message);
   }
@@ -175,11 +214,11 @@ export function http_get(theUrl: string): void
  * @param dark the dark state
  * @returns the right state
  */
-export function get_themed_state<T=unknown>(
+export function get_themed_state<T = TU>(
   mode: 'dark'|'light',
-  main: unknown,
-  light: unknown,
-  dark: unknown
+  main: TU,
+  light: TU,
+  dark: TU
 ): T {
   if (light && dark) {
     return mode === 'dark' ? dark as T : light as T;
@@ -228,7 +267,7 @@ export function get_themed_state<T=unknown>(
  * 
  * @deprecated Not in use
  */
-export function resolve_unexpected_nesting (response: unknown) {
+export function resolve_unexpected_nesting (response: TU) {
   if (typeof response === 'object'
     && response !== null
     && !Array.isArray(response)
@@ -256,14 +295,14 @@ interface IViewportSize {
  * @see https://stackoverflow.com/questions/1377782/javascript-how-to-determine-the-screen-height-visible-i-e-removing-the-space
  */
 export function get_viewport_size(): IViewportSize {
-  let e: unknown = window, a = 'inner';
+  let e: TU = window, a = 'inner';
   if ( !( 'innerWidth' in window ) ) {
     a = 'client';
     e = document.documentElement || document.body;
   }
   return {
-    width : (e as Record<string, unknown>)[ a+'Width' ] as number,
-    height : (e as Record<string, unknown>)[ a+'Height' ] as number
+    width : (e as Record<string, TU>)[ a+'Width' ] as number,
+    height : (e as Record<string, TU>)[ a+'Height' ] as number
   };
 }
 

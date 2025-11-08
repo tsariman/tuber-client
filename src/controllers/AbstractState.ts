@@ -1,12 +1,10 @@
-import { type TEventCallback } from '../constants.client';
+import type { TEventHandler } from '@tuber/shared';
 import Config from '../config';
 
-/**
- * AbstractState is the base class for all state classes.
- */
+/** Base class for all wrapper classes. */
 export default abstract class AbstractState {
   /**
-   * Get the state.
+   * Get the raw state.
    *
    * It contains the raw data with which this object was instantiated.
    * It's useful to use if the interface version of the object is expected or
@@ -78,8 +76,10 @@ export default abstract class AbstractState {
    * If a callback is required for a link or button but is not defined, then this
    * method will provide a dummy one.
    */
-  protected get_dud_event_callback (): TEventCallback {
-    return () => {
+  protected dummy_factory_handler (arg: unknown): TEventHandler {
+    void arg;
+    return (e: unknown) => {
+      void e;
       this.ler('No callback was assigned.', undefined);
     }
   }

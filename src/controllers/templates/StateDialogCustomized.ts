@@ -1,9 +1,9 @@
-import {
+import type {
   DialogContentProps,
   DialogProps,
   DialogTitleProps
 } from '@mui/material';
-import IStateFormItem from '../../interfaces/IStateFormItem';
+import type { IStateFormItem } from '../../localized/interfaces';
 import StateDialog from '../StateDialog';
 
 export default class StateDialogCustomized extends StateDialog {

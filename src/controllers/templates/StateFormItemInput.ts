@@ -1,4 +1,4 @@
-import { FormControlProps, InputLabelProps } from '@mui/material';
+import type { FormControlProps, InputLabelProps } from '@mui/material';
 import StateFormItem from '../StateFormItem';
 
 export type TInput = 'phone' | 'none';

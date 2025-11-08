@@ -1,6 +1,6 @@
 
-import { createSlice } from '@reduxjs/toolkit';
-import IStateFormItem from '../interfaces/IStateFormItem';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { IStateFormItem } from '@tuber/shared';
 import initialState from '../state/initial.state';
 
 export interface ISliceFormsDataErrorsArgs {
@@ -29,11 +29,6 @@ interface IRemove {
   name: string;
 }
 
-interface IFormsDataErrorsReducerArgs {
-  type: string;
-  payload: ISliceFormsDataErrorsArgs;
-}
-
 interface IFormsDataErrorRemoveAction {
   type: string;
   payload: IRemove;
@@ -59,7 +54,7 @@ export const formsDataErrorsSlice = createSlice({
   name: 'formsDataErrors',
   initialState: initialState.formsDataErrors,
   reducers: {
-    formsDataErrorsUpdate: (state, { payload }: IFormsDataErrorsReducerArgs) => {
+    formsDataErrorsUpdate: (state, { payload }: PayloadAction<ISliceFormsDataErrorsArgs>) => {
       const {
         formName,
         name,
@@ -114,7 +109,7 @@ export const formsDataErrorsSlice = createSlice({
       }
     },
     /** Deletes a form error data. Payload is the form name. */
-    formsDataErrorsClear: (state, action) => {
+    formsDataErrorsClear: (state, action: PayloadAction<string>) => {
       delete state[action.payload];
     },
     /** [TODO] Does not work! */
@@ -127,7 +122,7 @@ export const formsDataErrorsSlice = createSlice({
       delete state[formName][name];
     }
   }
-})
+});
 
 export const formsDataErrorsActions = formsDataErrorsSlice.actions;
 export const {
@@ -137,4 +132,4 @@ export const {
   formsDataErrorsRemove,
 } = formsDataErrorsSlice.actions;
 
-export default formsDataErrorsSlice.reducer
+export default formsDataErrorsSlice.reducer;

@@ -1,5 +1,6 @@
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// TODO - Install those import if or when needed.
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   Box,
   FormControl,
@@ -7,7 +8,12 @@ import {
   FormGroup,
   Stack,
 } from '@mui/material';
-import React, { Fragment, ReactElement, useMemo } from 'react';
+import React, {
+  Fragment,
+  type ReactElement,
+  type ReactNode,
+  useMemo
+} from 'react';
 import type StateFormItemGroup from '../../controllers/StateFormItemGroup';
 import {
   BOX,
@@ -19,16 +25,32 @@ import {
   INDETERMINATE,
   DIV,
   NONE
-} from '../../constants.client';
+} from '@tuber/shared';
 
 interface IFormItemGroupProps {
   def: StateFormItemGroup;
   children: React.ReactNode;
 }
 
+// TODO - Delete following dummy values when imports are available ============
+
+interface IFakeProps {
+  dateAdapter?: ReactElement;
+  children?: ReactNode;
+}
+
+const AdapterDayjs = <></>;
+
+const LocalizationProvider = (props: IFakeProps) => {
+  void props;
+  return null;
+};
+
+// END - Delete ===============================================================
+
 const StateJsxFormItemGroup = React.memo<IFormItemGroupProps>(({ def: item, children }) => {
   // Memoize the table to prevent recreation on every render
-  const table: Record<string, () => JSX.Element> = useMemo(() => ({
+  const table: Record<string, () => ReactElement> = useMemo(() => ({
     [BOX]: () => (
       <Box {...item.props}>
         {children}

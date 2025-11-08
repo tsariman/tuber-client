@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import IStateAllDialogs from 'src/interfaces/IStateAllDialogs';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { IStateAllDialogs } from '@tuber/shared';
 import initialState from '../state/initial.state';
 
 /**
@@ -19,7 +19,7 @@ export const dialogsSlice = createSlice({
     dialogsAddMultiple: (state, action: PayloadAction<IStateAllDialogs>) => {
       const dialogs = action.payload;
       Object.keys(dialogs).forEach(key => {
-        /* @ts-ignore */
+        // @ts-expect-error The Redux toolkit and Material-UI do not get along.
         state[key] = dialogs[key];
       });
     },

@@ -1,7 +1,7 @@
 
 // Tuber app configuration values
 
-import { TPlatform } from './tuber.interfaces';
+import type { TPlatform } from './tuber.interfaces';
 
 /** Setting for thumbnail load attempts total. */
 export const THUMB_LOAD_ATTEMPTS_CONF = 'thumbnail_Load_attempts_';

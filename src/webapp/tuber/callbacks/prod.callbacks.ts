@@ -1,4 +1,4 @@
-import { type IRedux, type TReduxHandle } from '../../../state';
+import type { IRedux, TReduxHandler } from '../../../state';
 import form_submit_sign_in, { sign_out } from './prod.authentication';
 import form_submit_new_youtube_bookmark from './prod.bookmarks.201.youtube';
 import form_submit_delete_bookmark from './prod.bookmarks.actions';
@@ -51,7 +51,7 @@ export function dialog_sign_in(redux: IRedux) {
   };
 }
 
-const prodCallbacks: { readonly [key: string]: TReduxHandle } = {
+const prodCallbacks: { readonly [key: string]: TReduxHandler } = {
   defaultClose: close_default,
   '$1_C_1': dialog_new_bookmark_from_url,
   '$3_C_1': dialog_new_video_url,

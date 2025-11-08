@@ -1,16 +1,17 @@
 import AbstractState from './AbstractState';
-import IStateAllIcons from '../interfaces/IStateAllIcons';
-import IStateIcon from '../interfaces/IStateIcon';
+import type { IStateAllIcons, IStateIcon } from '@tuber/shared';
 import State from './State';
 import StateIcon from './StateIcon';
-import { get_state } from 'src/state';
+import { get_state } from '../state';
 
 export default class StateAllIcons extends AbstractState {
+  private _allIconsState: IStateAllIcons;
+  private _parent?: State;
 
-  constructor(private _allIconsState: IStateAllIcons,
-    private _parent?: State
-  ) {
+  constructor(allIconsState: IStateAllIcons, parent?: State) {
     super();
+    this._allIconsState = allIconsState;
+    this._parent = parent;
   }
 
   /** Get a copy of all icons definition. */

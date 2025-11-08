@@ -2,17 +2,17 @@ import {
   get_parsed_content,
   get_state_form_name
 } from 'src/business.logic/parsing';
-import { IJsonapiResponseResource } from 'src/interfaces/IJsonapi';
+import type { IJsonapiResponseResource } from '@tuber/shared';
 import StateTmp from 'src/controllers/StateTmp';
 import { type IRedux } from 'src/state';
 import { error_id } from 'src/business.logic/errors';
 import { delete_req_state, get_dialog_state } from 'src/state/net.actions';
 import { get_val, safely_get_as } from 'src/business.logic/utility';
 import { get_dialog_registry_key_for_edit } from '../_tuber.common.logic';
-import { IBookmark } from '../tuber.interfaces';
+import type { IBookmark } from '../tuber.interfaces';
 import { DIALOG_DELETE_BOOKMARK_ID } from '../tuber.config';
 import { ler, log, pre } from '../../../business.logic/logging';
-import { IStateData } from 'src/interfaces/IState';
+import type { IStateData } from '@tuber/shared';
 
 /** Get bookmarks data from redux store. */
 function get_bookmark_resources (data: IStateData<IBookmark>) {

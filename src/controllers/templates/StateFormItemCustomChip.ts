@@ -1,12 +1,14 @@
-import { ChipProps } from '@mui/material';
+import type { ChipProps } from '@mui/material';
 import { get_base_route } from '../../business.logic/parsing';
-import type { IRedux, TReduxHandle } from '../../state';
+import type { IRedux, TReduxHandler } from '../../state';
 import StateFormItemCustom from '../StateFormItemCustom';
-import { TStateFormITemCustomColor } from '../../interfaces/IStateFormItemCustom';
+import type { TStateFormITemCustomColor } from '@tuber/shared';
 
-export default class StateFormItemCustomChip<P=unknown> extends StateFormItemCustom<P> {
-  private _handleOnClick?: TReduxHandle;
-  private _handleOnDelete?: TReduxHandle;
+export default class StateFormItemCustomChip<P=unknown>
+  extends StateFormItemCustom<P>
+{
+  private _handleOnClick?: TReduxHandler;
+  private _handleOnDelete?: TReduxHandler;
   get color(): TStateFormITemCustomColor { return this.hasState.color ?? 'default'; }
   get variant(): ChipProps['variant'] { return this.hasState.variant ?? 'outlined'; }
   get props(): Record<string, unknown> {
@@ -33,24 +35,24 @@ export default class StateFormItemCustomChip<P=unknown> extends StateFormItemCus
     };
   };
 
-  private _setHandleOnClick = (): TReduxHandle => {
+  private _setHandleOnClick = (): TReduxHandler => {
     if (this.hasState.onClick) {
       return this._handleOnClick = this.hasState.onClick;
     }
     const handleCallback = this.getDirectiveHandle()
-      || this.getHandle();
+      || this.getHandler();
     if (handleCallback) {
       return this._handleOnClick = handleCallback;
     }
     // return this._handleOnClick = default_callback;
     return this._handleOnClick = this._defaultChipCb;
   };
-  private _setHandleOnDelete = (): TReduxHandle => {
+  private _setHandleOnDelete = (): TReduxHandler => {
     if (this.hasState.onDelete) {
       return this._handleOnDelete = this.hasState.onDelete;
     }
     const handleCallback = this.getDirectiveHandle('ondelete')
-      || this.getHandle('ondelete');
+      || this.getHandler('ondelete');
     if (handleCallback) {
       return this._handleOnDelete = handleCallback;
     }

@@ -1,14 +1,13 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import IStateDialog from '../interfaces/IStateDialog';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { IStateDialog, IStateFormItem } from '@tuber/shared';
 import initialState from '../state/initial.state';
-import { IStateFormItem } from '../interfaces';
 
 export const dialogSlice = createSlice({
   name: 'dialog',
   initialState: initialState.dialog,
   reducers: {
     dialogActionUpdate: (state, action: PayloadAction<IStateFormItem[]>) => {
-      // @ts-ignore The CSSProperties property type in IStateFormItem is causing issues.
+      // @ts-expect-error The CSSProperties property type in IStateFormItem is causing issues.
       state.actions = action.payload;
     },
     dialogTitleUpdate: (state, action: PayloadAction<string>) => {
@@ -41,24 +40,24 @@ export const dialogSlice = createSlice({
       state.label = payload.label;
       state.contentText = payload.contentText;
       state.content     = payload.content;
-      // @ts-ignore
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.actions     = payload.actions;
       state.showActions = payload.showActions;
       state.onSubmit    = payload.onSubmit;
-      // @ts-ignore
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.list        = payload.list;
       state.callback    = payload.callback;
-      // @ts-ignore
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.props       = payload.props;
-      // @ts-ignore
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.titleProps  = payload.titleProps;
-      // @ts-ignore
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.contentProps = payload.contentProps;
-      // @ts-ignore
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.contentTextProps = payload.contentTextProps;
-      // @ts-ignore
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.actionsProps     = payload.actionsProps;
-      // @ts-ignore
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.slideProps       = payload.slideProps;
     },
     dialogDismount: (state) => {
@@ -71,24 +70,24 @@ export const dialogSlice = createSlice({
       state.label = $default.label;
       state.contentText = $default.contentText;
       state.content     = $default.content;
-      /* @ts-ignore */
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.actions     = $default.actions;
       state.showActions = $default.showActions;
       state.onSubmit    = $default.onSubmit;
-      /* @ts-ignore */
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.list        = $default.list;
       state.callback    = $default.callback;
-      /* @ts-ignore */
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.props       = $default.props;
-      /* @ts-ignore */
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.titleProps  = $default.titleProps;
-      /* @ts-ignore */
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.contentProps = $default.contentProps;
-      /* @ts-ignore */
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.contentTextProps = $default.contentTextProps;
-      /* @ts-ignore */
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.actionsProps     = $default.actionsProps;
-      /* @ts-ignore */
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.slideProps       = $default.slideProps;
     }
   }

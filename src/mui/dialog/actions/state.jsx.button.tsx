@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { Icon, Button } from '@mui/material';
 import type { StateFormItem, StateDialog } from '../../../controllers';
-import store, { actions } from 'src/state';
+import store, { actions, type IRedux } from '../../../state';
 
 interface IJsonButtonProps { def: StateFormItem<StateDialog>; }
 interface IJsonButtonContentProps {
@@ -11,12 +11,12 @@ interface IJsonButtonContentProps {
 export default function StateJsxDialogActionButton (
   { def: button }: IJsonButtonProps
 ) {
-  const redux = {
+  const redux: IRedux = {
     store,
     actions,
-    route: button.props.href
+    route: button.props.href as string
   };
-  const onClick = button.onClick;
+  const onClick = button.clickReduxHandler;
 
   const ButtonContent = ({ def: button }: IJsonButtonContentProps) => {
     if (button.text) {

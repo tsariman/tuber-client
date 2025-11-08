@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IJsonapiResource } from '../interfaces/IJsonapi';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { IJsonapiResource } from '@tuber/shared';
 import initialState from '../state/initial.state';
 
 export interface IDataAdd {

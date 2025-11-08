@@ -1,18 +1,22 @@
 import AbstractState from './AbstractState';
 import State from './State';
 import { get_state } from '../state';
-import IStateDialog from '../interfaces/IStateDialog';
 import type StateDialogSelectionItem from './templates/StateDialogSelectionItem';
-import IStateFormItem from '../interfaces/IStateFormItem';
-import { CSSProperties } from 'react';
-import { DialogContentTextProps } from '@mui/material';
+import type { CSSProperties } from 'react';
+import type { DialogContentTextProps } from '@mui/material';
+import type { IStateDialog, IStateFormItem } from '../localized/interfaces';
 
-export default class StateDialog<T = unknown> extends AbstractState implements IStateDialog<T> {
+export default class StateDialog<T = unknown>
+  extends AbstractState
+  implements IStateDialog<T>
+{
+  protected dialogState: IStateDialog<T>;
+  protected parentDef?: State;
 
-  constructor(protected dialogState: IStateDialog<T>,
-    protected parentDef?: State
-  ) {
+  constructor(dialogState: IStateDialog<T>, parent?: State) {
     super();
+    this.dialogState = dialogState;
+    this.parentDef = parent;
   }
 
   get state(): IStateDialog<T> { return this.dialogState; }
@@ -33,7 +37,7 @@ export default class StateDialog<T = unknown> extends AbstractState implements I
     return this.dialogState.showActions ?? false
   }
   get onSubmit() {
-    return this.dialogState.onSubmit || this.get_dud_event_callback
+    return this.dialogState.onSubmit || this.dummy_factory_handler
   }
   get open(): boolean { return this.dialogState.open ?? false }
   get titleProps() { return this.dialogState.titleProps }

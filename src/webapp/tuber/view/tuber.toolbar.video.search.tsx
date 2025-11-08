@@ -7,9 +7,9 @@ import {
   StatePagesData
 } from 'src/controllers';
 import Link from 'src/mui/link';
-import { IResearchToolbarProps } from '../tuber.interfaces';
+import type { IResearchToolbarProps } from '../tuber.interfaces';
 import { useSelector } from 'react-redux';
-import { IRedux, type RootState } from 'src/state';
+import type { IRedux, RootState } from 'src/state';
 import { ENDPOINT, PLAYER_OPEN } from '../tuber.config';
 import { useMediaQuery, useTheme } from '@mui/material';
 

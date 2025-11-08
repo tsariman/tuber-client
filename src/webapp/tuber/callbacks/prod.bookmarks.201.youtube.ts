@@ -2,7 +2,7 @@ import JsonapiRequest from '../../../business.logic/JsonapiRequest';
 import { post_req_state } from '../../../state/net.actions';
 import { type IRedux } from '../../../state';
 import { DIALOG_YOUTUBE_NEW_ID, FORM_YOUTUBE_NEW_ID } from '../tuber.config';
-import { IBookmark } from '../tuber.interfaces';
+import type { IBookmark } from '../tuber.interfaces';
 import {
   get_form_data,
   get_dialog_form_endpoint

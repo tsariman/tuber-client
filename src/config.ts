@@ -1,5 +1,5 @@
-import get_config, { IConfiguration } from './business.logic/configuration';
-import { TThemeMode } from './common.types';
+import { type TThemeMode, get_config, type IConfiguration } from '@tuber/shared';
+// import { TThemeMode } from './common.types';
 
 const initConfObj = {
   /** App default theme mode. */

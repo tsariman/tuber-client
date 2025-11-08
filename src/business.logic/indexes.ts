@@ -1,5 +1,5 @@
 import { error_id } from './errors';
-import { IJsonapiResponseResource } from '../interfaces/IJsonapi';
+import type { IJsonapiResponseResource } from '@tuber/shared';
 
 export interface IIndexes {
   [endpoint: string]: {
@@ -71,9 +71,9 @@ export function drop_index(collection: string): void {
  * @param endpoint 
  * @param id 
  */
-export function select(endpoint: string, id: string): unknown {
+export function select<T = IJsonapiResponseResource>(endpoint: string, id: string): T | undefined {
   try {
-    return indexes?.[endpoint]?.[id];
+    return indexes?.[endpoint]?.[id] as T;
   } catch (e) {
     error_id(6).remember_error({ // error 6
       'code': 'MISSING_VALUE',
@@ -83,5 +83,6 @@ export function select(endpoint: string, id: string): unknown {
         'parameter': `${endpoint}/${id}`
       }
     });
+    return undefined;
   }
 }

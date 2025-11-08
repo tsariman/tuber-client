@@ -1,16 +1,17 @@
 import { mongo_object_id } from './utility';
-import {
+import type {
   IJsonapiError,
   IJsonapiErrorLinks,
   IJsonapiErrorSource,
   TJsonapiErrorStatus,
   TJsonapiMeta
-} from '../interfaces/IJsonapi';
+} from '@tuber/shared';
 
 export default class JsonapiError implements IJsonapiError {
+  private _e: IJsonapiError;
   private _id?: string;
 
-  constructor(private _e: IJsonapiError) {}
+  constructor(e: IJsonapiError) { this._e = e; }
 
   get json(): IJsonapiError { return this._e; }
   get id(): string {

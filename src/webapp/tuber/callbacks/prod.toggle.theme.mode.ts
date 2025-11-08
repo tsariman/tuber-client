@@ -1,7 +1,7 @@
 import { clear_last_content_jsx } from 'src/business.logic/cache';
 import Config from 'src/config';
-import { THEME_DEFAULT_MODE, THEME_MODE } from 'src/constants.client';
-import { TThemeMode } from 'src/common.types';
+import type { TThemeMode } from '@tuber/shared';
+import { THEME_DEFAULT_MODE, THEME_MODE } from '@tuber/shared';
 import { type IRedux } from 'src/state';
 
 /** @id 44_C_1 */

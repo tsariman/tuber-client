@@ -5,13 +5,13 @@ import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import React, { Fragment, useCallback, useMemo } from 'react';
 import { ENDPOINT, PLAYER_OPEN, SET_TO_PLAY, SHORTENED_NOTE_MAX_LENGTH } from '../../tuber.config';
-import { IBookmark } from '../../tuber.interfaces';
+import type { IBookmark } from '../../tuber.interfaces';
 import { gen_video_url, shorten_text } from '../../_tuber.common.logic';
 import BookmarkActionsToolbar from './list.actions';
 import { StateJsxIcon } from 'src/mui/icon';
 import PlatformIcon from './platform.icon';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from 'src/state';
+import type { AppDispatch, RootState } from 'src/state';
 import StatePagesData from 'src/controllers/StatePagesData';
 import { pagesDataAdd } from 'src/slices/pagesData.slice';
 
@@ -101,6 +101,7 @@ const Bookmark = React.memo<IBookmarkProps>(({ children: bookmark, index: i, han
 
   // Memoized click handlers
   const handleBookmarkClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
     if (playerOpen) {
       dispatch(pagesDataAdd({
         route: ENDPOINT,

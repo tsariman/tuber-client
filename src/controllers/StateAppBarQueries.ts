@@ -1,21 +1,23 @@
 import AbstractState from './AbstractState';
-import {
+import type {
   TStateAppbarQueries,
-  IStateAppbarQuery
-} from '../interfaces/IStateAppbarQueries';
+  IStateAppbarQuery,
+  TWithRequired,
+} from '@tuber/shared';
 import State from './State';
-import { TWithRequired } from '../common.types';
-import { get_state } from 'src/state';
+import { get_state } from '../state';
 
 export default class StateAppbarQueries extends AbstractState {
+  protected searchesState: TStateAppbarQueries;
+  protected parentDef?: State;
 
-  constructor(protected _searchesState: TStateAppbarQueries,
-    protected parentDef?: State
-  ) {
+  constructor(searchesState: TStateAppbarQueries, parent?: State) {
     super();
+    this.searchesState = searchesState;
+    this.parentDef = parent;
   }
 
-  get state(): TStateAppbarQueries { return this._searchesState; }
+  get state(): TStateAppbarQueries { return this.searchesState; }
   get parent(): State {
     return this.parentDef ?? (
       this.parentDef = State.fromRootState(get_state())
@@ -34,8 +36,8 @@ export default class StateAppbarQueries extends AbstractState {
     IStateAppbarQuery,
     'value'
   >|null => {
-    const queryState =  this._searchesState[route]
-      ?? this._searchesState[`/${route}`]
+    const queryState =  this.searchesState[route]
+      ?? this.searchesState[`/${route}`]
       ?? null;
     if (!queryState) return null;
     return {

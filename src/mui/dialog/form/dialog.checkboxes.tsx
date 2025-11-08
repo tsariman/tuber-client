@@ -2,13 +2,16 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { type RadioProps } from '@mui/material/Radio';
 import { Fragment, useState } from 'react';
-import { THive } from '.';
+import type { THive } from '.';
 import type {
   StateForm,
   StateFormItem,
   StateFormItemCheckboxBox
 } from '../../../controllers';
-import { ICheckboxesData, update_checkboxes } from '../../form/items/_items.common.logic';
+import {
+  type ICheckboxesData,
+  update_checkboxes
+} from '../../form/items/_items.common.logic';
 
 interface IDialogCheckboxes {
   def: StateFormItem<StateForm, StateFormItemCheckboxBox>;

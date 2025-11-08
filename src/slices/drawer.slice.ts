@@ -1,13 +1,13 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import initialState from '../state/initial.state';
-import IStateLink from '../interfaces/IStateLink';
+import type { IStateLink } from '@tuber/shared';
 
 export const drawerSlice = createSlice({
   name: 'drawer',
   initialState: initialState.drawer,
   reducers: {
     drawerItemsUpdate: (state, action: PayloadAction<IStateLink[]>) => {
-      // @ts-ignore IStateFormItemCustom property type incompatible with Redux.
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.items = action.payload;
     },
     drawerOpen: (state) => { state.open = true; },

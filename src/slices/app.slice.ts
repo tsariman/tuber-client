@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TThemeMode } from '../common.types';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import initialState from '../state/initial.state';
 import {
+  type TThemeMode,
   APP_IS_BOOTSTRAPPED,
   APP_IS_FETCHING,
   APP_IS_READY,
@@ -9,13 +9,13 @@ import {
   APP_REQUEST_SUCCESS,
   APP_SWITCHED_PAGE,
   APP_BROWSER_SWITCHED_PAGE
-} from '../constants.client';
+} from '@tuber/shared';
 
 export const appSlice = createSlice({
   name: 'app',
   initialState: initialState.app,
   reducers: {
-    appSwitchPage: (state, action) => {
+    appSwitchPage: (state, action: PayloadAction<string>) => {
       state.lastRoute = state.route;
       state.route = action.payload;
       state.status = APP_SWITCHED_PAGE;
@@ -25,13 +25,13 @@ export const appSlice = createSlice({
       state.route = action.payload;
       state.status = APP_BROWSER_SWITCHED_PAGE;
     },
-    appTitleUpdate: (state, action) => {
+    appTitleUpdate: (state, action: PayloadAction<string>) => {
       state.title = action.payload;
     },
-    appOriginUpdate: (state, action) => {
+    appOriginUpdate: (state, action: PayloadAction<string>) => {
       state.origin = action.payload;
     },
-    appStatusUpdate: (state, action) => {
+    appStatusUpdate: (state, action: PayloadAction<string>) => {
       state.status = action.payload;
     },
     appTaskCompleted: (state) => {
@@ -65,11 +65,11 @@ export const appSlice = createSlice({
     appRequestProcessEnd: (state) => {
       state.status = APP_IS_BOOTSTRAPPED;
     },
-    appSetFetchMessage: (state, actions: PayloadAction<string>) => {
-      state.fetchMessage = actions.payload;
+    appSetFetchMessage: (state, action: PayloadAction<string>) => {
+      state.fetchMessage = action.payload;
     },
-    appThemeModeUpdate: (state, actions: PayloadAction<TThemeMode>) => {
-      state.themeMode = actions.payload;
+    appThemeModeUpdate: (state, action: PayloadAction<TThemeMode>) => {
+      state.themeMode = action.payload;
     },
   },
 });

@@ -1,10 +1,10 @@
-import {
+import type {
   FormControlLabelProps,
   FormControlProps,
   FormHelperTextProps,
   InputLabelProps
 } from '@mui/material';
-import IStateFormItemSelectOption from '../../interfaces/IStateFormItemSelectOption';
+import type { IStateFormItemSelectOption } from '@tuber/shared';
 import type StateForm from '../StateForm';
 import StateFormItem from '../StateFormItem';
 

@@ -3,7 +3,7 @@ import JsonapiRequest from 'src/business.logic/JsonapiRequest';
 import { post_req_state } from 'src/state/net.actions';
 import { type IRedux } from '../../../state';
 import { DIALOG_VIMEO_NEW_ID, FORM_VIMEO_NEW_ID } from '../tuber.config';
-import { IBookmark } from '../tuber.interfaces';
+import type { IBookmark } from '../tuber.interfaces';
 import { get_dialog_form_endpoint, get_form_data } from './_callbacks.common.logic';
 
 /**

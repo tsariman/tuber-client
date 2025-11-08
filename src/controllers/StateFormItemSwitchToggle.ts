@@ -1,17 +1,22 @@
 import AbstractState from './AbstractState';
-import IStateFormItemSwitchToggle from '../interfaces/IStateFormItemSwitchToggle';
+import type { IStateFormItemSwitchToggle } from '@tuber/shared';
 import type StateFormItemSwitch from './templates/StateFormItemSwitch';
-import React, { CSSProperties } from 'react';
-import { FormControlLabelProps } from '@mui/material';
+import React, { type CSSProperties } from 'react';
+import type { FormControlLabelProps } from '@mui/material';
 
 export default class StateFormItemSwitchToggle
   extends AbstractState
   implements IStateFormItemSwitchToggle
 {
-  constructor (private _switchToggleState: IStateFormItemSwitchToggle,
-    private _parent: StateFormItemSwitch
+  private _switchToggleState: IStateFormItemSwitchToggle;
+  private _parent: StateFormItemSwitch;
+
+  constructor (switchToggleState: IStateFormItemSwitchToggle,
+    parent: StateFormItemSwitch
   ) {
     super();
+    this._switchToggleState = switchToggleState;
+    this._parent = parent;
   }
 
   get state(): IStateFormItemSwitchToggle { return this._switchToggleState; }

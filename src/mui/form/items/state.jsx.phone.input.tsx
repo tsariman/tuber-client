@@ -1,14 +1,16 @@
 import FormControl from '@mui/material/FormControl';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
-import { forwardRef, ElementType } from 'react';
-import { IMaskInput } from 'react-imask';
+import { forwardRef } from 'react';
+import type { ElementType } from 'react';
+import { IMaskInput } from '../../../components/IMaskInput';
 import { useSelector } from 'react-redux';
 import {
   type StateFormItemInput,
   StateFormsData
 } from '../../../controllers';
-import { type RootState } from '../../../state';
+import type {  RootState } from '../../../state';
+import type { TFormItemDefaultEventHandler } from './_items.common.logic';
 
 interface CustomProps {
   onChange: (event: { target: { name: string; value: string } }) => void;
@@ -33,9 +35,7 @@ const TextMaskCustom = forwardRef<HTMLElement, CustomProps>(
   },
 )
 
-interface IDialogPhoneInput {
-  def: StateFormItemInput;
-}
+interface IDialogPhoneInput { def: StateFormItemInput; }
 
 export default function StateJsxPhoneInput({ def: input }: IDialogPhoneInput) {
   input.configure('phone');
@@ -49,7 +49,7 @@ export default function StateJsxPhoneInput({ def: input }: IDialogPhoneInput) {
         {...input.props}
         name={input.name}
         value={value}
-        onChange={input.onChange(input.name)}
+        onChange={(input.onChange as TFormItemDefaultEventHandler)(input.name)}
         inputComponent={TextMaskCustom as ElementType<unknown>}
       />
     </FormControl>

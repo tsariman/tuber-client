@@ -1,4 +1,4 @@
-import { YouTubePlayer } from 'react-youtube';
+import type { YouTubePlayer } from 'react-youtube';
 import Config from 'src/config';
 import {
   get_parsed_content,
@@ -6,7 +6,7 @@ import {
 } from 'src/business.logic/parsing';
 import { type IRedux } from 'src/state';
 import { error_id } from 'src/business.logic/errors';
-import { TPlatform } from '../tuber.interfaces';
+import type { TPlatform } from '../tuber.interfaces';
 import { get_dialog_state } from 'src/state/net.actions';
 import { pre } from '../../../business.logic/logging';
 

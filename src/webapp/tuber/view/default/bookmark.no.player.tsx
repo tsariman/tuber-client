@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Grid';
 import ListItem from '@mui/material/ListItem';
 import { styled } from '@mui/material/styles';
-import { IBookmark } from '../../tuber.interfaces';
+import type { IBookmark } from '../../tuber.interfaces';
 import { gen_video_url, shorten_text } from '../../_tuber.common.logic';
 import React, { Fragment, useCallback, useMemo } from 'react';
 import { SHORTENED_NOTE_MAX_LENGTH } from '../../tuber.config';
@@ -102,6 +102,7 @@ const BookmarkNoPlayer = React.memo<IBookmarkProps>(({
 
   // Memoized click handlers
   const handleBookmarkClick = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
     const url = bookmark.url || gen_video_url(bookmark);
     window.open(url, '_blank')?.focus();
   }, [bookmark]);

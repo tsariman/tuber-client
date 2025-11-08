@@ -1,5 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import initialState from '../state/initial.state';
+
+interface ISet {
+  csrfTokenName?: string;
+  csrfTokenMethod?: 'meta' | 'javascript';
+  csrfToken?: string;
+  headers?: Record<string, string>;
+}
 
 export const netSlice = createSlice({
   name: 'net',
@@ -11,22 +18,22 @@ export const netSlice = createSlice({
       state.csrfToken = undefined;
       state.headers = undefined;
     },
-    netSet: (state, { payload }) => {
+    netSet: (state, { payload }: PayloadAction<ISet>) => {
       state.csrfTokenName = payload.csrfTokenName;
       state.csrfTokenMethod = payload.csrfTokenMethod;
       state.csrfToken = payload.csrfToken;
       state.headers = payload.headers;
     },
-    netSetCsrfTokenName: (state, action) => {
+    netSetCsrfTokenName: (state, action: PayloadAction<string>) => {
       state.csrfTokenName = action.payload;
     },
-    netSetCsrfTokenMethod: (state, action) => {
+    netSetCsrfTokenMethod: (state, action: PayloadAction<'meta' | 'javascript'>) => {
       state.csrfTokenMethod = action.payload;
     },
-    netSetCsrfToken: (state, action) => {
+    netSetCsrfToken: (state, action: PayloadAction<string>) => {
       state.csrfToken = action.payload;
     },
-    netSetHeaders: (state, action) => {
+    netSetHeaders: (state, action: PayloadAction<Record<string, string>>) => {
       state.headers = action.payload;
     },
   }

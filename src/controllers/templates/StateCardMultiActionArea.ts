@@ -1,5 +1,5 @@
-import { CardMediaProps } from '@mui/material';
-import IStateCard from '../../interfaces/IStateCard';
+import type { CardMediaProps } from '@mui/material';
+import type { IStateCard } from '../../localized/interfaces';
 import StateCard from '../StateCard';
 
 export default class StateCardMultiActionArea extends StateCard {

@@ -2,21 +2,23 @@ import Controller from './AbstractState';
 import { get_state } from '../state';
 import State from './State';
 import StateForm from './StateForm';
-import IStateAllForms from '../interfaces/IStateAllForms';
+import type { TStateAllForms } from '../localized/interfaces';
 import { log } from '../business.logic/logging';
 
 export default class StateAllForms extends Controller {
+  private _allFormsState: TStateAllForms;
+  private _parent?: State;
   private _lastFormName: string;
 
-  constructor (private _allFormsState: IStateAllForms,
-    private _parent?: State
-  ) {
+  constructor (allFormsState: TStateAllForms, parent?: State) {
     super();
+    this._allFormsState = allFormsState;
+    this._parent = parent;
     this._lastFormName = '';
   }
 
   /** Get all forms json. */
-  get state(): IStateAllForms { return this._allFormsState; }
+  get state(): TStateAllForms { return this._allFormsState; }
   /** Chain-access to root definition. */
   get parent(): State {
     return this._parent ?? (this._parent = State.fromRootState(get_state()));

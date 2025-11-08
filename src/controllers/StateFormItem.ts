@@ -15,15 +15,15 @@ import {
   LOCALIZED,
   STACK,
   DIV,
-} from '../constants.client';
+  type IFormItemDataError,
+  type THandleName,
+} from '@tuber/shared';
+import type { IStateFormItem, IStateFormItemCustom } from '../localized/interfaces';
 import StateFormItemCustom from './StateFormItemCustom';
-import { dummy_callback } from '../state';
-import IStateFormItem from '../interfaces/IStateFormItem';
-import IStateFormItemCustom from '../interfaces/IStateFormItemCustom';
+import { dummy_redux_handler, type TReduxHandler } from '../state';
 import StateFormItemInputProps from './StateFormItemInputProps';
-import { IFormItemDataError } from '../interfaces/IState';
 import { err } from '../business.logic/logging';
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 
 export interface IFormItemHandle {
   dispatch: unknown;
@@ -36,23 +36,42 @@ export default class StateFormItem<P = StateForm, T = unknown>
   extends AbstractState
   implements IStateFormItem
 {
+  protected readonly itemState: IStateFormItem<T>;
+  protected parentDef: P;
   protected itemHasState: IStateFormItemCustom<T>;
   protected itemHas?: StateFormItemCustom<StateFormItem<P, T>, T>;
   protected itemDisabled: boolean;
-  protected itemOnClick?: Function;
-  protected itemOnFocus?: Function;
-  protected itemOnChange?: Function;
-  protected itemOnKeydown?: Function;
-  protected itemOnBlur?: Function;
+
+  protected reduxClick?: TReduxHandler;
+  protected reduxFocus?: TReduxHandler;
+  protected reduxChange?: TReduxHandler;
+  protected reduxKeydown?: TReduxHandler;
+  protected reduxBlur?: TReduxHandler;
+
+  protected onclickHandler?: unknown;
+  protected onchangeHandler?: unknown;
+  protected onfocusHandler?: unknown;
+  protected onkeydownHandler?: unknown;
+  protected onblurHandler?: unknown;
+
   protected recursiveItems?: StateFormItem<P, T>[];
   protected itemInputProps?: StateFormItemInputProps<StateFormItem<P, T>>;
 
-  constructor(protected itemState: IStateFormItem<T>,
-    protected parentDef: P
-  ) {
+  private _badReduxHandlers: { [key in THandleName]?: boolean; };
+
+  constructor(itemState: Readonly<IStateFormItem<T>>, parent: P) {
     super();
+    this.itemState = itemState;
+    this.parentDef = parent;
     this.itemDisabled = !!this.itemState.disabled;
     this.itemHasState = itemState.has || {};
+
+    this.onfocusHandler = this.itemState.onFocus;
+    this.onclickHandler = this.itemState.onClick;
+    this.onchangeHandler = this.itemState.onChange;
+    this.onkeydownHandler = this.itemState.onKeyDown;
+    this.onblurHandler = this.itemState.onBlur;
+    this._badReduxHandlers = {};
   }
 
   get state(): IStateFormItem<T> { return this.itemState; }
@@ -94,62 +113,68 @@ export default class StateFormItem<P = StateForm, T = unknown>
       || this.itemState.name
       || '';
   }
-  /** Callback to run on 'onClick' event. */
-  get onFocus(): Function {
-    return this.itemOnFocus
+  get hasNoOnClickHandler() { return !!this.itemState.onClick; }
+  get hasNoOnChangeHandler() { return !!this.itemState.onChange; }
+  get focusReduxHandler(): TReduxHandler {
+    return this.reduxFocus
       || (
-        this.itemOnFocus = this.has.getDirectiveHandle('onfocus')
-          || this.has.getHandle('onfocus')
-          || this.itemState.onFocus
-          || dummy_callback
+        this.reduxFocus = this.has.getDirectiveHandle('onfocus')
+          || this.has.getHandler('onfocus')
+          || this._getDummyReduxHandler('onfocus')
       );
+  }
+  get clickReduxHandler(): TReduxHandler {
+    return this.reduxClick
+      || (
+        this.reduxClick = this.has.getDirectiveHandle('onclick')
+          || this.has.getHandler('onclick')
+          || this.has.callback
+          || this._getDummyReduxHandler('onclick')
+      );
+  }
+  get changeReduxHandler(): TReduxHandler {
+    return this.reduxChange
+      || (
+        this.reduxChange = this.has.getDirectiveHandle('onchange')
+          || this.has.getHandler('onchange')
+          || this._getDummyReduxHandler('onchange')
+      );
+  }
+  get keydownReduxHandler(): TReduxHandler {
+    return this.reduxKeydown
+      || (
+        this.reduxKeydown = this.has.getDirectiveHandle('onkeydown')
+          || this.has.getHandler('onkeydown')
+          || this._getDummyReduxHandler('onkeydown')
+      );
+  }
+  get blurReduxHandler(): TReduxHandler {
+    return this.reduxBlur
+      || (
+        this.reduxBlur = this.has.getDirectiveHandle('onblur')
+          || this.has.getHandler('onblur')
+          || this._getDummyReduxHandler('onblur')
+      );
+  }
+  /** Callback to run on 'onClick' event. */
+  get onFocus(): unknown {
+    return this.onfocusHandler ?? this.dummy_factory_handler;
   }
   /** Get the form field `onClick` callback. */
-  get onClick(): Function {
-    return this.itemOnClick
-      || (
-        this.itemOnClick = this.has.getDirectiveHandle('onclick')
-          || this.has.getHandle('onclick')
-          || this.itemState.onClick
-          || this.has.callback
-          || dummy_callback
-      );
-  }
-  get hasNoOnClickCallback() {
-    return !(this.itemState.onClick || this.itemHasState.onclickHandle);
-  }
-  get hasNoOnChangeCallback() {
-    return !!this.itemState.onChange;
+  get onClick(): unknown {
+    return this.onclickHandler ?? this.dummy_factory_handler;
   }
   /** Callback to run on 'onChange' event. */
-  get onChange(): Function {
-    return this.itemOnChange
-      || (
-        this.itemOnChange = this.has.getDirectiveHandle('onchange')
-          || this.has.getHandle('onchange')
-          || this.itemState.onChange
-          || dummy_callback
-      );
+  get onChange(): unknown {
+    return this.onchangeHandler ?? this.dummy_factory_handler;
   }
   /** Callback to run on 'onKeyDown' event. */
-  get onKeyDown(): Function {
-    return this.itemOnKeydown
-      || (
-        this.itemOnKeydown = this.has.getDirectiveHandle('onkeydown')
-          || this.has.getHandle('onkeydown')
-          || this.itemState.onKeyDown
-          || dummy_callback
-      );
+  get onKeyDown(): unknown {
+    return this.onkeydownHandler ?? this.dummy_factory_handler;
   }
   /** Callback to run on 'onBlur' event. */
-  get onBlur(): Function {
-    return this.itemOnBlur
-      || (
-        this.itemOnBlur = this.has.getDirectiveHandle('onblur')
-          || this.has.getHandle('onblur')
-          || this.itemState.onBlur
-          || dummy_callback
-      );
+  get onBlur(): unknown {
+    return this.onblurHandler ?? this.dummy_factory_handler;
   }
   get disabled(): boolean { return this.itemDisabled; }
   get label(): string | undefined { return this.itemState.label ?? ''; }
@@ -236,22 +261,16 @@ export default class StateFormItem<P = StateForm, T = unknown>
       // || this.disableOnClick
       // || this.disableOnChange
   }
+  /** Set form field `onFocus` attribute of the form item. */
+  set onFocus(handler: unknown) { this.onfocusHandler = handler; }
   /** Set form field `onClick` attribute */
-  set onClick(cb: Function) {
-    this.itemOnClick = cb;
-  }
-  /** Set the 'onChange' attribute of the form field. */
-  set onChange(cb: Function) {
-    this.itemOnChange = cb;
-  }
-  /** Set the 'onKeyDown' attribute of the form field. */
-  set onKeyDown(cb: Function) {
-    this.itemOnKeydown = cb;
-  }
-  /** Set the 'onBlur' attribute of the form field. */
-  set onBlur(cb: Function) {
-    this.itemOnBlur = cb;
-  }
+  set onClick(handler: unknown) { this.onclickHandler = handler; }
+  /** Set the 'onChange' attribute of the form item. */
+  set onChange(handler: unknown) { this.onchangeHandler = handler; }
+  /** Set the 'onKeyDown' attribute of the form item. */
+  set onKeyDown(handler: unknown) { this.onkeydownHandler = handler; }
+  /** Set the 'onBlur' attribute of the form item. */
+  set onBlur(handler: unknown) { this.onblurHandler = handler; }
   set disabled(b: boolean) { this.itemDisabled = b; }
 
   /**
@@ -290,6 +309,24 @@ export default class StateFormItem<P = StateForm, T = unknown>
     err('`formItem.name` is NOT defined.');
 
     return type;
+  }
+
+  /**
+   * Helps keep track of which redux handler isn't provided.
+   *
+   * @param event Event name
+   * @returns 
+   */
+  private _getDummyReduxHandler(event: THandleName): TReduxHandler {
+    this._badReduxHandlers[event] = true;
+    return dummy_redux_handler;
+  }
+  private _noReduxHandlerFor(event: THandleName): boolean {
+    return !!this._badReduxHandlers[event];
+  }
+  /** Checks if a valid Redux handler is set for the event. */
+  hasReduxHandler(event: THandleName): boolean {
+    return !this._noReduxHandlerFor(event);
   }
 
 }

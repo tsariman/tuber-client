@@ -2,9 +2,11 @@ import FormControl from '@mui/material/FormControl';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { forwardRef, useState } from 'react';
-import { IMaskInput } from 'react-imask';
-import { THive } from '.';
+// TODO install library if you want phone input component
+// import { IMaskInput } from 'react-imask';
+import type { THive } from '.';
 import type StateFormItemInput from '../../../controllers/templates/StateFormItemInput';
+import { IMaskInput } from '../../../components/IMaskInput';
 
 interface CustomProps {
   onChange: (event: { target: { name: string; value: string } }) => void;
@@ -50,7 +52,7 @@ export default function DialogPhoneInput(props: IDialogPhoneInput) {
   return (
     <FormControl {...input.formControlProps}>
       <InputLabel {...input.inputLabelProps}>{ input.label }</InputLabel>
-      { /* @ts-ignore */ }
+      { /* @ts-expect-error Not my job to fix lib errors.  */ }
       <Input {...input.props} name={input.name} value={value} onChange={handleChange} inputComponent={TextMaskCustom} />
     </FormControl>
   );

@@ -1,11 +1,5 @@
-import { Dispatch } from 'redux';
+import type { Dispatch } from 'redux';
 import { is_object } from '../business.logic/utility';
-import {
-  IJsonapiAbstractResponse,
-  IJsonapiDataAttributes,
-  IJsonapiResource,
-  IJsonapiResponse
-} from '../interfaces/IJsonapi';
 import {
   appRequestFailed,
   appRequestSuccess
@@ -15,7 +9,13 @@ import { dataStackCol, dataStack } from '../slices/data.slice';
 import { metaAdd } from '../slices/meta.slice';
 import { net_patch_state } from './actions';
 import { pre, log, ler } from '../business.logic/logging';
-import { clean_endpoint_ending } from 'src/business.logic/parsing';
+import { clean_endpoint_ending } from '../business.logic/parsing';
+import type {
+  IJsonapiAbstractResponse,
+  IJsonapiDataAttributes,
+  IJsonapiResource,
+  IJsonapiResponse
+} from '@tuber/shared';
 
 export default function net_default_201_driver (
   dispatch: Dispatch,
@@ -23,8 +23,9 @@ export default function net_default_201_driver (
   endpoint: string,
   response: IJsonapiAbstractResponse
 ): void {
+  void getState;
   const doc = response as IJsonapiResponse;
-  if (!!(doc.meta || doc.data || doc.links || doc.state)) {
+  if (doc.meta || doc.data || doc.links || doc.state) {
     dispatch(appRequestSuccess());
   } else {
     dispatch(appRequestFailed());

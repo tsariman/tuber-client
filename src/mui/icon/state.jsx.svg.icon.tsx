@@ -1,11 +1,11 @@
 import { SvgIcon } from '@mui/material';
 import type StateIcon from '../../controllers/StateIcon';
 import {
-  IStateIconPolygon,
-  IStateIconPath,
-  IStateIconRect,
-  IStateIconGroup
-} from 'src/interfaces/IStateIcon';
+  type IStateIconPolygon,
+  type IStateIconPath,
+  type IStateIconRect,
+  type IStateIconGroup
+} from '@tuber/shared';
 
 interface IJsonIconProps {
   def?: {

@@ -1,10 +1,9 @@
-import { IGenericObject } from '../common.types';
-import {
+import type {
   IJsonapiDataAttributes,
   IJsonapiDataRelationships,
   IJsonapiRequestClient,
   IJsonapiResourceLinks
-} from '../interfaces/IJsonapi';
+} from '@tuber/shared';
 
 /** Formats the request using the JSON:API specification. */
 export default class JsonapiRequest<T=IJsonapiDataAttributes> {
@@ -40,7 +39,7 @@ export default class JsonapiRequest<T=IJsonapiDataAttributes> {
     return this;
   }
 
-  setMeta(meta: IGenericObject) {
+  setMeta(meta: Record<string, unknown>) {
     this._request.data.meta = meta;
     return this;
   }

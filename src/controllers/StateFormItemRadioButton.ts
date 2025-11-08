@@ -1,9 +1,8 @@
 import AbstractState from './AbstractState';
-import { IStateFormItemRadioButton } from '../interfaces/IFormChoices';
-import IStateFormItemCustom from '../interfaces/IStateFormItemCustom';
+import type { IFormChoices, IStateFormItemCustom } from '../localized/interfaces';
 import type StateFormItemRadioCustom from './templates/StateFormItemRadioCustom';
-import { CSSProperties } from 'react';
-import { FormControlLabelProps, Radio } from '@mui/material';
+import type { CSSProperties } from 'react';
+import { type FormControlLabelProps, Radio } from '@mui/material';
 import React from 'react';
 
 /**
@@ -12,18 +11,22 @@ import React from 'react';
  */
 export default class StateFormItemRadioButton
   extends AbstractState
-  implements IStateFormItemRadioButton
+  implements IFormChoices
 {
+  private _radioButtonState: IFormChoices;
+  private _parent: StateFormItemRadioCustom;
   private _radioButtonHasState: IStateFormItemCustom;
 
-  constructor(private _radioButtonState: IStateFormItemRadioButton,
-    private _parent: StateFormItemRadioCustom
+  constructor(radioButtonState: IFormChoices,
+    parent: StateFormItemRadioCustom
   ) {
     super();
+    this._radioButtonState = radioButtonState;
+    this._parent = parent;
     this._radioButtonHasState = this._radioButtonState.has || {};
   }
 
-  get state(): IStateFormItemRadioButton { return this._radioButtonState; }
+  get state(): IFormChoices { return this._radioButtonState; }
   get parent(): StateFormItemRadioCustom { return this._parent; }
   get props(): Record<string, unknown> { return this._radioButtonState.props ?? {}; }
   get theme(): CSSProperties { return this.die('Not implemented yet.', {}); }
@@ -33,7 +36,7 @@ export default class StateFormItemRadioButton
       ?? this._radioButtonState.name
       ?? '';
   }
-  get color(): Required<IStateFormItemRadioButton>['color'] {
+  get color(): Required<IFormChoices>['color'] {
     return this._radioButtonState.color || 'default';
   }
   get disabled(): boolean {

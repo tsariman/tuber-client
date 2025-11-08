@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import IStateBackground from '../interfaces/IStateBackground';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { IStateBackground } from '@tuber/shared';
 import initialState from '../state/initial.state';
 
 export const backgroundSlice = createSlice({

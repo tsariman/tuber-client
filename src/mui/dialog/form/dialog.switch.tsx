@@ -3,10 +3,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Switch from '@mui/material/Switch';
 import { useState } from 'react';
-import { THive } from '.';
+import type { THive } from '.';
 import { type StateFormItemSwitch } from '../../../controllers';
 import {
-  ICheckboxesData,
+  type ICheckboxesData,
   update_checkboxes,
   update_switches_statuses
 } from '../../form/items/_items.common.logic';

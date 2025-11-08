@@ -1,22 +1,26 @@
-import { default_callback, TReduxHandle } from 'src/state';
+import { default_callback, type TReduxHandler } from '../state';
 import AbstractState from './AbstractState';
-import IStateFormItemCustom, { TStateFormITemCustomColor } from '../interfaces/IStateFormItemCustom';
-import IStateLink from '../interfaces/IStateLink';
+import type { CSSProperties } from 'react';
+import type {
+  TStateFormITemCustomColor,
+  TObj
+} from '@tuber/shared';
 import StateFormItemCustom from './StateFormItemCustom';
-import { TObj } from 'src/common.types';
-import { CSSProperties } from 'react';
+import type { IStateFormItemCustom, IStateLink } from '../localized/interfaces';
 
 export default class StateLink<P = unknown>
   extends AbstractState
   implements IStateLink
 {
+  private _linkState: IStateLink;
   private _parent: P;
   private _linkHasState: IStateFormItemCustom;
   private _linkHas?: StateFormItemCustom<this>;
-  private _handleOnClick?: TReduxHandle;
+  private _handleOnClick?: TReduxHandler;
 
-  constructor (private _linkState: IStateLink, parent?: P) {
+  constructor (linkState: IStateLink, parent?: P) {
     super();
+    this._linkState = linkState;
     this._parent = parent || ({
       menuItemsProps: {},
       menuItemsSx: {},
@@ -36,26 +40,26 @@ export default class StateLink<P = unknown>
         this._linkHasState, this
       ));
   }
-  private setHandleOnClick = (): TReduxHandle => {
+  private setHandleOnClick = (): TReduxHandler => {
     if (this._linkState.onClick) {
       return this._handleOnClick = this._linkState.onClick;
     }
     if (this._linkHas) {
       const handleCallback = this._linkHas.getDirectiveHandle()
-        || this._linkHas.getHandle();
+        || this._linkHas.getHandler();
       if (handleCallback) {
         return this._handleOnClick = handleCallback;
       }
     }
     return this._handleOnClick = default_callback;
   }
-  get onClick(): TReduxHandle {
+  get onClick(): TReduxHandler {
     return this._handleOnClick || this.setHandleOnClick();
   }
   get href(): string { return this._linkState.href ?? ''; }
   get color(): TStateFormITemCustomColor { return this._linkHasState.color || 'default'; }
   /** Set form field `onClick` attribute */
-  set onClick(cb: TReduxHandle) {
+  set onClick(cb: TReduxHandler) {
     this._handleOnClick = cb;
   }
 }

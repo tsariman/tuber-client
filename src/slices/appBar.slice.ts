@@ -1,7 +1,15 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import initialState from '../state/initial.state';
-import { IStateBackground } from 'src/interfaces';
-import { AppBarProps as AppbarProps } from '@mui/material';
+import type { IStateBackground, IStateComponent } from '@tuber/shared';
+import type {
+  AppBarProps as AppbarProps,
+  ToolbarProps,
+  IconButtonProps,
+  TypographyProps,
+  BoxProps,
+  SxProps
+} from '@mui/material';
+import type { HTMLAttributes } from 'react';
 
 export const appbarSlice = createSlice({
   name: 'appbar',
@@ -11,49 +19,57 @@ export const appbarSlice = createSlice({
       state.background = action.payload;
     },
     appbarPropsUpdate: (state, action: PayloadAction<AppbarProps>) => {
-      // @ts-ignore - Material-UI AppBarProps type incompatibility with Redux state
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.props = action.payload;
     },
-    appbarToolbarPropsUpdate: (state, action) => {
+    appbarToolbarPropsUpdate: (state, action: PayloadAction<ToolbarProps>) => {
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.toolbarProps = action.payload;
     },
-    appbarMenuIconPropsUpdate: (state, action) => {
+    appbarMenuIconPropsUpdate: (state, action: PayloadAction<IconButtonProps>) => {
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.menuIconProps = action.payload;
     },
-    appbarLogoPropsUpdate: (state, action) => {
+    appbarLogoPropsUpdate: (state, action: PayloadAction<Record<string, unknown>>) => {
       state.logoProps = action.payload;
     },
-    appbarTextLogoPropsUpdate: (state, action) => {
+    appbarTextLogoPropsUpdate: (state, action: PayloadAction<TypographyProps>) => {
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.textLogoProps = action.payload;
     },
-    appbarSearchFieldPropsUpdate: (state, action) => {
+    appbarSearchFieldPropsUpdate: (state, action: PayloadAction<HTMLAttributes<HTMLDivElement> & { sx?: SxProps }>) => {
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.searchContainerProps = action.payload;
     },
-    appbarDesktopMenuItemsPropsUpdate: (state, action) => {
+    appbarDesktopMenuItemsPropsUpdate: (state, action: PayloadAction<BoxProps>) => {
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.desktopMenuItemsProps = action.payload;
     },
-    appbarMobileMenuItemsPropsUpdate: (state, action) => {
+    appbarMobileMenuItemsPropsUpdate: (state, action: PayloadAction<BoxProps>) => {
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.mobileMenuItemsProps = action.payload;
     },
-    appbarMobilMenuIconPropsUpdate: (state, action) => {
+    appbarMobilMenuIconPropsUpdate: (state, action: PayloadAction<IconButtonProps>) => {
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.mobileMenuIconProps = action.payload;
     },
-    appbarLogoThemeUpdate: (state, action) => {
+    appbarLogoThemeUpdate: (state, action: PayloadAction<HTMLAttributes<HTMLDivElement>>) => {
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state.logoTheme = action.payload;
     },
-    appbarBackgroundInheritedUpdate: (state, action) => {
+    appbarBackgroundInheritedUpdate: (state, action: PayloadAction<string>) => {
       state.backgroundInherited = action.payload;
     },
-    appbarUseDefaultBackgroundUpdate: (state, action) => {
+    appbarUseDefaultBackgroundUpdate: (state, action: PayloadAction<boolean>) => {
       state.useDefaultBackground = action.payload;
     },
-    appbarUseDefaultTypographyUpdate: (state, action) => {
+    appbarUseDefaultTypographyUpdate: (state, action: PayloadAction<boolean>) => {
       state.useDefaultTypography = action.payload;
     },
-    appbarTypographyInheritedUpdate: (state, action) => {
+    appbarTypographyInheritedUpdate: (state, action: PayloadAction<string>) => {
       state.typographyInherited = action.payload;
     },
-    appbarComponentsUpdate: (state, action) => {
+    appbarComponentsUpdate: (state, action: PayloadAction<{ [comp: string]: IStateComponent[] }>) => {
       state.components = action.payload;
     },
   }

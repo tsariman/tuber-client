@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import initialState from '../state/initial.state';
-import { TObj } from '../common.types';
+import type { TObj } from '@tuber/shared';
 
 export interface IFormsDataArgs {
   formName: string;

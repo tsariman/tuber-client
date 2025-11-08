@@ -1,13 +1,13 @@
-import { type AppDispatch } from 'src/state';
-import { get_req_state } from 'src/state/net.actions';
+import { type AppDispatch } from '../state';
+import { get_req_state } from '../state/net.actions';
 import AbstractState from './AbstractState';
-import {
+import type {
   IJsonapiDataAttributes,
-  IJsonapiResource
-} from '../interfaces/IJsonapi';
-import { IStateData } from '../interfaces/IState';
+  IJsonapiResource,
+  IStateData,
+  TObj
+} from '@tuber/shared';
 import State from './State';
-import { TObj } from 'src/common.types';
 import { get_state } from '../state';
 
 interface IConfigure {
@@ -21,15 +21,17 @@ interface IConfigure {
  * It is also used to fetch data from the server.
  */
 export default class StateData extends AbstractState {
+  private _dataState: IStateData;
+  private _parent?: State;
   private _reduxDispatch?: AppDispatch;
   private _endpoint?: string;
   private _flattenedCollection?: IJsonapiDataAttributes[];
   private _includedProps: { id: boolean, types: boolean };
 
-  constructor(private _dataState: IStateData,
-    private _parent?: State
-  ) {
+  constructor(dataState: IStateData, parent?: State) {
     super();
+    this._dataState = dataState;
+    this._parent = parent;
     this._includedProps = { id: false, types: false };
   }
 

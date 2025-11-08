@@ -1,8 +1,8 @@
-import { DialogContentProps } from '@mui/material';
+import type { DialogContentProps } from '@mui/material';
 import { get_parsed_content } from '../../business.logic/parsing';
-import { IStatePageContent } from '../../interfaces/IStatePage';
 import StateDialog from '../StateDialog';
 import type StateForm from '../StateForm';
+import type { IStatePageContent } from '@tuber/shared';
 
 /**
  * This is the class for a dialog that displays a form. It is similar to the

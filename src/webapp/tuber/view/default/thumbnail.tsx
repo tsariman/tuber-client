@@ -1,10 +1,9 @@
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import { FC } from 'react';
 import StateLink from 'src/controllers/StateLink';
 import StateJsxLink from 'src/mui/link';
 import { dev_fix_missing_thumbnails } from '../../callbacks/dev.get.video.thumbnail';
-import { IBookmark } from '../../tuber.interfaces';
+import type { IBookmark } from '../../tuber.interfaces';
 
 interface IThumbnailProps {
   i: number;
@@ -25,7 +24,7 @@ const ThumbnailGrid = styled(Grid)(({ theme: { spacing, palette } }) => ({
   backgroundSize: 'cover',
 }));
 
-const BookmarkThumbnail: FC<IThumbnailProps> = ({ i, bookmark }) => {
+const BookmarkThumbnail = ({ i, bookmark }: IThumbnailProps) => {
   return (
     <ThumbnailGrid
       sx={{

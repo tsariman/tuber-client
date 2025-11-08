@@ -3,8 +3,8 @@ import {
   StateAppbarQueries,
   StateData
 } from 'src/controllers';
-import { type IRedux } from 'src/state';
-import { IBookmark } from '../tuber.interfaces';
+import type { IRedux } from 'src/state';
+import type { IBookmark } from '../tuber.interfaces';
 
 export default function appbar_filter_bookmarks(redux: IRedux) {
   return async () => {

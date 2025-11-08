@@ -1,635 +1,413 @@
-import * as bl from '../../business.logic/utility';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import {
+  is_object,
+  is_record,
+  is_struct,
+  is_string,
+  is_number,
+  get_val,
+  safely_get_as,
+  get_global_var,
+  mongo_object_id,
+  get_themed_state,
+  resolve_unexpected_nesting,
+  get_viewport_size,
+  stretch_to_bottom
+} from '../../business.logic/utility';
 
-describe('src/business.logic/utility', () => {
-
-  describe('get_appbar_input_val', () => {
-      it('should return empty string when route is not in queries', () => {
-        const queries = {
-          '/': { 'value': '', 'mode': 'search' }
-        } as Record<string, { value?: string; mode?: 'search' | 'filter'}>;
-        const route = '/bar'
-        const result = bl.get_appbar_input_val(queries, route)
-        expect(result).toBe('')
-      });
-  
-      it('should return empty string when route is in queries but has no value', () => {
-        const queries = {
-          '/': { 'value': '', 'mode': 'search' }
-        } as Record<string, { value?: string; mode?: 'search' | 'filter'}>;
-        const route = '/bar'
-        const result = bl.get_appbar_input_val(queries, route)
-        expect(result).toBe('')
-      });
-  
-      it('should return value when route is in queries and has value', () => {
-        const queries = {
-          '/': { 'value': '', 'mode': 'search' }
-        } as Record<string, { value?: string; mode?: 'search' | 'filter'}>;
-        const route = '/bar'
-        const result = bl.get_appbar_input_val(queries, route)
-        expect(result).toBe('baz')
+describe('utility.ts', () => {
+  describe('Type Guards', () => {
+    describe('is_object', () => {
+      it('should return true for plain objects', () => {
+        expect(is_object({})).toBe(true);
+        expect(is_object({ a: 1 })).toBe(true);
+        expect(is_object(new Date())).toBe(true);
       });
 
-      it('Beginning forward slash can be omitted', () => {
-        const queries = {
-          '/': { 'value': '', 'mode': 'search' }
-        } as Record<string, { value?: string; mode?: 'search' | 'filter'}>;
-        const route = 'bar'
-        const result = bl.get_appbar_input_val(queries, route)
-        expect(result).toBe('baz')
+      it('should return false for non-objects', () => {
+        expect(is_object(null)).toBe(false);
+        expect(is_object(undefined)).toBe(false);
+        expect(is_object([])).toBe(false);
+        expect(is_object([1, 2, 3])).toBe(false);
+        expect(is_object('string')).toBe(false);
+        expect(is_object(123)).toBe(false);
+        expect(is_object(true)).toBe(false);
       });
+    });
+
+    describe('is_record', () => {
+      it('should return true for objects that can be used as records', () => {
+        expect(is_record({})).toBe(true);
+        expect(is_record({ a: 1 })).toBe(true);
+        expect(is_record(new Date())).toBe(true);
+      });
+
+      it('should return false for non-record types', () => {
+        expect(is_record(null)).toBe(false);
+        expect(is_record(undefined)).toBe(false);
+        expect(is_record([])).toBe(false);
+        expect(is_record('string')).toBe(false);
+        expect(is_record(123)).toBe(false);
+        expect(is_record(true)).toBe(false);
+      });
+    });
+
+    describe('is_struct', () => {
+      it('should return true for objects and arrays', () => {
+        expect(is_struct({})).toBe(true);
+        expect(is_struct({ a: 1 })).toBe(true);
+        expect(is_struct([])).toBe(true);
+        expect(is_struct([1, 2, 3])).toBe(true);
+        expect(is_struct(new Date())).toBe(true);
+      });
+
+      it('should return false for primitives and null', () => {
+        expect(is_struct(null)).toBe(false);
+        expect(is_struct(undefined)).toBe(false);
+        expect(is_struct('string')).toBe(false);
+        expect(is_struct(123)).toBe(false);
+        expect(is_struct(true)).toBe(false);
+      });
+    });
+
+    describe('is_string', () => {
+      it('should return true for strings', () => {
+        expect(is_string('')).toBe(true);
+        expect(is_string('hello')).toBe(true);
+        expect(is_string('123')).toBe(true);
+      });
+
+      it('should return false for non-strings', () => {
+        expect(is_string(123)).toBe(false);
+        expect(is_string(true)).toBe(false);
+        expect(is_string({})).toBe(false);
+        expect(is_string([])).toBe(false);
+        expect(is_string(null)).toBe(false);
+        expect(is_string(undefined)).toBe(false);
+      });
+    });
+
+    describe('is_number', () => {
+      it('should return true for numbers', () => {
+        expect(is_number(0)).toBe(true);
+        expect(is_number(123)).toBe(true);
+        expect(is_number(-456)).toBe(true);
+        expect(is_number(3.14)).toBe(true);
+        expect(is_number(NaN)).toBe(true);
+        expect(is_number(Infinity)).toBe(true);
+      });
+
+      it('should return false for non-numbers', () => {
+        expect(is_number('123')).toBe(false);
+        expect(is_number(true)).toBe(false);
+        expect(is_number({})).toBe(false);
+        expect(is_number([])).toBe(false);
+        expect(is_number(null)).toBe(false);
+        expect(is_number(undefined)).toBe(false);
+      });
+    });
   });
-
-  describe('get_global_var', () => {
-    it('should return an empty object when the variable does not exist', () => {
-      const result = bl.get_global_var('foo')
-      expect(result).toEqual({})
-    })
-  })
 
   describe('get_val', () => {
     const testObj = {
-      name: 'John',
-      account: {
-        user: {
-          lastname: 'Doe',
-          age: 30
+      user: {
+        name: 'John',
+        address: {
+          street: '123 Main St',
+          city: 'Springfield'
         },
-        settings: {
-          theme: 'dark'
-        }
+        hobbies: ['reading', 'swimming']
       },
-      items: ['apple', 'banana', { fruit: 'orange', count: 5 }],
-      mixed: {
-        data: [
-          { id: 1, value: 'first' },
-          { id: 2, value: 'second' }
-        ]
-      }
+      count: 42,
+      isActive: true,
+      items: [
+        { id: 1, name: 'item1' },
+        { id: 2, name: 'item2' }
+      ]
     };
 
-    it('should returned nested object from object literal', () => {
-      expect(bl.get_val({ state: { a: 1 }}, 'state')).toEqual({ a: 1});
+    it('should get simple property values', () => {
+      expect(get_val(testObj, 'count')).toBe(42);
+      expect(get_val(testObj, 'isActive')).toBe(true);
     });
 
-    it('should return value for simple property path', () => {
-      expect(bl.get_val(testObj, 'name')).toBe('John');
+    it('should get nested property values', () => {
+      expect(get_val(testObj, 'user.name')).toBe('John');
+      expect(get_val(testObj, 'user.address.street')).toBe('123 Main St');
+      expect(get_val(testObj, 'user.address.city')).toBe('Springfield');
     });
 
-    it('should return value for nested object path', () => {
-      expect(bl.get_val(testObj, 'account.user.lastname')).toBe('Doe');
-      expect(bl.get_val(testObj, 'account.user.age')).toBe(30);
-      expect(bl.get_val(testObj, 'account.settings.theme')).toBe('dark');
-    });
-
-    it('should return value for array index path', () => {
-      expect(bl.get_val(testObj, 'items.0')).toBe('apple');
-      expect(bl.get_val(testObj, 'items.1')).toBe('banana');
-    });
-
-    it('should return value for mixed object/array path', () => {
-      expect(bl.get_val(testObj, 'items.2.fruit')).toBe('orange');
-      expect(bl.get_val(testObj, 'items.2.count')).toBe(5);
-      expect(bl.get_val(testObj, 'mixed.data.0.id')).toBe(1);
-      expect(bl.get_val(testObj, 'mixed.data.1.value')).toBe('second');
-    });
-
-    it('should handle whitespace in path', () => {
-      expect(bl.get_val(testObj, ' name ')).toBe('John');
-      expect(bl.get_val(testObj, ' account . user . lastname ')).toBe('Doe');
-      expect(bl.get_val(testObj, 'items . 0 ')).toBe('apple');
+    it('should get array values by index', () => {
+      expect(get_val(testObj, 'user.hobbies.0')).toBe('reading');
+      expect(get_val(testObj, 'user.hobbies.1')).toBe('swimming');
+      expect(get_val(testObj, 'items.0.name')).toBe('item1');
+      expect(get_val(testObj, 'items.1.id')).toBe(2);
     });
 
     it('should return undefined for non-existent paths', () => {
-      expect(bl.get_val(testObj, 'nonexistent')).toBeUndefined();
-      expect(bl.get_val(testObj, 'account.nonexistent')).toBeUndefined();
-      expect(bl.get_val(testObj, 'account.user.nonexistent')).toBeUndefined();
-      expect(bl.get_val(testObj, 'items.10')).toBeUndefined();
+      expect(get_val(testObj, 'nonexistent')).toBeUndefined();
+      expect(get_val(testObj, 'user.nonexistent')).toBeUndefined();
+      expect(get_val(testObj, 'user.address.nonexistent')).toBeUndefined();
+      expect(get_val(testObj, 'user.hobbies.5')).toBeUndefined();
     });
 
-    it('should return undefined for invalid object inputs', () => {
-      expect(bl.get_val(null, 'name')).toBeUndefined();
-      expect(bl.get_val(undefined, 'name')).toBeUndefined();
-      expect(bl.get_val('string', 'name')).toBeUndefined();
-      expect(bl.get_val(123, 'name')).toBeUndefined();
-      expect(bl.get_val(true, 'name')).toBeUndefined();
+    it('should handle invalid inputs', () => {
+      expect(get_val(null, 'path')).toBeUndefined();
+      expect(get_val(undefined, 'path')).toBeUndefined();
+      expect(get_val('string', 'path')).toBeUndefined();
+      expect(get_val(123, 'path')).toBeUndefined();
     });
 
-    it('should handle empty path', () => {
-      expect(bl.get_val(testObj, '')).toBeUndefined();
-    });
-
-    it('should handle paths that encounter null/undefined values', () => {
-      const objWithNulls = {
-        data: null,
-        nested: {
-          value: undefined
-        }
-      };
-      expect(bl.get_val(objWithNulls, 'data.something')).toBeUndefined();
-      expect(bl.get_val(objWithNulls, 'nested.value.something')).toBeUndefined();
-    });
-
-    it('should handle array as root object', () => {
-      const arr = ['first', 'second', { nested: 'value' }];
-      expect(bl.get_val(arr, '0')).toBe('first');
-      expect(bl.get_val(arr, '1')).toBe('second');
-      expect(bl.get_val(arr, '2.nested')).toBe('value');
-    });
-
-    it('should return typed values when using generic', () => {
-      const result1 = bl.get_val<string>(testObj, 'name');
-      expect(result1).toBe('John');
-      
-      const result2 = bl.get_val<number>(testObj, 'account.user.age');
-      expect(result2).toBe(30);
-      
-      const result3 = bl.get_val<object>(testObj, 'account.user');
-      expect(result3).toEqual({ lastname: 'Doe', age: 30 });
-    });
-
-    it('should handle deep nesting', () => {
-      const deepObj = {
-        level1: {
-          level2: {
-            level3: {
-              level4: {
-                level5: 'deep value'
-              }
-            }
-          }
-        }
-      };
-      expect(bl.get_val(deepObj, 'level1.level2.level3.level4.level5')).toBe('deep value');
+    it('should handle invalid paths', () => {
+      expect(get_val(testObj, '')).toBeUndefined();
+      expect(get_val(testObj, '   ')).toBeUndefined();
+      expect(get_val(testObj, 'user..name')).toBeUndefined();
+      expect(get_val(testObj, '.user.name')).toBeUndefined();
+      expect(get_val(testObj, 'user.name.')).toBeUndefined();
     });
 
     it('should handle invalid array indices', () => {
-      expect(bl.get_val(testObj, 'items.abc')).toBeUndefined();
-      expect(bl.get_val(testObj, 'items.-1')).toBeUndefined();
+      expect(get_val(testObj, 'user.hobbies.-1')).toBeUndefined();
+      expect(get_val(testObj, 'user.hobbies.abc')).toBeUndefined();
+      expect(get_val(testObj, 'user.hobbies.1.5')).toBeUndefined();
     });
 
-    it('should handle paths that try to traverse non-objects', () => {
-      expect(bl.get_val(testObj, 'name.something')).toBeUndefined();
-      expect(bl.get_val(testObj, 'account.user.age.something')).toBeUndefined();
-    });
-
-    it('should handle floating point array indices', () => {
-      expect(bl.get_val(testObj, 'items.1.5')).toBeUndefined();
-      expect(bl.get_val(testObj, 'items.0.1')).toBeUndefined();
-    });
-
-    it('should handle boolean values in paths', () => {
-      const objWithBooleans = {
-        active: true,
-        disabled: false,
-        user: { isActive: true }
-      };
-      expect(bl.get_val(objWithBooleans, 'active')).toBe(true);
-      expect(bl.get_val(objWithBooleans, 'disabled')).toBe(false);
-      expect(bl.get_val(objWithBooleans, 'user.isActive')).toBe(true);
-    });
-
-    it('should handle zero and falsy values', () => {
-      const objWithFalsyValues = {
+    it('should return falsy values correctly', () => {
+      const objWithFalsy = {
         zero: 0,
-        emptyString: '',
-        nullValue: null,
-        undefinedValue: undefined,
+        empty: '',
+        false: false,
         nested: {
-          zero: 0,
-          empty: ''
+          null: null
         }
       };
-      expect(bl.get_val(objWithFalsyValues, 'zero')).toBe(0);
-      expect(bl.get_val(objWithFalsyValues, 'emptyString')).toBe('');
-      expect(bl.get_val(objWithFalsyValues, 'nullValue')).toBe(null);
-      expect(bl.get_val(objWithFalsyValues, 'undefinedValue')).toBe(undefined);
-      expect(bl.get_val(objWithFalsyValues, 'nested.zero')).toBe(0);
-      expect(bl.get_val(objWithFalsyValues, 'nested.empty')).toBe('');
-    });
-
-    it('should handle nested arrays', () => {
-      const objWithNestedArrays = {
-        matrix: [
-          [1, 2, 3],
-          [4, 5, 6],
-          [7, 8, 9]
-        ],
-        complex: [
-          { data: [{ value: 'a' }, { value: 'b' }] },
-          { data: [{ value: 'c' }, { value: 'd' }] }
-        ]
-      };
-      expect(bl.get_val(objWithNestedArrays, 'matrix.0.1')).toBe(2);
-      expect(bl.get_val(objWithNestedArrays, 'matrix.2.2')).toBe(9);
-      expect(bl.get_val(objWithNestedArrays, 'complex.0.data.1.value')).toBe('b');
-      expect(bl.get_val(objWithNestedArrays, 'complex.1.data.0.value')).toBe('c');
-    });
-
-    it('should handle single character paths', () => {
-      const singleCharObj = {
-        a: 'letter a',
-        b: { c: 'nested c' },
-        1: 'number one'
-      };
-      expect(bl.get_val(singleCharObj, 'a')).toBe('letter a');
-      expect(bl.get_val(singleCharObj, 'b')).toEqual({ c: 'nested c' });
-      expect(bl.get_val(singleCharObj, '1')).toBe('number one');
-    });
-
-    it('should handle paths with consecutive dots', () => {
-      expect(bl.get_val(testObj, 'account..user')).toBeUndefined();
-      expect(bl.get_val(testObj, 'account...user')).toBeUndefined();
-      expect(bl.get_val(testObj, '..name')).toBeUndefined();
-    });
-
-    it('should handle numeric string properties vs array indices', () => {
-      const mixedObj = {
-        '0': 'string key zero',
-        '1': 'string key one',
-        items: ['array zero', 'array one']
-      };
-      expect(bl.get_val(mixedObj, '0')).toBe('string key zero');
-      expect(bl.get_val(mixedObj, '1')).toBe('string key one');
-      expect(bl.get_val(mixedObj, 'items.0')).toBe('array zero');
-      expect(bl.get_val(mixedObj, 'items.1')).toBe('array one');
-    });
-
-    it('should handle very long paths', () => {
-      const deepObj = {
-        a: { b: { c: { d: { e: { f: { g: { h: { i: { j: 'deep value' } } } } } } } } }
-      };
-      expect(bl.get_val(deepObj, 'a.b.c.d.e.f.g.h.i.j')).toBe('deep value');
-    });
-
-    it('should handle objects with prototype properties', () => {
-      const proto = { inherited: 'inherited value' };
-      const obj = Object.create(proto);
-      obj.own = 'own value';
       
-      expect(bl.get_val(obj, 'own')).toBe('own value');
-      expect(bl.get_val(obj, 'inherited')).toBe('inherited value');
-    });
-
-    it('should handle sparse arrays', () => {
-      const sparseArray = [] as string[];
-      sparseArray[0] = 'first';
-      sparseArray[5] = 'sixth';
-      
-      expect(bl.get_val(sparseArray, '0')).toBe('first');
-      expect(bl.get_val(sparseArray, '1')).toBeUndefined();
-      expect(bl.get_val(sparseArray, '5')).toBe('sixth');
-    });
-
-    it('should handle path with only whitespace', () => {
-      expect(bl.get_val(testObj, '   ')).toBeUndefined();
-      expect(bl.get_val(testObj, '\t\n')).toBeUndefined();
-    });
-  });
-
-  describe('set_val', () => {
-    it('sets the value of the given key', () => {
-      const obj = { a: 1, b: 2 };
-      bl.set_val(obj, 'b', 3);
-      expect(obj.b).toEqual(3);
-    });
-    it('creates a key by setting its value', () => {
-      const obj = { a: 1, b: 2 };
-      bl.set_val(obj, 'c', 3);
-      expect(obj['c']).toEqual(3);
-    });
-  });
-
-  describe('get_endpoint_ending_fixed', () => {
-    it('should return empty string when endpoint is undefined', () => {
-      const result = bl.get_endpoint_ending_fixed(undefined);
-      expect(result).toBe('');
-    });
-
-    it('should return empty string when endpoint is empty string', () => {
-      const result = bl.get_endpoint_ending_fixed('');
-      expect(result).toBe('');
-    });
-
-    it('should return empty string when endpoint has ending forward slash', () => {
-      const result = bl.get_endpoint_ending_fixed('foo/');
-      expect(result).toBe('foo/');
-    });
-
-    it('should return empty string when endpoint has no ending forward slash', () => {
-      const result = bl.get_endpoint_ending_fixed('foo');
-      expect(result).toBe('foo/');
-    });
-  });
-
-  describe('clean_endpoint_ending', () => {
-    it('should return empty string when endpoint is undefined', () => {
-      const result = bl.clean_endpoint_ending(undefined);
-      expect(result).toBe('');
-    });
-
-    it('should return empty string when endpoint is empty string', () => {
-      const result = bl.clean_endpoint_ending('');
-      expect(result).toBe('');
-    });
-
-    it('should return empty string when endpoint has ending forward slash', () => {
-      const result = bl.clean_endpoint_ending('foo/');
-      expect(result).toBe('foo');
-    });
-
-    it('should return empty string when endpoint has no ending forward slash', () => {
-      const result = bl.clean_endpoint_ending('foo');
-      expect(result).toBe('foo');
-    });
-  });
-
-  describe('get_query_starting_fixed', () => {
-    it('should return empty string when query is undefined', () => {
-      const result = bl.get_query_starting_fixed(undefined);
-      expect(result).toBe('');
-    });
-
-    it('should return empty string when query is empty string', () => {
-      const result = bl.get_query_starting_fixed('');
-      expect(result).toBe('');
-    });
-
-    it('should return empty string when query has starting question mark', () => {
-      const result = bl.get_query_starting_fixed('?foo');
-      expect(result).toBe('?foo');
-    });
-
-    it('should return empty string when query has no starting question mark', () => {
-      const result = bl.get_query_starting_fixed('foo');
-      expect(result).toBe('?foo');
+      expect(get_val(objWithFalsy, 'zero')).toBe(0);
+      expect(get_val(objWithFalsy, 'empty')).toBe('');
+      expect(get_val(objWithFalsy, 'false')).toBe(false);
+      expect(get_val(objWithFalsy, 'nested.null')).toBe(null);
     });
   });
 
   describe('safely_get_as', () => {
-    it('should return default value when object is undefined', () => {
-      const result = bl.safely_get_as({}, 'foo', 'bar');
-      expect(result).toBe('bar');
+    const testObj = {
+      name: 'John',
+      age: 30,
+      address: {
+        city: 'Springfield'
+      }
+    };
+
+    it('should return the value when it exists', () => {
+      expect(safely_get_as(testObj, 'name', 'default')).toBe('John');
+      expect(safely_get_as(testObj, 'age', 0)).toBe(30);
+      expect(safely_get_as(testObj, 'address.city', 'default')).toBe('Springfield');
     });
 
-    it('should return default value when nested value not found', () => {
-      const result = bl.safely_get_as({ 'foo': {} }, 'foo.name', 'bar');
-      expect(result).toBe('bar');
+    it('should return the default when value does not exist', () => {
+      expect(safely_get_as(testObj, 'nonexistent', 'default')).toBe('default');
+      expect(safely_get_as(testObj, 'address.nonexistent', 'default')).toBe('default');
     });
 
-    it('should return default value when path is not found', () => {
-      const result = bl.safely_get_as({ 'bar': { 'foo': {}}}, 'foo', 'bar');
-      expect(result).toBe('bar');
+    it('should return the default for falsy values', () => {
+      const objWithFalsy = {
+        zero: 0,
+        empty: '',
+        false: false,
+        null: null,
+        undefined: undefined
+      };
+      
+      expect(safely_get_as(objWithFalsy, 'zero', 42)).toBe(42);
+      expect(safely_get_as(objWithFalsy, 'empty', 'fallback')).toBe('fallback');
+      expect(safely_get_as(objWithFalsy, 'false', true)).toBe(true);
+      expect(safely_get_as(objWithFalsy, 'null', 'fallback')).toBe('fallback');
+      expect(safely_get_as(objWithFalsy, 'undefined', 'fallback')).toBe('fallback');
     });
 
-    it('should return value when path is found', () => {
-      const result = bl.safely_get_as({ foo: 'baz' }, 'foo', 'bar');
-      expect(result).toBe('baz');
-    });
-
-    it('should return nested value from path', () => {
-      const result = bl.safely_get_as({ foo: {baz: { bar: 1 }}}, 'foo.baz.bar', 'bar');
-      expect(result).toBe(1);
-    });
-  });
-
-  describe('set_url_query_val', () => {
-    it('should return empty string when url is empty', () => {
-      const result = bl.set_url_query_val('', 'foo');
-      expect(result).toBe('');
-    });
-
-    it('should return empty string when url is empty string', () => {
-      const result = bl.set_url_query_val('', 'foo');
-      expect(result).toBe('');
-    });
-
-    it('should return empty string when param is empty', () => {
-      const result = bl.set_url_query_val('foo', '');
-      expect(result).toBe('');
-    });
-
-    it('should return empty string when param is empty string', () => {
-      const result = bl.set_url_query_val('foo', '');
-      expect(result).toBe('');
-    });
-
-    it('should return url with query string when query string is not present', () => {
-      const result = bl.set_url_query_val('foo', 'bar');
-      expect(result).toBe('foo?bar');
-    });
-
-    it('should return url with query string when query string is present', () => {
-      const result = bl.set_url_query_val('foo?baz', 'bar');
-      expect(result).toBe('foo?baz&bar');
-    });
-
-    it('should return url with query string when query string is present and has value', () => {
-      const result = bl.set_url_query_val('foo?baz=bar', 'bar');
-      expect(result).toBe('foo?baz=bar&bar');
+    it('should handle invalid objects', () => {
+      expect(safely_get_as(null, 'path', 'default')).toBe('default');
+      expect(safely_get_as(undefined, 'path', 'default')).toBe('default');
     });
   });
 
-  describe('get_state_form_name', () => {
-    it('should return empty string when formKey is empty string', () => {
-      const result = bl.get_state_form_name('');
-      expect(result).toBe('');
+  describe('get_global_var', () => {
+    beforeEach(() => {
+      // Clear any existing test properties
+      delete (window as Record<string, unknown>).testVar;
+      delete (window as Record<string, unknown>).testObj;
     });
 
-    it('Inserts the suffix \'Form\' if it is missing', () => {
-      const result = bl.get_state_form_name('foo');
-      expect(result).toBe('fooForm');
+    it('should return global variable when it exists', () => {
+      (window as Record<string, unknown>).testVar = 'test value';
+      expect(get_global_var('testVar')).toBe('test value');
     });
 
-    it('If form name contains the suffix, simply returns it', () => {
-      const result = bl.get_state_form_name('fooForm');
-      expect(result).toBe('fooForm');
-    });
-  });
-
-  describe('get_state_dialog_name', () => {
-    it('should return empty string when dialogKey is empty string', () => {
-      const result = bl.get_state_dialog_name('');
-      expect(result).toBe('');
+    it('should return object when global variable is an object', () => {
+      const testObj = { a: 1, b: 2 };
+      (window as Record<string, unknown>).testObj = testObj;
+      expect(get_global_var('testObj')).toBe(testObj);
     });
 
-    it('Inserts the suffix \'Dialog\' if it is missing', () => {
-      const result = bl.get_state_dialog_name('foo');
-      expect(result).toBe('fooDialog');
-    });
-
-    it('If dialog name contains the suffix, simply returns it', () => {
-      const result = bl.get_state_dialog_name('fooDialog');
-      expect(result).toBe('fooDialog');
+    it('should return empty object when variable does not exist', () => {
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const result = get_global_var('nonExistentVar');
+      expect(result).toEqual({});
+      expect(consoleSpy).toHaveBeenCalledWith('Global variable "nonExistentVar" does not exist.');
+      consoleSpy.mockRestore();
     });
   });
 
   describe('mongo_object_id', () => {
-    it('should return a string', () => {
-      const result = bl.mongo_object_id();
-      expect(typeof result).toBe('string');
-    });
-  });
-
-  describe('trim_slashes', () => {
-    it('should return empty string when url is empty', () => {
-      const result = bl.trim_slashes('');
-      expect(result).toBe('');
+    it('should generate a valid ObjectId-like string', () => {
+      const id = mongo_object_id();
+      expect(typeof id).toBe('string');
+      expect(id).toHaveLength(24);
+      expect(/^[0-9a-f]{24}$/.test(id)).toBe(true);
     });
 
-    it('should return empty string when url is empty string', () => {
-      const result = bl.trim_slashes('');
-      expect(result).toBe('');
+    it('should generate unique IDs', () => {
+      const id1 = mongo_object_id();
+      const id2 = mongo_object_id();
+      expect(id1).not.toBe(id2);
     });
 
-    it('should return empty string when url has only forward slashes', () => {
-      const result = bl.trim_slashes('////');
-      expect(result).toBe('');
-    });
-
-    it('should return url with no forward slashes when url has only forward slashes', () => {
-      const result = bl.trim_slashes('////foo////');
-      expect(result).toBe('foo');
-    });
-  });
-
-  describe('get_endpoint', () => {
-    it('should return empty string when url is empty', () => {
-      const result = bl.get_endpoint('');
-      expect(result).toBe('');
-    });
-
-    it('should return empty string when url is empty string', () => {
-      const result = bl.get_endpoint('');
-      expect(result).toBe('');
-    });
-
-    it('should return empty string when url has no forward slashes test 1', () => {
-      const result = bl.get_endpoint('foo');
-      expect(result).toBe('');
-    });
-
-    it('should return empty string when url has no forward slashes test 2', () => {
-      const result = bl.get_endpoint('foo');
-      expect(result).toBe('');
-    });
-
-    it('should return endpoint when url has forward slashes test 1', () => {
-      const result = bl.get_endpoint('foo/bar');
-      expect(result).toBe('bar');
-    });
-
-    it('should return endpoint when url has forward slashes test 2', () => {
-      const result = bl.get_endpoint('foo/bar/baz');
-      expect(result).toBe('baz');
-    });
-  });
-
-  describe('http_get', () => {
-    it('should return empty string when url is empty', () => {
-      const result = bl.http_get('');
-      expect(result).toBe('');
-    });
-
-    it('should return empty string when url is empty string', () => {
-      const result = bl.http_get('');
-      expect(result).toBe('');
-    });
-
-    it('should return empty string when url has no forward slashes test 1', () => {
-      const result = bl.http_get('foo');
-      expect(result).toBe('');
-    });
-
-    it('should return empty string when url has no forward slashes test 2', () => {
-      const result = bl.http_get('foo');
-      expect(result).toBe('');
-    });
-
-    it('should return endpoint when url has forward slashes test 1', () => {
-      const result = bl.http_get('foo/bar');
-      expect(result).toBe('bar');
-    });
-
-    it('should return endpoint when url has forward slashes test 2', () => {
-      const result = bl.http_get('foo/bar/baz');
-      expect(result).toBe('baz');
+    it('should start with a timestamp', () => {
+      const beforeTime = Math.floor(Date.now() / 1000);
+      const id = mongo_object_id();
+      const afterTime = Math.floor(Date.now() / 1000);
+      
+      const timestamp = parseInt(id.substring(0, 8), 16);
+      expect(timestamp).toBeGreaterThanOrEqual(beforeTime);
+      expect(timestamp).toBeLessThanOrEqual(afterTime);
     });
   });
 
   describe('get_themed_state', () => {
-    it('should return main state when light and dark states are undefined', () => {
-      const result = bl.get_themed_state('dark', 'foo', undefined, undefined);
-      expect(result).toBe('foo');
+    const mainState = { color: 'blue' };
+    const lightState = { color: 'white' };
+    const darkState = { color: 'black' };
+
+    it('should return dark state when mode is dark and both light and dark are provided', () => {
+      const result = get_themed_state('dark', mainState, lightState, darkState);
+      expect(result).toBe(darkState);
     });
 
-    it('should return main state when light and dark states are null', () => {
-      const result = bl.get_themed_state('dark', 'foo', null, null);
-      expect(result).toBe('foo');
+    it('should return light state when mode is light and both light and dark are provided', () => {
+      const result = get_themed_state('light', mainState, lightState, darkState);
+      expect(result).toBe(lightState);
     });
 
-    it('should return main state when light and dark states are not objects', () => {
-      const result = bl.get_themed_state('dark', 'foo', 1, 1);
-      expect(result).toBe('foo');
+    it('should return main state when light is not provided', () => {
+      const result = get_themed_state('light', mainState, null, darkState);
+      expect(result).toBe(mainState);
     });
 
-    it('should return main state when light and dark states are arrays', () => {
-      const result = bl.get_themed_state('dark', 'foo', [], []);
-      expect(result).toBe('foo');
+    it('should return main state when dark is not provided', () => {
+      const result = get_themed_state('dark', mainState, lightState, null);
+      expect(result).toBe(mainState);
     });
 
-    it('should return light state when mode is light and light state is defined', () => {
-      const result = bl.get_themed_state('light', 'foo', 'bar', undefined);
-      expect(result).toBe('bar');
-    });
-
-    it('should return dark state when mode is dark and dark state is defined', () => {
-      const result = bl.get_themed_state('dark', 'foo', undefined, 'bar');
-      expect(result).toBe('bar');
-    });
-  });
-
-  describe('parse_cookies', () => {
-    it('should return empty object when document.cookie is empty', () => {
-      const result = bl.parse_cookies();
-      expect(result).toEqual({});
-    });
-
-    it('should return empty object when document.cookie is empty string', () => {
-      const result = bl.parse_cookies();
-      expect(result).toEqual({});
-    });
-
-    it('should return object with key and value when document.cookie has one cookie', () => {
-      const result = bl.parse_cookies();
-      expect(result).toEqual({});
-    });
-
-    it('should return object with key and value when document.cookie has multiple cookies', () => {
-      const result = bl.parse_cookies();
-      expect(result).toEqual({});
+    it('should return main state when neither light nor dark are provided', () => {
+      const result = get_themed_state('dark', mainState, null, null);
+      expect(result).toBe(mainState);
     });
   });
 
-  describe('get_cookie', () => {
-    it('should return empty string when cookie name is empty', () => {
-      const result = bl.get_cookie('');
-      expect(result).toBe('');
+  describe('resolve_unexpected_nesting', () => {
+    it('should return response.response when response has nested response property', () => {
+      const nestedResponse = {
+        response: { data: 'actual data' }
+      };
+      const result = resolve_unexpected_nesting(nestedResponse);
+      expect(result).toEqual({ data: 'actual data' });
     });
 
-    it('should return empty string when cookie name is empty string', () => {
-      const result = bl.get_cookie('');
-      expect(result).toBe('');
+    it('should return original response when no nesting detected', () => {
+      const normalResponse = { data: 'actual data' };
+      const result = resolve_unexpected_nesting(normalResponse);
+      expect(result).toBe(normalResponse);
     });
 
-    it('should return empty string when cookie name is not found', () => {
-      const result = bl.get_cookie('foo');
-      expect(result).toBe('');
+    it('should return original response for non-objects', () => {
+      expect(resolve_unexpected_nesting('string')).toBe('string');
+      expect(resolve_unexpected_nesting(123)).toBe(123);
+      expect(resolve_unexpected_nesting(null)).toBe(null);
+      expect(resolve_unexpected_nesting(undefined)).toBe(undefined);
     });
 
-    it('should return value when cookie name is found', () => {
-      const result = bl.get_cookie('foo');
-      expect(result).toBe('');
+    it('should return original response for arrays', () => {
+      const arrayResponse = [1, 2, 3];
+      const result = resolve_unexpected_nesting(arrayResponse);
+      expect(result).toBe(arrayResponse);
+    });
+  });
+
+  describe('get_viewport_size', () => {
+    it('should return viewport size using innerWidth/innerHeight when available', () => {
+      const originalInnerWidth = window.innerWidth;
+      const originalInnerHeight = window.innerHeight;
+      
+      Object.defineProperty(window, 'innerWidth', { value: 1024, writable: true });
+      Object.defineProperty(window, 'innerHeight', { value: 768, writable: true });
+      
+      const size = get_viewport_size();
+      expect(size.width).toBe(1024);
+      expect(size.height).toBe(768);
+      
+      // Restore original values
+      Object.defineProperty(window, 'innerWidth', { value: originalInnerWidth, writable: true });
+      Object.defineProperty(window, 'innerHeight', { value: originalInnerHeight, writable: true });
+    });
+
+    it('should fallback to clientWidth/clientHeight when inner dimensions not available', () => {
+      // Mock a scenario where innerWidth is not available
+      const originalInnerWidth = window.innerWidth;
+      delete (window as Record<string, unknown>).innerWidth;
+      
+      // Mock document.documentElement
+      const mockDocumentElement = {
+        clientWidth: 800,
+        clientHeight: 600
+      };
+      Object.defineProperty(document, 'documentElement', { 
+        value: mockDocumentElement, 
+        writable: true 
+      });
+      
+      const size = get_viewport_size();
+      expect(size.width).toBe(800);
+      expect(size.height).toBe(600);
+      
+      // Restore
+      Object.defineProperty(window, 'innerWidth', { value: originalInnerWidth, writable: true });
+    });
+  });
+
+  describe('stretch_to_bottom', () => {
+    it('should calculate correct height by subtracting bottom margin from viewport height', () => {
+      const originalInnerHeight = window.innerHeight;
+      Object.defineProperty(window, 'innerHeight', { value: 1000, writable: true });
+      
+      const result = stretch_to_bottom(100);
+      expect(result).toBe(900);
+      
+      const result2 = stretch_to_bottom(200);
+      expect(result2).toBe(800);
+      
+      // Restore
+      Object.defineProperty(window, 'innerHeight', { value: originalInnerHeight, writable: true });
+    });
+
+    it('should handle zero bottom margin', () => {
+      const originalInnerHeight = window.innerHeight;
+      Object.defineProperty(window, 'innerHeight', { value: 1000, writable: true });
+      
+      const result = stretch_to_bottom(0);
+      expect(result).toBe(1000);
+      
+      // Restore
+      Object.defineProperty(window, 'innerHeight', { value: originalInnerHeight, writable: true });
     });
   });
 });

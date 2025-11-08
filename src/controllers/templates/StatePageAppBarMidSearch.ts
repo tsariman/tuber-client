@@ -1,6 +1,5 @@
-import { IconButtonProps } from '@mui/material/IconButton';
-import { TStateAllChips } from 'src/interfaces/IState';
-import IStateAppbar from '../../interfaces/IStateAppbar';
+import type { IconButtonProps } from '@mui/material/IconButton';
+import type { IStateAppbar, TStateAllChips } from '../../localized/interfaces';
 import StateAppbarInputChip from '../StateAppbarInputChip';
 import StateFormItemCustom from '../StateFormItemCustom';
 import StateLink from '../StateLink';
@@ -131,6 +130,10 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
     anal.match = anal.tplParts.length === anal.routeParts.length
       && anal.tplParts[0] === anal.routeParts[0];
     return anal;
+  }
+
+  tplRouteAnal(tpl: string, route: string) {
+    this._tplRouteAnal(tpl, route);
   }
 
   /**

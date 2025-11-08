@@ -1,17 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import initialState from '../state/initial.state';
 
 export const pathnamesSlice = createSlice({
   name: 'pathnames',
   initialState: initialState.pathnames,
   reducers: {
-    setDialogsPath: (state, action) => {
+    setDialogsPath: (state, action: PayloadAction<string>) => {
       state.dialogs = action.payload
     },
-    setFormsPath: (state, action) => {
+    setFormsPath: (state, action: PayloadAction<string>) => {
       state.forms = action.payload
     },
-    setPagesPath: (state, action) => {
+    setPagesPath: (state, action: PayloadAction<string>) => {
       state.pages = action.payload
     },
   }

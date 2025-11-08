@@ -1,42 +1,26 @@
 import { TextField } from '@mui/material';
-import { type AppDispatch, redux, type RootState } from '../../../state';
+import { redux, type AppDispatch, type IRedux, type RootState } from '../../../state';
 import { StateJsxAdornment } from './state.jsx.input.adornment';
 import {type StateFormItem, StateFormsData } from '../../../controllers';
 import { useDispatch, useSelector } from 'react-redux';
-import { NAME_NOT_SET } from '../../../constants.client';
+import { NAME_NOT_SET, typeMap, type IFormItemDataError } from '@tuber/shared';
 import StateJsxTextfieldInputProps from './state.jsx.textfield.input.props';
-import { useEffect } from 'react';
-import { ISliceFormsDataErrorsArgs } from 'src/slices/formsDataErrors.slice';
+import {
+  useCallback,
+  useEffect,
+  type FocusEventHandler,
+  type KeyboardEventHandler
+} from 'react';
+import type { ISliceFormsDataErrorsArgs } from '../../../slices/formsDataErrors.slice';
 
 interface IJsonTextfieldProps { def: StateFormItem; }
+type TOnFocus = FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+type TOnKeyDown = (redux: IRedux) => KeyboardEventHandler<HTMLDivElement>;
+type TOnChange = (textfield: StateFormItem) => React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+type TOnBlur = (textfield: StateFormItem,
+  e: IFormItemDataError
+) => FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 
-export const typeMap: { [constant: string]: string } = {
-  text: 'text',
-  textfield: 'text',
-  textarea: 'text',
-  password: 'password',
-  number: 'number'
-};
-
-/** Textfield
- *
- * Example:
- * ```json
- * {
- *   "name": "username",
- *   "type": "text",
- *   "label": "Username",
- *   "props": { "required": true },
- *   "inputProps": {
- *     "start": {
- *        "icon": { "icon": "user" }
- *     },
- *     "end": {
- *        "icon": { "icon": "user" }
- *      }
- *   }
- * } 
- */
 export default function StateJsxTextfield({ def: textfield }: IJsonTextfieldProps) {
   const { name, parent: { name: formName } } = textfield;
   const formsDataState = useSelector((state: RootState) => state.formsData);
@@ -73,7 +57,8 @@ export default function StateJsxTextfield({ def: textfield }: IJsonTextfieldProp
     }
   }, [ dispatch, textfield, formName, name ]);
 
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleFocus: TOnFocus = useCallback((e) => {
+    void e;
     if (error) {
       dispatch({ // Temporarily clears out error state from textfield if focused.
         type: 'formsDataErrors/formsDataErrorsUpdate',
@@ -84,8 +69,8 @@ export default function StateJsxTextfield({ def: textfield }: IJsonTextfieldProp
         }
       });
     }
-    textfield.onFocus(e); // User defined function to run
-  };
+    (textfield.onFocus as TOnFocus)(e); // User defined function to run
+  }, [dispatch, error, formName, name, textfield]);
 
   return name ? (
     <TextField
@@ -99,9 +84,9 @@ export default function StateJsxTextfield({ def: textfield }: IJsonTextfieldProp
       }
       value={value}
       onFocus={handleFocus}
-      onChange={textfield.onChange(textfield)}
-      onKeyDown={textfield.onKeyDown(redux)}
-      onBlur={textfield.onBlur(textfield, formsDataErrors[formName]?.[name])}
+      onChange={(textfield.onChange as TOnChange)(textfield)}
+      onKeyDown={(textfield.onKeyDown as TOnKeyDown)(redux)}
+      onBlur={(textfield.onBlur as TOnBlur)(textfield, formsDataErrors[formName]?.[name])}
       InputProps={StateJsxTextfieldInputProps(textfield.inputProps)}
     />
   ) : (

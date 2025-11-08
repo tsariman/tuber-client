@@ -1,4 +1,4 @@
-import { type RootState } from '../state';
+import type { IState } from '../localized/interfaces';
 import StateAllPages from './StateAllPages';
 import StateAllIcons from './StateAllIcons';
 import AbstractState from './AbstractState';
@@ -22,10 +22,11 @@ import StateAppbarQueries from './StateAppbarQueries';
 import StateTopLevelLinks from './StateTopLevelLinks';
 import StateFormsDataErrors from './StateFormsDataErrors';
 import StatePathnames from './StatePathnames';
-import { ThemeOptions } from '@mui/material';
+import type { ThemeOptions } from '@mui/material';
 import StateRegistry from './StateRegistry';
 
 export default class State extends AbstractState {
+  private _rootState: IState;
   private _app?: StateApp;
   private _appbar?: StateAppbarDefault;
   private _appbarQueries?: StateAppbarQueries;
@@ -58,8 +59,9 @@ export default class State extends AbstractState {
   private static _globalStateVersion = 0;
   private _stateVersion: number;
 
-  constructor(private _rootState: RootState) { 
-    super(); 
+  constructor(rootState: IState) {
+    super();
+    this._rootState = rootState;
     this._stateVersion = State._globalStateVersion;
   }
 
@@ -67,7 +69,7 @@ export default class State extends AbstractState {
    * Create new State instance with fresh cache.
    * Preferred method for creating State instances with updated root state data.
    */
-  static fromRootState(rootState: RootState): State {
+  static fromRootState(rootState: IState): State {
     return new State(rootState);
   }
 
@@ -99,7 +101,7 @@ export default class State extends AbstractState {
   /**
    * Get a copy of the (store) state.
    */
-  get state(): RootState {
+  get state(): IState {
     this.checkAndInvalidateIfStale();
     return this.die(
       `Access to the root state is NOT a good idea.`,
@@ -125,6 +127,7 @@ export default class State extends AbstractState {
    * Chain-access to app definition.
    */
   get app(): StateApp {
+    this.checkAndInvalidateIfStale();
     return this._app
       || (this._app = new StateApp(
           this._rootState.app,

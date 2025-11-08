@@ -4,7 +4,7 @@ import MiniAppbar from './state.jsx.mini.appbar';
 import ResponsiveAppbar from './state.jsx.responsive.appbar';
 import ComponentBuilder from '../../components';
 import StateJsxMidSearchAppbar from './state.jsx.middle-search.appbar';
-import { FC, Fragment, useMemo, memo } from 'react';
+import { Fragment, useMemo, memo } from 'react';
 
 interface IAppbarProps {
   def: StatePage;
@@ -24,7 +24,7 @@ interface IAppbarProps {
  * @see IStateAppbar.appbarStyle
  * @see IStateAppbar._type
  */
-const StateJsxAppbar: FC<IAppbarProps> = memo(({ def: page }) => {
+const StateJsxAppbar = memo<IAppbarProps>(({ def: page }) => {
   // Memoize appbar properties to prevent unnecessary recalculations
   const hasAppbar = useMemo(() => page.hasAppbar, [page]);
   const hasCustomAppbar = useMemo(() => page.hasCustomAppbar, [page]);

@@ -1,9 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import IStateAllIcons from '../interfaces/IStateAllIcons';
-import IStateIcon from '../interfaces/IStateIcon';
-import mainInitialState from '../state/initial.state';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { IStateAllIcons, IStateIcon } from '@tuber/shared';
+import defaultInitialState from '../state/initial.state';
 
-const initialState: IStateAllIcons = mainInitialState.icons;
+const initialState: IStateAllIcons = defaultInitialState.icons;
 
 const iconsSlice = createSlice({
   name: 'icons',
@@ -11,7 +10,7 @@ const iconsSlice = createSlice({
   reducers: {
     /** Set all icons */
     iconsSet: (state, action: PayloadAction<IStateAllIcons>) => {
-      return action.payload;
+      Object.assign(state, action.payload);
     },
     /** Add or update a single icon */
     iconsAddIcon: (state, action: PayloadAction<{ name: string; data: IStateIcon }>) => {

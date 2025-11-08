@@ -1,18 +1,19 @@
 import { get_origin_ending_fixed } from '../business.logic/parsing';
 import AbstractState from './AbstractState';
-import IStateApp from '../interfaces/IStateApp';
+import type { IStateApp, TThemeMode } from '@tuber/shared';
 import State from './State';
 import Config from '../config';
-import { TThemeMode } from '../common.types';
 import { get_state } from '../state';
 
 export default class StateApp extends AbstractState implements IStateApp {
+  private _appState: IStateApp;
+  private _parent?: State;
   private _appOrigin?: string;
 
-  constructor(private _appState: IStateApp,
-    private _parent?: State
-  ) {
+  constructor(appState: IStateApp, parent?: State) {
     super();
+    this._appState = appState;
+    this._parent = parent;
   }
 
   /** Get a copy of the app definition. */

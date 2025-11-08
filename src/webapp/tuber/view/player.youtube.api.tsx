@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import YouTube, { YouTubeProps } from 'react-youtube';
+import YouTube, { type YouTubeProps } from 'react-youtube';
 import Config from '../../../config';
-import { IBookmarkOrigin } from '../tuber.interfaces';
+import type { IBookmarkOrigin } from '../tuber.interfaces';
 
 type OnReadyEvent = {
   target: {
@@ -9,7 +9,7 @@ type OnReadyEvent = {
     playVideo: () => void;
     pauseVideo: () => void;
     // Add other methods as needed
-    [key: string]: any;
+    [key: string]: unknown;
   };
 };
 

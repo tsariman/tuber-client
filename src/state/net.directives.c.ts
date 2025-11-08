@@ -1,5 +1,5 @@
-import { Dispatch } from 'redux';
-import { TJsonapiMeta } from '../interfaces/IJsonapi';
+import type { Dispatch } from 'redux';
+import type { TJsonapiMeta } from '@tuber/shared';
 import { state_reset } from './actions';
 
 const ACTIONS = {

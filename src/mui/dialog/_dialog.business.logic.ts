@@ -3,11 +3,13 @@ import {
   type StateAllPages,
   type StateFormItem
 } from '../../controllers';
-import store from '../../state';
-import IStateFormItem from '../../interfaces/IStateFormItem';
-import IStateForm from '../../interfaces/IStateForm';
-import IStateDialog from '../../interfaces/IStateDialog';
-import { error_id } from 'src/business.logic/errors';
+import { get_state } from '../../state';
+import type {
+  IStateFormItem,
+  IStateForm,
+  IStateDialog
+} from '../../localized/interfaces';
+import { error_id } from '../../business.logic/errors';
 import { ler } from '../../business.logic/logging';
 
 export type THive = Record<string, unknown>
@@ -40,7 +42,7 @@ export function get_dialog_property_name(dialogName: string) {
 function get_dialog_json(dialogName: string, defaultDialog: IStateDialog) {
   try {
     const dialogPropertyName = get_dialog_property_name(dialogName);
-    return store.getState().dialogs[dialogPropertyName];
+    return get_state().dialogs[dialogPropertyName];
   } catch (e) {
     const message = `get_dialog_state: '${dialogName}' does not exist.`;
     ler(message);

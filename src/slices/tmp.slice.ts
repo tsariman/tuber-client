@@ -1,28 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import initialState from '../state/initial.state';
-import { TObj } from 'src/common.types';
+import type { TObj } from '@tuber/shared';
 
-export interface ITmpArgs {
+interface IAdd {
   id: string;
   name: string;
   value: unknown;
-}
-
-interface ITmpReducerArgs {
-  type: string;
-  payload: ITmpArgs;
 }
 
 export const tmpSlice = createSlice({
   name: 'tmp',
   initialState: initialState.tmp,
   reducers: {
-    tmpAdd: (state, action: ITmpReducerArgs) => {
+    tmpAdd: (state, action: PayloadAction<IAdd>) => {
       const { id, name, value } = action.payload;
       state[id] = state[id] || {};
       (state[id] as TObj)[name] = value;
     },
-    tmpRemove: (state, action) => {
+    tmpRemove: (state, action: PayloadAction<string>) => {
       delete state[action.payload];
     },
   }

@@ -1,5 +1,5 @@
 import AbstractState from './AbstractState';
-import IStateTypography from '../interfaces/IStateTypography';
+import type { IStateTypography } from '@tuber/shared';
 import type State from './State';
 
 export default class StateTypography<P = State>

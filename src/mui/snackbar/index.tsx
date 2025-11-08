@@ -1,7 +1,7 @@
 import React from 'react';
 import { Snackbar } from '@mui/material';
 import { type AppDispatch, type RootState } from '../../state';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import MuiAlert, { type AlertProps } from '@mui/material/Alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { snackbarClose } from '../../slices/snackbar.slice';
 
@@ -22,6 +22,7 @@ export default function StateJsxSnackbar () {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    void event;
     if (reason === 'clickaway') {
       return;
     }

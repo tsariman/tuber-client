@@ -1,9 +1,9 @@
 import { log, pre } from 'src/business.logic/logging';
 import JsonapiRequest from 'src/business.logic/JsonapiRequest';
 import { post_req_state } from 'src/state/net.actions';
-import { type IRedux } from 'src/state';
+import type { IRedux } from 'src/state';
 import { DIALOG_DAILY_NEW_ID, FORM_DAILY_NEW_ID } from '../tuber.config';
-import { IBookmark } from '../tuber.interfaces';
+import type { IBookmark } from '../tuber.interfaces';
 import { get_start_time_in_seconds } from '../_tuber.common.logic';
 import {
   get_dialog_form_endpoint,

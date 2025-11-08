@@ -1,25 +1,28 @@
-import AbstractState from './AbstractState';
-import { IStateFormsDataErrors } from '../interfaces/IState';
-import State from './State';
-import { get_state } from '../state';
+import AbstractState from './AbstractState'
+import type { IStateFormsDataErrors } from '@tuber/shared'
+import State from './State'
+import { get_state } from '../state'
+import StateFormErrors from './StateFormErrors'
 
-const EXCEPTION_MESSAGE = 'StateFormsDataErrors: configure instance with \'formName\'';
+const EXCEPTION_MESSAGE = 'StateFormsDataErrors: configure instance with \'formName\''
 
 export default class StateFormsDataErrors<T=unknown> extends AbstractState {
-  private _formName?: string;
+  private _state: IStateFormsDataErrors
+  private _parent?: State
+  private _formName?: string
 
-  constructor (private formsDataErrorsState: IStateFormsDataErrors,
-    private _parent?: State
-  ) {
-    super();
+  constructor (state: IStateFormsDataErrors, parent?: State) {
+    super()
+    this._state = state
+    this._parent = parent
   }
 
   get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()));
+    return this._parent ?? (this._parent = State.fromRootState(get_state()))
   }
-  get state(): IStateFormsDataErrors { return this.formsDataErrorsState; }
-  get props(): unknown { return this.die('Not implemented yet.', {}); }
-  get theme(): unknown { return this.die('Not implemented yet.', {}); }
+  get state(): IStateFormsDataErrors { return this._state }
+  get props(): unknown { return this.die('Not implemented yet.', {}) }
+  get theme(): unknown { return this.die('Not implemented yet.', {}) }
 
   configure({ formName }: { formName: string }) {
     this._formName = formName;
@@ -28,42 +31,45 @@ export default class StateFormsDataErrors<T=unknown> extends AbstractState {
   /** Returns the form's error count. */
   getCount(formName: string): number {
     let errorCount = 0;
-    const formErrorsState = this.formsDataErrorsState[formName];
-    for (let field in formErrorsState) {
-      formErrorsState[field].error && ++errorCount;
+    const formErrorsState = this._state[formName];
+    for (const field in formErrorsState) {
+      if (formErrorsState[field].error) {
+        ++errorCount
+      }
     }
-    return errorCount;
+    return errorCount
   }
 
   hasError(name: keyof T): boolean {
     if (!this._formName) {
-      throw new Error(EXCEPTION_MESSAGE);
+      throw new Error(EXCEPTION_MESSAGE)
     }
-    const fieldName = name as string;
-    return this.formsDataErrorsState[this._formName]?.[fieldName]?.error
-      ?? false;
+    const fieldName = name as string
+    return this._state[this._formName]?.[fieldName]?.error
+      ?? false
   }
 
   getError(name: keyof T): boolean {
     if (!this._formName) {
-      throw new Error(EXCEPTION_MESSAGE);
+      throw new Error(EXCEPTION_MESSAGE)
     }
     const n = name as string;
-    return !!this.formsDataErrorsState[this._formName]?.[n];
+    return !!this._state[this._formName]?.[n]
   }
 
   getMessage(name: keyof T): string {
     if (!this._formName) {
       throw new Error(EXCEPTION_MESSAGE);
     }
-    const n = name as string;
-    return this.formsDataErrorsState[this._formName]?.[n]?.message ?? '';
+    const n = name as string
+    return this._state[this._formName]?.[n]?.message ?? ''
   }
 
-  get(): unknown {
+  get(): StateFormErrors {
     if (!this._formName) {
-      throw new Error(EXCEPTION_MESSAGE);
+      throw new Error(EXCEPTION_MESSAGE)
     }
-    return this.formsDataErrorsState[this._formName] || {};
+    const formErrorsState = this._state[this._formName] ?? {}
+    return new StateFormErrors(formErrorsState, this)
   }
 }

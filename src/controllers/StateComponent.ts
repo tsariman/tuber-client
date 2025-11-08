@@ -1,17 +1,19 @@
 import AbstractState from './AbstractState';
-import IStateComponent from '../interfaces/IStateComponent';
-import { CSSProperties } from 'react';
+import type { IStateComponent } from '@tuber/shared';
+import type { CSSProperties } from 'react';
 
 export default class StateComponent<P = unknown>
   extends AbstractState
   implements IStateComponent
 {
+  private _componentState: IStateComponent;
+  private _parent: P;
   private _componentItems?: StateComponent<P>[];
 
-  constructor (private _componentState: IStateComponent,
-    private _parent: P
-  ) {
+  constructor (componentState: IStateComponent, parent: P) {
     super();
+    this._componentState = componentState;
+    this._parent = parent;
   }
 
   get state(): IStateComponent { return this._componentState; }

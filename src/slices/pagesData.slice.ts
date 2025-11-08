@@ -1,28 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import initialState from '../state/initial.state';
-import { TObj } from 'src/common.types';
+import type { TObj } from '@tuber/shared';
 
-export interface IPagesDataArgs {
+export interface IAdd {
   route: string;
   key:   string;
   value:  unknown;
-}
-
-interface IArgs {
-  type: string;
-  payload: IPagesDataArgs;
 }
 
 export const pagesDataSlice = createSlice({
   name: 'pagesData',
   initialState: initialState.pagesData,
   reducers: {
-    pagesDataAdd: (state, action: IArgs) => {
+    pagesDataAdd: (state, action: PayloadAction<IAdd>) => {
       const { route, value, key } = action.payload;
       state[route] ??= {};
       (state[route] as TObj)[key] = value;
     },
-    pagesDataRemove: (state, action) => {
+    pagesDataRemove: (state, action: PayloadAction<string>) => {
       delete state[action.payload];
     },
   }

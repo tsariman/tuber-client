@@ -1,14 +1,18 @@
 import AbstractState from './AbstractState';
 import State from './State';
 import Config from '../config';
-import { TObj } from '../common.types';
+import type { TObj } from '@tuber/shared';
 import { error_id } from '../business.logic/errors';
 import { get_state } from '../state';
 
 export default class StateMeta extends AbstractState {
+  private _metaState: TObj;
+  private _parent?: State;
 
-  constructor (private _metaState: TObj, private _parent?: State) {
+  constructor (metaState: TObj, parent?: State) {
     super();
+    this._metaState = metaState;
+    this._parent = parent;
   }
 
   get state(): TObj { return this._metaState; }

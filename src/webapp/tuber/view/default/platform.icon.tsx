@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { StateJsxIcon } from 'src/mui/icon';
-import { TPlatform } from '../../tuber.interfaces';
-import { TThemeMode } from 'src/common.types';
+import type { TPlatform } from '../../tuber.interfaces';
+import type { TThemeMode } from '@tuber/shared';
 
 export interface IPlatformIconProps {
   platform: TPlatform;

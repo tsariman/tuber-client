@@ -1,4 +1,4 @@
-import { IStateFormItemRadioButton } from '../../interfaces/IFormChoices';
+import { type IFormChoices } from '../../localized/interfaces';
 import StateFormItemCustom from '../StateFormItemCustom';
 import type StateFormItemRadio from './StateFormItemRadio';
 import StateFormItemRadioButton from '../StateFormItemRadioButton';
@@ -9,7 +9,7 @@ import StateFormItemRadioButton from '../StateFormItemRadioButton';
  */
 export default class StateFormItemRadioCustom extends StateFormItemCustom<
   StateFormItemRadio,
-  IStateFormItemRadioButton
+  IFormChoices
 > {
   private _radioButtons?: StateFormItemRadioButton[];
 

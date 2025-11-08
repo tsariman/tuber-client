@@ -1,4 +1,4 @@
-import { Dispatch } from 'redux';
+import type { Dispatch } from 'redux';
 import {
   dataLimitQueueCol,
   dataLimitStackCol,
@@ -7,19 +7,19 @@ import { metaAdd } from '../slices/meta.slice';
 import { topLevelLinksStore } from '../slices/topLevelLinks.slice';
 import { appRequestSuccess, appRequestFailed } from '../slices/app.slice';
 import { bootstrap, type RootState } from '.';
-import {
-  IJsonapiAbstractResponse,
-  IJsonapiResponse
-} from '../interfaces/IJsonapi';
 import StateDataPagesRange from '../controllers/StateDataPagesRange';
 import JsonapiPaginationLinks from '../business.logic/JsonapiPaginationLinks';
 import { remember_jsonapi_errors } from '../business.logic/errors';
 import { is_object, safely_get_as } from '../business.logic/utility';
 import Config from '../config';
-import { BOOTSTRAP_ATTEMPTS } from 'src/constants.client';
-import { dataUpdateRange } from 'src/slices/dataLoadedPages.slice';
 import execute_directives from './net.directives.c';
 import { net_patch_state } from './actions';
+import type {
+  IJsonapiAbstractResponse,
+  IJsonapiResponse,
+} from '@tuber/shared';
+import { BOOTSTRAP_ATTEMPTS } from '@tuber/shared';
+import { dataUpdateRange } from '../slices/dataLoadedPages.slice';
 
 // [TODO] The `included` state does not exist yet and needs to be created
 
@@ -33,7 +33,7 @@ export default function net_default_200_driver (
   response: IJsonapiAbstractResponse
 ): void {
   const doc = response as IJsonapiResponse;
-  if (!!(doc.meta || doc.data || doc.links || doc.state)) {
+  if (doc.meta || doc.data || doc.links || doc.state) {
     dispatch(appRequestSuccess());
   } else {
     dispatch(appRequestFailed());

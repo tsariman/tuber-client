@@ -1,18 +1,23 @@
 
 import type StateSnackbar from './StateSnackbar';
 import AbstractState from './AbstractState';
-import IStateAnchorOrigin, {
-  AnchorHorizontal, AnchorVertical
-} from '../interfaces/IStateAnchorOrigin';
+import type {
+  IStateAnchorOrigin, 
+  AnchorHorizontal,
+  AnchorVertical
+} from '@tuber/shared';
 
 export default class StateAnchorOrigin
   extends AbstractState
   implements IStateAnchorOrigin
 {
-  constructor(private _anchorOriginState: IStateAnchorOrigin,
-    private _parent: StateSnackbar
-  ) {
+  private _anchorOriginState: IStateAnchorOrigin;
+  private _parent: StateSnackbar;
+
+  constructor(anchorOriginState: IStateAnchorOrigin, parent: StateSnackbar) {
     super();
+    this._anchorOriginState = anchorOriginState;
+    this._parent = parent;
   }
 
   get state(): IStateAnchorOrigin { return this._anchorOriginState; }

@@ -1,8 +1,6 @@
-import { InputProps } from '@mui/material';
+import type { InputProps } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
-import {
-  IStateFormItemAdornment
-} from '../../../interfaces/IStateFormItem';
+import type { IStateFormItemAdornment } from '../../../localized/interfaces';
 import StateLink from '../../../controllers/StateLink';
 import type StateFormItemInputProps from '../../../controllers/StateFormItemInputProps';
 import StateJsxLink from '../../link';

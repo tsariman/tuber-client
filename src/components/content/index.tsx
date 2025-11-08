@@ -1,14 +1,13 @@
-import { useMemo, useCallback } from 'react';
-import View from '../view.component';
+import { useMemo, useCallback, type JSX } from 'react';
+import View from '../view.cpn';
 import StatePage from '../../controllers/StatePage';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../state';
 import { post_req_state } from '../../state/net.actions';
-import IStateApp from '../../interfaces/IStateApp';
-import IStateAllForms from '../../interfaces/IStateAllForms';
-import IStatePage from '../../interfaces/IStatePage';
-import HtmlContent from './html.component';
-import { APP_CONTENT_VIEW } from '../../constants.client';
+import HtmlContent from './html.cpn';
+import type { IStateApp } from '@tuber/shared';
+import { APP_CONTENT_VIEW } from '@tuber/shared';
+import type { TStateAllForms, IStatePage } from '../../localized/interfaces';
 import {
   error_id,
   get_state_form_name,
@@ -16,12 +15,13 @@ import {
   save_content_jsx,
   ler
 } from '../../business.logic';
-import FormContent from './form.component';
-import WebApps from './webapp.content.component';
+import FormContent from './form.cpn';
+import WebApps from './webapp.content.cpn';
+
 
 export interface IContentState {
   stateApp: IStateApp;
-  stateForms: IStateAllForms;
+  stateForms: TStateAllForms;
   statePage: IStatePage;
 }
 

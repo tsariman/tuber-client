@@ -1,4 +1,4 @@
-import JsonapiError from '../../business.logic/jsonapi.error';
+import JsonapiError from 'src/business.logic/JsonapiError'
 
 describe('JsonapiError', () => {
   describe('constructor', () => {

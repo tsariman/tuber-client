@@ -1,7 +1,22 @@
 import { log } from '../../../business.logic/logging';
 import { error_id } from '../../../business.logic/errors';
-import IStateFormItem from '../../../interfaces/IStateFormItem';
+import type { IStateFormItem } from '../../../localized/interfaces';
 import { is_record } from '../../../business.logic/utility';
+import type { StateForm } from '../../../controllers';
+import type { TEventHandler, TObj } from '@tuber/shared';
+import { styled } from '@mui/material/styles';
+
+export type TFormItemDefaultEventHandler = (name: string) => TEventHandler;
+export type TFormItemEventHandlerFactory<T = unknown> = (
+  name: string,
+  data: T
+) => TEventHandler;
+export type TFormEventHandlerFactory = (f: StateForm) =>
+  TFormItemDefaultEventHandler;
+export type TSwitchEventHandlerFactory = (
+  name: string,
+  value: unknown
+) => TEventHandler;
 
 /**
  * To be used with a multiple checkboxes component.
@@ -17,6 +32,10 @@ export interface ICheckboxesData {
   checked: boolean;
   statuses: ICheckboxesStatus;
 }
+
+export type TCheckboxesEventHandlerFactory = TFormItemEventHandlerFactory<
+  ICheckboxesData
+>;
 
 /**
  * Get form field value form the redux store.
@@ -146,4 +165,23 @@ export function inc_decr_error_count(old: boolean, $new: boolean): number {
     return -1;
   }
   return 0;
+}
+
+/* Contains HTML components which are styled so they can use the `sx` prop. */
+export const get_styled_div = () => styled('div')(() => ({}));
+
+/** Parse handlebar notations */
+export function parseHandlebars(htmlText: string, values?: TObj) {
+  let html = htmlText;
+  if (!values) {
+    html = html.replace(/{{\s*[_$a-zA-Z0-9]+\s*}}/g, '');
+    return html;
+  }
+  Object.keys(values).forEach(key => {
+    const val = String(values[key] ?? '&#128681;');
+    const re = new RegExp(`{{\\s*${key}\\s*}}`, 'g');
+    html = html.replace(re, val);
+  });
+  html = html.replace(/{{\s*[_$a-zA-Z0-9]+\s*}}/g, '');
+  return html;
 }

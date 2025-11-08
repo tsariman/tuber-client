@@ -5,49 +5,25 @@ import {
   type StateForm,
   type StateFormItem
 } from '../../../controllers';
-import { get_formatted_route } from '../../../controllers/StateLink';
-import { type RootState } from '../../../state';
+import { get_redux, type RootState } from '../../../state';
 import parse from 'html-react-parser';
 import { Fragment } from 'react';
-import store, { actions } from '../../../state';
 import Link from '@mui/material/Link';
-import {
-  Link as RouterLink,
-  LinkProps as RouterLinkProps
-} from 'react-router-dom';
-import { TObj } from '../../../common.types';
+import type { TObj } from '@tuber/shared';
+import { parseHandlebars } from './_items.common.logic';
 
 interface IHtmlProps {
   def: StateFormItem<StateForm, string>;
 }
 
-/* Contains HTML components which are styled so they can use the `sx` prop. */
-export const get_styled_div = () => styled('div')(() => ({}));
-
 /** Styled anchor element */
-export const LinkStyled = styled(Link)<RouterLinkProps>(({ theme }) => ({
+export const LinkStyled = styled(Link)(({ theme }) => ({
   textDecoration: 'none',
   color: theme.palette.primary.main,
   '&:hover': {
     textDecoration: 'underline'
   }
 }));
-
-/** Parse handlebar notations */
-export function parseHandlebars(htmlText: string, values?: TObj) {
-  let html = htmlText;
-  if (!values) {
-    html = html.replace(/{{\s*[_$a-zA-Z0-9]+\s*}}/g, '');
-    return html;
-  }
-  Object.keys(values).forEach(key => {
-    const val = String(values[key] ?? '&#128681;');
-    const re = new RegExp(`{{\\s*${key}\\s*}}`, 'g');
-    html = html.replace(re, val);
-  });
-  html = html.replace(/{{\s*[_$a-zA-Z0-9]+\s*}}/g, '');
-  return html;
-}
 
 /**
  * Renders HTML as JSX.
@@ -95,19 +71,11 @@ export const StateJsxHtmlTag: React.FC<IHtmlProps> = ({ def: htmlTag }) => {
 
 /** State version of the HTML anchor tag */
 export const StateJsxHtmlA: React.FC<IHtmlProps> = ({ def: link }) => {
-  const route = get_formatted_route(link.is);
-  const redux = {
-    store,
-    actions,
-    route: link.has.route
-  };
   return (
     <Fragment>
       <Link
-        component={RouterLink}
         {...link.props}
-        to={route}
-        onClick={link.onClick(redux)}
+        onClick={link.clickReduxHandler(get_redux(link.has.route))}
       >
         { link.text }
       </Link>

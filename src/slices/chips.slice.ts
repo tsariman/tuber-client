@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IStateChip } from '../interfaces/IState';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import initialState from '../state/initial.state';
+import type { IStateChip } from '../localized/interfaces';
 
 interface IAdd {
   route: string;
@@ -20,7 +20,7 @@ export const chipsSlice = createSlice({
     chipAdd: (state, action: PayloadAction<IAdd>) => {
       const { route, id, chipState } = action.payload;
       const pageChipsState = state[route] ?? {};
-      // @ts-ignore
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       pageChipsState[id] = chipState;
       state[route] = pageChipsState;
     },
@@ -37,7 +37,7 @@ export const chipsSlice = createSlice({
     chipUpdate: (state, action: PayloadAction<IAdd>) => {
       const { route, id, chipState } = action.payload;
       const pageChipsState = state[route] ?? {};
-      // @ts-ignore
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       pageChipsState[id] = chipState;
       state[route] = pageChipsState;
     },

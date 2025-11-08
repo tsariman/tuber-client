@@ -1,7 +1,7 @@
-import { Dispatch } from 'redux';
+import type { Dispatch } from 'redux';
 import { is_object, mongo_object_id } from '../business.logic/utility';
-import { IJsonapiResponse } from 'src/interfaces/IJsonapi';
-import { appRequestFailed } from 'src/slices/app.slice';
+import type { IJsonapiResponse } from '@tuber/shared';
+import { appRequestFailed } from '../slices/app.slice';
 import { type RootState } from '.';
 import { error_id, remember_jsonapi_errors } from '../business.logic/errors';
 import execute_directives from './net.directives.c';

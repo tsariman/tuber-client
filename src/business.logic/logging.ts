@@ -45,7 +45,7 @@ export const ler = (...args: unknown[]) => {
  * Logs a warning message to the console if the app is in debug mode.
  * @param msg Message to log.
  */
-export const lwr = (...args: unknown[]) => {
+export const lwa = (...args: unknown[]) => {
   if (window.webui?.inDebugMode) {
     console.warn(_msgPrefix, ...args);
   }

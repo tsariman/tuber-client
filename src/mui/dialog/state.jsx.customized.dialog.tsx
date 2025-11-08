@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
-import DialogTitle, { DialogTitleProps } from '@mui/material/DialogTitle';
+import DialogTitle, { type DialogTitleProps } from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import { type StateDialogCustomized } from '../../controllers';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../state';
+import type { AppDispatch, RootState } from '../../state';
 import StateJsxDialogAction from './actions/state.jsx';
 import { StateJsxIcon } from '../icon';
 

@@ -1,7 +1,7 @@
-import { Theme } from '@mui/material';
+import type { Theme } from '@mui/material';
 import { err } from '../business.logic/logging';
 import { get_val, safely_get_as } from '../business.logic/utility';
-import { TObj } from 'src/common.types';
+import type { TObj } from '@tuber/shared';
 
 interface IEval {
   type      : 'fn' | 'slice';
@@ -47,7 +47,7 @@ export default class StateThemeParser {
   getTheme(): Theme|undefined { return this._theme; }
 
   /** Get a simplified parser */
-  getParser (): Function {
+  getParser (): (theme: Theme, rules: Record<string, unknown>) => TObj {
     return  (theme: Theme, rules: Record<string, unknown>) => {
       this._theme = theme;
       return this._parse({ ...rules });
@@ -82,12 +82,15 @@ export default class StateThemeParser {
     }
 
     const parsed: (string | number)[] = [fname];
-    for (var i = 1; i < strFnPieces.length; i++) {
+    for (let i = 1; i < strFnPieces.length; i++) {
       const arg = strFnPieces[i];
-      const parsedArg = +arg || NaN;
-      isNaN(parsedArg)
-        ? parsed.push(safely_get_as(this._theme as object, arg, arg))
-        : parsed.push(parsedArg);
+      const parsedArg = Number(arg);
+
+      if (isNaN(parsedArg)) {
+        parsed.push(safely_get_as(this._theme as object, arg, arg));
+      } else {
+        parsed.push(parsedArg);
+      }
     }
     return parsed;
   }
@@ -118,7 +121,7 @@ export default class StateThemeParser {
   }
 
   /** Detects theme functions embeded in strings and evaluates them */
-  private _eval(str: string) {
+  private _eval(str: string): string | number | TThemeFuncArgs {
     const queue: IEval[] = [];
     const pattern = /\${|}/g;
 
@@ -145,7 +148,7 @@ export default class StateThemeParser {
             });
           }
           sliceStart = fnEnd + 1;
-          let fn = str.substring(fnStart + 2, fnEnd);
+          const fn = str.substring(fnStart + 2, fnEnd);
           if (fn) {
             queue.push({
               type: 'fn',
@@ -174,7 +177,7 @@ export default class StateThemeParser {
     }
 
     let e: IEval | undefined;
-    let fragments: (string|number)[] = [];
+    const fragments: (string|number)[] = [];
 
     // eslint-disable-next-line
     while (e = queue.shift()) {
@@ -206,12 +209,13 @@ export default class StateThemeParser {
     case 'value':
       rules[prop] = this._runFn(fname, tokens);
       break;
-    case 'property':
+    case 'property': {
       const computedProp = this._runFn(fname, tokens);
-      if (computedProp) {
+      if (computedProp && typeof computedProp === 'string') {
         rules[computedProp] = rules[prop];
+        delete rules[prop];
       }
-      break;
+    } break;
     }
   }
 
@@ -237,7 +241,7 @@ export default class StateThemeParser {
   }
 
   /** Returns true if a value is a falsy. */
-  private _bad(val: unknown) {
+  private _bad(val: unknown): boolean {
     if (!val) return true;
     switch (typeof val) {
       case 'string':
@@ -246,11 +250,13 @@ export default class StateThemeParser {
         return (!Array.isArray(val) && Object.keys(val).length <= 0)
           || (Array.isArray(val) && val.length <= 0);
       }
+      default:
+        return false;
     }
   }
 
   /** Applies theme function values */
-  private _parse (rules : TObj) {
+  private _parse (rules : TObj): TObj {
     if (this._bad(rules)) { return {}; }
     const propertyBin: string[] = [];
     for (const prop in rules) {
@@ -263,11 +269,14 @@ export default class StateThemeParser {
       const parsedProp = this._eval(prop);
       switch (typeof parsedProp) {
       case 'string':
-        rules[safely_get_as(this._theme as object, parsedProp,parsedProp)] = val;
+        if (parsedProp !== prop) {
+          rules[parsedProp] = val;
+          delete rules[prop];
+        }
         break;
       case 'object':
         propertyBin.push(prop);
-        this._apply('property', rules, prop, parsedProp);
+        this._apply('property', rules, prop, parsedProp as (string|number)[]);
         break;
       }
     }
@@ -288,7 +297,7 @@ export default class StateThemeParser {
           break;
         case 'object':
           if (Array.isArray(parsedVal)) {
-            this._apply('value', rules, prop, parsedVal);
+            this._apply('value', rules, prop, parsedVal as (string|number)[]);
           }
           break;
       }

@@ -3,7 +3,7 @@ import {
   Drawer,
   IconButton,
   List,
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   styled,
@@ -11,9 +11,7 @@ import {
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { type StateDrawerPersistent } from '../../controllers';
-import { get_formatted_route } from '../../controllers/StateLink';
-import store, { type AppDispatch, type RootState, actions } from '../../state';
-import { Link as RouterLink } from 'react-router-dom';
+import { type AppDispatch, type RootState, get_redux } from '../../state';
 import { StateJsxIcon, StateJsxUnifiedIconProvider } from '../icon';
 import { Fragment, memo } from 'react';
 
@@ -65,18 +63,15 @@ export default function PersistentDrawer({def: drawer }: PerDrawerProps) {
         ( null ) }
       <List>
         { drawer.items.map((item, i) => (
-          <ListItem
+          <ListItemButton
             key={i + 1}
-            button
-            onClick={item.onClick({store, actions, route: item.has.route})}
-            component={RouterLink}
-            to={get_formatted_route(item.has)}
+            onClick={item.onClick(get_redux(item.has.route))}
           >
             <ListItemIcon>
               <StateJsxUnifiedIconProvider def={item.has} />
             </ListItemIcon>
             <ListItemText primary={item.has.state.text} />
-          </ListItem>
+          </ListItemButton>
         )) }
       </List>
     </Drawer>

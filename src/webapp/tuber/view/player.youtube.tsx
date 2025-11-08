@@ -1,5 +1,5 @@
 import Config from '../../../config';
-import { IBookmark } from '../tuber.interfaces';
+import type { IBookmark } from '../tuber.interfaces';
 
 interface IYTPlayerProps {
   bookmark: IBookmark;

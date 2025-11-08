@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import IStateAllForms from '../interfaces/IStateAllForms';
-import IStateForm from '../interfaces/IStateForm';
+import type { IStateAllForms, IStateForm } from '@tuber/shared';
 import initialState from '../state/initial.state';
 
 export const FORMS_ADD = 'forms/formsAdd';
@@ -48,13 +47,13 @@ export const formsSlice = createSlice({
     formsAddMultiple: (state, action:IAddMultipleAction) => {
       const forms = action.payload;
       Object.keys(forms).forEach(key => {
-        /* @ts-ignore */
+        // @ts-expect-error The Redux toolkit and Material-UI do not get along.
         state[key] = forms[key];
       });
     },
     formsAdd: (state, action: IFormsReducerArgs) => {
       const { name, form } = action.payload;
-      /* @ts-ignore */
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state[_form_(name)] = form;
     },
     formsRemove: (state, action) => {

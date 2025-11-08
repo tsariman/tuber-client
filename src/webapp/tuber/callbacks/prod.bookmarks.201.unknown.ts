@@ -3,7 +3,7 @@ import { type IRedux } from 'src/state';
 import { post_req_state } from 'src/state/net.actions';
 import { DIALOG_UNKNOWN_NEW_ID, FORM_UNKNOWN_NEW_ID } from '../tuber.config';
 import { get_iframe_url_src } from '../_tuber.common.logic';
-import { IBookmark } from '../tuber.interfaces';
+import type { IBookmark } from '../tuber.interfaces';
 import { get_dialog_form_endpoint, get_form_data } from './_callbacks.common.logic';
 import { log } from 'src/business.logic/logging';
 

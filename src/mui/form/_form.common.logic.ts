@@ -1,8 +1,11 @@
-import { TBoolVal } from 'src/common.types';
-import * as C from 'src/constants.client';
-import IStateDialog from '../../interfaces/IStateDialog';
-import IStateFormItem from '../../interfaces/IStateFormItem';
-import { is_record } from 'src/business.logic/utility';
+
+import * as C from '@tuber/shared/dist/constants.client';
+import type { TBoolVal } from '@tuber/shared/dist/common.types';
+import { is_record } from '../../business.logic/utility';
+import type {
+  IStateDialog,
+  IStateFormItem
+} from '../../localized/interfaces';
 
 /** 
  * Regular expression identifying a `true` or `false` boolean value.

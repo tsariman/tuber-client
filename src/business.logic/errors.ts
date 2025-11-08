@@ -1,9 +1,9 @@
-import { Theme } from '@mui/material/styles';
-import { IJsonapiError, TJsonapiMeta } from '../interfaces/IJsonapi';
+import type { IJsonapiError, TJsonapiMeta } from '@tuber/shared';
 import { dispatch, get_state } from '../state';
 import { errorsActions } from '../slices/errors.slice';
 import { ler } from './logging';
 import { get_val } from './utility';
+import type { Theme } from '@mui/material';
 
 // WARNING: Redux integration requires importing dispatch and actions.
 
@@ -72,13 +72,11 @@ export function get_error_code(error?: IJsonapiError): string {
  * in doing that by giving a code to error object who do not have one.
  */
 export function set_date_error_code(error: IJsonapiError): void {
-  error.code = error.code || Date.now().toString();
+  error.code = error.code || 'INTERNAL_ERROR';
 }
 
 export function set_status_error_code(error: IJsonapiError): void {
-  error.code = error.code
-    || error.status
-    || Date.now().toString();
+  error.code = error.code || 'INTERNAL_ERROR';
 }
 
 /** Format JSON */

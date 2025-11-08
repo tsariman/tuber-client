@@ -1,4 +1,4 @@
-import JsonapiPaginationLinks from '../../business.logic/jsonapi.pagination.links';
+import JsonapiPaginationLinks from 'src/business.logic/JsonapiPaginationLinks'
 
 describe('JsonapiPaginationLinks', () => {
   describe('constructor', () => {

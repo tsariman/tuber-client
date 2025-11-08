@@ -2,15 +2,15 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useDispatch, useSelector } from 'react-redux';
 import type StateDialogForm from '../../controllers/templates/StateDialogForm';
 import type { AppDispatch, RootState } from '../../state';
 import StateJsxDialogAction from './actions/state.jsx.form';
-import FormContent from '../../components/content/form.component';
+import FormContent from '../../components/content/form.cpn';
 import { memo } from 'react';
 import { StateJsxIcon } from '../icon';
+import DialogContentText from '@mui/material/DialogContentText';
 
 interface IDialogForm { def: StateDialogForm; }
 

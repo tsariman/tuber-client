@@ -3,8 +3,8 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { type StateFormItemRadio } from '../../../controllers';
-import { THive } from '.';
+import type { StateFormItemRadio } from '../../../controllers';
+import type { THive } from '.';
 import { useState } from 'react';
 
 interface IDialogRadio {

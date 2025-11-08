@@ -1,8 +1,17 @@
+/**
+ * Parsing Utilities
+ *
+ * This module provides utility functions for parsing and manipulating various
+ * data formats including content definitions, URLs, cookies, and strings.
+ * These functions are used throughout the application for data transformation
+ * and validation.
+ */
+
 import {
   APP_CONTENT_VIEW,
   DEFAULT_LANDING_PAGE_VIEW,
-} from '../constants.client';
-import { IStatePageContent } from '../interfaces/IStatePage';
+} from '@tuber/shared';
+import type { IStatePageContent } from '@tuber/shared';
 import { ler } from './logging';
 
 /**
@@ -11,13 +20,13 @@ import { ler } from './logging';
  *
  * Format: "type : name : endpoint : args"
  *
- * **type**: Type of content found on the page.  
- * **name**: Identifier for a a specific content.  
- * **endpoint**: to which data may be sent or retrieve for the page.  
- * **args**: URL arguments when making server request using the enpoint.  
+ * **type**: Type of content found on the page.
+ * **name**: Identifier for a specific content.
+ * **endpoint**: Endpoint to which data may be sent or retrieved for the page.
+ * **args**: URL arguments when making server requests using the endpoint.
  *
- * @param content 
- * @returns `IStatePageContent` object.
+ * @param content The content definition string to parse
+ * @returns An `IStatePageContent` object with parsed properties
  */
 export function get_parsed_content(content?: unknown): IStatePageContent {
   if (typeof content !== 'string') {
@@ -45,9 +54,9 @@ export function get_parsed_content(content?: unknown): IStatePageContent {
 }
 
 /**
- * Parse cookie string into an object.
- * @param cookieString Cookie string
- * @returns object
+ * Parses the document cookie string into an object.
+ *
+ * @returns An object containing all cookie key-value pairs
  */
 export function parse_cookies() {
   const cookies = {} as Record<string, string>;
@@ -62,9 +71,10 @@ export function parse_cookies() {
 }
 
 /**
- * Get the cookie value by name.
- * @param name Cookie name
- * @returns T
+ * Gets the value of a cookie by name.
+ *
+ * @param name The name of the cookie to retrieve
+ * @returns The cookie value as the specified type, or empty string if not found
  */
 export function get_cookie<T=string>(name: string): T {
   const cookies = parse_cookies();
@@ -73,11 +83,13 @@ export function get_cookie<T=string>(name: string): T {
 }
 
 /**
- * Get the search query from the URL.
+ * Sets or removes a query parameter in a URL.
  *
- * @param url 
- * @returns string
- * 
+ * @param url The URL to modify
+ * @param param The query parameter name
+ * @param val The value to set (if undefined, the parameter will be removed)
+ * @returns The modified URL string
+ *
  * @deprecated Not in use
  */
 export function set_url_query_val(url: string, param: string, val?: string) {
@@ -130,10 +142,11 @@ export function set_val(obj: object, path: string, val: unknown): void {
 }
 
 /**
- * Get HTML head meta data.
+ * Gets the content of an HTML meta tag by name.
  *
- * @param name 
- * @returns string
+ * @param name The name attribute of the meta tag
+ * @param $default The default value to return if the meta tag is not found
+ * @returns The content of the meta tag or the default value
  */
 export function get_head_meta_content(name: string, $default = 'app'): string {
   const element = document.querySelector(`meta[name="${name}"]`);
@@ -142,9 +155,10 @@ export function get_head_meta_content(name: string, $default = 'app'): string {
 }
 
 /**
- * Get the real route from the template route by ignoring the path variables.
- * @param templateRoute
- * @param templateRoute 
+ * Gets the base route from a template route by ignoring path variables.
+ *
+ * @param templateRoute The template route string (e.g., "/users/:id/posts")
+ * @returns The base route (e.g., "users")
  */
 export function get_base_route(templateRoute?: string): string {
   if (!templateRoute) return '';
@@ -152,9 +166,10 @@ export function get_base_route(templateRoute?: string): string {
 }
 
 /**
- * Ensures the origin is a valid URL has an ending forward slash.
+ * Ensures the origin URL has a trailing forward slash.
  *
- * @returns string
+ * @param origin The origin URL to process (optional)
+ * @returns The origin URL with a trailing slash, or window.location.origin with a trailing slash if no origin provided
  */
 export function get_origin_ending_fixed(origin?: string): string {
   if (origin) {
@@ -164,10 +179,10 @@ export function get_origin_ending_fixed(origin?: string): string {
 }
 
 /**
- * Removes ending forward slash from the endpoint if there is one.
+ * Removes the trailing forward slash from an endpoint if present.
  *
- * @param endpoint
- * @returns string
+ * @param endpoint The endpoint string to clean
+ * @returns The endpoint without a trailing slash
  */
 export function clean_endpoint_ending(endpoint?: string): string {
   if (endpoint) {
@@ -176,7 +191,12 @@ export function clean_endpoint_ending(endpoint?: string): string {
   return '';
 }
 
-/** Ensures that question mark symbol is included query string. */
+/**
+ * Ensures a query string starts with a question mark.
+ *
+ * @param query The query string to process
+ * @returns The query string prefixed with '?' if it doesn't already start with one
+ */
 export function get_query_starting_fixed(query?: string): string {
   if (query) {
     return query.charAt(0) === '?' ? query : '?' + query;
@@ -185,9 +205,10 @@ export function get_query_starting_fixed(query?: string): string {
 }
 
 /**
- * Get all query string values as an object
- * @param url
- * @returns object of query string keys and values
+ * Parses all query string parameters from a URL into an object.
+ *
+ * @param url The URL containing query parameters
+ * @returns An object containing all query parameter key-value pairs
  */
 export function get_query_values(url: string): { [key: string]: string } {
   const query = url.split('?')[1];
@@ -225,9 +246,10 @@ export function get_state_dialog_name(name: string): string {
 }
 
 /**
- * Removes leading and ending forward and back slashes.
+ * Removes leading and trailing forward and back slashes from a string.
  *
- * @param str 
+ * @param str The string to trim
+ * @returns The string with leading and trailing slashes removed
  */
 export function trim_slashes(str: string): string {
   let s = str;
@@ -243,14 +265,14 @@ export function trim_slashes(str: string): string {
 }
 
 /**
- * Extracts the endpoint from the pathname.
+ * Extracts the endpoint from a pathname.
  *
- * The pathname can include a query string e.g. `name1/name2?q=123`
+ * The pathname can include a query string (e.g., `name1/name2?q=123`).
+ * This function will not work with full URLs that include the domain name
+ * and/or protocol.
  *
- * This function will not work with whole URL that includes the domain name
- * and/or the protocol.
- *
- * @param pathname 
+ * @param pathname The pathname to extract the endpoint from
+ * @returns The extracted endpoint (last segment of the path)
  */
 export function get_endpoint(pathname: string): string {
   let pname = trim_slashes(pathname);
@@ -264,11 +286,10 @@ export function get_endpoint(pathname: string): string {
 }
 
 /**
- * Converts an endpoint which contains hyphens to a camel case
- * version.
+ * Converts an endpoint containing hyphens to camelCase.
  *
- * @param endpoint
- * @returns camel case version of the endpoint
+ * @param endpoint The endpoint string to convert
+ * @returns The camelCase version of the endpoint
  */
 export function camelize(endpoint: string): string {
   return endpoint.replace(/-([a-zA-Z])/g, g => g[1].toUpperCase());

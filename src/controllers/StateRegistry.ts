@@ -5,11 +5,12 @@ import AbstractState from './AbstractState';
 import State from './State';
 
 export default class StateRegistry extends AbstractState {
-  constructor(
-    private _registryState: Record<string, unknown>,
-    private _parent?: State
-  ) {
+  private _registryState: Record<string, unknown>;
+  private _parent?: State;
+  constructor(registryState: Record<string, unknown>, parent?: State) {
     super();
+    this._registryState = registryState;
+    this._parent = parent;
   }
   get state(): Record<string, unknown> {
     return this._registryState;

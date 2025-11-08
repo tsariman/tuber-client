@@ -20,7 +20,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { StateJsxIcon, StateJsxUnifiedIconProvider } from '../icon';
 import Menu from '@mui/material/Menu';
 import StateJsxChip from './state.jsx.chip';
-import { appbarQueriesSet } from 'src/slices/appbarQueries.slice';
+import { appbarQueriesSet } from '../../slices/appbarQueries.slice';
 import { drawerOpen } from '../../slices/drawer.slice';
 
 const Search = styled('div')(({ theme }) => ({

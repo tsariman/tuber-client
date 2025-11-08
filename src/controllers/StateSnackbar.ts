@@ -1,20 +1,25 @@
 import AbstractState from './AbstractState';
-import IStateAnchorOrigin from '../interfaces/IStateAnchorOrigin';
-import IStateSnackbar from '../interfaces/IStateSnackbar';
+import type {
+  IStateAnchorOrigin,
+  IStateSnackbar
+} from '@tuber/shared';
 import State from './State';
 import { get_state } from '../state';
 import StateAnchorOrigin from './StateAnchorOrigin';
+import type { JSX } from 'react';
 
 export default class StateSnackbar
   extends AbstractState
   implements IStateSnackbar
 {
+  private _snackbarState: IStateSnackbar;
+  private _parent?: State;
   private _snackbarAnchorOrigin?: StateAnchorOrigin;
 
-  constructor(private _snackbarState: IStateSnackbar,
-    private _parent?: State
-  ) {
+  constructor(snackbarState: IStateSnackbar, parent?: State) {
     super();
+    this._snackbarState = snackbarState;
+    this._parent = parent;
   }
 
   get state(): IStateSnackbar { return this._snackbarState; }

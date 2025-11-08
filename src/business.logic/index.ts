@@ -11,11 +11,6 @@ export {
   get_content_refresh_key
 } from './cache';
 
-// Configuration
-export type { IConfiguration } from './configuration';
-export { Configuration } from './configuration';
-export { default as getConfig } from './configuration';
-
 // Error handling and tracking
 export {
   set_error_id,
@@ -63,7 +58,7 @@ export {
   pre,
   log,
   ler,
-  lwr,
+  lwa as lwr,
   err
 } from './logging';
 

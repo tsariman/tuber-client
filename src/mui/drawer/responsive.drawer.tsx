@@ -2,7 +2,7 @@ import {
   Divider,
   Drawer,
   List,
-  ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Toolbar
@@ -10,9 +10,7 @@ import {
 import { Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { type StateDrawerResponsive } from '../../controllers';
-import { get_formatted_route } from '../../controllers/StateLink';
-import store, { type RootState, actions } from 'src/state';
-import { Link as RouterLink } from 'react-router-dom';
+import { type RootState, get_redux } from '../../state';
 import { StateJsxUnifiedIconProvider } from '../icon';
 
 interface IResDrawerProps { def: StateDrawerResponsive; }
@@ -31,18 +29,15 @@ export default function ResponsiveDrawer({ def: drawer }: IResDrawerProps) {
         ( null ) }
       <List>
         { drawer.items.map((item, i) => (
-          <ListItem
+          <ListItemButton
             key={i + 1}
-            button
-            onClick={item.onClick({store, actions, route: item.has.route})}
-            component={RouterLink}
-            to={get_formatted_route(item.has)}
+            onClick={item.onClick(get_redux(item.has.route))}
           >
             <ListItemIcon>
               <StateJsxUnifiedIconProvider def={item.has} />
             </ListItemIcon>
             <ListItemText primary={item.has.state.text} />
-          </ListItem>
+          </ListItemButton>
         )) }
       </List>
     </Fragment>

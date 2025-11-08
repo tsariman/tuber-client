@@ -1,6 +1,6 @@
 import { Box, Grid } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
-import { ReactNode, useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 
 const theme = createTheme();
 

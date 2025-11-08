@@ -10,7 +10,8 @@ import {
 import TextField from '@mui/material/TextField';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../../../state';
-import { NAME_NOT_SET } from '../../../../constants.client';
+import { NAME_NOT_SET } from '@tuber/shared';
+import type { TFormItemDefaultEventHandler } from '../_items.common.logic';
 
 interface IDialogSelectDefault { def: StateFormItemSelect; }
 
@@ -31,7 +32,7 @@ export default function StateJsxSelectDefault (
       <Select
         {...select.props}
         value={getValue()}
-        onChange={select.onChange(name)}
+        onChange={(select.onChange as TFormItemDefaultEventHandler)(name)}
       >
         <MenuItem value=''></MenuItem>
         {select.has.items.map((item, i) => (

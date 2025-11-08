@@ -6,6 +6,7 @@ import FormLabel from '@mui/material/FormLabel';
 import { type StateFormItemRadio, StateFormsData } from '../../../controllers';
 import { type RootState } from '../../../state';
 import { useSelector } from 'react-redux';
+import type { TFormItemDefaultEventHandler } from './_items.common.logic';
 
 interface IDialogRadio { def: StateFormItemRadio; }
 
@@ -47,7 +48,7 @@ export default function StateJsxRadio({ def: radioGroup }: IDialogRadio) {
       <RadioGroup
         {...radioGroup.props}
         name={name}
-        onChange={radioGroup.onChange(name)}
+        onChange={(radioGroup.onChange as TFormItemDefaultEventHandler)(name)}
       >
         {radioGroup.has.items.map((radio, i) => (
           <FormControlLabel

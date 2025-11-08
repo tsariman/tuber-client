@@ -1,5 +1,5 @@
 import AbstractState from '../AbstractState';
-import { type IStateDialogSelectionItem } from '../../interfaces/IStateDialog';
+import type { IStateDialogSelectionItem } from '@tuber/shared';
 import type StateDialogSelection from './StateDialogSelection';
 import { err } from '../../business.logic/logging';
 import StateAvatar from '../StateAvatar';
@@ -9,12 +9,16 @@ export default class StateDialogSelectionItem<T = unknown>
   extends AbstractState
   implements IStateDialogSelectionItem<T>
 {
+  private _itemState: IStateDialogSelectionItem<T>;
+  private _parent: StateDialogSelection<T>;
   private avatarState?: StateAvatar;
 
-  constructor(private _itemState: IStateDialogSelectionItem<T>,
-    private _parent: StateDialogSelection<T>
+  constructor(itemState: IStateDialogSelectionItem<T>,
+    parent: StateDialogSelection<T>
   ) {
     super();
+    this._itemState = itemState;
+    this._parent = parent;
   }
 
   get parent(): StateDialogSelection<T> { return this._parent; }

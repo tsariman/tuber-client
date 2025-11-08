@@ -1,17 +1,15 @@
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import SwipeableDrawer, {
-  SwipeableDrawerProps
-} from '@mui/material/SwipeableDrawer';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import { type SwipeableDrawerProps } from '@mui/material/SwipeableDrawer';
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { useDispatch, useSelector } from 'react-redux';
-import store, { actions, type AppDispatch, type RootState } from 'src/state';
-import { Link as RouterLink } from 'react-router-dom';
+import React from 'react';
+import { get_redux, type AppDispatch, type RootState } from '../../state';
 import { type StatePageDrawer } from '../../controllers';
-import { get_formatted_route } from '../../controllers/StateLink';
 import { StateJsxUnifiedIconProvider } from '../icon';
 
 interface ITempDrawerProps {
@@ -41,24 +39,21 @@ export default function TempDrawer({ def: drawer }: ITempDrawerProps) {
     >
       <List>
         { drawer.items.map((item, i) => (
-          <ListItem
+          <ListItemButton
             key={i + 1}
-            button
-            onClick={item.onClick({store, actions, route: item.has.route})}
-            component={RouterLink}
-            to={get_formatted_route(item.has)}
+            onClick={item.onClick(get_redux(item.has.route))}
           >
             <ListItemIcon>
               <StateJsxUnifiedIconProvider def={item.has} />
             </ListItemIcon>
             <ListItemText primary={item.has.state.text} />
-          </ListItem>
+          </ListItemButton>
         )) }
       </List>
     </Box>
   );
 
-  const drawerTable: {[prop: string]: JSX.Element } = {
+  const drawerTable: {[prop: string]: React.JSX.Element } = {
     'temporary': (
       <Drawer
         {...drawer.props}

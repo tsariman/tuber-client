@@ -6,17 +6,21 @@ import {
   err
 } from '../business.logic';
 import AbstractState from './AbstractState';
-import IStateNet from '../interfaces/IStateNet';
+import type { IStateNet } from '@tuber/shared';
 import State from './State';
 import { get_state } from '../state';
 
 export default class StateNet extends AbstractState implements IStateNet {
+  private _netState: IStateNet;
+  private _parent?: State;
   private _netCsrfToken?: string;
   private _netHeaders?: Record<string, string>;
   private _token?: string;
 
-  constructor(private _netState: IStateNet, private _parent?: State) {
+  constructor(netState: IStateNet, parent?: State) {
     super();
+    this._netState = netState;
+    this._parent = parent;
   }
 
   get state(): IStateNet { return this._netState; }

@@ -5,13 +5,13 @@ import type {
   SxProps,
   TypographyProps
 } from '@mui/material';
-import IStateAppbar from '../../interfaces/IStateAppbar';
+import type { TObj } from '@tuber/shared';
+import type { IStateAppbar } from '../../localized/interfaces';
 import type State from '../State';
 import StateAppbar from '../StateAppbar';
 import StateAppbarBackground from './StateAppbarBackground';
 import StateAppbarTypography from './StateAppbarTypography';
-import { HTMLAttributes } from 'react';
-import { TObj } from '../../common.types';
+import { type HTMLAttributes } from 'react';
 
 export default class StateAppbarDefault
   extends StateAppbar<State>

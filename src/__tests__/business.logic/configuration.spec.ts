@@ -1,4 +1,5 @@
-import getConfig, { IConfiguration } from '../../business.logic/configuration';
+import { get_config, type IConfiguration } from '@tuber/shared';
+
 
 describe('configuration.ts', () => {
   const initConfObj = {
@@ -12,7 +13,7 @@ describe('configuration.ts', () => {
     // MY_CONFIG: 'my config value',
   };
 
-  const $config = getConfig();
+  const $config = get_config();
   $config.init(initConfObj);
 
   // Makes config object key available in suggestions

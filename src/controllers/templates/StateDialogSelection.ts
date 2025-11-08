@@ -1,13 +1,11 @@
-import IStateDialog, {
-  IStateDialogSelectionItem
-} from '../../interfaces/IStateDialog';
+import type { IStateDialogSelectionItem } from '@tuber/shared';
+import type { IStateDialog } from '../../localized/interfaces';
 import type State from '../State';
 import StateDialog from '../StateDialog';
 import StateDialogSelectionItem from './StateDialogSelectionItem';
 
 export default class StateDialogSelection<T = unknown>
   extends StateDialog<T>
-  implements IStateDialog<T>
 {
   private _dialogSelectionState: IStateDialog<T>;
   private _dialogItems?: StateDialogSelectionItem<T>[];

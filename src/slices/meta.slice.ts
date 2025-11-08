@@ -1,15 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import initialState from '../state/initial.state';
+
+interface IAdd {
+  endpoint: string;
+  meta: Record<string, unknown>;
+}
 
 export const metaSlice = createSlice({
   name: 'meta',
   initialState: initialState.meta,
   reducers: {
-    metaAdd: (state, action) => {
+    metaAdd: (state, action: PayloadAction<IAdd>) => {
       const { endpoint, meta } = action.payload;
       state[endpoint] = meta;
     },
-    metaRemove: (state, action) => {
+    metaRemove: (state, action: PayloadAction<string>) => {
       delete state[action.payload];
     },
   },

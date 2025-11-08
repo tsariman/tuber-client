@@ -1,14 +1,7 @@
-import { dummy_callback, type IRedux, type TReduxHandle } from '../state';
+import { dummy_redux_handler, type IRedux, type TReduxHandler } from '../state';
 import { ler, get_val } from '../business.logic';
 import AbstractState from './AbstractState';
-import IStateFormItemCustom, {
-  IHandleDirective,
-  THandle,
-  TStateFormITemCustomColor
-} from '../interfaces/IStateFormItemCustom';
-import { TObj } from 'src/common.types';
-import { CSSProperties } from 'react';
-import {
+import type {
   FormControlLabelProps,
   FormControlProps,
   FormGroupProps,
@@ -17,22 +10,32 @@ import {
   IconProps,
   SvgIconProps
 } from '@mui/material';
+import type {
+  IHandleDirective,
+  THandleName,
+  TStateFormITemCustomColor,
+  TObj
+} from '@tuber/shared';
+import type { IStateFormItemCustom } from '../localized/interfaces';
+import type { CSSProperties } from 'react';
 import React from 'react';
-import StateHandleFactory from './StateHandleFactory';
+import ReduxHandlerFactory from '../event/ReduxHandlerFactory';
 
 export default class StateFormItemCustom<P, T = unknown>
   extends AbstractState
   implements IStateFormItemCustom<T>
 {
+  protected hasState: IStateFormItemCustom<T>;
+  protected parentDef: P;
   protected hasItemsState: T[];
-  protected hasCallback?: TReduxHandle;
+  protected hasCallback?: TReduxHandler;
   protected hasClasses: unknown;
   private _fieldOk = true;
 
-  constructor (protected hasState: IStateFormItemCustom<T>,
-    protected parentDef: P
-  ) {
+  constructor (hasState: IStateFormItemCustom<T>, parent: P) {
     super();
+    this.hasState = hasState;
+    this.parentDef = parent;
     this.hasItemsState = this.hasState.items || [];
     this.hasCallback = this.hasState.callback;
     this.hasClasses = this.hasState.classes || {};
@@ -41,7 +44,7 @@ export default class StateFormItemCustom<P, T = unknown>
   get state(): IStateFormItemCustom<T> { return this.hasState; }
   get parent(): P { return this.parentDef; }
   get id(): string { return this.hasState.id ?? ''; }
-  get callback(): TReduxHandle { return this.hasCallback || dummy_callback; }
+  get callback(): TReduxHandler { return this.hasCallback || dummy_redux_handler; }
   get classes(): unknown { return this.hasClasses; }
   get content(): string { return this.hasState.content ?? ''; }
   get color(): TStateFormITemCustomColor { return this.hasState.color ?? 'default'; }
@@ -211,11 +214,11 @@ export default class StateFormItemCustom<P, T = unknown>
    * // Or, "handleSet.myOtherCallback", then:
    * const myOtherCallback = window.handleSet.myOtherCallback;
    * ```
-   * @param {THandle} event e.g., 'onclick', 'onfocus'... etc.
+   * @param {THandleName} event e.g., 'onclick', 'onfocus'... etc.
    */
-  getHandle = (
-    event: THandle = 'onclick'
-  ): TReduxHandle | undefined => {
+  getHandler = (
+    event: THandleName = 'onclick'
+  ): TReduxHandler | undefined => {
     const callbackName = this.hasState[`${event}Handle`];
     if (!callbackName) {
       return;
@@ -225,13 +228,13 @@ export default class StateFormItemCustom<P, T = unknown>
       ler(`getHandle(): '${callbackName}' not a function`);
       return;
     }
-    return callback as TReduxHandle;
+    return callback as TReduxHandler;
   } // END of method
 
   /** Generate callback */
   getDirectiveHandle = (
-    event: THandle = 'onclick'
-  ): TReduxHandle | undefined => {
+    event: THandleName = 'onclick'
+  ): TReduxHandler | undefined => {
     let handleDirective: IHandleDirective | undefined;
     switch (event) {
       case 'onclick':
@@ -253,8 +256,8 @@ export default class StateFormItemCustom<P, T = unknown>
         handleDirective = this.hasState.ondeleteHandleDirective;
         break;
     }
-    if (!handleDirective) { return undefined; }
-    const handleFactory = new StateHandleFactory(handleDirective);
+    if (!handleDirective) { return undefined; };
+    const handleFactory = new ReduxHandlerFactory(handleDirective);
     const callback = handleFactory.getDirectiveCallback();
     return callback;
   }

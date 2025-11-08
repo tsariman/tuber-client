@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ILoadedPagesRange } from '../interfaces/IState';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { ILoadedPagesRange } from '@tuber/shared';
 import initialState from '../state/initial.state';
 
 export interface IPageNumbersUpdate {

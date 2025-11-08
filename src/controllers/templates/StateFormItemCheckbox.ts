@@ -1,11 +1,11 @@
+import type { IFormChoices } from '../../localized/interfaces';
 import type StateForm from '../StateForm';
 import StateFormItem from '../StateFormItem';
-import { type IStateFormItemCheckboxBox } from '../StateFormItemCheckboxBox';
 import StateFormItemCheckboxCustom from './StateFormItemCheckboxCustom';
 
 export default class StateFormItemCheckbox extends StateFormItem<
   StateForm,
-  IStateFormItemCheckboxBox
+  IFormChoices
 > {
   private _itemCheckboxHas?: StateFormItemCheckboxCustom;
   get has(): StateFormItemCheckboxCustom {

@@ -1,17 +1,23 @@
 import {
-  CSSObject, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText,
-  styled, Theme, useTheme
+  type CSSObject,
+  Divider,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  styled,
+  type Theme,
+  useTheme
 } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
 import { useDispatch, useSelector } from 'react-redux';
 import { type StatePageDrawer } from '../../controllers';
-import store, { actions } from 'src/state';
-import type { RootState, AppDispatch } from 'src/state';
-import { Link as RouterLink } from 'react-router-dom';
+import { get_redux } from '../../state';
+import type { RootState, AppDispatch } from '../../state';
 import { StateJsxIcon, StateJsxUnifiedIconProvider } from '../icon';
 import { get_drawer_width } from '../../state';
 import { Fragment, memo } from 'react';
-import { get_formatted_route } from 'src/controllers/StateLink';
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: get_drawer_width(),
@@ -95,18 +101,15 @@ export default function MiniDrawer({ def: drawer }: IMiniDrawerProps) {
         ( null ) }
       <List>
         { drawer.items.map((item, i) => (
-          <ListItem
+          <ListItemButton
             key={i + 1}
-            button
-            onClick={item.onClick({store, actions, route: item.has.route})}
-            component={RouterLink}
-            to={get_formatted_route(item.has)}
+            onClick={item.onClick(get_redux(item.has.route))}
           >
             <ListItemIcon>
               <StateJsxUnifiedIconProvider def={item.has} />
             </ListItemIcon>
             <ListItemText primary={item.has.state.text} />
-          </ListItem>
+          </ListItemButton>
         )) }
       </List>
     </Drawer>

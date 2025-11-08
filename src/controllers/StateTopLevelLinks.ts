@@ -1,14 +1,16 @@
 import AbstractState from './AbstractState';
-import IStateTopLevelLinks from '../interfaces/IStateTopLevelLinks';
+import type { IStateTopLevelLinks } from '@tuber/shared';
 import State from './State';
 import { get_state } from '../state';
 
 export default class StateTopLevelLinks extends AbstractState {
+  private _topLevelLinksState: IStateTopLevelLinks;
+  private _parent?: State;
 
-  constructor(private _topLevelLinksState: IStateTopLevelLinks,
-    private _parent?: State
-  ) {
+  constructor(topLevelLinksState: IStateTopLevelLinks, parent?: State) {
     super();
+    this._topLevelLinksState = topLevelLinksState;
+    this._parent = parent;
   }
 
   get state(): IStateTopLevelLinks { return this._topLevelLinksState; }

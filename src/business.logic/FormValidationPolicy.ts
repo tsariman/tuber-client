@@ -1,29 +1,34 @@
-import { type IRedux } from '../state';
-import { IStateFormsDataErrors } from '../interfaces/IState';
-import StateFormsDataErrors from '../controllers/StateFormsDataErrors';
+import { type IRedux } from '../state'
+import type { TObj, IStateFormsDataErrors } from '@tuber/shared'
+import StateFormsDataErrors from '../controllers/StateFormsDataErrors'
+import { is_record, is_string } from './utility'
 
 interface IValidation<T> {
-  name: keyof T;
-  error: boolean;
-  message?: string;
+  name: keyof T
+  error: boolean
+  message?: string
 }
 
 /**
  * Helper class for validating form data and displaying error messages.
  */
 export default class FormValidationPolicy<T=Record<string, unknown>> {
+  private _redux: IRedux
+  private _formName: string
   /** Short for formsDataErrorsState */
-  private _state: IStateFormsDataErrors;
-  private _e: StateFormsDataErrors<T>;
-  private _formData?: Record<string, unknown>;
+  private _state: IStateFormsDataErrors
+  private _e: StateFormsDataErrors<T>
+  private _formData?: TObj
 
-  constructor (private _redux: IRedux, private _formName: string) {
-    this._state = _redux.store.getState().formsDataErrors;
-    this._e = new StateFormsDataErrors<T>(this._state);
-    this._e.configure({ formName: this._formName });
+  constructor (redux: IRedux, formName: string) {
+    this._redux = redux
+    this._formName = formName
+    this._state = this._redux.store.getState().formsDataErrors
+    this._e = new StateFormsDataErrors<T>(this._state)
+    this._e.configure({ formName: this._formName })
   }
 
-  get e(): StateFormsDataErrors<T> { return this._e; }
+  get e(): StateFormsDataErrors<T> { return this._e }
 
   /**
    * Displays error message on form field.
@@ -63,18 +68,14 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
    * @returns Cleaned form data.
    * @example const formData = formValidationPolicy.getFilteredData()
    */
-  getFilteredData(): T {
-    return this._getFormData() as T;
-  }
+  getFilteredData(): T { return this._getFormData() as T }
 
   /**
    * Get the form data.
    * @returns Form data.
    * @example const formData = formValidationPolicy.getFormData()
    */
-  getFormData(): T {
-    return this._getFormData() as T;
-  }
+  getFormData(): T { return this._getFormData() as T }
 
   /**
    * Get a cleaned version of the form data.
@@ -83,10 +84,12 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
    */
   private _filterData(value: unknown) {
     if (typeof value === 'string') {
-      return value.trim();
+      const trimmed = value.trim()
+      // Optionally handle empty-after-trim as null or undefined
+      return trimmed || undefined
              // TODO apply other fixes here
     }
-    return value;
+    return value
   }
 
   /**
@@ -94,72 +97,70 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
    * @returns Form data.
    * @example const formData = formValidationPolicy.getFormData()
    */
-  private _getFormData() {
-    if (this._formData) {
-      return this._formData;
+  private _getFormData(): TObj {
+    if (this._formData) { return this._formData }
+    this._formData = {}
+    const formData = this._redux.store.getState().formsData[this._formName]
+    if (is_record(formData)) {
+      const names = Object.keys(formData)
+      const scopedFormData: TObj = {}
+      Object.values(formData).forEach((value, i) => {
+        scopedFormData[names[i]] = this._filterData(value)
+      })
+      this._formData = scopedFormData
     }
-    this._formData = {};
-    const formData = this._redux.store.getState().formsData[this._formName];
-    if (!formData) {
-      return this._formData;
-    }
-    const names = Object.keys(formData);
-    Object.values(formData).forEach((value, i) => {
-      this._formData ??= {};
-      this._formData[names[i]] = this._filterData(value);
-    });
-    return this._formData;
+    return this._formData
   }
 
   /**
    * Apply the validation schemes.
    * @returns Validation errors.
    */
-  applyValidationSchemes(): IValidation<T>[] | null {
-    const formsData = this._getFormData();
-    if (!formsData) { return null; }
-    const formErrorProfiles = this._e.state[this._formName];
-    const vError: IValidation<T>[] = [];
-    Object.entries(formErrorProfiles).forEach(key => {
-      const [name, profile] = key;
-      const value = formsData[name] as string;
-      if (typeof value === 'undefined'
-        && !profile.required
-      ) {
-        return null;
-      } else if (profile.required === true && !value) {
+  applyValidationSchemes(): IValidation<T>[] {
+    const formsData = this._getFormData()
+    const formErrors = this._e.get()
+    const vError: IValidation<T>[] = []
+    Object.entries(formErrors.profile).forEach(entry => {
+      const [name, field] = entry
+      const value = formsData[name]
+      if (field.is.not.required) {
+        return;
+      } else if (field.is.required && !value) {
         vError.push({
           name: name as keyof T,
           error: true,
-          message: profile.requiredMessage
-        });
-      } else if (typeof profile.maxLength !== 'undefined'
-        && value.length > profile.maxLength
+          message: field.requiredMessage
+        })
+      } else if (is_string(value)
+        && typeof field.maxLength !== 'undefined'
+        && value.length > field.maxLength
       ) {
         vError.push({
           name: name as keyof T,
           error: true,
-          message: profile.maxLengthMessage
-        });
-      } else if (profile.invalidationRegex
-        && new RegExp(profile.invalidationRegex).test(value)
+          message: field.maxLengthMessage
+        })
+      } else if (is_string(value)
+        && field.invalidationRegex
+        && new RegExp(field.invalidationRegex).test(value)
       ) {
         vError.push({
           name: name as keyof T,
           error: true,
-          message: profile.invalidationMessage
-        });
-      } else if (profile.validationRegex
-        && !new RegExp(profile.validationRegex).test(value)
+          message: field.invalidationMessage
+        })
+      } else if (is_string(value)
+        && field.validationRegex
+        && !new RegExp(field.validationRegex).test(value)
       ) {
         vError.push({
           name: name as keyof T,
           error: true,
-          message: profile.validationMessage
-        });
+          message: field.validationMessage
+        })
       }
     })
-    return vError.length > 0 ? vError : null;
+    return vError
   }
 
 }

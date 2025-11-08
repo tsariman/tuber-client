@@ -2,12 +2,12 @@ import AbstractState from './AbstractState';
 import State from './State';
 import { ler } from '../business.logic/logging';
 import { tmpRemove } from '../slices/tmp.slice';
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 import { is_record } from '../business.logic/utility';
-import { get_state } from '../state';
+import { get_state, type AppDispatch } from '../state';
 
 interface IConfiguration {
-  dispatch?: Function;
+  dispatch?: AppDispatch;
 }
 
 function error_msg(msg: string) {
@@ -15,12 +15,14 @@ function error_msg(msg: string) {
 }
 
 export default class StateTmp extends AbstractState {
-  private _dispatch?: Function;
+  private _tmpState: Record<string, unknown>;
+  private _parent?: State;
+  private _dispatch?: AppDispatch;
 
-  constructor(private _tmpState: Record<string, unknown>,
-    private _parent?: State
-  ) {
+  constructor(tmpState: Record<string, unknown>, parent?: State) {
     super();
+    this._tmpState = tmpState;
+    this._parent = parent;
   }
 
   get state(): Record<string, unknown> { return this._tmpState; }

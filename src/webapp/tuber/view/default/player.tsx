@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import React, { Fragment, useMemo } from 'react';
-import { IBookmark, TTPlayer, TTuberPlatformMap } from '../../tuber.interfaces';
+import type { IBookmark, TTPlayer, TTuberPlatformMap } from '../../tuber.interfaces';
 import RumblePlayer from '../player.rumble';
 import ResearchToolbar from '../tuber.toolbar.video';
 import YouTubePlayerApi from '../player.youtube.api';

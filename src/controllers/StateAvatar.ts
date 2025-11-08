@@ -1,9 +1,12 @@
 import AbstractState from './AbstractState';
-import IStateAvatar from '../interfaces/IStateAvatar';
+import type {
+  IStateDialog,
+  IStateDialogAvatar,
+  IStateAvatar
+} from '@tuber/shared';
 import StateFormItemCustom from './StateFormItemCustom';
-import { AvatarProps } from '@mui/material';
-import IStateDialog, { IStateDialogAvatar } from '../interfaces/IStateDialog';
-import { CSSProperties } from 'react';
+import type { AvatarProps } from '@mui/material';
+import type { CSSProperties } from 'react';
 
 export default class StateAvatar
   extends AbstractState

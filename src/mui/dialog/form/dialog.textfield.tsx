@@ -1,10 +1,9 @@
 import TextField from '@mui/material/TextField';
 import { useState } from 'react';
-import { THive } from '.';
-import { NAME_NOT_SET } from '../../../constants.client';
+import type { THive } from '.';
+import { NAME_NOT_SET, typeMap } from '@tuber/shared';
 import type StateFormItem from '../../../controllers/StateFormItem';
 import { StateJsxAdornment } from '../../form/items/state.jsx.input.adornment';
-import { typeMap } from '../../form/items/state.jsx.textfield';
 
 interface IJsonTextfieldProps {
   def: StateFormItem;

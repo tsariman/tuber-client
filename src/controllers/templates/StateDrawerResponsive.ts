@@ -1,6 +1,6 @@
 import { type DrawerProps } from '@mui/material';
 import StatePageDrawer from './StatePageDrawer';
-import { TWithRequired } from 'src/common.types';
+import type { TWithRequired } from '@tuber/shared';
 
 export default class StateDrawerResponsive extends StatePageDrawer {
   private _container = window !== undefined

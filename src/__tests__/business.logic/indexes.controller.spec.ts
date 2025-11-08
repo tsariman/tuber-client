@@ -1,5 +1,5 @@
+import type { IJsonapiResponseResource } from '@tuber/shared';
 import * as F from '../../business.logic/indexes';
-import { IJsonapiResponseResource } from '../../interfaces/IJsonapi';
 
 describe('indexes.controller.ts', () => {
 

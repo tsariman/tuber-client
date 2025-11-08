@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, type PayloadAction } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 // import logger from 'redux-logger'// TODO Uncomment when debugging Redux
 import infoReducer, { appActions } from '../slices/app.slice';
@@ -41,15 +41,15 @@ import {
   NET_STATE_PATCH,
   NET_STATE_PATCH_DELETE,
   STATE_RESET,
-  TEventCallback
-} from '../constants.client';
+  type TEventHandler,
+  type TObj
+} from '@tuber/shared';
+import type { IState, TNetState } from '../localized/interfaces';
 import Config from '../config';
 import { error_id } from '../business.logic/errors';
 import initialState from './initial.state';
-import { clear_last_content_jsx } from 'src/business.logic/cache';
+import { clear_last_content_jsx } from '../business.logic/cache';
 import { err } from '../business.logic/logging';
-import IState, { INetState } from '../interfaces/IState';
-import { TObj } from '../common.types';
 import { set_val } from '../business.logic/parsing';
 
 const appReducer = combineReducers({
@@ -153,14 +153,11 @@ const net_patch_state_reducer = <T=unknown>($oldState: unknown, $fragment: unkno
   return state as T;
 }
 
-interface IActionShell {
-  payload: INetState;
-  type: string;
-}
+type TActionShell = PayloadAction<TNetState>;
 
 // https://stackoverflow.com/questions/35622588/how-to-reset-the-state-of-a-redux-store
 const rootReducer = ($state: unknown, $action?: unknown) => {
-  const action = $action as IActionShell;
+  const action = $action as TActionShell;
   const state = $state as IState;
 
   if (action.type === NET_STATE_PATCH) {
@@ -244,9 +241,8 @@ export const actions = {
 export type TAllActions = typeof actions;
 
 /**
- * Ensures that callbacks for buttons, links (, and more) can access the redux
- * store and fire all available redux actions...
- * Even if the callback is implemented in pure javascript.
+ * Ensures access to the redux store and all available redux actions,
+ * even in pure javascript.
  */
 export interface IRedux {
   store: typeof store;
@@ -259,7 +255,14 @@ export interface IRedux {
   route?: string;
 }
 
-/** Callback parameter */
+/** Get callback argument */
+export const get_redux = (route = ''): IRedux => ({
+  store,
+  actions,
+  route
+});
+
+/** Callback argument */
 export const redux: IRedux = {
   store,
   actions,
@@ -270,7 +273,7 @@ export const redux: IRedux = {
  * Type for callback that needs to access the redux store and actions in
  * addition to the event object.
  */
-export type TReduxHandle = (redux: IRedux) => TEventCallback;
+export type TReduxHandler = (redux: IRedux) => TEventHandler;
 /** Type that gives access to the redux store and actions. */
 export type TReduxCallback = (redux: IRedux) => void;
 /**
@@ -308,10 +311,10 @@ export function get_bootstrap_key(): string {
  * If a callback is required for a link or button but is not defined, then this
  * method will provide a dummy one.
  */
-export function dummy_callback (_redux: IRedux): TEventCallback {
+export function dummy_redux_handler (redux: IRedux): TEventHandler {
   return () => {
     if (redux.store.getState().app.inDebugMode) {
-      console.error('dummy_callback: No callback was assigned.');
+      console.error('[function] dummy_callback(): No callback was assigned.');
     }
   };
 }
@@ -322,7 +325,7 @@ export function dummy_callback (_redux: IRedux): TEventCallback {
  *
  * The app page will be updated based on the URL change triggered by the link.
  */
-export function default_callback ({store, actions, route}:IRedux): TEventCallback {
+export function default_callback ({store, actions, route}:IRedux): TEventHandler {
   return () => {
     if (route) {
       store.dispatch(actions.appBrowserSwitchPage(route));

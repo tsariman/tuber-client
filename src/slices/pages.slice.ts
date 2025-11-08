@@ -1,33 +1,29 @@
-import { createSlice } from '@reduxjs/toolkit';
-import IStatePage from '../interfaces/IStatePage';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { IStateAllPages, IStatePage } from '@tuber/shared';
 import initialState from '../state/initial.state';
 
 export const PAGES_ADD = 'pages/pagesAdd';
 export const PAGES_REMOVE = 'pages/pagesRemove';
 
-export interface IPagesArgs {
+interface IAdd {
   route: string;
   page: IStatePage;
-}
-
-interface IArgs {
-  type: string;
-  payload: IPagesArgs;
 }
 
 export const pagesSlice = createSlice({
   name:'pages',
   initialState: initialState.pages,
   reducers: {
-    pagesAddMultiple: (state, action) => {
+    pagesAddMultiple: (state, action: PayloadAction<IStateAllPages>) => {
       const pages = action.payload;
       Object.keys(pages).forEach(key => {
+        // @ts-expect-error The Redux toolkit and Material-UI do not get along.
         state[key] = pages[key];
       })
     },
-    pagesAdd: (state, action: IArgs) => {
+    pagesAdd: (state, action: PayloadAction<IAdd>) => {
       const { route, page } = action.payload;
-      /* @ts-ignore */
+      // @ts-expect-error The Redux toolkit and Material-UI do not get along.
       state[route] = page;
     },
     pagesRemove: (state, action) => {

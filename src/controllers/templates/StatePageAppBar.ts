@@ -1,14 +1,17 @@
-import IStateAppbar, { TAppbarStyle } from '../../interfaces/IStateAppbar';
-import IStateBackground from '../../interfaces/IStateBackground';
-import IStateTypography from '../../interfaces/IStateTypography';
+import type {
+  TAppbarStyle,
+  IStateBackground,
+  IStateTypography
+} from '@tuber/shared';
+import type { IStateAppbar } from '../../localized/interfaces';
 import StateAppbar from '../StateAppbar';
 import type StateAppbarDefault from './StateAppbarDefault';
 import type StatePage from '../StatePage';
 import StatePageAppbarBackground from './StatePageAppbarBackground';
 import StatePageAppbarTypography from './StatePageAppbarTypography';
 import { error_id } from '../../business.logic/errors';
-import { CSSProperties, HTMLAttributes } from 'react';
-import { AppBarProps, SxProps } from '@mui/material';
+import type { CSSProperties, HTMLAttributes } from 'react';
+import type { AppBarProps, SxProps } from '@mui/material';
 
 export default class StatePageAppbar 
   extends StateAppbar<StatePage>
@@ -17,7 +20,7 @@ export default class StatePageAppbar
   protected noAppbarBackground: boolean;
   protected noAppbarTypography: boolean;
   protected pageAppbarBackgroundDef?: StatePageAppbarBackground;
-  protected appbarTypography?: StatePageAppbarTypography;
+  declare protected appbarTypography?: StatePageAppbarTypography;
   private _default: StateAppbarDefault;
   private _appbarLogoProps?: IStateAppbar['logoProps'];
 

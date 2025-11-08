@@ -1,9 +1,9 @@
 import { Badge, Icon, SvgIcon } from '@mui/material';
 import getSvgIcon from '../state.jsx.imported.svg.icons';
 import {type StateFormItemCustom, StateAllIcons } from '../../controllers';
-import { FC, Fragment, useMemo, useCallback } from 'react';
+import { Fragment, useMemo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import type { RootState } from 'src/state';
+import type { RootState } from '../../state';
 import StateJsxSvgIcon from './state.jsx.svg.icon';
 
 interface IJsonIconProps {
@@ -26,7 +26,7 @@ export interface IStateJsxIconProps {
  * }
  * ```
  */
-export const StateJsxUnifiedIconProvider = (({ def: has }) => {
+export const StateJsxUnifiedIconProvider = (({ def: has }: IJsonIconProps) => {
   const iconsState = useSelector((state: RootState) => state.icons);
 
   const renderIcon = useCallback(() => {
@@ -36,12 +36,12 @@ export const StateJsxUnifiedIconProvider = (({ def: has }) => {
   }, [iconsState, has]);
 
   const renderSvgIcon = useCallback(() =>
-    getSvgIcon(has.svgIcon, has.iconProps) ||
+    getSvgIcon({ iconName: has.svgIcon, props: has.iconProps }) ||
     <Icon {...has.iconProps}>{ has.svgIcon }</Icon>
   , [has.svgIcon, has.iconProps]);
 
   const renderMuiIcon = useCallback(() => 
-    getSvgIcon(has.muiIcon, has.iconProps) || 
+    getSvgIcon({ iconName: has.muiIcon, props: has.iconProps }) || 
     <Icon {...has.iconProps}>{ has.muiIcon }</Icon>
   , [has.muiIcon, has.iconProps]);
 
@@ -68,9 +68,9 @@ export const StateJsxUnifiedIconProvider = (({ def: has }) => {
   }, [has.svgIcon, has.icon, has.faIcon]);
 
   return map[type]();
-}) as FC<IJsonIconProps>;
+});
 
-export const StateJsxIcon: FC<IStateJsxIconProps> = ({ name, config }) => {
+export const StateJsxIcon = ({ name, config } : IStateJsxIconProps) => {
   const iconsState = useSelector((state: RootState) => state.icons);
   const allIcons = new StateAllIcons(iconsState);
   const iconSvg = allIcons.getIcon(name);
@@ -80,7 +80,7 @@ export const StateJsxIcon: FC<IStateJsxIconProps> = ({ name, config }) => {
   );
 };
 
-export const StateJsxBadgedIcon = (({ def: has }) => {
+export const StateJsxBadgedIcon = (({ def: has }: IJsonIconProps) => {
   const badgeProps = useMemo(() => ({
     color: 'error' as const,
     ...has.badge,
@@ -100,6 +100,6 @@ export const StateJsxBadgedIcon = (({ def: has }) => {
       )}
     </Fragment>
   );
-}) as FC<IJsonIconProps>;
+});
 
 export default StateJsxBadgedIcon;

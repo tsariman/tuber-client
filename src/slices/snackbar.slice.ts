@@ -1,20 +1,25 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import initialState from '../state/initial.state';
+import type { IStateAnchorOrigin } from '@tuber/shared';
+
+type TTypeUpdate = 'message' | 'customized' | 'void';
 
 export const snackbarSlice = createSlice({
   name: 'snackbar',
   initialState: initialState.snackbar,
   reducers: {
-    snackbarAnchorOriginUpdate: (state, action) => {
+    snackbarAnchorOriginUpdate: (state, action: PayloadAction<IStateAnchorOrigin>) => {
       state.anchorOrigin = action.payload;
     },
-    snackbarAutoHideDurationUpdate: (state, action) => {
+    snackbarAutoHideDurationUpdate: (state, action: PayloadAction<number>) => {
       state.autoHideDuration = action.payload;
     },
-    snackbarDefaultIdUpdate: (state, action) => {
+    snackbarDefaultIdUpdate: (state, action: PayloadAction<string>) => {
       state.defaultId = action.payload;
     },
-    snackbarTypeUpdate: (state, action) => { state.type = action.payload },
+    snackbarTypeUpdate: (state, action: PayloadAction<TTypeUpdate>) => {
+      state.type = action.payload
+    },
     snackbarVariantUpdate: (state, action) => {
       state.variant = action.payload;
     },
@@ -27,25 +32,25 @@ export const snackbarSlice = createSlice({
       state.type    = 'void';
       state.variant = 'info';
     },
-    snackbarWriteInfo: (state, action) => {
+    snackbarWriteInfo: (state, action: PayloadAction<string>) => {
       state.open = true;
       state.type = 'message';
       state.variant = 'info';
       state.message = action.payload;
     },
-    snackbarWriteSuccess: (state, action) => {
+    snackbarWriteSuccess: (state, action: PayloadAction<string>) => {
       state.open = true;
       state.type = 'message';
       state.variant = 'success';
       state.message = action.payload;
     },
-    snackbarWriteWarning: (state, action) => {
+    snackbarWriteWarning: (state, action: PayloadAction<string>) => {
       state.open = true;
       state.type = 'message';
       state.variant = 'warning';
       state.message = action.payload;
     },
-    snackbarWriteError: (state, action) => {
+    snackbarWriteError: (state, action: PayloadAction<string>) => {
       state.open = true;
       state.type = 'message';
       state.variant = 'error';

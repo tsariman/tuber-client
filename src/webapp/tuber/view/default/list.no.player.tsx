@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import StateData from 'src/controllers/StateData';
 import { type RootState } from 'src/state';
 import { shorten_text } from '../../_tuber.common.logic';
-import { IBookmark } from '../../tuber.interfaces';
+import type { IBookmark } from '../../tuber.interfaces';
 import LoadMoreBookmarksFromServer, {
   LoadEarlierBookmarksFromServer
 } from './list.load.more';

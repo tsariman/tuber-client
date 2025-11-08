@@ -5,7 +5,7 @@ import {
   StateNet,
   StatePagesData
 } from 'src/controllers';
-import { IBookmark } from '../../tuber.interfaces';
+import type { IBookmark } from '../../tuber.interfaces';
 import TuberBookmarkList from './list';
 import TuberPlayer from './player';
 import tuber_register_callbacks from '../../callbacks/tuber.callbacks';
@@ -16,8 +16,9 @@ import ResearchToolbarFixed from '../tuber.toolbar.video.search';
 import TuberBookmarkSearchWithThumbnails from './list.no.player';
 import { useMediaQuery } from '@mui/material';
 import TuberThumbnailedBookmarkList from './list.with.thumbnail';
-import { AppDispatch, on_bootstrap_run, RootState } from 'src/state';
-import { IJsonapiStateResponse } from 'src/interfaces/IJsonapi';
+import { on_bootstrap_run } from 'src/state';
+import type { AppDispatch, RootState } from 'src/state';
+import type { IJsonapiStateResponse } from '@tuber/shared';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ENDPOINT,

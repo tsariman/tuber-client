@@ -39,7 +39,7 @@ export default class StateFactory {
   private get _parent() {
     return this.__parent || (this.__parent = new State(this._rootState));
   }
-  get parent() { return this.__parent };
+  get parent() { return this._parent };
 
   createStateApp(): StateApp {
     return new StateApp(this._rootState.app, this._parent);

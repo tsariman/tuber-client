@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { IBookmark } from '../tuber.interfaces';
+import type { IBookmark } from '../tuber.interfaces';
 
 interface IUnknownPlayerProps {
   bookmark: IBookmark;

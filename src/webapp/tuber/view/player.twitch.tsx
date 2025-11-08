@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import React from 'react';
-import { IBookmark } from '../tuber.interfaces';
+import type { IBookmark } from '../tuber.interfaces';
 
 interface ITwitchPlayerProps {
   bookmark: IBookmark;

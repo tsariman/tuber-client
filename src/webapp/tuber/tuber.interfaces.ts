@@ -1,6 +1,7 @@
 // Tuber app types and interfaces gathered in one spot
+import type { JSX } from 'react';
 import type StatePageAppbar from '../../controllers/templates/StatePageAppbar';
-import { TWithRequired } from 'src/common.types';
+import type { TWithRequired } from '@tuber/shared';
 
 /**
  * Online video platform.

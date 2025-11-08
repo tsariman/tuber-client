@@ -3,12 +3,13 @@ import InputLabel from '@mui/material/InputLabel';
 import NativeSelect from '@mui/material/NativeSelect';
 import TextField from '@mui/material/TextField';
 import { useSelector } from 'react-redux';
-import { NAME_NOT_SET } from '../../../../constants.client';
+import { NAME_NOT_SET } from '@tuber/shared';
 import {
   type StateFormItemSelect,
   StateFormsData
 } from '../../../../controllers';
 import type { RootState } from '../../../../state';
+import type { TFormItemDefaultEventHandler } from '../_items.common.logic';
 
 interface IDialogSelectNative { def: StateFormItemSelect; }
 
@@ -34,7 +35,7 @@ export default function StateJsxSelectNative (
           name: select.name,
           id: select.config_id,
         }}
-        onChange={select.onChange(name)}
+        onChange={(select.onChange as TFormItemDefaultEventHandler)(name)}
       >
         <option value=''></option>
         {select.has.items.map((option, i) => (

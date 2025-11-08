@@ -1,22 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { IJsonapiPaginationLinks } from '../interfaces/IJsonapi';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { IJsonapiPaginationLinks } from '@tuber/shared';
 import initialState from '../state/initial.state';
 
-export interface ITopLevelLinksArgs {
+export interface IStore {
   endpoint: string;
   links: IJsonapiPaginationLinks;
-}
-
-interface ITopLevelLinksReducerArgs {
-  type: string;
-  payload: ITopLevelLinksArgs;
 }
 
 export const topLevelLinksSlice = createSlice({
   name: 'topLevelLinks',
   initialState: initialState.topLevelLinks,
   reducers: {
-    topLevelLinksStore: (state, action: ITopLevelLinksReducerArgs) => {
+    topLevelLinksStore: (state, action: PayloadAction<IStore>) => {
       const { endpoint, links } = action.payload;
       state[endpoint] = links;
     },

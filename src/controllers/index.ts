@@ -32,7 +32,6 @@ export { default as StatePagesData } from './StatePagesData';
 export { default as StateDataPagesRange } from './StateDataPagesRange';
 
 // Specialized controllers
-export { default as StateHandleFactory } from './StateHandleFactory';
 export { default as StateRegistry } from './StateRegistry';
 export { default as StateSession } from './StateSession';
 export { default as StateThemeParser } from './StateThemeParser';

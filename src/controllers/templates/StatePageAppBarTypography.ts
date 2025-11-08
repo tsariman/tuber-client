@@ -1,5 +1,5 @@
 import { set_val } from '../../business.logic/parsing';
-import IStatePage from '../../interfaces/IStatePage';
+import type { IStatePage } from '@tuber/shared';
 import StateTypography from '../StateTypography';
 import type StateAppbar from '../StateAppbar';
 import type StatePage from '../StatePage';

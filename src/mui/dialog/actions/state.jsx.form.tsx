@@ -1,9 +1,9 @@
 import { Fragment } from 'react';
-import { STATE_BUTTON } from '../../../constants.client';
 import type StateForm from '../../../controllers/StateForm';
 import StateFormItem from '../../../controllers/StateFormItem';
-import IStateFormItem from '../../../interfaces/IStateFormItem';
 import StateJsxDialogActionButton from './state.jsx.form.button';
+import type { IStateFormItem } from '../../../localized/interfaces';
+import { STATE_BUTTON } from '@tuber/shared';
 
 interface IFieldItemProps {
   def: IStateFormItem[];

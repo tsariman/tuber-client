@@ -1,5 +1,5 @@
 import { remember_possible_error } from '../business.logic/errors';
-import IStateSession from '../interfaces/IStateSession';
+import type { IStateSession } from '@tuber/shared';
 import AbstractState from './AbstractState';
 
 /**
@@ -10,8 +10,11 @@ export default class StateSession
   extends AbstractState
   implements IStateSession
 {
-  constructor (private _sessionState: IStateSession) {
+  private _sessionState: IStateSession;
+
+  constructor (sessionState: IStateSession) {
     super();
+    this._sessionState = sessionState;
   }
   get state(): IStateSession { return this._sessionState; }
   get parent(): unknown { return this.die('Not implemented.', {}); }

@@ -1,14 +1,16 @@
 import State from './State';
 import AbstractState from './AbstractState';
-import { IJsonapiError } from '../interfaces/IJsonapi';
+import type { IJsonapiError } from '@tuber/shared';
 import { get_state } from '../state';
 
 export default class StateAllErrors extends AbstractState {
+  private _allErrorsState: IJsonapiError[];
+  private _parent?: State;
 
-  constructor(private _allErrorsState: IJsonapiError[],
-    private _parent?: State
-  ) {
+  constructor(allErrorsState: IJsonapiError[], parent?: State) {
     super();
+    this._allErrorsState = allErrorsState;
+    this._parent = parent;
   }
 
   get state(): IJsonapiError[] { return this._allErrorsState; }

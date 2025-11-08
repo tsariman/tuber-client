@@ -1,5 +1,5 @@
-import { error_id, remember_exception } from 'src/business.logic/errors';
-import { ler, log } from 'src/business.logic/logging';
+import { error_id, remember_exception } from '../../business.logic/errors';
+import { ler, log } from '../../business.logic/logging';
 import { get_query_values } from '../../business.logic/parsing';
 import {
   DIALOG_DAILY_EDIT_ID,
@@ -14,7 +14,7 @@ import {
   DIALOG_YOUTUBE_EDIT_ID,
   DIALOG_TWITCH_EDIT_ID
 } from './tuber.config';
-import { IBookmark, TPlatform, TVideoData } from './tuber.interfaces';
+import type { IBookmark, TPlatform, TVideoData } from './tuber.interfaces';
 
 /** @deprecated */
 const HOST_TO_PLATFORM_MAP: { [host: string]: TPlatform } = {
@@ -55,7 +55,7 @@ export function get_platform(url: string): TPlatform {
  * @see https://stackoverflow.com/a/27728417/1875859
  */
 export function youtube_get_video_id(url: string): string | undefined {
-  var regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed|live\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]+).*/;
+  const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed|live\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]+).*/;
   const match = url.match(regExp);
   if (!match) {
     ler(`youtube_get_video_id: Bad video URL: '${url}'`);

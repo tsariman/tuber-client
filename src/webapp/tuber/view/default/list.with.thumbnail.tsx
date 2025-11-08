@@ -6,7 +6,7 @@ import { type RootState } from 'src/state';
 import LoadMoreBookmarksFromServer, {
   LoadEarlierBookmarksFromServer
 } from './list.load.more';
-import { IBookmark } from '../../tuber.interfaces';
+import type { IBookmark } from '../../tuber.interfaces';
 import StateData from 'src/controllers/StateData';
 import BookmarkWithThumbnail from './bookmark.with.thumbnail';
 

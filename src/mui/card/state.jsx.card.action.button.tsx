@@ -1,6 +1,6 @@
-import { Fragment } from 'react';
+import { Fragment, type JSX } from 'react';
 import { Icon, Button } from '@mui/material';
-import store, { actions } from 'src/state';
+import store, { actions, type IRedux } from '../../state';
 import { type StateFormItemCardAction } from '../../controllers';
 
 type TMapIcon = {
@@ -14,12 +14,12 @@ type TMapPosition = {
 export default function StateJsxCardActionButton (
   { def: button }: { def: StateFormItemCardAction }
 ) {
-  const redux = {
+  const redux: IRedux = {
     store,
     actions,
-    route: button.props.href
+    route: button.props.href as string
   };
-  const onClick = button.onClick;
+  const onClick = button.clickReduxHandler;
 
   const mapRight: TMapIcon = {
     icon: () => (

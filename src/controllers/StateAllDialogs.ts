@@ -1,14 +1,16 @@
 import AbstractState from './AbstractState';
-import IStateAllDialogs from '../interfaces/IStateAllDialogs';
+import type { IStateAllDialogs } from '../localized/interfaces';
 import State from './State';
 import { get_state } from '../state';
 
 export default class StateAllDialogs extends AbstractState {
+  private _allDialogsState: IStateAllDialogs;
+  private _parent?: State;
 
-  constructor(private _allDialogsState: IStateAllDialogs,
-    private _parent?: State
-  ) {
+  constructor(allDialogsState: IStateAllDialogs, parent?: State) {
     super();
+    this._allDialogsState = allDialogsState;
+    this._parent = parent;
   }
 
   get state(): IStateAllDialogs { return this._allDialogsState; }

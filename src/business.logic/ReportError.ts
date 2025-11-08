@@ -1,7 +1,7 @@
-import { IJsonapiError, TJsonapiErrorCode } from '../interfaces/IJsonapi';
 import { dispatch, get_state } from '../state';
 import { errorsActions } from '../slices/errors.slice';
 import { ler } from './logging';
+import type { IJsonapiError, TJsonapiErrorCode } from '@tuber/shared';
 
 /**
  * Interface defining various error reporting methods accessible through the `as` property.

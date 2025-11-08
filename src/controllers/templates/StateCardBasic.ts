@@ -1,4 +1,4 @@
-import IStateCard from '../../interfaces/IStateCard';
+import type { IStateCard } from '../../localized/interfaces';
 import StateCard from '../StateCard';
 
 export default class StateCardBasic extends StateCard {

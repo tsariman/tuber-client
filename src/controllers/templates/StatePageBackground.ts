@@ -1,5 +1,4 @@
-import IStateBackground from '../../interfaces/IStateBackground';
-import IStatePage from '../../interfaces/IStatePage';
+import type { IStateBackground, IStatePage } from '@tuber/shared';
 import StateBackground from '../StateBackground';
 import type StatePage from '../StatePage';
 

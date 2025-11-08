@@ -1,18 +1,22 @@
+import type { CSSProperties } from 'react';
 import AbstractState from './AbstractState';
-import IStateFormItemGroup, { TItemGroup } from '../interfaces/IStateFormItemGroup';
+import type { TItemGroup } from '@tuber/shared';
+import type { IStateFormItemGroup } from '../localized/interfaces';
 import type StateForm from './StateForm';
 import StateFormItem from './StateFormItem';
-import { CSSProperties } from 'react';
 
 export default class StateFormItemGroup
-  extends AbstractState implements IStateFormItemGroup
+  extends AbstractState
+  implements IStateFormItemGroup
 {
+  private _itemGroupState: IStateFormItemGroup;
+  protected parentDef: StateForm;
   private _itemGroupItems?: StateFormItem[];
 
-  constructor (private _itemGroupState: IStateFormItemGroup,
-    protected parentDef: StateForm
-  ) {
+  constructor (itemGroupState: IStateFormItemGroup, parent: StateForm) {
     super();
+    this._itemGroupState = itemGroupState;
+    this.parentDef = parent;
   }
 
   get state(): IStateFormItemGroup { return this._itemGroupState; }

@@ -1,14 +1,17 @@
-import { AppBarProps } from '@mui/material';
+import type { AppBarProps } from '@mui/material';
 import AbstractState from './AbstractState';
-import IStateBackground from '../interfaces/IStateBackground';
-import IStateTypography from '../interfaces/IStateTypography';
+import type {
+  IStateBackground,
+  IStateTypography,
+  TAppbarStyle
+} from '@tuber/shared';
 import type State from './State';
 import type StateAppbarBackground from './templates/StateAppbarBackground';
 import type StateAppbarTypography from './templates/StateAppbarTypography';
 import StateComponent from './StateComponent';
 import StateLink from './StateLink';
-import IStateAppbar, { TAppbarStyle } from '../interfaces/IStateAppbar';
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
+import type { IStateAppbar } from '../localized/interfaces';
 
 export default class StateAppbar<P = State>
   extends AbstractState implements IStateAppbar

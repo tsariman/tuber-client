@@ -1,4 +1,10 @@
-import { Fragment, useMemo, useCallback, ReactNode } from 'react';
+import {
+  Fragment,
+  useMemo,
+  useCallback,
+  type ReactNode,
+  type JSX
+} from 'react';
 import { Box, Paper, Stack } from '@mui/material';
 import type StateForm from '../../controllers/StateForm';
 import { error_id } from '../../business.logic/errors';

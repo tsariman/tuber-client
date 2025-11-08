@@ -1,4 +1,4 @@
-import { error_id } from 'src/business.logic/errors';
+import { error_id } from '../../business.logic/errors';
 import {
   DIALOG_DAILY_NEW_ID,
   DIALOG_FACEBOOK_NEW_ID,
@@ -22,7 +22,7 @@ import {
   daily_get_start_time,
   odysee_get_url_data,
 } from './_tuber.common.logic';
-import { IUrlStatus, IVideoData } from './tuber.interfaces';
+import type { IUrlStatus, IVideoData } from './tuber.interfaces';
 
 const DATA_SKELETON: IVideoData = {
   platform: '_blank',

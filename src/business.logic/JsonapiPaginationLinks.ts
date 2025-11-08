@@ -1,9 +1,10 @@
 import { error_id } from './errors';
-import { IJsonapiPaginationLinks } from '../interfaces/IJsonapi';
+import type { IJsonapiPaginationLinks } from '@tuber/shared';
 
 type TLink = IJsonapiPaginationLinks[keyof IJsonapiPaginationLinks];
 
 export default class JsonapiPaginationLinks {
+  private _links: IJsonapiPaginationLinks;
   private _selfPageNumber?: number;
   private _pageSize?: number;
   private _firstPageNumber?: number;
@@ -11,7 +12,8 @@ export default class JsonapiPaginationLinks {
   private _nextPageNumber?: number;
   private _prevPageNumber?: number;
 
-  constructor (private _links: IJsonapiPaginationLinks) {
+  constructor (links: IJsonapiPaginationLinks) {
+    this._links = links;
     if (!this._links) {
       this._lastPageNumber = 1; // [bugfix]
     }
@@ -132,7 +134,7 @@ export default class JsonapiPaginationLinks {
     pageSize,
     // TODO Add more query params to update
   }: {pageNumber?: number, pageSize?: number}) {
-    let qs = get_jsonapi_link_url(this._links.self);
+    const qs = get_jsonapi_link_url(this._links.self);
     const params = new URLSearchParams(qs);
     if (pageNumber) {
       params.set('page[number]', pageNumber.toString());

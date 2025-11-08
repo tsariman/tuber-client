@@ -4,7 +4,7 @@ import { ler, pre } from 'src/business.logic/logging';
 import { get_parsed_content } from 'src/business.logic/parsing';
 import FormValidationPolicy from 'src/business.logic/FormValidationPolicy';
 import StateRegistry from 'src/controllers/StateRegistry';
-import { type IRedux, type RootState } from 'src/state';
+import type { IRedux, RootState } from 'src/state';
 
 interface IFormData<T=unknown> {
   formData: T;

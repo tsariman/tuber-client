@@ -1,12 +1,10 @@
-import React, { Fragment, useMemo } from 'react';
+import React, { type JSX, Fragment, useMemo } from 'react';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { StateFormItemCustomChip, StateLink } from '../../controllers';
-import { get_formatted_route } from '../../controllers/StateLink';
 import store, { type IRedux, actions } from '../../state';
-import { Link as RouterLink } from 'react-router-dom';
 import Chip from '@mui/material/Chip';
 import StateJsxBadgedIcon from '../icon';
 import { get_val } from '../../business.logic/utility';
@@ -34,10 +32,8 @@ const StateJsxLink = React.memo<IJsonLinkProps>(({ def, children }) => {
     route: has.route 
   }), [has.route]);
   
-  const route = useMemo(() => get_formatted_route(has), [has]);
-  
   const menuItemsProps = useMemo(() => {
-    const mItemsProps = get_val<{}>(def, 'parent.menuItemsProps');
+    const mItemsProps = get_val<object>(def, 'parent.menuItemsProps');
     return mItemsProps;
   }, [def]);
 
@@ -47,7 +43,7 @@ const StateJsxLink = React.memo<IJsonLinkProps>(({ def, children }) => {
   }), [menuItemsProps, def.props]);
 
   const commonSx = useMemo(() => {
-    const menuItemsSx = get_val<{}>(def, 'def.parent.menuItemsSx');
+    const menuItemsSx = get_val<object>(def, 'def.parent.menuItemsSx');
     const fontFamily = get_val<string>(def, 'parent.typography.fontFamily');
     const color = get_val<string>(def, 'parent.typography.color');
     return { ...menuItemsSx, fontFamily, color };
@@ -66,12 +62,10 @@ const StateJsxLink = React.memo<IJsonLinkProps>(({ def, children }) => {
     // normal link
     'link': () => (
       <Link
-        component={RouterLink}
         variant='body2'
         color='inherit'
         sx={commonSx}
         {...props}
-        to={route}
         onClick={handleClick}
       >
         {has.text}
@@ -81,12 +75,10 @@ const StateJsxLink = React.memo<IJsonLinkProps>(({ def, children }) => {
     // Text looking like icon
     'text': () => (
       <Button
-        component={RouterLink}
         color='inherit'
         aria-label={has.label}
         sx={commonSx}
         {...props}
-        to={route}
         onClick={handleClick}
       >
         {has.text}
@@ -95,12 +87,10 @@ const StateJsxLink = React.memo<IJsonLinkProps>(({ def, children }) => {
 
     'textlogo': () => (
       <Button
-        component={RouterLink}
         color='inherit'
         aria-label={has.label}
         sx={commonSx}
         {...props}
-        to={route}
         onClick={handleClick}
         style={{ textTransform: 'none' }}
       >
@@ -112,12 +102,10 @@ const StateJsxLink = React.memo<IJsonLinkProps>(({ def, children }) => {
 
     'svg': () => (
       <IconButton
-        component={RouterLink}
         color='inherit'
         aria-label={has.label}
         sx={commonSx}
         {...props}
-        to={route}
         onClick={handleClick}
         style={{ textTransform: 'none' }}
       >
@@ -127,12 +115,10 @@ const StateJsxLink = React.memo<IJsonLinkProps>(({ def, children }) => {
 
     'svg_right': () => (
       <IconButton
-        component={RouterLink}
         color='inherit'
         aria-label={has.label}
         sx={commonSx}
         {...props}
-        to={route}
         onClick={handleClick}
         style={{ textTransform: 'none' }}
       >
@@ -144,12 +130,10 @@ const StateJsxLink = React.memo<IJsonLinkProps>(({ def, children }) => {
 
     'svg_left': () => (
       <IconButton
-        component={RouterLink}
         color='inherit'
         aria-label={has.label}
         sx={commonSx}
         {...props}
-        to={route}
         onClick={handleClick}
         style={{ textTransform: 'none' }}
       >
@@ -162,12 +146,10 @@ const StateJsxLink = React.memo<IJsonLinkProps>(({ def, children }) => {
     // icon only
     'icon': () => (
       <IconButton
-        component={RouterLink}
         color={color}
         aria-label={has.label}
         sx={commonSx}
         {...props}
-        to={route}
         onClick={handleClick}
       >
         <StateJsxBadgedIcon def={has} />
@@ -177,12 +159,10 @@ const StateJsxLink = React.memo<IJsonLinkProps>(({ def, children }) => {
     // The icon and the text
     'hybrid': () => (
       <IconButton
-        component={RouterLink}
         color={color}
         aria-label={has.label}
         sx={commonSx}
         {...props}
-        to={route}
         onClick={handleClick}
       >
         <StateJsxBadgedIcon def={has} />
@@ -202,10 +182,8 @@ const StateJsxLink = React.memo<IJsonLinkProps>(({ def, children }) => {
 
     'default': () => (
       <Link
-        component={RouterLink}
         variant='body2'
         color='inherit'
-        to={route}
         sx={commonSx}
         {...props}
       >
@@ -218,7 +196,7 @@ const StateJsxLink = React.memo<IJsonLinkProps>(({ def, children }) => {
     'dropdown': () => (
       <Fragment />
     )
-  }), [commonSx, props, route, handleClick, has, color, children, chipHas]);
+  }), [commonSx, props, handleClick, has, color, children, chipHas]);
 
   const linkType = type.toLowerCase();
   const linkRenderer = linkTable[linkType] || linkTable['default'];

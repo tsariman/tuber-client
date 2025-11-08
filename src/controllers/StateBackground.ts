@@ -1,15 +1,20 @@
 import { type CSSProperties } from 'react';
 import { type SxProps } from '@mui/material';
 import AbstractState from './AbstractState';
-import IStateBackground from '../interfaces/IStateBackground';
+import type { IStateBackground } from '@tuber/shared';
 import type State from './State';
 
 export default class StateBackground<P = State>
   extends AbstractState
   implements IStateBackground
 {
-  constructor(private _backgroundState: IStateBackground, private _parent: P) {
+  private _backgroundState: IStateBackground;
+  private _parent: P;
+
+  constructor(backgroundState: IStateBackground, parent: P) {
     super();
+    this._backgroundState = backgroundState;
+    this._parent = parent;
   }
 
   /** Get the background json. */

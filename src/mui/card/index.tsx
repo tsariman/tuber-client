@@ -2,8 +2,14 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import {
-  Avatar, CardActionArea, CardActions, CardHeader, Collapse, IconButton,
-  IconButtonProps, styled
+  Avatar,
+  CardActionArea,
+  CardActions,
+  CardHeader,
+  Collapse,
+  IconButton,
+  type IconButtonProps,
+  styled
 } from '@mui/material';
 import {
   StateCard,
@@ -12,7 +18,7 @@ import {
   StateCardComplex
 } from '../../controllers';
 import StateJsxCardActionButton from './state.jsx.card.action.button';
-import React, { memo } from 'react';
+import React, { memo, type JSX } from 'react';
 import { StateJsxIcon } from '../icon';
 
 interface ICardProps {
@@ -28,6 +34,7 @@ interface ExpandMoreProps extends IconButtonProps {
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
   const { expand, ...other } = props;
+  void expand;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
   transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',

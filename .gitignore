@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules/*
 /.pnp
 .pnp.js
 /.VSCodeCounter
@@ -11,7 +11,8 @@
 /coverage
 
 # production
-/build
+build/*
+dist/*
 
 # Source code files
 src/business.logic/error-tracking-example.ts
@@ -28,7 +29,14 @@ yarn-debug.log*
 yarn-error.log*
 
 # files
-/src/App.test.tsx.backup
-/src/designdoc.md
+public/vite.svg
+src/assets/react.svg
+src/App.test.tsx.backup
+src/designdoc.md
 src/business.logic/ERROR_TRACKING_README.md
 TESTING_TUTORIAL.md
+COMPONENT_TESTING_SUMMARY.md
+
+# Backups
+src/App.css.backup
+src/App.tsx.backup

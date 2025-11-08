@@ -1,8 +1,11 @@
 import React from 'react';
 import { Icon, Button } from '@mui/material';
-import store, { actions } from '../../../../state';
+import { get_redux } from '../../../../state';
 import type StateFormItem from '../../../../controllers/StateFormItem';
-import { get_button_content_code, TCombinations } from './_button.common.logic';
+import {
+  get_button_content_code,
+  type TCombinations
+} from './_button.common.logic';
 
 interface IJsonButtonProps { def: StateFormItem; }
 
@@ -43,17 +46,12 @@ export default function StateJsxButton ({ def: button }: IJsonButtonProps) {
     text: () => <>{ button.text }</>,
     none: () => <>❌ No Text!</>
   }
-  const redux = {
-    store,
-    actions,
-    route: button.props.href
-  };
-  const onClick = button.onClick || button.has.callback;
+  const onClick = button.clickReduxHandler;
   const code = get_button_content_code(button);
   return (
     <Button
       {...button.props}
-      onClick={onClick(redux)}
+      onClick={onClick(get_redux(button.props.href as string))}
     >
       { map[code]() }
     </Button>

@@ -1,4 +1,4 @@
-import { TStateAllChips, TStateChips } from '../interfaces/IState';
+import type { TStateAllChips, TStateChips } from '../localized/interfaces';
 import AbstractState from './AbstractState';
 import StateFormItemCustomChip from './templates/StateFormItemCustomChip';
 
@@ -8,11 +8,13 @@ interface IConfigure {
 }
 
 export default class StateAppbarInputChip extends AbstractState {
+  private _allChipState: TStateAllChips
   private _route?: string;
   private _template?: string;
 
-  constructor(private _allChipState: TStateAllChips) {
+  constructor(allChipState: TStateAllChips) {
     super();
+    this._allChipState = allChipState;
   }
 
   get state(): TStateAllChips { return this._allChipState; }

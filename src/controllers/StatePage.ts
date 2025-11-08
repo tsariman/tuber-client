@@ -8,18 +8,26 @@ import type StateAllPages from './StateAllPages';
 import StatePageDrawer from './templates/StatePageDrawer';
 import StatePageTypography from './templates/StatePageTypography';
 import AbstractState from './AbstractState';
-import IStateAppbar from '../interfaces/IStateAppbar';
+import type {
+  IStatePageContent,
+  IStateBackground,
+  IStateComponent,
+  IStateTypography,
+  TStatePageLayout,
+  IJsonapiPageLinks
+} from '@tuber/shared';
+import type {
+  IStateAppbar,
+  IStateDrawer,
+  IStatePage,
+  IStatePageDrawer
+} from '../localized/interfaces';
 import StateComponent from './StateComponent';
-import IStatePage, { IStatePageContent } from '../interfaces/IStatePage';
-import IStateBackground from '../interfaces/IStateBackground';
-import IStateComponent from '../interfaces/IStateComponent';
-import IStateTypography from '../interfaces/IStateTypography';
-import IStateDrawer, { IStatePageDrawer } from '../interfaces/IStateDrawer';
-import { TStatePageLayout } from '../constants.client';
-import { IJsonapiPageLinks } from '../interfaces/IJsonapi';
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 
 export default class StatePage extends AbstractState implements IStatePage {
+  private _pageState: IStatePage;
+  private _parent: StateAllPages;
   static EMPTY_APPBAR: IStateAppbar = { items: [] };
   static EMPTY_DRAWER: IStateDrawer = {
     items: [],
@@ -46,10 +54,10 @@ export default class StatePage extends AbstractState implements IStatePage {
    *
    * @param pageState 
    */
-  constructor(private _pageState: IStatePage,
-    private _parentDef: StateAllPages
-  ) {
+  constructor(pageState: IStatePage, parent: StateAllPages) {
     super();
+    this._pageState = pageState;
+    this._parent = parent;
     this._pageId = this._pageState._id;
     this._noPageAppbar = !this._pageState.appbar;
     this._noPageDrawer = !this._pageState.drawer;
@@ -59,7 +67,7 @@ export default class StatePage extends AbstractState implements IStatePage {
   /** Get the page json. */
   get state(): IStatePage { return this._pageState; }
   /** Chain-access to all pages definition. */
-  get parent(): StateAllPages { return this._parentDef; }
+  get parent(): StateAllPages { return this._parent; }
   get props(): Record<string, unknown> { return this.die('Not implemented yet.', {}); }
   get theme(): CSSProperties { return this.die('Not implemented yet.', {}); }
   /**

@@ -1,7 +1,7 @@
-import { InputAdornment, InputAdornmentProps } from '@mui/material';
-import { IAdornment } from '../../../common.types';
-import { StateJsxUnifiedIconProvider } from 'src/mui/icon';
+import { InputAdornment, type InputAdornmentProps } from '@mui/material';
+import { StateJsxUnifiedIconProvider } from '../../../mui/icon';
 import StateFormItemCustom from '../../../controllers/StateFormItemCustom';
+import type { IAdornment } from '@tuber/shared';
 
 const StateJsxAdornmentIcon = ({ i }: { i?: string; fa?: string;}) => {
   const icon = new StateFormItemCustom({ icon: i }, {});

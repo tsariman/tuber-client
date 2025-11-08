@@ -1,8 +1,14 @@
-import { Fragment, MouseEvent, ChangeEvent } from 'react';
+import {
+  Fragment,
+  type MouseEvent,
+  type ChangeEvent,
+  type JSX,
+  type CSSProperties
+} from 'react';
 import {
   styled,
   alpha,
-  InputLabel
+  InputLabel,
 } from '@mui/material';
 import StateAllForms from '../controllers/StateAllForms';
 import StateForm from '../controllers/StateForm';
@@ -37,10 +43,10 @@ import {
   TEXTAREA,
   TEXTFIELD,
   TEXT_NODE,
-  TIME_PICKER
-} from '../constants.client';
+  TIME_PICKER,
+} from '@tuber/shared';
 import {
-  ICheckboxesData,
+  type ICheckboxesData,
   update_checkboxes
 } from '../mui/form/items/_items.common.logic';
 import StateJsxButton from '../mui/form/items/state.jsx.button';
@@ -59,8 +65,8 @@ import { useDispatch } from 'react-redux';
 import store from '../state';
 import { error_id, log } from '../business.logic';
 import { formsDataClear } from '../slices/formsData.slice';
-import { get_bool_type } from 'src/mui/form/_form.common.logic';
-import IStateFormItem from '../interfaces/IStateFormItem';
+import { get_bool_type } from '../mui/form/_form.common.logic';
+import type { IStateFormItem } from '../localized/interfaces';
 
 interface IComponentsBuilderProps {
   def: StateComponent[];
@@ -72,7 +78,7 @@ interface IDefProps {
   key: string|number;
   getState: <T=unknown>()=>T;
   props: Record<string, unknown>;
-  jsonTheme: unknown;
+  jsonTheme: CSSProperties;
   items: StateComponent[];
 }
 
@@ -120,7 +126,7 @@ function RecursiveComponents({
   const onHandleCheckbox = (form: StateForm) =>
     (name: string, oldValue: unknown) => () => 
   {
-    let value = (oldValue ? oldValue : []) as ICheckboxesData;
+    const value = (oldValue ? oldValue : []) as ICheckboxesData;
     update_checkboxes(value);
     dispatch({
       type: 'formsData/formsDataUpdate',
@@ -272,7 +278,7 @@ function RecursiveComponents({
     [SUBMIT]:({ type, key, getState: getJson }:IDefProps): void => {
       const button = new StateFormItem(getJson<IStateFormItem>(), parent as StateForm);
       if (parent instanceof StateForm) {
-        button.onClick = button.hasNoOnClickCallback
+        button.onClick = button.hasNoOnClickHandler
           ? onFormSubmitDefault(parent)
           : button.onClick;
       }
@@ -310,7 +316,7 @@ function RecursiveComponents({
 
     $default: ({ type, key, props, jsonTheme, items }:IDefProps): void => {
       const C = styled(type as keyof JSX.IntrinsicElements)(
-        ({ theme }) => parse(theme, jsonTheme)
+        ({ theme }) => parse(theme, jsonTheme as Record<string, unknown>)
       );
       components.push(
         <C key={`${type}-${key}`} {...props}>
@@ -328,21 +334,25 @@ function RecursiveComponents({
     const { type, getJson, props, theme: jsonTheme, items } = allDefs[i];
     try {
       const TYPE = type.toLowerCase();
-      componentsTable[TYPE] ? componentsTable[TYPE]({
-        type,
-        key: i,
-        getState: getJson,
-        props,
-        jsonTheme,
-        items
-      }) : componentsTable['$default']({
-        type,
-        key: i,
-        getState: getJson,
-        props,
-        jsonTheme,
-        items
-      });
+      if (componentsTable[TYPE]) {
+        componentsTable[TYPE]({
+          type,
+          key: i,
+          getState: getJson,
+          props,
+          jsonTheme,
+          items
+        });
+      } else {
+        componentsTable['$default']({
+          type,
+          key: i,
+          getState: getJson,
+          props,
+          jsonTheme,
+          items
+        });
+      }
     } catch (e) {
       error_id(1).remember_exception(e); // error 1
       log((e as Error).message);

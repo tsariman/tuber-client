@@ -1,4 +1,4 @@
-import { TObj } from '../common.types';
+import type { TObj } from '@tuber/shared';
 import AbstractState from './AbstractState';
 import State from './State';
 import { get_state } from '../state';
@@ -12,9 +12,13 @@ interface IConfigure {
  */
 export default class StatePagesData extends AbstractState {
   private _endpoint?: string;
+  private _pagesDataState: TObj;
+  private _parent?: State;
 
-  constructor(private _pagesDataState: TObj, private _parent?: State) {
+  constructor(pagesDataState: TObj, parent?: State) {
     super();
+    this._pagesDataState = pagesDataState;
+    this._parent = parent;
   }
 
   get state(): TObj { return this._pagesDataState; }

@@ -1,26 +1,22 @@
 import { get_head_meta_content } from '../business.logic/parsing';
 import { orange } from '@mui/material/colors';
-import IState from '../interfaces/IState';
-
-/*
- * WARNING: Be careful what you import in here. It might cause WEBPACK errors.
- */
+import type { IState } from '../localized/interfaces';
 
 /**
  * Get global variable value.
  *
- * Since there's a number of global variables that are defined by clients,
- * there's a strong chance that some or all of them may be undefined.
- * This function is a solution to that problem.
+ * Since there are a number of global variables that can be defined by consumers,
+ * there is a strong chance that some or all of them may be undefined.
+ * This function provides a safe way to access them.
  *
  * @param varName string representation of in-code variable identifier.
- * @returns object or throws an exception
- * @throws an exception if the global variable name is invalid.
+ * @returns the global variable value or an empty object if not found.
  */
 const _get_global_var = <T=unknown>(varName: string): T => {
   try {
     return window[varName] as T;
   } catch (e) {
+    void e;
     const message = `Global variable "${varName}" does not exist.`;
     console.error(message);
   }
@@ -31,28 +27,26 @@ const _get_global_var = <T=unknown>(varName: string): T => {
 const GLOBAL_PREFIX = get_head_meta_content('web-ui');
 
 /**
- * Default background color  
+ * Default background color
  * History: `#af74b0`
  */
 export const DEFAULT_BACKGROUND_COLOR = '#72A0C1';
 
 /**
- * Raw data obtained from server will be stored in this object as an
- * array.
- * 
- * **procedure**
+ * Raw data obtained from the server will be stored in this object as arrays.
+ *
+ * **Procedure**
  * The data is received only once, when the app is loaded. Afterwards,
- * any new data inserted by users will be sent to the server as a
- * request first. Upon a successful POST request (create), the new data
+ * any new data inserted by users will be sent to the server as a request first. Upon a successful POST request (create), the new data
  * will be inserted in the array with `Array.push()` and then displayed.
- * 
- * **dev note**
- * use `Array.push()` to insert data as it arrives or you can create a
+ *
+ * **Dev note**
+ * Use `Array.push()` to insert data as it arrives or you can create a
  * function to apply rules as to how the data is displayed.
  *
- * Each property in the `data` member represents a separated set of data.
+ * Each property in the `data` member represents a separate set of data.
  * For example, you could have a property for reservations along with
- * access logs. e.g.
+ * access logs. e.g.,
  *
  * ```javascript
  * 'data': {
@@ -68,11 +62,8 @@ export const DEFAULT_BACKGROUND_COLOR = '#72A0C1';
  */
 export default {
 
-  /**
-   * @see info.state.ts
-   */
   'app': {
-    /** Whether the app can retrieve state from server when not available */
+    /** Whether the app can retrieve state from the server when not available */
     'fetchingStateAllowed': true,
 
     /** Whether the app is in debugging mode or not */
@@ -82,8 +73,8 @@ export default {
     /**
      * The page that is currently displayed.
      *
-     * **How it works**
-     * When this member is set, to a value, e.g. `login` the app will look for an
+     * **How it works:**
+     * When this member is set to a value, e.g., `login`, the app will look for an
      * equivalent `loginPage` property from `pages.state.ts`. If found, the
      * definition from the `loginPage` will be used to apply modifications to the
      * UI, like transitioning from one page to another but without loading anything
@@ -98,7 +89,7 @@ export default {
 
   /**
    * The `meta` member is used to apply rules as to how the data is
-   * displayed. e.g.
+   * displayed. e.g.,
    *
    * ```javascript
    * 'meta': {
@@ -141,7 +132,7 @@ export default {
 
   /** Application `font-family` and `color` */
   'typography': {
-    // Todo: Insert default values here.
+    // TODO: Insert default values here.
 
     ..._get_global_var(`${GLOBAL_PREFIX}Typography`)
   },
@@ -284,27 +275,27 @@ export default {
 
   /**
    * Object containing all dialog definitions
-   * 
-   * It can hold dialog definitions for them to be used at the specific time.
-   * It is also a way to prevent callback function from being over-inflated
+   *
+   * It can hold dialog definitions for them to be used at a specific time.
+   * It is also a way to prevent callback functions from being over-inflated
    * with dialog definitions.
    */
   'dialogs': {
-    // Todo: Insert default values here.
+    // TODO: Insert default values here.
 
     ..._get_global_var(`${GLOBAL_PREFIX}Dialogs`)
   },
 
-  'dialogsLight': { ..._get_global_var(`${GLOBAL_PREFIX}DialogsLignt`) },
+  'dialogsLight': { ..._get_global_var(`${GLOBAL_PREFIX}DialogsLight`) },
   'dialogsDark': { ..._get_global_var(`${GLOBAL_PREFIX}DialogsDark`) },
 
   /**
-   * Drawer general state
+   * General drawer state
    *
-   * The `drawer` data which can be modified at any time will be stored here.
-   * However, icons and functionalities will be defined in the `page` state.
+   * The `drawer` data that can be modified at any time will be stored here.
+   * However, icons and functionalities will be defined in the `pages` state.
    *
-   * This state can contain icons definitions if there is a need for a default
+   * This state can contain icon definitions if there is a need for a default
    * set of icons and the bootstrap page should not have any.
    *
    * @see https://material-ui.com/demos/drawers/
@@ -315,7 +306,7 @@ export default {
    * Object containing all form definitions
    */
   'forms': {
-    // Todo Insert default values here.
+    // TODO: Insert default values here.
 
     ..._get_global_var(`${GLOBAL_PREFIX}Forms`)
   }, // forms
@@ -331,7 +322,7 @@ export default {
    */
   'pages': {
 
-    // List of hard coded pages
+    // List of hard-coded pages
 
     // Default blank page
     'default-blank': {
@@ -433,7 +424,7 @@ export default {
   'formsData': {},
   'formsDataErrors': {},
 
-  /** material-ui snackbar redux store data */
+  /** Material-UI Snackbar Redux store data */
   'snackbar': {},
 
   'tmp': {},
@@ -446,7 +437,7 @@ export default {
   'topLevelLinks': {},
 
   /**
-   * For a complete structure of the theme object, visit:
+   * For the complete structure of the theme object, visit:
    *
    * @link https://v4.mui.com/customization/default-theme/#default-theme
    */
@@ -465,8 +456,8 @@ export default {
 
   'net': {},
 
-  /** 
-   * Used for making request to a server if a dialog, form, or page state are 
+  /**
+   * Used for making requests to a server if a dialog, form, or page state is
    * not available. The app will attempt to load it from the server.
    */
   'pathnames': {

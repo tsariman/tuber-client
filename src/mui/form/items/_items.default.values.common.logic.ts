@@ -15,15 +15,15 @@ import {
   PHONE_INPUT,
   STATE_SELECT_NATIVE,
   CHECKBOXES,
-  DESKTOP_DATE_TIME_PICKER
-} from '../../../constants.client';
+  DESKTOP_DATE_TIME_PICKER,
+  type TObj
+} from '@tuber/shared';
 import {
   formsDataUpdate,
-  IFormsDataArgs
+  type IFormsDataArgs
 } from '../../../slices/formsData.slice';
 import type StateFormItem from '../../../controllers/StateFormItem';
 import { error_id } from '../../../business.logic/errors';
-import { TObj } from '../../../common.types';
 
 /**
  * Insert form data to the Redux store.

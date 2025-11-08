@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import IStateForm from '../interfaces/IStateForm';
+import type { IStateForm } from '@tuber/shared';
 import initialState from '../state/initial.state';
 
 export interface IFormsArgs {

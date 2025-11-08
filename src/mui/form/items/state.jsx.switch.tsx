@@ -4,11 +4,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import { type RootState } from '../../../state';
-import { ICheckboxesData } from './_items.common.logic';
+import type { ICheckboxesData, TSwitchEventHandlerFactory } from './_items.common.logic';
 import { useSelector } from 'react-redux';
 import { type StateFormItemSwitch, StateFormsData } from '../../../controllers';
 import FormLabel from '@mui/material/FormLabel';
-import { NAME_NOT_SET } from '../../../constants.client';
+import { NAME_NOT_SET } from '@tuber/shared';
 
 interface IJsonSwitchProps { def: StateFormItemSwitch; }
 
@@ -67,7 +67,7 @@ export default function StateJsxSwitch (props: IJsonSwitchProps) {
               <Switch
                 {...$witch.props}
                 name={$witch.name}
-                onChange={switchGroup.onChange(name, data)}
+                onChange={(switchGroup.onChange as TSwitchEventHandlerFactory)(name, data)}
               />
             }
             label={$witch.label}

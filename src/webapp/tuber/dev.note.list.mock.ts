@@ -1,4 +1,4 @@
-import { IBookmark } from './tuber.interfaces';
+import type { IBookmark } from './tuber.interfaces';
 
 const BOOKMARK_LIST: IBookmark[] = [
   {

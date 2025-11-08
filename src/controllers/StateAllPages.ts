@@ -1,22 +1,25 @@
-import { DEFAULT_BLANK_PAGE, DEFAULT_LANDING_PAGE } from '../constants.client';
+import type { IStateAllPages, IStatePage } from '../localized/interfaces';
+import {
+  DEFAULT_BLANK_PAGE,
+  DEFAULT_LANDING_PAGE
+} from '@tuber/shared';
 import AbstractState from './AbstractState';
-import IStateAllPages from '../interfaces/IStateAllPages';
-import IStatePage from '../interfaces/IStatePage';
 import State from './State';
 import type StateApp from './StateApp';
 import StatePage from './StatePage';
 import { log } from '../business.logic/logging';
 import { get_state } from '../state';
 
+/** Wrapper class for `RootState.pages`. */
 export default class StateAllPages extends AbstractState {
-
-  constructor(private _allPagesState: IStateAllPages,
-    private _parent?: State
-  ) {
+  private _allPagesState: IStateAllPages;
+  private _parent?: State;
+  constructor(allPagesState: IStateAllPages, parent?: State) {
     super();
+    this._allPagesState = allPagesState;
+    this._parent = parent;
   }
 
-  /** Get a copy of all pages json. */
   get state(): IStateAllPages { return this._allPagesState; }
   /** Chain-access root definition. */
   get parent(): State {
@@ -27,6 +30,7 @@ export default class StateAllPages extends AbstractState {
 
   /** Check to see if the route has path variables. */
   private _has_path_vars(rawRoute: string): boolean {
+    if (!rawRoute) return false;
     return rawRoute.replace(/^\/|\/$/g, '').split('/').length > 1;
   }
 
@@ -65,10 +69,13 @@ export default class StateAllPages extends AbstractState {
    * @returns the page state or null if not found
    */
   getPageState = (route: string): IStatePage | null => {
+    if (!route) return null;
+    
     if (this._no_path_vars(route)) {
       return this._allPagesState[route]
       || this._allPagesState[`/${route}`]
-      || this._allPagesState[route.substring(1)];
+      || this._allPagesState[route.substring(1)]
+      || null;
     }
 
     // Handle routes with path variables
@@ -80,7 +87,7 @@ export default class StateAllPages extends AbstractState {
         break;
       }
     }
-    return pageState;
+    return pageState || null;
   }
 
   /**
