@@ -21,7 +21,7 @@ import {
   get_errors_list
 } from '../../business.logic';
 import InputBase from '@mui/material/InputBase';
-import { StateJsxIcon } from '../../mui/icon';
+import { StateJsxIcon } from '../icon';
 
 type TSetLastSelected = <T>($class: T) => void;
 type TClasses = 'errorCardHover' | 'errorCardClicked';

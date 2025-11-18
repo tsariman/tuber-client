@@ -1,17 +1,54 @@
-import renderer from 'react-test-renderer';
+import { describe, it, expect } from 'vitest';
+import { render } from '@testing-library/react';
 import StateCard from '../../../controllers/StateCard';
 import Card from '../../../mui/card';
 
+// Mock StateCard for testing
+const createMockCard = (type: 'basic' | 'multi_action_area' | 'complex' = 'basic'): StateCard => ({
+  _type: type,
+  state: {
+    props: { 'data-testid': 'card' },
+    contentProps: { children: 'Test content' },
+    actionsProps: {},
+    actions: [],
+    _key: 'test-card',
+  },
+} as unknown as StateCard);
+
 describe('src/mui/card/index.tsx', () => {
-  it('should render correctly', () => {
-    const card = {
+  it('should render basic card correctly', () => {
+    const mockCard = createMockCard('basic');
+    
+    const { getByTestId, getByText } = render(<Card def={mockCard} />);
+    
+    expect(getByTestId('card')).toBeInTheDocument();
+    expect(getByText('Test content')).toBeInTheDocument();
+  });
 
-      // [TODO] Add card props here
+  it('should render multi action area card', () => {
+    const mockCard = createMockCard('multi_action_area');
+    
+    const { container } = render(<Card def={mockCard} />);
+    const cardElement = container.querySelector('.MuiCard-root');
+    
+    expect(cardElement).toBeInTheDocument();
+  });
 
-    } as StateCard;
-    const tree = renderer
-      .create(<Card def={card} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+  it('should render complex card', () => {
+    const mockCard = createMockCard('complex');
+    
+    const { container } = render(<Card def={mockCard} />);
+    const cardElement = container.querySelector('.MuiCard-root');
+    
+    expect(cardElement).toBeInTheDocument();
+  });
+
+  it('should handle card without actions', () => {
+    const mockCard = createMockCard('basic');
+    
+    const { container } = render(<Card def={mockCard} />);
+    const actionsElement = container.querySelector('.MuiCardActions-root');
+    
+    expect(actionsElement).toBeInTheDocument();
   });
 });

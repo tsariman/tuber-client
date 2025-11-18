@@ -73,11 +73,11 @@ describe('indexes.ts', () => {
 
   describe('index_by_id', () => {
     it('should create an index from array of resources', () => {
-      index_by_id(mockUsers as Parameters<typeof index_by_id>[0], 'users');
+      index_by_id(mockUsers as Parameters<typeof index_by_id>[0]);
       
       // Test that the index was created by checking select function
-      const user1 = select<MockJsonapiResponseResource>('users', '1');
-      const user2 = select<MockJsonapiResponseResource>('users', '2');
+      const user1 = select<MockJsonapiResponseResource>('user', '1');
+      const user2 = select<MockJsonapiResponseResource>('user', '2');
       
       expect(user1).toBeDefined();
       expect(user2).toBeDefined();
@@ -86,11 +86,11 @@ describe('indexes.ts', () => {
     });
 
     it('should handle multiple collections', () => {
-      index_by_id(mockUsers as Parameters<typeof index_by_id>[0], 'users');
-      index_by_id(mockPosts as Parameters<typeof index_by_id>[0], 'posts');
+      index_by_id(mockUsers as Parameters<typeof index_by_id>[0]);
+      index_by_id(mockPosts as Parameters<typeof index_by_id>[0]);
       
-      const user = select<MockJsonapiResponseResource>('users', '1');
-      const post = select<MockJsonapiResponseResource>('posts', 'post-1');
+      const user = select<MockJsonapiResponseResource>('user', '1');
+      const post = select<MockJsonapiResponseResource>('post', 'post-1');
       
       expect(user).toBeDefined();
       expect(post).toBeDefined();
@@ -100,8 +100,8 @@ describe('indexes.ts', () => {
 
     it('should overwrite existing collection index', () => {
       // Create initial index
-      index_by_id(mockUsers as Parameters<typeof index_by_id>[0], 'users');
-      const initialUser = select<MockJsonapiResponseResource>('users', '1');
+      index_by_id(mockUsers as Parameters<typeof index_by_id>[0]);
+      const initialUser = select<MockJsonapiResponseResource>('user', '1');
       expect(initialUser).toBeDefined();
       
       // Create new index with different data
@@ -113,18 +113,18 @@ describe('indexes.ts', () => {
         }
       ];
       
-      index_by_id(newUsers as Parameters<typeof index_by_id>[0], 'users');
+      index_by_id(newUsers as Parameters<typeof index_by_id>[0]);
       
       // Old data should no longer be accessible
-      const oldUser = select<MockJsonapiResponseResource>('users', '1');
-      const newUser = select<MockJsonapiResponseResource>('users', '4');
+      const oldUser = select<MockJsonapiResponseResource>('user', '1');
+      const newUser = select<MockJsonapiResponseResource>('user', '4');
       
       expect(oldUser).toBeUndefined();
       expect(newUser).toBeDefined();
     });
 
     it('should handle empty array', () => {
-      index_by_id([], 'empty');
+      index_by_id([]);
       
       const result = select('empty', 'any-id');
       expect(result).toBeUndefined();
@@ -144,9 +144,9 @@ describe('indexes.ts', () => {
         }
       ];
       
-      index_by_id(duplicateUsers as Parameters<typeof index_by_id>[0], 'users');
+      index_by_id(duplicateUsers as Parameters<typeof index_by_id>[0]);
       
-      const user = select<MockJsonapiResponseResource>('users', '1');
+      const user = select<MockJsonapiResponseResource>('user', '1');
       expect(user?.attributes?.name).toBe('Second John');
     });
   });
@@ -154,15 +154,15 @@ describe('indexes.ts', () => {
   describe('drop_index', () => {
     it('should remove an existing collection index', () => {
       // Create index
-      index_by_id(mockUsers as Parameters<typeof index_by_id>[0], 'users');
-      const user = select<MockJsonapiResponseResource>('users', '1');
+      index_by_id(mockUsers as Parameters<typeof index_by_id>[0]);
+      const user = select<MockJsonapiResponseResource>('user', '1');
       expect(user).toBeDefined();
       
       // Drop index
-      drop_index('users');
+      drop_index('user');
       
       // Should no longer be accessible
-      const userAfterDrop = select<MockJsonapiResponseResource>('users', '1');
+      const userAfterDrop = select<MockJsonapiResponseResource>('user', '1');
       expect(userAfterDrop).toBeUndefined();
     });
 
@@ -172,41 +172,41 @@ describe('indexes.ts', () => {
     });
 
     it('should not affect other collections', () => {
-      index_by_id(mockUsers as Parameters<typeof index_by_id>[0], 'users');
-      index_by_id(mockPosts as Parameters<typeof index_by_id>[0], 'posts');
+      index_by_id(mockUsers as Parameters<typeof index_by_id>[0]);
+      index_by_id(mockPosts as Parameters<typeof index_by_id>[0]);
       
       // Drop one collection
-      drop_index('users');
+      drop_index('user');
       
       // Other collection should still exist
-      const post = select<MockJsonapiResponseResource>('posts', 'post-1');
+      const post = select<MockJsonapiResponseResource>('post', 'post-1');
       expect(post).toBeDefined();
       
       // Dropped collection should not exist
-      const user = select<MockJsonapiResponseResource>('users', '1');
+      const user = select<MockJsonapiResponseResource>('user', '1');
       expect(user).toBeUndefined();
     });
 
     it('should allow re-indexing after drop', () => {
       // Create, drop, and recreate index
-      index_by_id(mockUsers as Parameters<typeof index_by_id>[0], 'users');
-      drop_index('users');
-      index_by_id(mockUsers as Parameters<typeof index_by_id>[0], 'users');
+      index_by_id(mockUsers as Parameters<typeof index_by_id>[0]);
+      drop_index('user');
+      index_by_id(mockUsers as Parameters<typeof index_by_id>[0]);
       
-      const user = select<MockJsonapiResponseResource>('users', '1');
+      const user = select<MockJsonapiResponseResource>('user', '1');
       expect(user).toBeDefined();
     });
   });
 
   describe('select', () => {
     beforeEach(() => {
-      index_by_id(mockUsers as Parameters<typeof index_by_id>[0], 'users');
-      index_by_id(mockPosts as Parameters<typeof index_by_id>[0], 'posts');
+      index_by_id(mockUsers as Parameters<typeof index_by_id>[0]);
+      index_by_id(mockPosts as Parameters<typeof index_by_id>[0]);
     });
 
     it('should retrieve resource by collection and id', () => {
-      const user1 = select<MockJsonapiResponseResource>('users', '1');
-      const user2 = select<MockJsonapiResponseResource>('users', '2');
+      const user1 = select<MockJsonapiResponseResource>('user', '1');
+      const user2 = select<MockJsonapiResponseResource>('user', '2');
       
       expect(user1?.id).toBe('1');
       expect(user1?.attributes?.name).toBe('John Doe');
@@ -220,20 +220,20 @@ describe('indexes.ts', () => {
     });
 
     it('should return undefined for non-existent id', () => {
-      const result = select('users', 'nonexistent-id');
+      const result = select('user', 'nonexistent-id');
       expect(result).toBeUndefined();
     });
 
     it('should handle different data types in collections', () => {
-      const post = select<MockJsonapiResponseResource>('posts', 'post-1');
+      const post = select<MockJsonapiResponseResource>('post', 'post-1');
       expect(post?.type).toBe('post');
       expect(post?.attributes?.title).toBe('First Post');
     });
 
     it('should be case sensitive for collection names', () => {
-      const result1 = select<MockJsonapiResponseResource>('users', '1');
-      const result2 = select<MockJsonapiResponseResource>('Users', '1');
-      const result3 = select<MockJsonapiResponseResource>('USERS', '1');
+      const result1 = select<MockJsonapiResponseResource>('user', '1');
+      const result2 = select<MockJsonapiResponseResource>('User', '1');
+      const result3 = select<MockJsonapiResponseResource>('USER', '1');
       
       expect(result1).toBeDefined();
       expect(result2).toBeUndefined();
@@ -241,9 +241,9 @@ describe('indexes.ts', () => {
     });
 
     it('should be case sensitive for IDs', () => {
-      const result1 = select<MockJsonapiResponseResource>('users', '1');
-      const result2 = select<MockJsonapiResponseResource>('users', '1 ');
-      const result3 = select('users', ' 1');
+      const result1 = select<MockJsonapiResponseResource>('user', '1');
+      const result2 = select<MockJsonapiResponseResource>('user', '1 ');
+      const result3 = select('user', ' 1');
       
       expect(result1).toBeDefined();
       expect(result2).toBeUndefined();
@@ -252,14 +252,14 @@ describe('indexes.ts', () => {
 
     it('should handle error cases gracefully', () => {
       // The function should not throw errors for edge cases
-      const result = select('users', '1');
+      const result = select('user', '1');
       
       // If no error occurred, we should get a valid result
       expect(result).toBeDefined();
       
       // Test edge cases
       expect(() => select('', '')).not.toThrow();
-      expect(() => select('users', '')).not.toThrow();
+      expect(() => select('user', '')).not.toThrow();
       expect(() => select('', '1')).not.toThrow();
     });
   });
@@ -267,19 +267,19 @@ describe('indexes.ts', () => {
   describe('Integration scenarios', () => {
     beforeEach(() => {
       // Clear all indexes to start with clean state
-      drop_index('users');
-      drop_index('posts');
+      drop_index('user');
+      drop_index('post');
       drop_index('empty');
     });
 
     it('should handle complete workflow', () => {
       // Start with empty state
-      let user = select<MockJsonapiResponseResource>('users', '1');
+      let user = select<MockJsonapiResponseResource>('user', '1');
       expect(user).toBeUndefined();
       
       // Index data
-      index_by_id(mockUsers as Parameters<typeof index_by_id>[0], 'users');
-      user = select<MockJsonapiResponseResource>('users', '1');
+      index_by_id(mockUsers as Parameters<typeof index_by_id>[0]);
+      user = select<MockJsonapiResponseResource>('user', '1');
       expect(user).toBeDefined();
       
       // Update index with new data
@@ -291,37 +291,37 @@ describe('indexes.ts', () => {
         }
       ];
       
-      index_by_id(updatedUsers as Parameters<typeof index_by_id>[0], 'users');
-      user = select<MockJsonapiResponseResource>('users', '1');
+      index_by_id(updatedUsers as Parameters<typeof index_by_id>[0]);
+      user = select<MockJsonapiResponseResource>('user', '1');
       expect(user?.attributes?.name).toBe('Updated John');
       
       // Drop index
-      drop_index('users');
-      user = select<MockJsonapiResponseResource>('users', '1');
+      drop_index('user');
+      user = select<MockJsonapiResponseResource>('user', '1');
       expect(user).toBeUndefined();
     });
 
     it('should handle multiple collections simultaneously', () => {
-      index_by_id(mockUsers as Parameters<typeof index_by_id>[0], 'users');
-      index_by_id(mockPosts as Parameters<typeof index_by_id>[0], 'posts');
+      index_by_id(mockUsers as Parameters<typeof index_by_id>[0]);
+      index_by_id(mockPosts as Parameters<typeof index_by_id>[0]);
       
       // Both collections should be accessible
-      expect(select<MockJsonapiResponseResource>('users', '1')).toBeDefined();
-      expect(select<MockJsonapiResponseResource>('posts', 'post-1')).toBeDefined();
+      expect(select<MockJsonapiResponseResource>('user', '1')).toBeDefined();
+      expect(select<MockJsonapiResponseResource>('post', 'post-1')).toBeDefined();
       
       // Drop one, other should remain
-      drop_index('users');
-      expect(select<MockJsonapiResponseResource>('users', '1')).toBeUndefined();
-      expect(select<MockJsonapiResponseResource>('posts', 'post-1')).toBeDefined();
+      drop_index('user');
+      expect(select<MockJsonapiResponseResource>('user', '1')).toBeUndefined();
+      expect(select<MockJsonapiResponseResource>('post', 'post-1')).toBeDefined();
       
       // Add another collection
       const comments: MockJsonapiResponseResource[] = [
         { id: 'comment-1', type: 'comment', attributes: { text: 'Great post!' } }
       ];
       
-      index_by_id(comments as Parameters<typeof index_by_id>[0], 'comments');
-      expect(select<MockJsonapiResponseResource>('comments', 'comment-1')).toBeDefined();
-      expect(select<MockJsonapiResponseResource>('posts', 'post-1')).toBeDefined();
+      index_by_id(comments as Parameters<typeof index_by_id>[0]);
+      expect(select<MockJsonapiResponseResource>('comment', 'comment-1')).toBeDefined();
+      expect(select<MockJsonapiResponseResource>('post', 'post-1')).toBeDefined();
     });
 
     it('should handle large datasets efficiently', () => {
@@ -336,19 +336,19 @@ describe('indexes.ts', () => {
       }
       
       // Index should handle large datasets
-      expect(() => index_by_id(largeDataset as Parameters<typeof index_by_id>[0], 'large-users')).not.toThrow();
+      expect(() => index_by_id(largeDataset as Parameters<typeof index_by_id>[0])).not.toThrow();
       
       // Retrieval should work
-      const firstUser = select<MockJsonapiResponseResource>('large-users', 'user-0');
-      const lastUser = select<MockJsonapiResponseResource>('large-users', 'user-999');
-      const middleUser = select<MockJsonapiResponseResource>('large-users', 'user-500');
+      const firstUser = select<MockJsonapiResponseResource>('user', 'user-0');
+      const lastUser = select<MockJsonapiResponseResource>('user', 'user-999');
+      const middleUser = select<MockJsonapiResponseResource>('user', 'user-500');
       
       expect(firstUser).toBeDefined();
       expect(lastUser).toBeDefined();
       expect(middleUser).toBeDefined();
       
       // Non-existent should return undefined
-      const nonExistent = select('large-users', 'user-1000');
+      const nonExistent = select('user', 'user-1000');
       expect(nonExistent).toBeUndefined();
     });
   });

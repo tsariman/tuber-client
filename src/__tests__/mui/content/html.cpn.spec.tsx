@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { renderWithProviders, screen } from '../../test-utils';
-import HtmlContent from '../../../components/content/html.cpn';
+import HtmlContent from '../../../mui/content/html.cpn';
 
 // Mock StatePage
 const mockPage = {

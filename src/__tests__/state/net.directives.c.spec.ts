@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import execute_directives from '../../state/net.directives.c'
 
 describe('src/state/net.directives.c.ts', () => {

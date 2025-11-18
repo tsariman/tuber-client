@@ -11,7 +11,7 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme();
 
 // Create a minimal mock reducer setup
-const createMockStore = () => configureStore({
+const createMockStore = (preloadedState?: any) => configureStore({
   reducer: {
     app: (state = {
       status: 'idle',
@@ -30,8 +30,15 @@ const createMockStore = () => configureStore({
           return state;
       }
     },
+    pagesData: (state = {}, action) => {
+      switch (action.type) {
+        default:
+          return state;
+      }
+    },
     // Add other reducers as needed
   },
+  ...(preloadedState && { preloadedState }),
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // Disable for testing
@@ -48,7 +55,8 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'wrapper'> {
 export function renderWithProviders(
   ui: ReactElement,
   {
-    store = createMockStore(),
+    preloadedState,
+    store = createMockStore(preloadedState),
     ...renderOptions
   }: ExtendedRenderOptions = {}
 ): ReturnType<typeof render> & { store: MockStoreType } {

@@ -1,5 +1,5 @@
 import { CircularProgress, styled } from '@mui/material';
-import { LayoutCenteredNoScroll } from '../mui/layouts';
+import { LayoutCenteredNoScroll } from './layout/layouts';
 import type { RootState } from '../state';
 import { useSelector } from 'react-redux';
 import { APP_IS_FETCHING } from '@tuber/shared';

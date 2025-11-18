@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { renderWithProviders } from '../../test-utils';
-import PageLanding from '../../../components/pages/landing.cpn';
+import PageLanding from '../../../components/page/landing.cpn';
 
 describe('PageLanding Component', () => {
   const mockPage = {} as unknown;

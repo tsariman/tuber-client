@@ -1,4 +1,5 @@
-import JsonapiError from 'src/business.logic/JsonapiError'
+import { describe, it, expect } from 'vitest';
+import JsonapiError from '../../business.logic/JsonapiError';
 
 describe('JsonapiError', () => {
   describe('constructor', () => {

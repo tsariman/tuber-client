@@ -12,7 +12,7 @@ describe('StateAllErrors', () => {
             }
           },
           status: '404',
-          code: 'not_found',
+          code: 'RESOURCE_NOT_FOUND',
           title: 'Not Found',
           detail: 'The requested resource could not be found.',
           source: { parameter: 'id' },
@@ -26,7 +26,7 @@ describe('StateAllErrors', () => {
             }
           },
           status: '404',
-          code: 'not_found',
+          code: 'RESOURCE_NOT_FOUND',
           title: 'Not Found',
           detail: 'The requested resource could not be found.',
           source: { parameter: 'id' },
@@ -39,7 +39,7 @@ describe('StateAllErrors', () => {
             id: '1',
             links: { about: 'http://example.com' },
             status: '404',
-            code: 'not_found',
+            code: 'RESOURCE_NOT_FOUND',
             title: 'Not Found',
             detail: 'The requested resource could not be found.',
             source: { parameter: 'id' },
@@ -49,7 +49,7 @@ describe('StateAllErrors', () => {
             id: '2',
             links: { about: 'http://example.com' },
             status: '404',
-            code: 'not_found',
+            code: 'RESOURCE_NOT_FOUND',
             title: 'Not Found',
             detail: 'The requested resource could not be found.',
             source: { parameter: 'id' },
@@ -71,7 +71,7 @@ describe('StateAllErrors', () => {
             }
           },
           status: '404',
-          code: 'not_found',
+          code: 'RESOURCE_NOT_FOUND',
           title: 'Not Found',
           detail: 'The requested resource could not be found.',
           source: { parameter: 'id' },
@@ -85,7 +85,7 @@ describe('StateAllErrors', () => {
             }
           },
           status: '404',
-          code: 'not_found',
+          code: 'RESOURCE_NOT_FOUND',
           title: 'Not Found',
           detail: 'The requested resource could not be found.',
           source: { parameter: 'id' },

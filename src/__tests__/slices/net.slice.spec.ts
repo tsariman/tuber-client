@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { netActions } from '../../slices/net.slice';
 import store from '../../state';
 

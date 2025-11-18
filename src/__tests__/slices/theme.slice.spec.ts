@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { themeActions } from '../../slices/theme.slice';
 import store from '../../state';
 

@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import StateFormItemCheckbox from '../../../controllers/templates/StateFormItemCheckbox';
 import StateFormItemCheckboxCustom from '../../../controllers/templates/StateFormItemCheckboxCustom';
 

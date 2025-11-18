@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import StateFormItemCustom from '../../controllers/StateFormItemCustom';
 
 describe('StateFormItemCustom', () => {

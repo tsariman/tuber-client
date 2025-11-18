@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { renderWithProviders, screen } from '../../test-utils';
-import PageSuccess from '../../../components/pages/success.cpn';
+import PageSuccess from '../../../mui/page/success.cpn';
 
 // Mock the StateJsxIcon component
 vi.mock('../../../mui/icon', () => ({

@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import StateSnackbar from '../../controllers/StateSnackbar';
 
 describe('StateSnackbar', () => {

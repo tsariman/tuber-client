@@ -1,10 +1,11 @@
+import { StateAllPages } from 'src/controllers';
 import StatePage from '../../../controllers/StatePage';
 import StatePageAppbarMidSearch from '../../../controllers/templates/StatePageAppbarMidSearch';
-import IStateAppbar from '../../../interfaces/IStateAppbar';
+import type { IStateAppbar } from '../../../localized/interfaces';
 
 describe('StatePageAppbarMidSearch', () => {
-
-  const page1 = new StatePage({});
+  const allPages = new StateAllPages({});
+  const page1 = new StatePage({}, allPages);
   const appbarState = {
     'appbarStyle': 'middle_search',
     'inputBaseChips': [

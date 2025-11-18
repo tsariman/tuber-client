@@ -1,4 +1,5 @@
-import JsonapiPaginationLinks from 'src/business.logic/JsonapiPaginationLinks'
+import { describe, it, expect } from 'vitest';
+import JsonapiPaginationLinks from '../../business.logic/JsonapiPaginationLinks';
 
 describe('JsonapiPaginationLinks', () => {
   describe('constructor', () => {

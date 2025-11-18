@@ -3,7 +3,7 @@ import {
   is_object,
   is_record,
   is_struct,
-  is_string,
+  is_non_empty_string,
   is_number,
   get_val,
   safely_get_as,
@@ -70,20 +70,20 @@ describe('utility.ts', () => {
       });
     });
 
-    describe('is_string', () => {
+    describe('is_non_empty_string', () => {
       it('should return true for strings', () => {
-        expect(is_string('')).toBe(true);
-        expect(is_string('hello')).toBe(true);
-        expect(is_string('123')).toBe(true);
+        expect(is_non_empty_string('')).toBe(true);
+        expect(is_non_empty_string('hello')).toBe(true);
+        expect(is_non_empty_string('123')).toBe(true);
       });
 
       it('should return false for non-strings', () => {
-        expect(is_string(123)).toBe(false);
-        expect(is_string(true)).toBe(false);
-        expect(is_string({})).toBe(false);
-        expect(is_string([])).toBe(false);
-        expect(is_string(null)).toBe(false);
-        expect(is_string(undefined)).toBe(false);
+        expect(is_non_empty_string(123)).toBe(false);
+        expect(is_non_empty_string(true)).toBe(false);
+        expect(is_non_empty_string({})).toBe(false);
+        expect(is_non_empty_string([])).toBe(false);
+        expect(is_non_empty_string(null)).toBe(false);
+        expect(is_non_empty_string(undefined)).toBe(false);
       });
     });
 

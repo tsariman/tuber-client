@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { renderWithProviders, screen } from '../test-utils';
-import Layout from '../../components/layout.cpn';
+import { renderWithProviders, screen } from '../../test-utils';
+import Layout from '../../../mui/layout';
 
 // Mock the dependencies
 vi.mock('@mui/material/Container', () => ({

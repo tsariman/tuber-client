@@ -1,5 +1,5 @@
-import { type TThemeMode, get_config, type IConfiguration } from '@tuber/shared';
-// import { TThemeMode } from './common.types';
+import { type TThemeMode, type IConfiguration } from '@tuber/shared'
+import get_config from './business.logic/Configuration'
 
 const initConfObj = {
   /** App default theme mode. */
@@ -10,12 +10,10 @@ const initConfObj = {
   DEV: false,
   // TODO Add your config object values here e.g.
   // MY_CONFIG: 'my config value',
-};
+}
 
-const Config = get_config();
-Config.init(initConfObj);
+const Config = get_config()
+Config.init(initConfObj)
 
 // Makes config object key available in suggestions
-export type IAppConfig = IConfiguration & typeof initConfObj;
-
-export default Config as IAppConfig;
+export default Config as IConfiguration & typeof initConfObj

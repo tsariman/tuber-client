@@ -49,7 +49,7 @@ import DialogTextField from './dialog.textfield';
 import DialogSelect from './select';
 import { log } from '../../../business.logic/logging';
 
-interface IRecursiveFormBuilder {
+export interface IRecursiveFormBuilder {
   form: StateForm;
   items?: StateFormItem['items'];
   depth?: number;

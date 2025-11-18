@@ -1,41 +1,41 @@
-import { configureStore, type PayloadAction } from '@reduxjs/toolkit';
-import { combineReducers } from 'redux';
+import { configureStore, type PayloadAction } from '@reduxjs/toolkit'
+import { combineReducers } from 'redux'
 // import logger from 'redux-logger'// TODO Uncomment when debugging Redux
-import infoReducer, { appActions } from '../slices/app.slice';
-import appbarReducer, { appbarActions } from '../slices/appbar.slice';
-import iconsReducer, { iconsActions } from '../slices/icons.slice';
-import metaReducer, { metaActions } from '../slices/meta.slice';
-import appbarQueriesReducer, { appbarQueriesActions } from '../slices/appbarQueries.slice';
-import backgroundReducer, { backgroundActions } from '../slices/background.slice';
-import typographyReducer, { typographyActions } from '../slices/typography.slice';
-import dialogReducer, { dialogActions } from '../slices/dialog.slice';
-import dialogsReducer, { dialogsAction } from '../slices/dialogs.slice';
-import drawerReducer, { drawerActions } from '../slices/drawer.slice';
-import formsReducer, { formsActions } from '../slices/forms.slice';
-import pagesReducer, { pagesActions } from '../slices/pages.slice';
-import dataReducer, { dataActions } from '../slices/data.slice';
-import dataLoadedPagesSlice, { dataLoadedPagesActions } from '../slices/dataLoadedPages.slice';
-import errorsReducer, { errorsActions } from '../slices/errors.slice';
-import pagesDataReducer, { pagesDataActions } from '../slices/pagesData.slice';
-import formsDataReducer, { formsDataActions } from '../slices/formsData.slice';
-import formsDataErrorsReducer, { formsDataErrorsActions } from '../slices/formsDataErrors.slice';
-import snackbarReducer, { snackbarActions } from '../slices/snackbar.slice';
-import tmpReducer, { tmpActions } from '../slices/tmp.slice';
-import topLevelLinksReducer, { topLevelLinksActions } from '../slices/topLevelLinks.slice';
-import themeReducer, { themeActions } from '../slices/theme.slice';
-import netReducer, { netActions } from '../slices/net.slice';
-import pathnamesReducer, { pathnamesActions } from '../slices/pathnames.slice';
-import staticRegistryReducer, { staticRegistryActions } from '../slices/staticRegistry.slice';
-import dynamicRegistryReducer, { dynamicRegistryActions } from '../slices/dynamicRegistry.slice';
-import dialogsLightReducer, { dialogsLightActions } from '../slices/dialogsLight.slice';
-import dialogsDarkReducer, { dialogsDarkActions } from '../slices/dialogsDark.slice';
-import formsLightReducer, { formsLightActions } from '../slices/formsLight.slice';
-import formsDarkReducer, { formsDarkActions } from '../slices/formsDark.slice';
-import pagesLightReducer, { pagesLightActions } from '../slices/pagesLight.slice';
-import pagesDarkReducer, { pagesDarkActions } from '../slices/pagesDark.slice';
-import themeLightReducer, { themeLightActions } from '../slices/themeLight.slice';
-import themeDarkReducer, { themeDarkActions } from '../slices/themeDark.slice';
-import chipsReducer, { chipsActions } from '../slices/chips.slice';
+import infoReducer, { appActions } from '../slices/app.slice'
+import appbarReducer, { appbarActions } from '../slices/appbar.slice'
+import iconsReducer, { iconsActions } from '../slices/icons.slice'
+import metaReducer, { metaActions } from '../slices/meta.slice'
+import appbarQueriesReducer, { appbarQueriesActions } from '../slices/appbarQueries.slice'
+import backgroundReducer, { backgroundActions } from '../slices/background.slice'
+import typographyReducer, { typographyActions } from '../slices/typography.slice'
+import dialogReducer, { dialogActions } from '../slices/dialog.slice'
+import dialogsReducer, { dialogsAction } from '../slices/dialogs.slice'
+import drawerReducer, { drawerActions } from '../slices/drawer.slice'
+import formsReducer, { formsActions } from '../slices/forms.slice'
+import pagesReducer, { pagesActions } from '../slices/pages.slice'
+import dataReducer, { dataActions } from '../slices/data.slice'
+import dataLoadedPagesSlice, { dataLoadedPagesActions } from '../slices/dataLoadedPages.slice'
+import errorsReducer, { errorsActions } from '../slices/errors.slice'
+import pagesDataReducer, { pagesDataActions } from '../slices/pagesData.slice'
+import formsDataReducer, { formsDataActions } from '../slices/formsData.slice'
+import formsDataErrorsReducer, { formsDataErrorsActions } from '../slices/formsDataErrors.slice'
+import snackbarReducer, { snackbarActions } from '../slices/snackbar.slice'
+import tmpReducer, { tmpActions } from '../slices/tmp.slice'
+import topLevelLinksReducer, { topLevelLinksActions } from '../slices/topLevelLinks.slice'
+import themeReducer, { themeActions } from '../slices/theme.slice'
+import netReducer, { netActions } from '../slices/net.slice'
+import pathnamesReducer, { pathnamesActions } from '../slices/pathnames.slice'
+import staticRegistryReducer, { staticRegistryActions } from '../slices/staticRegistry.slice'
+import dynamicRegistryReducer, { dynamicRegistryActions } from '../slices/dynamicRegistry.slice'
+import dialogsLightReducer, { dialogsLightActions } from '../slices/dialogsLight.slice'
+import dialogsDarkReducer, { dialogsDarkActions } from '../slices/dialogsDark.slice'
+import formsLightReducer, { formsLightActions } from '../slices/formsLight.slice'
+import formsDarkReducer, { formsDarkActions } from '../slices/formsDark.slice'
+import pagesLightReducer, { pagesLightActions } from '../slices/pagesLight.slice'
+import pagesDarkReducer, { pagesDarkActions } from '../slices/pagesDark.slice'
+import themeLightReducer, { themeLightActions } from '../slices/themeLight.slice'
+import themeDarkReducer, { themeDarkActions } from '../slices/themeDark.slice'
+import chipsReducer, { chipsActions } from '../slices/chips.slice'
 import {
   DRAWER_DEFAULT_WIDTH,
   NET_STATE_PATCH,
@@ -43,14 +43,14 @@ import {
   STATE_RESET,
   type TEventHandler,
   type TObj
-} from '@tuber/shared';
-import type { IState, TNetState } from '../localized/interfaces';
-import Config from '../config';
-import { error_id } from '../business.logic/errors';
-import initialState from './initial.state';
-import { clear_last_content_jsx } from '../business.logic/cache';
-import { err } from '../business.logic/logging';
-import { set_val } from '../business.logic/parsing';
+} from '@tuber/shared'
+import type { IState, TNetState } from '../localized/interfaces'
+import Config from '../config'
+import { error_id } from '../business.logic/errors'
+import initialState from './initial.state'
+import { clear_last_content_jsx } from '../business.logic/cache'
+import { err } from '../business.logic/logging'
+import { set_val } from '../business.logic/parsing'
 
 const appReducer = combineReducers({
   app: infoReducer,
@@ -88,7 +88,7 @@ const appReducer = combineReducers({
   pathnames: pathnamesReducer,
   staticRegistry: staticRegistryReducer,
   dynamicRegistry: dynamicRegistryReducer
-});
+})
 
 /**
  * Merges fragment state received from server into the current redux state.
@@ -101,38 +101,38 @@ const appReducer = combineReducers({
  * [TODO] Write a unit test for this function
  */
 const net_patch_state_reducer = <T=unknown>($oldState: unknown, $fragment: unknown): T => {
-  const state = { ...($oldState as TObj) };
-  const fragment = $fragment as TObj;
+  const state = { ...($oldState as TObj) }
+  const fragment = $fragment as TObj
   try {
     for (const prop in fragment) {
-      const newStateVal = fragment[prop];
+      const newStateVal = fragment[prop]
       switch (typeof newStateVal) {
       case 'undefined':
-        state[prop] = undefined;
-        break;
+        state[prop] = undefined
+        break
       case 'object':
-        if (newStateVal === null) continue;
+        if (newStateVal === null) continue
         if (!Array.isArray(newStateVal)) {
-          state[prop] = net_patch_state_reducer(state[prop], newStateVal);
+          state[prop] = net_patch_state_reducer(state[prop], newStateVal)
         } else {
-          state[prop] = [ ...newStateVal ]; // arrays are never copied deeply
+          state[prop] = [ ...newStateVal ] // arrays are never copied deeply
         }
-        break;
+        break
       case 'symbol':
       case 'bigint':
       case 'number':
       case 'function':
       case 'boolean':
-        state[prop] = newStateVal;
-        break;
+        state[prop] = newStateVal
+        break
       case 'string':
         if (newStateVal === NET_STATE_PATCH_DELETE) { // delete state
-          state[prop] = undefined;
-          clear_last_content_jsx();
+          state[prop] = undefined
+          clear_last_content_jsx()
         } else {
-          state[prop] = newStateVal;
+          state[prop] = newStateVal
         }
-        break;
+        break
       } // END switch
 
       // Runs a list of callbacks when a state with a certain id is loaded.
@@ -141,43 +141,43 @@ const net_patch_state_reducer = <T=unknown>($oldState: unknown, $fragment: unkno
         && typeof newStateVal._id === 'string'
       ) {
         ON_NET_LOAD_CALLBACK_LIST[newStateVal._id]
-          ?.forEach(callback => callback(redux));
+          ?.forEach(callback => callback(redux))
         // Delete the list of callbacks after they have been run.
-        delete ON_NET_LOAD_CALLBACK_LIST[newStateVal._id];
+        delete ON_NET_LOAD_CALLBACK_LIST[newStateVal._id]
       }
     }
   } catch (e) {
-    error_id(27).remember_exception(e); // error 27
-    err((e as Error).stack ?? '');
+    error_id(27).remember_exception(e) // error 27
+    err((e as Error).stack ?? '')
   }
-  return state as T;
+  return state as T
 }
 
-type TActionShell = PayloadAction<TNetState>;
+type TActionShell = PayloadAction<TNetState>
 
 // https://stackoverflow.com/questions/35622588/how-to-reset-the-state-of-a-redux-store
 const rootReducer = ($state: unknown, $action?: unknown) => {
-  const action = $action as TActionShell;
-  const state = $state as IState;
+  const action = $action as TActionShell
+  const state = $state as IState
 
   if (action.type === NET_STATE_PATCH) {
-    const newState = net_patch_state_reducer(state, action.payload) as IState;
-    Config.write('DEBUG', action.payload.app?.inDebugMode ?? false);
-    Config.write('DEV', action.payload.app?.inDevelMode ?? false);
-    set_val(window, 'webui.inDebugMode', Config.DEBUG);
-    set_val(window, 'webui.inDevelMode', Config.DEV);
+    const newState = net_patch_state_reducer(state, action.payload) as IState
+    Config.write('DEBUG', action.payload.app?.inDebugMode ?? false)
+    Config.write('DEV', action.payload.app?.inDevelMode ?? false)
+    set_val(window, 'webui.inDebugMode', Config.DEBUG)
+    set_val(window, 'webui.inDevelMode', Config.DEV)
 
     // TODO Set more server-side configuration here.
 
-    return appReducer(newState, action);
+    return appReducer(newState, action)
   }
 
   // Reset of the state
   if (action.type === STATE_RESET) {
-    return appReducer(initialState, action);
+    return appReducer(initialState, action)
   }
 
-  return appReducer(state, action);
+  return appReducer(state, action)
 }
 
 // https://redux-toolkit.js.org/usage/usage-with-typescript
@@ -191,14 +191,14 @@ const store = configureStore({
   //     // TODO add more middlewares here
   //   )
   //   .concat(logger) // TODO Uncomment when debugging Redux
-});
+})
 
 
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof store.getState>
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch;
+export type AppDispatch = typeof store.dispatch
 
 export const actions = {
   ...appActions,
@@ -236,46 +236,46 @@ export const actions = {
   ...pagesDarkActions,
   ...staticRegistryActions,
   ...dynamicRegistryActions
-};
+}
 
-export type TAllActions = typeof actions;
+export type TAllActions = typeof actions
 
 /**
  * Ensures access to the redux store and all available redux actions,
  * even in pure javascript.
  */
 export interface IRedux {
-  store: typeof store;
-  actions: typeof actions;
+  store: typeof store
+  actions: typeof actions
   /**
    * If you don't want to define a callback for your button or link,
    * you can use the href prop to set the target page. It's value should
    * then be passed to this route key.
    */
-  route?: string;
+  route?: string
 }
 
-/** Get callback argument */
+/** Get Redux handler argument */
 export const get_redux = (route = ''): IRedux => ({
   store,
   actions,
   route
-});
+})
 
-/** Callback argument */
+/** Get handler redux argument */
 export const redux: IRedux = {
   store,
   actions,
   route: ''
-};
+}
 
 /**
  * Type for callback that needs to access the redux store and actions in
  * addition to the event object.
  */
-export type TReduxHandler = (redux: IRedux) => TEventHandler;
+export type TReduxHandler = (redux: IRedux) => TEventHandler
 /** Type that gives access to the redux store and actions. */
-export type TReduxCallback = (redux: IRedux) => void;
+export type TReduxCallback = (redux: IRedux) => void
 /**
  * Type that gives access to the redux store, actions, and the response from
  * the server.
@@ -283,7 +283,7 @@ export type TReduxCallback = (redux: IRedux) => void;
 export type TReduxNetCallback<T=unknown> = (
   response: T,
   redux: IRedux
-) => Promise<void>;
+) => Promise<void>
 
 /**
  * Get the default drawer width.
@@ -291,20 +291,20 @@ export type TReduxNetCallback<T=unknown> = (
  */
 export const get_drawer_width = (): number => {
   return store.getState().drawer.width
-    ?? DRAWER_DEFAULT_WIDTH;
-};
+    ?? DRAWER_DEFAULT_WIDTH
+}
 
 /** Get the bootstrap key from meta tag. */
 export function get_bootstrap_key(): string {
-  const savedKey = Config.read('bootstrap_key', '');
-  if (savedKey) { return savedKey; }
-  const meta = document.querySelector('meta[name="bootstrap"]');
-  const key = (meta as HTMLMetaElement)?.content;
+  const savedKey = Config.read('bootstrap_key', '')
+  if (savedKey) { return savedKey }
+  const meta = document.querySelector('meta[name="bootstrap"]')
+  const key = (meta as HTMLMetaElement)?.content
   if (key) {
-    Config.set('bootstrap_key', key);
-    return key;
+    Config.set('bootstrap_key', key)
+    return key
   }
-  return '';
+  return ''
 }
 
 /**
@@ -314,9 +314,9 @@ export function get_bootstrap_key(): string {
 export function dummy_redux_handler (redux: IRedux): TEventHandler {
   return () => {
     if (redux.store.getState().app.inDebugMode) {
-      console.error('[function] dummy_callback(): No callback was assigned.');
+      console.error('[function] dummy_callback(): No callback was assigned.')
     }
-  };
+  }
 }
 
 /**
@@ -328,9 +328,9 @@ export function dummy_redux_handler (redux: IRedux): TEventHandler {
 export function default_callback ({store, actions, route}:IRedux): TEventHandler {
   return () => {
     if (route) {
-      store.dispatch(actions.appBrowserSwitchPage(route));
+      store.dispatch(actions.appBrowserSwitchPage(route))
     }
-  };
+  }
 }
 
 /**
@@ -339,27 +339,27 @@ export function default_callback ({store, actions, route}:IRedux): TEventHandler
 const INIT_CALLBACK_LIT: {
   callback: TReduxCallback,
   maxRun?: number
-}[] = [];
+}[] = []
 
 /**
  * Register a callback to run when app is initialized.
  * @param callback callback to run when app is initialized.
  */
 export const on_init_run = (callback: TReduxCallback) => {
-  INIT_CALLBACK_LIT.push({ callback });
+  INIT_CALLBACK_LIT.push({ callback })
 }
 
 /**
  * Run all callbacks that were registered with `on_init_run()`.
  */
 export const initialize = () => {
-  INIT_CALLBACK_LIT.forEach(obj => obj.callback(redux));
-};
+  INIT_CALLBACK_LIT.forEach(obj => obj.callback(redux))
+}
 
 const BOOTSTRAP_CALLBACK_LIST: {
   callback: TReduxNetCallback,
   maxRun?: number
-}[] = [];
+}[] = []
 
 /**
  * Register a callback to run when app is bootstrapped.
@@ -376,21 +376,21 @@ export const on_bootstrap_run = <T=unknown>(
   (BOOTSTRAP_CALLBACK_LIST as {
     callback: TReduxNetCallback<T>,
     maxRun?: number
-  }[]).push({ callback, maxRun });
-};
+  }[]).push({ callback, maxRun })
+}
 
 /** Run all callbacks that were registered with onBoostrapRun(). */
 export const bootstrap = (response: unknown) => {
   BOOTSTRAP_CALLBACK_LIST.forEach((obj, i) => {
-    obj.callback(response, redux);
+    obj.callback(response, redux)
     if (obj.maxRun) {
-      obj.maxRun--;
+      obj.maxRun--
       if (obj.maxRun <= 0) {
-        BOOTSTRAP_CALLBACK_LIST.splice(i, 1);
+        BOOTSTRAP_CALLBACK_LIST.splice(i, 1)
       }
     }
-  });
-};
+  })
+}
 
 /** Schedule callback run */
 export const schedule_callback_run = (
@@ -398,30 +398,30 @@ export const schedule_callback_run = (
   callback: (redux: IRedux) => void
 ) => {
   setTimeout(() => {
-    callback(redux);
-  }, time);
-};
+    callback(redux)
+  }, time)
+}
 
 interface IOnNetLoadCallbackList {
-  [_id: string]: ((redux: IRedux) => void)[];
+  [_id: string]: ((redux: IRedux) => void)[]
 }
 
 /** Map list of function */
-const ON_NET_LOAD_CALLBACK_LIST: IOnNetLoadCallbackList = {};
+const ON_NET_LOAD_CALLBACK_LIST: IOnNetLoadCallbackList = {}
 
 /** Run a list of function when a state with a certain id is loaded. */
 export function on_net_load_run(
   _id: string,
   callback: (redux: IRedux) => void
 ) {
-  ON_NET_LOAD_CALLBACK_LIST[_id] = ON_NET_LOAD_CALLBACK_LIST[_id] ?? [];
-  ON_NET_LOAD_CALLBACK_LIST[_id].push(callback);
+  ON_NET_LOAD_CALLBACK_LIST[_id] = ON_NET_LOAD_CALLBACK_LIST[_id] ?? []
+  ON_NET_LOAD_CALLBACK_LIST[_id].push(callback)
 }
 /** Reads the state tree managed by the store. */
-export const get_state = (): RootState => store.getState();
+export const get_state = (): RootState => store.getState()
 /** Dispatches an action. It is the only way to trigger a state change. */
-export const dispatch: typeof store.dispatch = store.dispatch.bind(store);
+export const dispatch: typeof store.dispatch = store.dispatch.bind(store)
 /** Adds a change listener. */
-export const subscribe: typeof store.subscribe = store.subscribe.bind(store);
+export const subscribe: typeof store.subscribe = store.subscribe.bind(store)
 
-export default store;
+export default store

@@ -24,7 +24,7 @@ vi.mock('../../controllers/StateFormsDataErrors');
 import FormValidationPolicy from '../../business.logic/FormValidationPolicy';
 import StateFormsDataErrors from '../../controllers/StateFormsDataErrors';
 import type { IRedux } from '../../state';
-import type { IStateFormsDataErrors, IFormErrorProfiles } from '@tuber/shared';
+import type { IStateFormsDataErrors, IStateFormErrors } from '@tuber/shared';
 
 interface TestFormData {
   username: string;
@@ -41,7 +41,7 @@ describe('FormValidationPolicy', () => {
     dispatch: Mock;
   };
   let mockFormsDataErrorsState: IStateFormsDataErrors;
-  let mockFormErrorProfiles: IFormErrorProfiles;
+  let mockFormErrorProfiles: IStateFormErrors;
   let mockStateFormsDataErrors: StateFormsDataErrors<TestFormData>;
   let formValidationPolicy: FormValidationPolicy<TestFormData>;
 

@@ -1,6 +1,6 @@
 import StatePage from '../../controllers/StatePage';
 import { styled } from '@mui/material';
-import { StateJsxIcon } from '../../mui/icon';
+import { StateJsxIcon } from '../icon';
 import { memo } from 'react';
 
 const MsgDiv = styled('div')(() => ({

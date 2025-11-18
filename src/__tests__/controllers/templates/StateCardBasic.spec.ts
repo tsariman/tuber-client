@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import StateCardBasic from '../../../../src/controllers/templates/StateCardBasic';
 
 describe('StateCardBasic', () => {

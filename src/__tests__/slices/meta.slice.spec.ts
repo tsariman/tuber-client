@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { metaActions } from '../../slices/meta.slice';
 import store from '../../state';
 

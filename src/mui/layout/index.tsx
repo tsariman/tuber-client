@@ -11,9 +11,9 @@ import {
   LayoutCentered,
   VirtualizedTableLayout,
   DefaultLayoutToolbared
-} from '../mui/layouts';
-import StatePage from '../controllers/StatePage';
-import { error_id, log } from '../business.logic';
+} from './layouts';
+import StatePage from '../../controllers/StatePage';
+import { error_id, log } from '../../business.logic';
 import {
   LAYOUT_CENTERED_NO_SCROLL,
   LAYOUT_CENTERED,

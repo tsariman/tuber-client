@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import StateSession from '../../controllers/StateSession';
 
 describe('StateSession', () => {

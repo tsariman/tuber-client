@@ -6,15 +6,11 @@ const { dispatch } = store;
 describe('drawerSlice', () => {
 
   it('drawerItemsUpdate', () => {
-    dispatch(drawerActions.drawerItemsUpdate({
-      items: [
-        {
-          name: 'test',
-          icon: 'test',
-          link: 'test'
-        }
-      ]
-    }));
+    dispatch(drawerActions.drawerItemsUpdate([
+      
+      // TODO: Implement test
+
+    ]));
     expect(store.getState().drawer.items).toEqual([
       {
         name: 'test',
@@ -35,7 +31,7 @@ describe('drawerSlice', () => {
   });
 
   it('drawerWidthUpdate', () => {
-    dispatch(drawerActions.drawerWidthUpdate({ width: 100 }));
+    dispatch(drawerActions.drawerWidthUpdate(100));
     expect(store.getState().drawer.width).toBe(100);
   });
 

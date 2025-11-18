@@ -4,7 +4,7 @@ import StatePage from '../../controllers/StatePage';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../../state';
 import { post_req_state } from '../../state/net.actions';
-import HtmlContent from './html.cpn';
+import HtmlContent from '../../mui/content/html.cpn';
 import type { IStateApp } from '@tuber/shared';
 import { APP_CONTENT_VIEW } from '@tuber/shared';
 import type { TStateAllForms, IStatePage } from '../../localized/interfaces';

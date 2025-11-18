@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { sessionActions } from '../../slices/session.slice';
 import store from '../../state';
 

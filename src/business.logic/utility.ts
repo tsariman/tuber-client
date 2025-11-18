@@ -6,7 +6,7 @@
   focused on generic helpers.
 */
 
-type TU = unknown;
+type TU = unknown
 
 /** Get as an object */
 export const o_ = (obj: TU) => obj as object | undefined
@@ -33,7 +33,7 @@ export const is_struct = <T=object>(obj: TU): obj is T => {
 }
 
 /** Checks if the argument is a `string`. Returns `true` if it is. */
-export const is_string = (arg: TU): arg is string => {
+export const is_non_empty_string = (arg: TU): arg is string => {
   return typeof arg === 'string' && arg.length > 0
 }
 
@@ -75,57 +75,57 @@ export const readme = (val: TU): IReadme => ({
 export function get_val<T = TU>(obj: TU, path: string): T | undefined {
   // Handle invalid inputs
   if (obj === null || obj === undefined || typeof obj !== 'object') {
-    return undefined;
+    return undefined
   }
 
   // Handle empty or whitespace-only path
-  const trimmedPath = path.trim();
+  const trimmedPath = path.trim()
   if (!trimmedPath) {
-    return undefined;
+    return undefined
   }
 
   // Split the path by dots and trim whitespace
-  const parts = trimmedPath.split('.');
+  const parts = trimmedPath.split('.')
   
   // Handle consecutive dots
   if (parts.some(part => part === '')) {
-    return undefined;
+    return undefined
   }
   
-  let current: TU = obj;
+  let current: TU = obj
   
   // Traverse the object according to the path
   for (let i = 0; i < parts.length; i++) {
-    const key = parts[i].trim();
+    const key = parts[i].trim()
     
     // If current is null or undefined, we can't go further
     if (current === null || current === undefined) {
-      return undefined;
+      return undefined
     }
     
     // If current is not an object/array, we can't traverse further
     if (typeof current !== 'object') {
-      return undefined;
+      return undefined
     }
     
     // For arrays, validate the index
     if (Array.isArray(current)) {
       // Ensure key is a valid array index (non-negative integer)
-      const index = Number(key);
+      const index = Number(key)
       if (isNaN(index) || index < 0 || !Number.isInteger(index)) {
-        return undefined;
+        return undefined
       }
       
-      current = current[index];
+      current = current[index]
     } else {
       // For objects, access the property using index notation
       // This avoids TypeScript errors about dynamic property access
-      current = (current as Record<string, TU>)[key];
+      current = (current as Record<string, TU>)[key]
     }
   }
   
   // Return the final value (it can be any type, including falsy values)
-  return current as T;
+  return current as T
 } // END - get_val
 
 /**
@@ -141,9 +141,9 @@ export function safely_get_as<T = TU>(
   path = '',
   _default: T
 ): T {
-  const value = get_val<T>(obj, path);
+  const value = get_val<T>(obj, path)
 
-  return value ? value : _default;
+  return typeof value !== 'undefined' ? value : _default
 }
 
 /**
@@ -161,13 +161,13 @@ export function safely_get_as<T = TU>(
  */
 export function get_global_var<T= TU>(varName: string): T {
   try {
-    return window[varName] as T;
+    return window[varName] as T
   } catch (e) {
-    void e;
-    const message = `Global variable "${varName}" does not exist.`;
-    console.error(message);
+    void e
+    const message = `Global variable "${varName}" does not exist.`
+    console.error(message)
   }
-  return { } as T;
+  return { } as T
 }
 
 /**
@@ -176,10 +176,10 @@ export function get_global_var<T= TU>(varName: string): T {
  * @see https://gist.github.com/solenoid/1372386
  */
 export function mongo_object_id(): string {
-  const timestamp = (new Date().getTime() / 1000 | 0).toString(16);
+  const timestamp = (new Date().getTime() / 1000 | 0).toString(16)
   return timestamp + 'xxxxxxxxxxxxxxxx'.replace(/[x]/g, function() {
-      return (Math.random() * 16 | 0).toString(16);
-  }).toLowerCase();
+      return (Math.random() * 16 | 0).toString(16)
+  }).toLowerCase()
 }
 
 /**
@@ -195,15 +195,15 @@ export function mongo_object_id(): string {
 export function http_get(theUrl: string): void
 {
   // code for IE7+, Firefox, Chrome, Opera, Safari
-  const xmlhttp = new XMLHttpRequest();
+  const xmlhttp = new XMLHttpRequest()
 
   xmlhttp.onreadystatechange = function () {
     if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-      return xmlhttp.responseText;
+      return xmlhttp.responseText
     }
   }
-  xmlhttp.open("GET", theUrl, false);
-  xmlhttp.send();    
+  xmlhttp.open("GET", theUrl, false)
+  xmlhttp.send()    
 }
 
 /**
@@ -221,9 +221,9 @@ export function get_themed_state<T = TU>(
   dark: TU
 ): T {
   if (light && dark) {
-    return mode === 'dark' ? dark as T : light as T;
+    return mode === 'dark' ? dark as T : light as T
   }
-  return main as T;
+  return main as T
 }
 
 /**
@@ -273,18 +273,18 @@ export function resolve_unexpected_nesting (response: TU) {
     && !Array.isArray(response)
     && 'response' in response
   ) {// Case of nested response
-    return response.response;
+    return response.response
   }
 
   // ... other cases
 
-  return response;
+  return response
 }
 
 /** @deprecated */
 interface IViewportSize {
-  width: number;
-  height: number;
+  width: number
+  height: number
 }
 
 /**
@@ -295,15 +295,15 @@ interface IViewportSize {
  * @see https://stackoverflow.com/questions/1377782/javascript-how-to-determine-the-screen-height-visible-i-e-removing-the-space
  */
 export function get_viewport_size(): IViewportSize {
-  let e: TU = window, a = 'inner';
+  let e: TU = window, a = 'inner'
   if ( !( 'innerWidth' in window ) ) {
-    a = 'client';
-    e = document.documentElement || document.body;
+    a = 'client'
+    e = document.documentElement || document.body
   }
   return {
     width : (e as Record<string, TU>)[ a+'Width' ] as number,
     height : (e as Record<string, TU>)[ a+'Height' ] as number
-  };
+  }
 }
 
 /**
@@ -318,7 +318,7 @@ export function get_viewport_size(): IViewportSize {
  * @deprecated
  */
 export function stretch_to_bottom(bottom: number): number {
-  const height = get_viewport_size().height;
+  const height = get_viewport_size().height
 
-  return height - bottom;
+  return height - bottom
 }

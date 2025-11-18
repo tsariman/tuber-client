@@ -1,17 +1,17 @@
-import React, { type JSX, Fragment, useMemo } from 'react';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
-import { StateFormItemCustomChip, StateLink } from '../../controllers';
-import store, { type IRedux, actions } from '../../state';
-import Chip from '@mui/material/Chip';
-import StateJsxBadgedIcon from '../icon';
-import { get_val } from '../../business.logic/utility';
+import React, { type JSX, Fragment, useMemo } from 'react'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import Link from '@mui/material/Link'
+import Typography from '@mui/material/Typography'
+import { StateFormItemCustomChip, StateLink } from '../../controllers'
+import { get_redux, type IRedux } from '../../state'
+import Chip from '@mui/material/Chip'
+import StateJsxBadgedIcon from '../icon'
+import { get_val } from '../../business.logic/utility'
 
 interface IJsonLinkProps {
-  def: StateLink;
-  children?: React.ReactNode;
+  def: StateLink
+  children?: React.ReactNode
 }
 
 /**
@@ -23,40 +23,36 @@ interface IJsonLinkProps {
  *        as the value of badge content.
  */
 const StateJsxLink = React.memo<IJsonLinkProps>(({ def, children }) => {
-  const { type, color, has } = def;
-  
+  const { type, color, has } = def
+
   // Memoize expensive computations
-  const redux: IRedux = useMemo(() => ({ 
-    store, 
-    actions, 
-    route: has.route 
-  }), [has.route]);
+  const redux: IRedux = useMemo(() => get_redux(has.route), [has.route])
   
   const menuItemsProps = useMemo(() => {
-    const mItemsProps = get_val<object>(def, 'parent.menuItemsProps');
-    return mItemsProps;
-  }, [def]);
+    const mItemsProps = get_val<object>(def, 'parent.menuItemsProps')
+    return mItemsProps
+  }, [def])
 
   const props = useMemo(() => ({ 
     ...menuItemsProps, 
     ...def.props 
-  }), [menuItemsProps, def.props]);
+  }), [menuItemsProps, def.props])
 
   const commonSx = useMemo(() => {
-    const menuItemsSx = get_val<object>(def, 'def.parent.menuItemsSx');
-    const fontFamily = get_val<string>(def, 'parent.typography.fontFamily');
-    const color = get_val<string>(def, 'parent.typography.color');
-    return { ...menuItemsSx, fontFamily, color };
-  }, [def]);
+    const menuItemsSx = get_val<object>(def, 'def.parent.menuItemsSx')
+    const fontFamily = get_val<string>(def, 'parent.typography.fontFamily')
+    const color = get_val<string>(def, 'parent.typography.color')
+    return { ...menuItemsSx, fontFamily, color }
+  }, [def])
 
   // Memoized onClick handler
-  const handleClick = useMemo(() => def.onClick(redux), [def, redux]);
+  const handleClick = useMemo(() => def.onClick(redux), [def, redux])
   
   // Memoized chip configuration
   const chipHas = useMemo(() => 
     type.toLowerCase() === 'chip' ? new StateFormItemCustomChip(has.state, def) : null,
     [type, has.state, def]
-  );
+  )
 
   const linkTable: Record<string, () => JSX.Element> = useMemo(() => ({
     // normal link
@@ -196,15 +192,15 @@ const StateJsxLink = React.memo<IJsonLinkProps>(({ def, children }) => {
     'dropdown': () => (
       <Fragment />
     )
-  }), [commonSx, props, handleClick, has, color, children, chipHas]);
+  }), [commonSx, props, handleClick, has, color, children, chipHas])
 
-  const linkType = type.toLowerCase();
-  const linkRenderer = linkTable[linkType] || linkTable['default'];
+  const linkType = type.toLowerCase()
+  const linkRenderer = linkTable[linkType] || linkTable['default']
   
-  return linkRenderer();
-});
+  return linkRenderer()
+})
 
 // Set display name for debugging
-StateJsxLink.displayName = 'StateJsxLink';
+StateJsxLink.displayName = 'StateJsxLink'
 
-export default StateJsxLink;
+export default StateJsxLink

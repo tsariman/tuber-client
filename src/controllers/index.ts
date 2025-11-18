@@ -59,6 +59,7 @@ export { default as StateAnchorOrigin } from './StateAnchorOrigin';
 export { default as StatePathnames } from './StatePathnames';
 export { default as StateTopLevelLinks } from './StateTopLevelLinks';
 export { default as StateTmp } from './StateTmp';
+export { default as StateFactory } from './StateFactory';
 
 // Re-export templates for convenience
 export * from './templates';

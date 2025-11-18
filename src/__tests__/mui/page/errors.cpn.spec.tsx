@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderWithProviders, screen, userEvent } from '../../test-utils';
-import PageErrors from '../../../components/pages/errors.cpn';
+import PageErrors from '../../../mui/page/errors.cpn';
 
 // Mock dependencies
 const mockGetErrorsList = vi.fn();

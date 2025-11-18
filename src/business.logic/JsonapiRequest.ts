@@ -59,9 +59,13 @@ export default class JsonapiRequest<T=IJsonapiDataAttributes> {
 
   link(key: string, value: string) {
     if (!this._request.data.links) {
-      this._request.data.links = { self: '' };
+      if (key !== 'self') {
+        throw new Error('self link must be set before other links');
+      }
+      this._request.data.links = { self: value };
+    } else {
+      this._request.data.links[key] = value;
     }
-    this._request.data.links[key] = value;
     return this;
   }
 

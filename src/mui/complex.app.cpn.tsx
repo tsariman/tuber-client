@@ -1,14 +1,14 @@
 import { Fragment, useEffect, useMemo } from 'react';
 import Box from '@mui/material/Box';
-import Appbar from '../mui/appbar';
-import Drawer from '../mui/drawer';
+import Appbar from './appbar';
+import Drawer from './drawer';
 import StatePage from '../controllers/StatePage';
-import Background from '../mui/background';
-import Dialog from '../mui/dialog';
-import Layout from './layout.cpn';
-import Content from './content';
+import Background from './background';
+import Dialog from './dialog';
+import Layout from './layout';
+import Content from '../components/content';
 import Spinner from './spinner.cpn';
-import Snackbar from '../mui/snackbar';
+import Snackbar from './snackbar';
 
 interface IComplexAppProps {
   def: StatePage;

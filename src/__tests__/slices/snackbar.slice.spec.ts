@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { snackbarActions } from '../../slices/snackbar.slice';
 import store from '../../state';
 

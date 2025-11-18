@@ -48,24 +48,24 @@ import {
 import {
   type ICheckboxesData,
   update_checkboxes
-} from '../mui/form/items/_items.common.logic';
-import StateJsxButton from '../mui/form/items/state.jsx.button';
-import StateJsxCheckboxes from '../mui/form/items/state.jsx.checkboxes';
-import StateJsxInput from '../mui/form/items/state.jsx.input';
-import StateJsxRadio from '../mui/form/items/state.jsx.radio';
-import JsonSelect from '../mui/form/items/state.jsx.select';
-import StateJsxSwitch from '../mui/form/items/state.jsx.switch';
-import StateJsxLink from '../mui/link';
-import JsonPicker from '../mui/form/items/state.jsx.picker';
-import StateJsxForm from '../mui/form';
-import StateJsxTextfield from '../mui/form/items/state.jsx.textfield';
+} from './form/items/_items.common.logic';
+import StateJsxButton from './form/items/state.jsx.button';
+import StateJsxCheckboxes from './form/items/state.jsx.checkboxes';
+import StateJsxInput from './form/items/state.jsx.input';
+import StateJsxRadio from './form/items/state.jsx.radio';
+import JsonSelect from './form/items/state.jsx.select';
+import StateJsxSwitch from './form/items/state.jsx.switch';
+import StateJsxLink from './link';
+import JsonPicker from './form/items/state.jsx.picker';
+import StateJsxForm from './form';
+import StateJsxTextfield from './form/items/state.jsx.textfield';
 import { post_req_state } from '../state/net.actions';
 import type { AppDispatch } from '../state';
 import { useDispatch } from 'react-redux';
 import store from '../state';
 import { error_id, log } from '../business.logic';
 import { formsDataClear } from '../slices/formsData.slice';
-import { get_bool_type } from '../mui/form/_form.common.logic';
+import { get_bool_type } from './form/_form.common.logic';
 import type { IStateFormItem } from '../localized/interfaces';
 
 interface IComponentsBuilderProps {

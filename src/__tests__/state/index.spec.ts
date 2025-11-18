@@ -1,4 +1,5 @@
-import * as F from '../../state';
+import { describe, it, expect } from 'vitest';
+import * as F from '../../state'
 
 describe('net_patch_state', () => {
 

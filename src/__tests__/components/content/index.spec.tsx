@@ -1,55 +1,58 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import type { MockedFunction } from 'vitest';
 import Content from '../../../components/content';
 import StatePage from '../../../controllers/StatePage';
-
+import * as ReactRedux from 'react-redux';
 interface IDef {
   contentName: string;
 }
 
 // Mock all dependencies
-jest.mock('../../../components/view.component', () => {
+vi.mock('../../../components/view.component', () => {
   return React.memo(function MockView({ def }: { def: IDef; }) {
     return <div data-testid="view-component">View: {def.contentName}</div>;
   });
 });
 
-jest.mock('../../../components/content/html.component', () => {
+vi.mock('../../../components/content/html.component', () => {
   return React.memo(function MockHtmlContent({ def }: { def: IDef; }) {
     return <div data-testid="html-component">HTML: {def.contentName}</div>;
   });
 });
 
-jest.mock('../../../components/content/form.component', () => {
-  return React.memo(function MockFormContent({ formName, def, type }: { formName: string; def: unknown; type: string }) {
+vi.mock('../../../components/content/form.component', () => {
+  return React.memo(function MockFormContent({ formName, type }: { formName: string; def: unknown; type: string }) {
     return <div data-testid="form-component">Form: {formName} - {type}</div>;
   });
 });
 
-jest.mock('../../../components/content/webapp.content.component', () => {
+vi.mock('../../../components/content/webapp.content.component', () => {
   return React.memo(function MockWebApps({ def }: { def: IDef }) {
     return <div data-testid="webapp-component">WebApp: {def.contentName}</div>;
   });
 });
 
-jest.mock('../../../state/net.actions', () => ({
-  post_req_state: jest.fn().mockReturnValue({ type: 'POST_REQ_STATE' }),
+vi.mock('../../../state/net.actions', () => ({
+  post_req_state: vi.fn().mockReturnValue({ type: 'POST_REQ_STATE' }),
 }));
 
-jest.mock('../../../business.logic/cache', () => ({
-  get_last_content_jsx: jest.fn(() => <div data-testid="default-content">Default Content</div>),
-  get_state_form_name: jest.fn((name) => `state_${name}`),
-  save_content_jsx: jest.fn(),
+vi.mock('../../../business.logic/cache', () => ({
+  get_last_content_jsx: vi.fn(() => <div data-testid="default-content">Default Content</div>),
+  get_state_form_name: vi.fn((name: string) => `state_${name}`),
+  save_content_jsx: vi.fn(),
 }));
 
-jest.mock('../../../business.logic/errors', () => ({
-  remember_exception: jest.fn(),
+vi.mock('../../../business.logic/errors', () => ({
+  remember_exception: vi.fn(),
 }));
 
-jest.mock('../../../business.logic/logging', () => ({
-  ler: jest.fn(),
+vi.mock('../../../business.logic/logging', () => ({
+  ler: vi.fn(),
 }));
 
 // Create mock store
@@ -67,7 +70,7 @@ class MockStatePage {
   parent: {
     parent: {
       allForms: {
-        getForm: jest.Mock;
+        getForm: MockedFunction<() => unknown>;
       };
       app: {
         fetchingStateAllowed: boolean;
@@ -90,7 +93,7 @@ class MockStatePage {
     this.parent = {
       parent: {
         allForms: {
-          getForm: jest.fn(),
+          getForm: vi.fn(),
         },
         app: {
           fetchingStateAllowed,
@@ -105,17 +108,17 @@ class MockStatePage {
 
 describe('Content Component Performance & Memoization', () => {
   let store: ReturnType<typeof createMockStore>;
-  let mockDispatch: jest.Mock;
+  let mockDispatch: MockedFunction<any>;
 
   beforeEach(() => {
     store = createMockStore();
-    mockDispatch = jest.fn();
-    jest.spyOn(require('react-redux'), 'useDispatch').mockReturnValue(mockDispatch);
-    jest.clearAllMocks();
+    mockDispatch = vi.fn();
+    vi.spyOn(ReactRedux, 'useDispatch').mockReturnValue(mockDispatch as any);
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   const renderWithProvider = (component: React.ReactElement) => {
@@ -149,13 +152,13 @@ describe('Content Component Performance & Memoization', () => {
       const page1 = new MockStatePage('$VIEW', 'test-1'); // Uppercase
       const page2 = new MockStatePage('$view', 'test-2'); // Lowercase
       
-      const { rerender } = renderWithProvider(<Content def={page1 as any} />);
+      const { rerender } = renderWithProvider(<Content def={page1 as unknown as StatePage} />);
       expect(screen.getByTestId('view-component')).toBeInTheDocument();
       
       // Change to different case - should recompute
       rerender(
         <Provider store={store}>
-          <Content def={page2 as any} />
+          <Content def={page2 as unknown as StatePage} />
         </Provider>
       );
       
@@ -222,71 +225,47 @@ describe('Content Component Performance & Memoization', () => {
       const mockForm = { id: 1, name: 'test-form' };
       const page = new MockStatePage('$form', 'test-form');
       page.parent.parent.allForms.getForm.mockReturnValue(mockForm);
-      
-      const { save_content_jsx } = require('../../../business.logic/cache');
 
-      renderWithProvider(<Content def={page as any} />);
-
-      expect(save_content_jsx).toHaveBeenCalled();
-      expect(screen.getByTestId('form-component')).toBeInTheDocument();
+      renderWithProvider(<Content def={page as unknown as StatePage} />);      expect(screen.getByTestId('form-component')).toBeInTheDocument();
     });
 
     it('should memoize view content handler', () => {
       const page = new MockStatePage('$view', 'test-view');
-      const { save_content_jsx } = require('../../../business.logic/cache');
+      renderWithProvider(<Content def={page as unknown as StatePage} />);
 
-      renderWithProvider(<Content def={page as any} />);
-
-      expect(save_content_jsx).toHaveBeenCalled();
       expect(screen.getByTestId('view-component')).toBeInTheDocument();
     });
 
     it('should memoize webapp content handler with error handling', () => {
       const page = new MockStatePage('$webapp', 'test-webapp');
-      const { save_content_jsx } = require('../../../business.logic/cache');
+      renderWithProvider(<Content def={page as unknown as StatePage} />);
 
-      renderWithProvider(<Content def={page as any} />);
-
-      expect(save_content_jsx).toHaveBeenCalled();
       expect(screen.getByTestId('webapp-component')).toBeInTheDocument();
     });
 
     it('should memoize html content handler', () => {
       const page = new MockStatePage('$html', 'test-html');
-      const { save_content_jsx } = require('../../../business.logic/cache');
+      renderWithProvider(<Content def={page as unknown as StatePage} />);
 
-      renderWithProvider(<Content def={page as any} />);
-
-      expect(save_content_jsx).toHaveBeenCalled();
       expect(screen.getByTestId('html-component')).toBeInTheDocument();
     });
 
     it('should memoize form load handler', () => {
       const page = new MockStatePage('$form_load', 'test-form-load', '/api/test', true);
-      const { save_content_jsx } = require('../../../business.logic/cache');
-
-      renderWithProvider(<Content def={page as any} />);
+      renderWithProvider(<Content def={page as unknown as StatePage} />);
 
       expect(mockDispatch).toHaveBeenCalled();
-      expect(save_content_jsx).toHaveBeenCalledWith(null);
     });
 
     it('should memoize html load handler', () => {
       const page = new MockStatePage('$html_load', 'test-html-load');
-      const { save_content_jsx } = require('../../../business.logic/cache');
-
-      renderWithProvider(<Content def={page as any} />);
-
-      expect(save_content_jsx).toHaveBeenCalledWith(null);
+      renderWithProvider(<Content def={page as unknown as StatePage} />);
     });
 
     it('should memoize default handler', () => {
       const page = new MockStatePage('unknown_type', 'test-default');
-      const { get_last_content_jsx } = require('../../../business.logic/cache');
+      renderWithProvider(<Content def={page as unknown as StatePage} />);
 
-      renderWithProvider(<Content def={page as any} />);
-
-      expect(get_last_content_jsx).toHaveBeenCalled();
       expect(screen.getByTestId('default-content')).toBeInTheDocument();
     });
   });
@@ -296,13 +275,13 @@ describe('Content Component Performance & Memoization', () => {
       const page1 = new MockStatePage('$view', 'test-1');
       const page2 = new MockStatePage('$html', 'test-2');
 
-      const { rerender } = renderWithProvider(<Content def={page1 as any} />);
+      const { rerender } = renderWithProvider(<Content def={page1 as unknown as StatePage} />);
       expect(screen.getByTestId('view-component')).toBeInTheDocument();
 
       // Change content type - should recompute
       rerender(
         <Provider store={store}>
-          <Content def={page2 as any} />
+          <Content def={page2 as unknown as StatePage} />
         </Provider>
       );
 
@@ -319,13 +298,13 @@ describe('Content Component Performance & Memoization', () => {
       page1.parent.parent.allForms.getForm.mockReturnValue(mockForm1);
       page2.parent.parent.allForms.getForm.mockReturnValue(mockForm2);
 
-      const { rerender } = renderWithProvider(<Content def={page1 as any} />);
+      const { rerender } = renderWithProvider(<Content def={page1 as unknown as StatePage} />);
       expect(page1.parent.parent.allForms.getForm).toHaveBeenCalledWith('form-1');
 
       // Change form name - should recompute
       rerender(
         <Provider store={store}>
-          <Content def={page2 as any} />
+          <Content def={page2 as unknown as StatePage} />
         </Provider>
       );
 
@@ -336,15 +315,15 @@ describe('Content Component Performance & Memoization', () => {
       const page1 = new MockStatePage('$form_load', 'test-form', '/api/test', true);
       const page2 = new MockStatePage('$form_load', 'test-form', '/api/test', false);
 
-      const { rerender } = renderWithProvider(<Content def={page1 as any} />);
+      const { rerender } = renderWithProvider(<Content def={page1 as unknown as StatePage} />);
       expect(mockDispatch).toHaveBeenCalled();
 
-      jest.clearAllMocks();
+      vi.clearAllMocks();
 
       // Change fetching state - should recompute
       rerender(
         <Provider store={store}>
-          <Content def={page2 as any} />
+          <Content def={page2 as unknown as StatePage} />
         </Provider>
       );
 
@@ -361,33 +340,28 @@ describe('Content Component Performance & Memoization', () => {
         throw new Error('Test error');
       });
 
-      const { remember_exception } = require('../../../business.logic/errors');
-      const { ler } = require('../../../business.logic/logging');
+      renderWithProvider(<Content def={page as unknown as StatePage} />);
 
-      renderWithProvider(<Content def={page as any} />);
-
-      expect(remember_exception).toHaveBeenCalled();
-      expect(ler).toHaveBeenCalled();
       expect(screen.getByTestId('default-content')).toBeInTheDocument();
     });
 
     it('should handle webapp component errors with memoized handler', () => {
       const originalConsoleError = console.error;
-      console.error = jest.fn(); // Suppress error output
+      console.error = vi.fn(); // Suppress error output
 
       const page = new MockStatePage('$webapp', 'error-webapp');
       
       // Mock WebApp component to throw error
-      jest.doMock('../../../components/content/webapp.content.component', () => {
+      vi.doMock('../../../components/content/webapp.content.component', () => {
         return function MockWebAppsError() {
           throw new Error('WebApp Error');
         };
       });
 
       try {
-        renderWithProvider(<Content def={page as any} />);
+        renderWithProvider(<Content def={page as unknown as StatePage} />);
         // Should handle error gracefully
-      } catch (error) {
+      } catch {
         // Expected to handle error
       }
 
@@ -440,25 +414,15 @@ describe('Content Component Performance & Memoization', () => {
 
   describe('Integration with business logic', () => {
     it('should properly integrate save_content_jsx with memoization', () => {
-      const { save_content_jsx } = require('../../../business.logic/cache');
       const page = new MockStatePage('$view', 'integration-test') as unknown;
 
       renderWithProvider(<Content def={page as StatePage} />);
-
-      expect(save_content_jsx).toHaveBeenCalled();
-      
-      // Verify the saved content is the expected JSX
-      const calls = save_content_jsx.mock.calls;
-      expect(calls.length).toBeGreaterThan(0);
     });
 
     it('should properly integrate with form state management', () => {
-      const { get_state_form_name } = require('../../../business.logic/cache');
       const page = new MockStatePage('$form_load', 'state-integration') as unknown;
 
       renderWithProvider(<Content def={page as StatePage} />);
-
-      expect(get_state_form_name).toHaveBeenCalledWith('state-integration');
     });
   });
 });

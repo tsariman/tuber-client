@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { dialogActions as a } from '../../slices/dialog.slice';
 import store from '../../state';
 
@@ -6,7 +7,7 @@ const { dispatch } = store;
 describe('dialogSlice', () => {
 
   it('dialogActionUpdate', () => {
-    dispatch(a.dialogActionUpdate({}));
+    dispatch(a.dialogActionUpdate([]));
     expect(store.getState().dialog.actions).toEqual({});
   });
 
@@ -54,7 +55,7 @@ describe('dialogSlice', () => {
     dispatch(a.dialogMount({
       _id: 'test',
       open: true,
-      _type: 'test',
+      _type: 'any',
       _key: 'test',
       title: 'test',
       label: 'test',
@@ -70,7 +71,7 @@ describe('dialogSlice', () => {
       contentProps: {},
       contentTextProps: {},
       actionsProps: {},
-      slideProps: {}
+      slideProps: { children: {} as ReactElement<unknown, ''> }
     }));
     expect(store.getState().dialog.open).toBe(true);
   });

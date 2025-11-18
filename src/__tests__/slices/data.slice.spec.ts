@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import dataReducer, { dataActions } from '../../slices/data.slice';
-import { IJsonapiResource } from '../../interfaces/IJsonapi';
+import type { IJsonapiResource } from '@tuber/shared';
 
 // Create a fresh store for each test to ensure isolation
 const createTestStore = () => configureStore({
@@ -453,7 +453,7 @@ describe('dataSlice', () => {
       expect(() => {
         store.dispatch(dataActions.dataSetAttrByIndex({
           endpoint: 'bookmarks',
-          index: undefined as any,
+          index: undefined,
           prop: 'title',
           val: 'test'
         }));

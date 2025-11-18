@@ -1,15 +1,122 @@
-import renderer from 'react-test-renderer';
-import StatePage from 'src/controllers/StatePage';
+import { describe, it, expect } from 'vitest';
+import { renderWithProviders } from '../../test-utils';
 import StateJsxBasicAppbar from '../../../mui/appbar/state.jsx.basic.appbar';
+import type StatePage from '../../../controllers/StatePage';
+
+// Mock interface for testing the basic appbar component
+interface MockAppbarPage {
+  appbar: {
+    props: Record<string, unknown>;
+    toolbarProps: Record<string, unknown>;
+    parent: {
+      hasDrawer: boolean;
+    };
+    menuIconProps: Record<string, unknown>;
+    hasLogo: boolean;
+    typography: {
+      fontFamily: string;
+      color: string;
+    };
+    textLogoProps: Record<string, unknown>;
+    items: unknown[];
+  };
+  parent: {
+    parent: {
+      app: {
+        title: string;
+      };
+    };
+  };
+}
 
 describe('src/mui/appbar/state.jsx.basic.appbar.tsx', () => {
-  it('should render correctly', () => {
-    const page = {
-      appbar: { appbarStyle: 'basic' },
-    } as StatePage;
-    const tree = renderer
-      .create(<StateJsxBasicAppbar def={page} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+  it('should render basic appbar without drawer', () => {
+    const mockPage: MockAppbarPage = {
+      appbar: {
+        props: {},
+        toolbarProps: {},
+        parent: {
+          hasDrawer: false,
+        },
+        menuIconProps: {},
+        hasLogo: false,
+        typography: {
+          fontFamily: 'Arial',
+          color: '#000000',
+        },
+        textLogoProps: {},
+        items: [],
+      },
+      parent: {
+        parent: {
+          app: {
+            title: 'Test App',
+          },
+        },
+      },
+    };
+
+    const { container } = renderWithProviders(<StateJsxBasicAppbar def={mockPage as unknown as StatePage} />);
+    expect(container.querySelector('[role="banner"]')).toBeInTheDocument();
+  });
+
+  it('should render basic appbar with drawer menu icon', () => {
+    const mockPage: MockAppbarPage = {
+      appbar: {
+        props: {},
+        toolbarProps: {},
+        parent: {
+          hasDrawer: true,
+        },
+        menuIconProps: {},
+        hasLogo: false,
+        typography: {
+          fontFamily: 'Arial',
+          color: '#000000',
+        },
+        textLogoProps: {},
+        items: [],
+      },
+      parent: {
+        parent: {
+          app: {
+            title: 'Test App',
+          },
+        },
+      },
+    };
+
+    const { container } = renderWithProviders(<StateJsxBasicAppbar def={mockPage as unknown as StatePage} />);
+    expect(container.querySelector('button')).toBeInTheDocument();
+  });
+
+  it('should render app title when no logo is present', () => {
+    const mockPage: MockAppbarPage = {
+      appbar: {
+        props: {},
+        toolbarProps: {},
+        parent: {
+          hasDrawer: false,
+        },
+        menuIconProps: {},
+        hasLogo: false,
+        typography: {
+          fontFamily: 'Arial',
+          color: '#000000',
+        },
+        textLogoProps: {},
+        items: [],
+      },
+      parent: {
+        parent: {
+          app: {
+            title: 'My Test App',
+          },
+        },
+      },
+    };
+
+    const { getByText } = renderWithProviders(<StateJsxBasicAppbar def={mockPage as unknown as StatePage} />);
+    expect(getByText('My Test App')).toBeInTheDocument();
   });
 });

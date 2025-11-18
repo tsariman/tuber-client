@@ -3,7 +3,7 @@ import type {
   IJsonapiError,
   IJsonapiErrorLinks,
   IJsonapiErrorSource,
-  TJsonapiErrorStatus,
+  TJsonapiErrorCode,
   TJsonapiMeta
 } from '@tuber/shared';
 
@@ -18,8 +18,8 @@ export default class JsonapiError implements IJsonapiError {
     return this._id || (this._id = this._e.id || mongo_object_id());
   }
   get links(): IJsonapiErrorLinks { return this._e.links ?? {}; }
-  get status(): TJsonapiErrorStatus { return this._e.status ?? '200'; }
-  get code()  { return this._e.code; }
+  get status(): string { return this._e.status ?? '200'; }
+  get code(): TJsonapiErrorCode { return this._e.code; }
   get title() { return this._e.title; }
   get detail(): string { return this._e.detail ?? ''; }
   get source(): IJsonapiErrorSource { return this._e.source ?? {}; }

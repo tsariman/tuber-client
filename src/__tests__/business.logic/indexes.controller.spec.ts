@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import type { IJsonapiResponseResource } from '@tuber/shared';
 import * as F from '../../business.logic/indexes';
 
@@ -10,7 +11,7 @@ describe('indexes.controller.ts', () => {
         { id: 'abcd' }
       ] as IJsonapiResponseResource[]
 
-      const object = F.index_by_id(array, '_id')
+      const object = F.index_by_id(array)
       expect(object).toEqual({ abc: {_id: 'abc'}, abcd: {_id: 'abcd'} })
     });
   });
@@ -22,7 +23,7 @@ describe('indexes.controller.ts', () => {
         { id: 'abcd' }
       ] as IJsonapiResponseResource[];
 
-      const object = F.index_by_id(array, 'id');
+      const object = F.index_by_id(array);
       expect(object).toEqual({ abc: { id: 'abc' }, abcd: { id: 'abcd' }});
       F.drop_index('collection_name');
       expect(F.select('collection_name', 'id')).toBeUndefined();
@@ -36,7 +37,7 @@ describe('indexes.controller.ts', () => {
         { id: 'abcd' }
       ] as IJsonapiResponseResource[];
 
-      const object = F.index_by_id(array, '_id');
+      const object = F.index_by_id(array);
       expect(object).toEqual({ abc: {_id: 'abc'}, abcd: {_id: 'abcd'} });
       const result = F.select('_id', 'abc');
       expect(result).toEqual({ _id: 'abc' });

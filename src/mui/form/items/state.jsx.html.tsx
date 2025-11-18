@@ -31,19 +31,18 @@ export const LinkStyled = styled(Link)(({ theme }) => ({
  * ```json
  * {
  *   "type": "html",
- *      "props": { "sx": { } },
- *      "has": {
- *        "content": "<div>Hello world!</div>",
+ *   "props": { "sx": { } },
+ *   "has": {
+ *     "content": "<div>Hello world!</div>",
  * 
- *         // [optional] page route or key is used if the content is a
- *         // handlebars template. The values will be retrieve from the
- *         // pagesData state. e.g. pagesData.home
- *        "route": "home",
- *         // or
- *        "key": "home"
- *      }
- *   },
- * }
+ *     // [optional] page route or key is used if the content is a
+ *     // handlebars template. The values will be retrieve from the
+ *     // pagesData state. e.g. pagesData.home
+ *     "route": "home",
+ *      // or
+ *      "key": "home"
+ *    }
+ * },
  * ```
  */
 export function StateJsxHtml({ def: html }: { def: StateFormItem<StateForm, string> }) {

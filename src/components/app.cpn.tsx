@@ -1,8 +1,8 @@
 import { Fragment, type JSX } from 'react';
 import StateApp from '../controllers/StateApp';
 import StateAllPages from '../controllers/StateAllPages';
-import ComplexApp from './complex.app.cpn';
-import GenericApp from './generic.app.cpn';
+import ComplexApp from '../mui/complex.app.cpn';
+import GenericApp from '../mui/generic.app.cpn';
 import type { IStatePage } from '../localized/interfaces';
 
 interface IGenericAppProps {

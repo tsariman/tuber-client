@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderWithProviders } from '../../test-utils';
-import PageBlank from '../../../components/pages/blank.cpn';
+import PageBlank from '../../../components/page/blank.cpn';
 
 // Mock dependencies
 const mockDispatch = vi.fn();

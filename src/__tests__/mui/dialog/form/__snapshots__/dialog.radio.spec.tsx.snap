@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`src/mui/dialog/form/dialog.radio.tsx should render correctly 1`] = `
 <div

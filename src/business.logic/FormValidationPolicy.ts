@@ -1,7 +1,7 @@
 import { type IRedux } from '../state'
 import type { TObj, IStateFormsDataErrors } from '@tuber/shared'
 import StateFormsDataErrors from '../controllers/StateFormsDataErrors'
-import { is_record, is_string } from './utility'
+import { is_record, is_non_empty_string } from './utility'
 
 interface IValidation<T> {
   name: keyof T
@@ -131,7 +131,7 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
           error: true,
           message: field.requiredMessage
         })
-      } else if (is_string(value)
+      } else if (is_non_empty_string(value)
         && typeof field.maxLength !== 'undefined'
         && value.length > field.maxLength
       ) {
@@ -140,7 +140,7 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
           error: true,
           message: field.maxLengthMessage
         })
-      } else if (is_string(value)
+      } else if (is_non_empty_string(value)
         && field.invalidationRegex
         && new RegExp(field.invalidationRegex).test(value)
       ) {
@@ -149,7 +149,7 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
           error: true,
           message: field.invalidationMessage
         })
-      } else if (is_string(value)
+      } else if (is_non_empty_string(value)
         && field.validationRegex
         && !new RegExp(field.validationRegex).test(value)
       ) {

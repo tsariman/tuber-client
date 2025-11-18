@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { renderWithProviders, screen } from '../../test-utils';
-import PageNotFound from '../../../components/pages/notfound.cpn';
+import PageNotFound from '../../../mui/page/notfound.cpn';
 
 describe('PageNotFound Component', () => {
   const createMockPage = (message = 'Default not found message') => ({

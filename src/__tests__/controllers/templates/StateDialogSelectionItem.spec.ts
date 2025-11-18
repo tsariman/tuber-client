@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import StateDialogSelection from '../../../controllers/templates/StateDialogSelection';
 import StateDialogSelectionItem from '../../../controllers/templates/StateDialogSelectionItem';
 

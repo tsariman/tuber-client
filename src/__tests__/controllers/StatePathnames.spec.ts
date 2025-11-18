@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import StatePathnames from '../../controllers/StatePathnames';
 
 describe('StatePathnames', () => {

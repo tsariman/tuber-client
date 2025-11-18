@@ -6,16 +6,14 @@ const { dispatch } = store;
 describe('formsSlice', () => {
 
   it('formsAddMultiple', () => {
-    dispatch(a.formsAddMultiple([
-      {
-        code: 'test',
-        title: 'test',
+    dispatch(a.formsAddMultiple({
+      '1': {
+        items: []
       },
-      {
-        code: 'test2',
-        title: 'test2',
+      '2': {
+        items: [],
       },
-    ]));
+    }));
     expect(store.getState().forms[0]).toBeDefined();
     expect(store.getState().forms[1]).toBeDefined();
   });

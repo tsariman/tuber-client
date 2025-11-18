@@ -1,9 +1,10 @@
+import { describe, it, expect } from 'vitest';
 import {
   APP_IS_BOOTSTRAPPED,
   APP_IS_FETCHING,
   APP_REQUEST_FAILED,
   APP_REQUEST_SUCCESS
-} from '../../constants.client';
+} from '@tuber/shared';
 import { appActions } from '../../slices/app.slice';
 import { get_state, dispatch } from '../../state';
 

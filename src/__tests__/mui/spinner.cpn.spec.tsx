@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { renderWithProviders, screen } from '../test-utils';
-import Spinner from '../../components/spinner.cpn';
+import Spinner from '../../mui/spinner.cpn';
 import { APP_IS_FETCHING } from '@tuber/shared';
 
 describe('Spinner Component', () => {

@@ -1,12 +1,12 @@
 import { Fragment, useEffect, useMemo } from 'react';
-import Appbar from '../mui/appbar';
-import Drawer from '../mui/drawer';
-import Layout from './layout.cpn';
-import Content from './content';
-import Background from '../mui/background';
-import Dialog from '../mui/dialog';
+import Appbar from './appbar';
+import Drawer from './drawer';
+import Layout from './layout';
+import Content from '../components/content';
+import Background from './background';
+import Dialog from './dialog';
 import Spinner from './spinner.cpn';
-import Snackbar from '../mui/snackbar';
+import Snackbar from './snackbar';
 import StatePage from '../controllers/StatePage';
 
 interface IGenericAppProps {

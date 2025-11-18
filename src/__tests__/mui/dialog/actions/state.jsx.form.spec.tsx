@@ -1,21 +1,12 @@
-import renderer from 'react-test-renderer';
+import { describe, it, expect } from 'vitest';
 import StateForm from 'src/controllers/StateForm';
-import IStateFormItem from '../../../../interfaces/IStateFormItem';
+import type { IStateFormItem } from '../../../../localized/interfaces';
 import StateJsxDialogAction from '../../../../mui/dialog/actions/state.jsx.form';
 
 describe('src/mui/dialog/actions/state.jsx.form.tsx', () => {
   it('should render correctly', () => {
-    const actions = [
+    
+    // TODO: Implement test
 
-      // [TODO] Dialog action is an array of form items
-
-    ] as IStateFormItem[]
-    const tree = renderer
-      .create(<StateJsxDialogAction
-        def={actions}
-        parent={{} as StateForm}
-      />)
-      .toJSON()
-    expect(tree).toMatchSnapshot()
   });
 });

@@ -1,8 +1,8 @@
-import PageSuccess from './pages/success.cpn';
-import PageNotFound from './pages/notfound.cpn';
+import PageSuccess from '../mui/page/success.cpn';
+import PageNotFound from '../mui/page/notfound.cpn';
 import StatePage from '../controllers/StatePage';
-import PageErrors from './pages/errors.cpn';
-import PageLanding from './pages/landing.cpn';
+import PageErrors from '../mui/page/errors.cpn';
+import PageLanding from './page/landing.cpn';
 import { error_id, err, log } from '../business.logic';
 import { Fragment, type JSX } from 'react';
 import {
@@ -12,7 +12,7 @@ import {
   DEFAULT_NOTFOUND_PAGE_VIEW,
   DEFAULT_SUCCESS_PAGE_VIEW
 } from '@tuber/shared';
-import PageBlank from './pages/blank.cpn';
+import PageBlank from './page/blank.cpn';
 
 interface IViewTable {
   [constant: string]: ()=>JSX.Element;

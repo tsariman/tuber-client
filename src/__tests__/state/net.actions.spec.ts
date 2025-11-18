@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import * as F from '../../state/net.actions'
 
 describe('src/state/net.actions.ts', () => {

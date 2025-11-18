@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import net_default_500_driver from '../../state/net.default.500.driver.c';
 
 describe('src/state/net.default.500.driver.c.ts', () => {
