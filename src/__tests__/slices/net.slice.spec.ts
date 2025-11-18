@@ -22,7 +22,7 @@ describe('netSlice', () => {
   });
 
   it('netSetCsrfTokenMethod', () => {
-    dispatch(netActions.netSetCsrfTokenMethod(''));
+    dispatch(netActions.netSetCsrfTokenMethod('meta'));
     expect(store.getState().net.csrfTokenMethod).toEqual('');
   });
 

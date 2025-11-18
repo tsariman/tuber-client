@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { dialogsAction } from '../../slices/dialogs.slice';
 import store from '../../state';
 

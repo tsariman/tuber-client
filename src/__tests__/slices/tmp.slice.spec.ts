@@ -7,12 +7,12 @@ const { dispatch } = store;
 describe('tmpSlice', () => {
 
   it('tmpAdd', () => {
-    dispatch(tmpActions.tmpAdd({ id: '', name: '', value: '' }));
+    dispatch(tmpActions.tmpAdd({ id: 'id1', name: 'name1', value: 'value1' }));
     expect(store.getState().tmp).toEqual({});
   });
 
   it('tmpRemove', () => {
-    dispatch(tmpActions.tmpRemove({}));
+    dispatch(tmpActions.tmpRemove('id1'));
     expect(store.getState().tmp).toEqual({});
   });
 

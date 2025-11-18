@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import StateAllErrors from '../../controllers/StateAllErrors';
 
 describe('StateAllErrors', () => {

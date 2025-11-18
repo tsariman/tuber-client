@@ -1,8 +1,8 @@
 import { Fragment, type JSX } from 'react';
 import StateApp from '../controllers/StateApp';
 import StateAllPages from '../controllers/StateAllPages';
-import ComplexApp from '../mui/complex.app.cpn';
-import GenericApp from '../mui/generic.app.cpn';
+import AppComplex from '../mui/app.complex.cpn';
+import AppGeneric from '../mui/app.generic.cpn';
 import type { IStatePage } from '../localized/interfaces';
 
 interface IGenericAppProps {
@@ -20,8 +20,8 @@ export default function AppPage({
     Required<IStatePage>['_type'],
     JSX.Element | null
   > = {
-    'generic': <GenericApp def={page} />,
-    'complex': <ComplexApp def={page} />,
+    'generic': <AppGeneric def={page} />,
+    'complex': <AppComplex def={page} />,
   };
 
   return (

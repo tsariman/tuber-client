@@ -8,6 +8,8 @@ import type { MockedFunction } from 'vitest';
 import Content from '../../../components/content';
 import StatePage from '../../../controllers/StatePage';
 import * as ReactRedux from 'react-redux';
+import '@testing-library/jest-dom'
+
 interface IDef {
   contentName: string;
 }

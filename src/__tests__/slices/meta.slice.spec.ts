@@ -7,7 +7,7 @@ const { dispatch } = store;
 describe('metaSlice', () => {
   
   it('metaAdd', () => {
-    dispatch(metaActions.metaAdd({}));
+    dispatch(metaActions.metaAdd({'endpoint': 'test1', 'meta': {}}));
     expect(store.getState().meta).toEqual({});
   });
 

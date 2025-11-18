@@ -1,4 +1,5 @@
-import { StateAllPages } from 'src/controllers';
+import { describe, it, expect } from 'vitest';
+import { StateAllPages } from '../../../controllers';
 import StatePage from '../../../controllers/StatePage';
 import StatePageAppbarMidSearch from '../../../controllers/templates/StatePageAppbarMidSearch';
 import type { IStateAppbar } from '../../../localized/interfaces';

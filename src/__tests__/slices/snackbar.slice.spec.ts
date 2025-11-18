@@ -45,7 +45,7 @@ describe('snackbarSlice', () => {
   });
 
   it('snackbarTypeUpdate', () => {
-    dispatch(snackbarActions.snackbarTypeUpdate('success'));
+    dispatch(snackbarActions.snackbarTypeUpdate('message'));
     expect(store.getState().snackbar.type).toEqual('success');
   });
 

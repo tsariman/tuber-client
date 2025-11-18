@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { errorsActions as a } from '../../slices/errors.slice';
 import store from '../../state';
 

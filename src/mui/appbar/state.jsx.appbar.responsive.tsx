@@ -1,25 +1,25 @@
-import * as React from 'react';
-import Appbar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import StateJsxMenuIcon from './state.jsx.menuicon.appbar';
-import type StatePage from '../../controllers/StatePage';
+import * as React from 'react'
+import Appbar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import StateJsxMenuIcon from './state.jsx.menuicon'
+import type StatePage from '../../controllers/StatePage'
 
-interface IJRAppbarProps {
-  def: StatePage;
+interface IResponsive {
+  def: StatePage
 }
 
-const navItems = [ 'Home', 'About', 'Contact' ];
+const navItems = [ 'Home', 'About', 'Contact' ]
 
-export default function StateJsxResponsiveAppbar({ def: page }: IJRAppbarProps) {
-  const { appbar } = page;
-  const [ mobileOpen, setMobileOpen ] = React.useState(false);
+const StateJsxAppbarResponsive = ({ def: page }: IResponsive) => {
+  const { appbar } = page
+  const [ mobileOpen, setMobileOpen ] = React.useState(false)
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+    setMobileOpen(!mobileOpen)
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -43,5 +43,7 @@ export default function StateJsxResponsiveAppbar({ def: page }: IJRAppbarProps) 
         </Toolbar>
       </Appbar>
     </Box>
-  );
+  )
 }
+
+export default StateJsxAppbarResponsive

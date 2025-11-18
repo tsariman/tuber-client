@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import StateBackground from '../../controllers/StateBackground';
 
 describe('StateBackground', () => {

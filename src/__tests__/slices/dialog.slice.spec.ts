@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import type { ReactElement } from 'react';
 import { dialogActions as a } from '../../slices/dialog.slice';
 import store from '../../state';

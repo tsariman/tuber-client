@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { appbarQueriesActions as a } from '../../slices/appbarQueries.slice';
 import store from '../../state';
 

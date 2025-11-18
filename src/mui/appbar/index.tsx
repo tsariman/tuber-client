@@ -1,29 +1,15 @@
 import type StatePage from '../../controllers/StatePage'
-import BasicAppbar from './state.jsx.basic.appbar'
-import MiniAppbar from './state.jsx.mini.appbar'
-import ResponsiveAppbar from './state.jsx.responsive.appbar'
+import AppbarBasic from './state.jsx.appbar.basic'
+import AppbarMini from './state.jsx.appbar.mini'
+import AppbarResponsive from './state.jsx.appbar.responsive'
 import ComponentBuilder from '../builder.cpn'
-import StateJsxMidSearchAppbar from './state.jsx.middle-search.appbar'
+import StateJsxAppbarMidSearch from './state.jsx.appbar.mid-search'
 import { Fragment, useMemo, memo } from 'react'
 
 interface IAppbarProps {
   def: StatePage
 }
 
-/**
- * Choose the style of app bar to render.
- * ```ts
- * const appbarState = {
- *   'appbarStyle': '' // <-- Set your app bar style
- * }
- * // Or
- * const appbarState = {
- *   '_type': '' // <-- Or you can set it here
- * }
- * ```
- * @see IStateAppbar.appbarStyle
- * @see IStateAppbar._type
- */
 const StateJsxAppbar = memo<IAppbarProps>(({ def: page }) => {
   // Memoize appbar properties to prevent unnecessary recalculations
   const hasAppbar = useMemo(() => page.hasAppbar, [page])
@@ -43,13 +29,13 @@ const StateJsxAppbar = memo<IAppbarProps>(({ def: page }) => {
       
       switch (style) {
         case 'basic':
-          return <BasicAppbar def={page} />
+          return <AppbarBasic def={page} />
         case 'responsive':
-          return <ResponsiveAppbar def={page} />
+          return <AppbarResponsive def={page} />
         case 'mini':
-          return <MiniAppbar def={page} />
+          return <AppbarMini def={page} />
         case 'middle_search':
-          return <StateJsxMidSearchAppbar def={page} />
+          return <StateJsxAppbarMidSearch def={page} />
         case 'none':
           return <Fragment />
         default:

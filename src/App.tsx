@@ -1,76 +1,70 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   type AppDispatch,
   type RootState,
   get_bootstrap_key,
   initialize
-} from './state';
-import { post_req_state } from './state/net.actions';
-import Config from './config';
-import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
-import AppPage from './components/app.cpn';
+} from './state'
+import { post_req_state } from './state/net.actions'
+import Config from './config'
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material'
+import AppPage from './components/app.cpn'
 import {
   ALLOWED_ATTEMPTS,
   BOOTSTRAP_ATTEMPTS,
   THEME_DEFAULT_MODE,
   THEME_MODE
-} from '@tuber/shared';
-import { get_cookie } from './business.logic/parsing';
-import StateAllPages from './controllers/StateAllPages';
-import StateApp from './controllers/StateApp';
-import StateNet from './controllers/StateNet';
+} from '@tuber/shared'
+import { get_cookie } from './business.logic/parsing'
+import StateAllPages from './controllers/StateAllPages'
+import StateApp from './controllers/StateApp'
 
 export default function App() {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<AppDispatch>()
   const app = new StateApp(
     useSelector((state: RootState) => state.app)
-  );
+  )
   const allPages = new StateAllPages(
     useSelector((state: RootState) => state.pages)
-  );
-  const net = new StateNet(
-    useSelector((state: RootState) => state.net)
-  );
-  const themeState = useSelector((state: RootState) => state.theme);
+  )
+  const themeState = useSelector((state: RootState) => state.theme)
 
   // Bootstrap the app from server
   useEffect(() => {
     /** Get state from server. */
     const onPostReqHomePageState = () => {
-      const key = get_bootstrap_key();
-      if (!key) { return; }
-      const bootstrapAttempts = Config.read<number>(BOOTSTRAP_ATTEMPTS, 0);
+      const key = get_bootstrap_key()
+      if (!key) { return }
+      const bootstrapAttempts = Config.read<number>(BOOTSTRAP_ATTEMPTS, 0)
       if (bootstrapAttempts < ALLOWED_ATTEMPTS) {
-        dispatch(post_req_state(key, {
-          cookie: document.cookie,
-        }, net.headers));
-        Config.write(BOOTSTRAP_ATTEMPTS, bootstrapAttempts + 1);
+        dispatch(post_req_state(key, {}))
+        Config.write(BOOTSTRAP_ATTEMPTS, bootstrapAttempts + 1)
       }
-    };
+    }
     // Get bootstrap state from server if none was provided.
-    // Setting `fetchingStateAllowed` to `false` will prevent it.
+    // Setting `fetchingStateAllowed` to `false` will prevent this.
     if (app.fetchingStateAllowed && !app.isBootstrapped) {
-      onPostReqHomePageState();
+      onPostReqHomePageState()
     }
 
-    Config.write(THEME_MODE, get_cookie('mode') || THEME_DEFAULT_MODE);
-    initialize();
-  }, [dispatch, net.headers, app.fetchingStateAllowed, app.isBootstrapped]);
+    Config.write(THEME_MODE, get_cookie('mode') || THEME_DEFAULT_MODE)
+    initialize()
+  }, [dispatch, app.fetchingStateAllowed, app.isBootstrapped])
 
   // Update browser URL when user switches pages
   useEffect(() => {
-    const currentRoute = app.route;
+    const currentRoute = app.route
     if (currentRoute && window.location.pathname !== currentRoute) {
       // Use pushState to add to browser history for proper back/forward navigation
-      window.history.pushState(null, '', currentRoute);
+      window.history.pushState(null, '', currentRoute)
     }
-  }, [app.route]);
+  }, [app.route])
 
   return (
     <ThemeProvider theme={createTheme(themeState)}>
       <CssBaseline />
       <AppPage def={allPages} info={app} />
     </ThemeProvider>
-  );
+  )
 }

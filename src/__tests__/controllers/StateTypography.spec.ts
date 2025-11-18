@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import StateTypography from '../../controllers/StateTypography';
 
 describe('StateTypography', () => {

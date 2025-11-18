@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { renderWithProviders } from '../../../../test-utils';
 import DialogSelect from '../../../../../mui/form/items/state.jsx.select';
-import type { StateForm, StateFormItem } from 'src/controllers';
+import type { StateForm, StateFormItem } from '../../../../../controllers';
 import type { IStateFormItemSelectOption } from '@tuber/shared';
 
 // Mock StateFormItem for select testing

@@ -21,7 +21,7 @@ describe('PageNotFound Component (Isolated)', () => {
   });
 
   it('should render 404 message', async () => {
-    const { default: PageNotFound } = await import('../../../components/pages/notfound.cpn');
+    const { default: PageNotFound } = await import('../../../mui/page/notfound.cpn');
     
     render(<PageNotFound def={{} as Parameters<typeof PageNotFound>[0]['def']} />);
     
@@ -30,7 +30,7 @@ describe('PageNotFound Component (Isolated)', () => {
   });
 
   it('should have correct heading structure', async () => {
-    const { default: PageNotFound } = await import('../../../components/pages/notfound.cpn');
+    const { default: PageNotFound } = await import('../../../mui/page/notfound.cpn');
     
     render(<PageNotFound def={{} as Parameters<typeof PageNotFound>[0]['def']} />);
     

@@ -1,14 +1,14 @@
-import { IconButton } from '@mui/material';
-import type StatePageAppbar from '../../controllers/templates/StatePageAppbar';
-import { StateJsxIcon } from '../icon';
-import { memo } from 'react';
+import { IconButton } from '@mui/material'
+import type StatePageAppbar from '../../controllers/templates/StatePageAppbar'
+import { StateJsxIcon } from '../icon'
+import { memo } from 'react'
 
-interface IJsonMIProps {
-  def: StatePageAppbar;
-  toggle: () => void;
+interface IMenuIcon {
+  def: StatePageAppbar
+  toggle: () => void
 }
 
-const MenuIcon = memo(() => <StateJsxIcon name='menu' />);
+const MenuIcon = memo(() => <StateJsxIcon name='menu' />)
 
 /**
  * If a drawer is defined for the current page then it will take priority.
@@ -19,13 +19,13 @@ const MenuIcon = memo(() => <StateJsxIcon name='menu' />);
  * To make use of the default drawer, the flag, `generateDefaultDrawer` needs
  * to be set to `true`.
  */
-export default function StateJsxMenuIcon ({ def: appbar, toggle }: IJsonMIProps) {
+const StateJsxMenuIcon = ({ def: appbar, toggle }: IMenuIcon) => {
   if (appbar.parent.hasDrawer) {
     return (
       <IconButton {...appbar.menuIconProps}>
         <MenuIcon />
       </IconButton>
-    );
+    )
   }
 
   if (appbar.parent.generateDefaultDrawer) {
@@ -39,8 +39,10 @@ export default function StateJsxMenuIcon ({ def: appbar, toggle }: IJsonMIProps)
       >
         <MenuIcon />
       </IconButton>
-    );
+    )
   }
 
-  return ( null );
+  return ( null )
 }
+
+export default StateJsxMenuIcon

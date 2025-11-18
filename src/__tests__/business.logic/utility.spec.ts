@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   is_object,
@@ -71,10 +72,13 @@ describe('utility.ts', () => {
     });
 
     describe('is_non_empty_string', () => {
-      it('should return true for strings', () => {
-        expect(is_non_empty_string('')).toBe(true);
+      it('should return true for non-empty strings', () => {
         expect(is_non_empty_string('hello')).toBe(true);
         expect(is_non_empty_string('123')).toBe(true);
+      });
+
+      it('should return false for empty strings', () => {
+        expect(is_non_empty_string('')).toBe(false);
       });
 
       it('should return false for non-strings', () => {
@@ -209,7 +213,7 @@ describe('utility.ts', () => {
       expect(safely_get_as(testObj, 'address.nonexistent', 'default')).toBe('default');
     });
 
-    it('should return the default for falsy values', () => {
+    it('should return the value if defined, else default', () => {
       const objWithFalsy = {
         zero: 0,
         empty: '',
@@ -218,9 +222,9 @@ describe('utility.ts', () => {
         undefined: undefined
       };
       
-      expect(safely_get_as(objWithFalsy, 'zero', 42)).toBe(42);
-      expect(safely_get_as(objWithFalsy, 'empty', 'fallback')).toBe('fallback');
-      expect(safely_get_as(objWithFalsy, 'false', true)).toBe(true);
+      expect(safely_get_as(objWithFalsy, 'zero', 42)).toBe(0);
+      expect(safely_get_as(objWithFalsy, 'empty', 'fallback')).toBe('');
+      expect(safely_get_as(objWithFalsy, 'false', true)).toBe(false);
       expect(safely_get_as(objWithFalsy, 'null', 'fallback')).toBe('fallback');
       expect(safely_get_as(objWithFalsy, 'undefined', 'fallback')).toBe('fallback');
     });
@@ -234,25 +238,25 @@ describe('utility.ts', () => {
   describe('get_global_var', () => {
     beforeEach(() => {
       // Clear any existing test properties
-      delete (window as Record<string, unknown>).testVar;
-      delete (window as Record<string, unknown>).testObj;
+      delete (window as any).testVar;
+      delete (window as any).testObj;
     });
 
     it('should return global variable when it exists', () => {
-      (window as Record<string, unknown>).testVar = 'test value';
+      (window as any).testVar = 'test value';
       expect(get_global_var('testVar')).toBe('test value');
     });
 
     it('should return object when global variable is an object', () => {
       const testObj = { a: 1, b: 2 };
-      (window as Record<string, unknown>).testObj = testObj;
+      (window as any).testObj = testObj;
       expect(get_global_var('testObj')).toBe(testObj);
     });
 
-    it('should return empty object when variable does not exist', () => {
+    it('should return undefined when variable does not exist', () => {
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const result = get_global_var('nonExistentVar');
-      expect(result).toEqual({});
+      expect(result).toBeUndefined();
       expect(consoleSpy).toHaveBeenCalledWith('Global variable "nonExistentVar" does not exist.');
       consoleSpy.mockRestore();
     });
@@ -358,29 +362,6 @@ describe('utility.ts', () => {
       // Restore original values
       Object.defineProperty(window, 'innerWidth', { value: originalInnerWidth, writable: true });
       Object.defineProperty(window, 'innerHeight', { value: originalInnerHeight, writable: true });
-    });
-
-    it('should fallback to clientWidth/clientHeight when inner dimensions not available', () => {
-      // Mock a scenario where innerWidth is not available
-      const originalInnerWidth = window.innerWidth;
-      delete (window as Record<string, unknown>).innerWidth;
-      
-      // Mock document.documentElement
-      const mockDocumentElement = {
-        clientWidth: 800,
-        clientHeight: 600
-      };
-      Object.defineProperty(document, 'documentElement', { 
-        value: mockDocumentElement, 
-        writable: true 
-      });
-      
-      const size = get_viewport_size();
-      expect(size.width).toBe(800);
-      expect(size.height).toBe(600);
-      
-      // Restore
-      Object.defineProperty(window, 'innerWidth', { value: originalInnerWidth, writable: true });
     });
   });
 

@@ -8,17 +8,17 @@ describe('pathnamesSlice', () => {
 
   it('setDialogsPath', () => {
     dispatch(pathnamesActions.setDialogsPath('test'));
-    expect(store.getState().pathnames.DIALOGS).toEqual('test');
+    expect(store.getState().pathnames.dialogs).toEqual('test');
   });
 
   it('setFormsPath', () => {
     dispatch(pathnamesActions.setFormsPath('test'));
-    expect(store.getState().pathnames.FORMS).toEqual('test');
+    expect(store.getState().pathnames.forms).toEqual('test');
   });
 
   it('setPagesPath', () => {
     dispatch(pathnamesActions.setPagesPath('test'));
-    expect(store.getState().pathnames.PAGES).toEqual('test');
+    expect(store.getState().pathnames.pages).toEqual('test');
   });
 
 });

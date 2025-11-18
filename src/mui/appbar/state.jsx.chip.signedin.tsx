@@ -3,7 +3,7 @@ import type StatePage from '../../controllers/StatePage';
 import Avatar from '@mui/material/Avatar';
 import { grey } from '@mui/material/colors';
 
-interface IProps {
+interface ISignedIn {
   def: StatePage;
 }
 
@@ -19,7 +19,7 @@ const CustomChip = styled('div')(() => ({
  *        display using this component.
  * Displays the user's email on the appbar when they are logged-in.
  */
-export default function StateJsxSignedIn({ def: page }: IProps) {
+const StateJsxSignedIn = ({ def: page }: ISignedIn) => {
   const net = page.parent.parent.net;
   const { sessionValid, name } = net;
   return sessionValid ? (
@@ -29,3 +29,5 @@ export default function StateJsxSignedIn({ def: page }: IProps) {
     </CustomChip>
   ) : ( null );
 }
+
+export default StateJsxSignedIn

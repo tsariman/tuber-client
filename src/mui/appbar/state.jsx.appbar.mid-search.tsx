@@ -1,27 +1,31 @@
-import React, { memo } from 'react';
-import { styled } from '@mui/material/styles';
-import Appbar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
+import React, { memo } from 'react'
+import { styled } from '@mui/material/styles'
+import Appbar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
+import Toolbar from '@mui/material/Toolbar'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import InputBase from '@mui/material/InputBase'
 import {
   StatePage,
   StatePageAppbarMidSearch,
   StateLink,
   StateAppbarQueries
-} from '../../controllers';
-import { useDispatch, useSelector } from 'react-redux';
-import { type AppDispatch, type RootState, redux } from '../../state';
-import StateJsxLogo from './state.jsx.logo';
-import AppbarButton from '../link';
-import InputAdornment from '@mui/material/InputAdornment';
-import { StateJsxIcon, StateJsxUnifiedIconProvider } from '../icon';
-import Menu from '@mui/material/Menu';
-import StateJsxChip from './state.jsx.chip';
-import { appbarQueriesSet } from '../../slices/appbarQueries.slice';
-import { drawerOpen } from '../../slices/drawer.slice';
+} from '../../controllers'
+import { useDispatch, useSelector } from 'react-redux'
+import { type AppDispatch, type RootState, redux } from '../../state'
+import StateJsxLogo from './state.jsx.logo'
+import AppbarButton from '../link'
+import InputAdornment from '@mui/material/InputAdornment'
+import { StateJsxIcon, StateJsxUnifiedIconProvider } from '../icon'
+import Menu from '@mui/material/Menu'
+import StateJsxChip from './state.jsx.chip'
+import { appbarQueriesSet } from '../../slices/appbarQueries.slice'
+import { drawerOpen } from '../../slices/drawer.slice'
+
+interface IMidSearch {
+  def: StatePage
+}
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -34,7 +38,7 @@ const Search = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('sm')]: {
     width: 500,
   },
-}));
+}))
 
 const UrlIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
@@ -44,7 +48,7 @@ const UrlIconWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-}));
+}))
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
@@ -53,46 +57,46 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create('width'),
     width: '100%',
   },
-}));
+}))
 
-const MenuIcon = memo(() => <StateJsxIcon name='menu' />);
-const MoreIcon = memo(() => <StateJsxIcon name='more_vert' />);
+const MenuIcon = memo(() => <StateJsxIcon name='menu' />)
+const MoreIcon = memo(() => <StateJsxIcon name='more_vert' />)
 
-export default function StateJsxMidSearchAppbar({ def: page }: { def: StatePage; }) {
+const StateJsxAppbarMidSearch = ({ def: page }: IMidSearch) => {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<null | HTMLElement>(null);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const appbar = new StatePageAppbarMidSearch(page.appbarJson, page);
-  const chips = useSelector((rootState: RootState) => rootState.chips);
-  const route = page.parent.parent.app.route;
-  appbar.configure({ chips, route, template: page._key });
-  const dispatch = useDispatch<AppDispatch>();
+    React.useState<null | HTMLElement>(null)
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
+  const appbar = new StatePageAppbarMidSearch(page.appbarJson, page)
+  const chips = useSelector((rootState: RootState) => rootState.chips)
+  const route = page.parent.parent.app.route
+  appbar.configure({ chips, route, template: page._key })
+  const dispatch = useDispatch<AppDispatch>()
   const queries = new StateAppbarQueries(
     useSelector((rootState: RootState) => rootState.appbarQueries)
-  );
-  const value = queries.alwaysGet(route).value;
+  )
+  const value = queries.alwaysGet(route).value
 
   const handleSearchfieldOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(appbarQueriesSet({ route, value: e.target.value }));
-  };
+    dispatch(appbarQueriesSet({ route, value: e.target.value }))
+  }
 
   const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      appbar.searchFieldIconButton.onClick(redux)(e);
+      appbar.searchFieldIconButton.onClick(redux)(e)
     }
-  };
+  }
 
   const handleDrawerOpen = () => {
-    dispatch(drawerOpen());
-  };
+    dispatch(drawerOpen())
+  }
 
   const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
+    setMobileMoreAnchorEl(null)
+  }
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
+    setMobileMoreAnchorEl(event.currentTarget)
+  }
 
   const renderMobileMenu = (
     <Menu
@@ -114,9 +118,9 @@ export default function StateJsxMidSearchAppbar({ def: page }: { def: StatePage;
         <AppbarButton def={item} key={`nav-menu-${i}`} />
       ))}
     </Menu>
-  );
+  )
 
-  const appbarChips = appbar.chips;
+  const appbarChips = appbar.chips
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -166,10 +170,10 @@ export default function StateJsxMidSearchAppbar({ def: page }: { def: StatePage;
                         'svgIconProps': { 'color': 'error', 'fontSize': 'small' },
                       },
                       'onClick': ({ store, actions }) => () => {
-                        store.dispatch(actions.appbarQueriesDelete(route));
-                        const inputId = appbar.inputBaseProps.id;
+                        store.dispatch(actions.appbarQueriesDelete(route))
+                        const inputId = appbar.inputBaseProps.id
                         if (inputId) {
-                          document.getElementById(inputId)?.focus();
+                          document.getElementById(inputId)?.focus()
                         }
                       }
                     })} />
@@ -203,5 +207,7 @@ export default function StateJsxMidSearchAppbar({ def: page }: { def: StatePage;
       </Appbar>
       { renderMobileMenu }
     </Box>
-  );
+  )
 }
+
+export default StateJsxAppbarMidSearch

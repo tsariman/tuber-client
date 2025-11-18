@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { renderWithProviders } from '../../../test-utils';
 import DialogCheckboxes from '../../../../mui/dialog/form/dialog.checkboxes';
-import type { StateForm, StateFormItem, StateFormItemCheckboxBox } from 'src/controllers';
+import type { StateForm, StateFormItem, StateFormItemCheckboxBox } from '../../../../controllers';
 
 // Mock StateFormItem with checkboxes for testing
 const createMockCheckboxes = (label: string = 'Options'): StateFormItem<StateForm, StateFormItemCheckboxBox> => ({

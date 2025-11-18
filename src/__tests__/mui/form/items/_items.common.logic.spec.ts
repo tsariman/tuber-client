@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import * as F from '../../../../mui/form/items/_items.common.logic';
 
 describe('src/mui/form/items/_items.common.logic.ts', () => {

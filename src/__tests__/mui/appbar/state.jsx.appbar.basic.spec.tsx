@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { renderWithProviders } from '../../test-utils';
-import StateJsxBasicAppbar from '../../../mui/appbar/state.jsx.basic.appbar';
+import AppbarBasic from '../../../mui/appbar/state.jsx.appbar.basic';
 import type StatePage from '../../../controllers/StatePage';
+import '@testing-library/jest-dom'
 
 // Mock interface for testing the basic appbar component
 interface MockAppbarPage {
@@ -56,7 +57,7 @@ describe('src/mui/appbar/state.jsx.basic.appbar.tsx', () => {
       },
     };
 
-    const { container } = renderWithProviders(<StateJsxBasicAppbar def={mockPage as unknown as StatePage} />);
+    const { container } = renderWithProviders(<AppbarBasic def={mockPage as unknown as StatePage} />);
     expect(container.querySelector('[role="banner"]')).toBeInTheDocument();
   });
 
@@ -86,7 +87,7 @@ describe('src/mui/appbar/state.jsx.basic.appbar.tsx', () => {
       },
     };
 
-    const { container } = renderWithProviders(<StateJsxBasicAppbar def={mockPage as unknown as StatePage} />);
+    const { container } = renderWithProviders(<AppbarBasic def={mockPage as unknown as StatePage} />);
     expect(container.querySelector('button')).toBeInTheDocument();
   });
 
@@ -116,7 +117,7 @@ describe('src/mui/appbar/state.jsx.basic.appbar.tsx', () => {
       },
     };
 
-    const { getByText } = renderWithProviders(<StateJsxBasicAppbar def={mockPage as unknown as StatePage} />);
+    const { getByText } = renderWithProviders(<AppbarBasic def={mockPage as unknown as StatePage} />);
     expect(getByText('My Test App')).toBeInTheDocument();
   });
 });

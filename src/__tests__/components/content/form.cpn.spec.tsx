@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import '@testing-library/jest-dom'
 import { renderWithProviders, screen } from '../../test-utils';
 import FormContent from '../../../components/content/form.cpn';
 

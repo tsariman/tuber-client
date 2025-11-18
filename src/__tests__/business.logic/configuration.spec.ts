@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { get_config, type IConfiguration } from '@tuber/shared';
+import type { IConfiguration } from '@tuber/shared';
+import get_config from '../../business.logic/Configuration';
 
 
 describe('configuration.ts', () => {
