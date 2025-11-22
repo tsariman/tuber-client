@@ -3,7 +3,6 @@ import { DIALOG_LOGIN_ID, FORM_LOGIN_ID } from '../tuber.config'
 import FormValidationPolicy from 'src/business.logic/FormValidationPolicy'
 import { error_id } from 'src/business.logic/errors'
 import { get_val } from 'src/business.logic/utility'
-import StateNet from 'src/controllers/StateNet'
 import { post_req, post_req_state } from 'src/state/net.actions'
 import { get_parsed_content, get_state_form_name } from 'src/business.logic/parsing'
 import Config from 'src/config'
@@ -85,10 +84,8 @@ export default function form_submit_sign_in(redux: IRedux) {
       new JsonapiRequest('signin', {
         'credentials': formData,
         'route': rootState.app.route,
-        'mode': mode,
-        'cookie': document.cookie
-      }).build(),
-      new StateNet(rootState.net).headers
+        'mode': mode
+      }).build()
     ))
     pre()
     dispatch(A.dialogClose())
@@ -100,12 +97,15 @@ export default function form_submit_sign_in(redux: IRedux) {
 export function sign_out(redux: IRedux) {
   return async () => {
     const { store: { dispatch }} = redux
-    const { net: netState } = redux.store.getState()
-    const net = new StateNet(netState)
-    net.deleteCookie()
-    dispatch(state_reset())
     dispatch(post_req('signout', {}, () => {
       Config.write(BOOTSTRAP_ATTEMPTS, 0)
+      dispatch(state_reset())
+      
+      // TODO Something!
+    }, e => {
+      Config.write(BOOTSTRAP_ATTEMPTS, 0)
+      dispatch(state_reset())
+      error_id(1101).remember_exception(e) // Error 1101
     }))
   }
 }

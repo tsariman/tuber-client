@@ -104,7 +104,7 @@ export * from './test-utils';
  * - StateTypography, StateAvatar
  * 
  * Specialized Controllers:
- * - StateNet, StateMeta, StateSession, StateThemeParser, StateTmp
+ * - StateNet, StateMeta, StateThemeParser, StateTmp
  * 
  * Form Controllers:
  * - StateForm, StateFormItem

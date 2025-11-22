@@ -1,7 +1,7 @@
-import { Fragment, memo, useState, type ChangeEvent, type JSX } from 'react';
+import { memo, useState, type ChangeEvent, type JSX } from 'react'
 import {
   CardContent,
-  GridLegacy as Grid, // [TODO] Port new equivalent
+  GridLegacy as Grid, // TODO: Port to new equivalent
   IconButton,
   InputAdornment,
   Paper,
@@ -10,38 +10,38 @@ import {
   Toolbar, 
   Typography,
   useTheme
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import StatePage from '../../controllers/StatePage';
-import type { IJsonapiError } from '@tuber/shared';
+} from '@mui/material'
+import { styled } from '@mui/material/styles'
+import StatePage from '../../controllers/StatePage'
+import type { IJsonapiError } from '@tuber/shared'
 import {
   JsonapiError,
   color_json_code,
   format_json_code,
   get_errors_list
-} from '../../business.logic';
-import InputBase from '@mui/material/InputBase';
-import { StateJsxIcon } from '../icon';
+} from '../../business.logic'
+import InputBase from '@mui/material/InputBase'
+import { StateJsxIcon } from '../icon'
 
-type TSetLastSelected = <T>($class: T) => void;
-type TClasses = 'errorCardHover' | 'errorCardClicked';
-type TStyles = {[key in TClasses]: SxProps };
-type TGetErrorCardStyles = (theme: Theme) => TStyles;
+type TSetLastSelected = <T>($class: T) => void
+type TClasses = 'errorCardHover' | 'errorCardClicked'
+type TStyles = {[key in TClasses]: SxProps }
+type TGetErrorCardStyles = (theme: Theme) => TStyles
 
-interface IPageErrorsProps { def: StatePage; }
+interface IPageErrorsProps { def: StatePage }
 
 interface IHive {
-  selected_i?: number;
-  filter?: string;
-  setSelected?: TSetLastSelected;
-  setState?: (state: string) => void;
+  selected_i?: number
+  filter?: string
+  setSelected?: TSetLastSelected
+  setState?: (state: string) => void
 }
 
 interface IErrorListItemProp {
-  i: number;
-  errorState: IJsonapiError;
+  i: number
+  errorState: IJsonapiError
   /** data shared between detail & error components */
-  hive: IHive;
+  hive: IHive
 }
 
 const getErrorCardStyles: TGetErrorCardStyles = (theme: Theme) => ({
@@ -58,7 +58,7 @@ const getErrorCardStyles: TGetErrorCardStyles = (theme: Theme) => ({
     },
     backgroundColor: `${theme.palette.action.selected} !important`
   }
-});
+})
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -75,7 +75,7 @@ const Search = styled('div')(({ theme }) => ({
     width: 'auto',
   },
   flexGrow: 1,
-}));
+}))
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
@@ -85,7 +85,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-}));
+}))
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
@@ -95,27 +95,33 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create('width'),
     width: '100%',
   },
-}));
+}))
 
 const ErrorList = styled('div')(() => ({
   flexGrow: 1,
   overflowY: 'scroll',
   height: 'calc(100vh - 107px)',
-}));
+}))
+
+const ErrorJsonGrid = styled(Grid)(() => ({
+  overflowY: 'auto',
+  flex: 1,
+
+}))
 
 const ErrorJsonWrapper = styled('div')(() => ({
   position: 'relative',
   fontFamily: 'monospace',
   fontWeight: 'bold',
   overflowWrap: 'anywhere',
-}));
+}))
 
 const ClearOutlinedIcon = memo(() => (
   <StateJsxIcon
     name='close'
     config={{ color: 'error', fontSize: 'small' }}
   />
-));
+))
 
 /** Original color: '#9e9e9e' */
 const SearchIcon = memo(() => (
@@ -123,20 +129,20 @@ const SearchIcon = memo(() => (
     name='search'
     config={{ sx: {'color': 'text.secondary'} }}
   />
-));
+))
 
 /** Highlight all occurence of a substring into a value */
 const highlight = (str: string, regex: string, theme: Theme) => {
   const style = [
     `background-color:${theme.palette.warning.light}`,
     `color:${theme.palette.warning.contrastText}`
-  ].join(';');
-  const regularExp = new RegExp(regex, 'g');
+  ].join(';')
+  const regularExp = new RegExp(regex, 'g')
   return str.replace(
     regularExp,
     match => `<span style="${style}">${match}</span>`
-  );
-};
+  )
+}
 
 /** Same as the highlight function but returns a JSX.Element. */
 const Highlight = ({
@@ -147,24 +153,24 @@ const Highlight = ({
   const style = [
     `background-color:${theme.palette.warning.light}`,
     `color:${theme.palette.warning.contrastText}`
-  ].join(';');
-  const regularExp = new RegExp(regex, 'g');
+  ].join(';')
+  const regularExp = new RegExp(regex, 'g')
   return <span dangerouslySetInnerHTML={{
     __html: value.replace(
       regularExp,
       match => `<span style="${style}">${match}</span>`
     )
-  }} />;
-};
+  }} />
+}
 
 /** Highlight all matches found as substring into json. */
 const jsonWithMatches = (state: string, filters: string[], theme: Theme): string => {
-  let highlightedState = state;
+  let highlightedState = state
   filters.forEach(filter => {
-    highlightedState = highlight(highlightedState, filter, theme);
+    highlightedState = highlight(highlightedState, filter, theme)
   })
-  return highlightedState;
-};
+  return highlightedState
+}
 
 /** Highlight all matches found as substring in code. */
 const CodeWithMatches = ({
@@ -172,16 +178,16 @@ const CodeWithMatches = ({
   matches,
   theme
 }: { code: string, matches: string[], theme: Theme }): JSX.Element => {
-  return <Highlight value={code} regex={matches.join('|')} theme={theme} />;
-};
+  return <Highlight value={code} regex={matches.join('|')} theme={theme} />
+}
 
 const IdWithMatches = ({
   id,
   matches,
   theme
 }: { id: string, matches: string[], theme: Theme }) => {
-  return <Highlight value={id} regex={matches.join('|')} theme={theme} />;
-};
+  return <Highlight value={id} regex={matches.join('|')} theme={theme} />
+}
 
 const TitleWithMatches = ({
   title,
@@ -192,41 +198,41 @@ const TitleWithMatches = ({
     <Typography variant='subtitle2' component='div'>
       <Highlight value={title} regex={matches.join('|')} theme={theme} />
     </Typography>
-  );
-};
+  )
+}
 
 /** List of errors in the left column. */
 function ErrorListItem({ i, errorState: errorJson, hive }: IErrorListItemProp): JSX.Element | null {
-  const theme = useTheme();
-  const styles = getErrorCardStyles(theme);
-  const error = new JsonapiError(errorJson);
-  const [ $class, setClass ] = useState<TClasses>('errorCardHover');
+  const theme = useTheme()
+  const styles = getErrorCardStyles(theme)
+  const error = new JsonapiError(errorJson)
+  const [ $class, setClass ] = useState<TClasses>('errorCardHover')
 
   const onPaperClick = () => {
     if (i !== hive.selected_i) {
-      if (hive.setSelected) { hive.setSelected<TClasses>('errorCardHover') };
-      setClass('errorCardClicked');
+      if (hive.setSelected) { hive.setSelected<TClasses>('errorCardHover') }
+      setClass('errorCardClicked')
       if (hive.filter) {
-        const jsonStr = format_json_code(error.json);
-        const json = jsonWithMatches(jsonStr, hive.filter.split(/\s+/), theme);
-        if (hive.setState) { hive.setState(json); }
+        const jsonStr = format_json_code(error.json)
+        const json = jsonWithMatches(jsonStr, hive.filter.split(/\s+/), theme)
+        if (hive.setState) { hive.setState(json) }
       } else {
-        const json = color_json_code(error.json, theme);
-        if (hive.setState) { hive.setState(json); }
+        const json = color_json_code(error.json, theme)
+        if (hive.setState) { hive.setState(json) }
       }
-      hive.selected_i = i;
-      hive.setSelected = setClass as TSetLastSelected;
+      hive.selected_i = i
+      hive.setSelected = setClass as TSetLastSelected
     }
-  };
+  }
 
   if (hive.filter) {
-    const filterWords = hive.filter?.split(' ') || [];
-    const json = JSON.stringify(error.json);
-    const jsonMatches = filterWords.filter(w => json.includes(w));
-    if (jsonMatches.length === 0) { return ( null ); }
-    const idMatches = filterWords.filter(w => error.id.includes(w));
-    const codeMatches = filterWords.filter(w => error.code.includes(w));
-    const titleMatches = filterWords.filter(w => error.title.includes(w));
+    const filterWords = hive.filter?.split(' ') || []
+    const json = JSON.stringify(error.json)
+    const jsonMatches = filterWords.filter(w => json.includes(w))
+    if (jsonMatches.length === 0) { return ( null ) }
+    const idMatches = filterWords.filter(w => error.id.includes(w))
+    const codeMatches = filterWords.filter(w => error.code.includes(w))
+    const titleMatches = filterWords.filter(w => error.title.includes(w))
 
     return (
       <Paper square sx={styles[$class]} onClick={onPaperClick}>
@@ -239,7 +245,7 @@ function ErrorListItem({ i, errorState: errorJson, hive }: IErrorListItemProp): 
           <TitleWithMatches title={error.title} matches={titleMatches} theme={theme} />
         </CardContent>
       </Paper>
-    );
+    )
   }
 
   return (
@@ -251,89 +257,83 @@ function ErrorListItem({ i, errorState: errorJson, hive }: IErrorListItemProp): 
         <Typography variant='subtitle2' component='div'>{error.title}</Typography>
       </CardContent>
     </Paper>
-  );
+  )
 }
 
 function ErrorBody({ hive }: { hive: IHive }): JSX.Element | null {
-  const [ json, setJson ] = useState<string>('');
-  hive.setState = setJson;
+  const [ json, setJson ] = useState<string>('')
+  hive.setState = setJson
   return json ? (
-    <Grid
-      sx={{
-        height: '100vh',
-        p: 2,
-      }}
-      item
-    >
-      <Toolbar />
+    <ErrorJsonGrid sx={{ height: '84vh', pl: 2 }} item>
       <ErrorJsonWrapper
         dangerouslySetInnerHTML={{
           __html: json
         }}
       />
-    </Grid>
-  ) : ( null );
+    </ErrorJsonGrid>
+  ) : ( null )
 }
 
 /** Error page */
 export default function PageErrors({ def: page }: IPageErrorsProps) {
-  void page;
-  const errors = get_errors_list();
-  const [ filter, setFilter ] = useState<string>('');
+  void page
+  const errors = get_errors_list()
+  const [ filter, setFilter ] = useState<string>('')
 
   const handleSearchChange = (e: unknown) => {
-    setFilter((e as ChangeEvent<HTMLInputElement>).target.value);
-    if (hive.setSelected) { hive.setSelected<TClasses>('errorCardHover'); }
-    if (hive.setState) { hive.setState(''); }
-  };
+    setFilter((e as ChangeEvent<HTMLInputElement>).target.value)
+    if (hive.setSelected) { hive.setSelected<TClasses>('errorCardHover') }
+    if (hive.setState) { hive.setState('') }
+  }
 
   const handleClearFilter = () => {
-    setFilter('');
-    if (hive.setSelected) { hive.setSelected<TClasses>('errorCardHover'); }
-    if (hive.setState) { hive.setState(''); }
-  };
+    setFilter('')
+    if (hive.setSelected) { hive.setSelected<TClasses>('errorCardHover') }
+    if (hive.setState) { hive.setState('') }
+  }
 
-  const hive: IHive = { filter };
+  const hive: IHive = { filter }
 
   return (
-    <Fragment>
-      <Grid container spacing={0}>
-        <Grid md={3} sx={{ pl: 1 }} item>
-          <Toolbar />
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Filter..."
-              inputProps={{ 'aria-label': 'filter' }}
-              fullWidth
-              value={filter}
-              onChange={handleSearchChange}
-              endAdornment={
-                <InputAdornment position="end">
-                  {filter ?
-                    <IconButton
-                      aria-label="clear"
-                      size="small"
-                      sx={{ mr: 1 }}
-                      onClick={handleClearFilter}
-                    >
-                      <ClearOutlinedIcon />
-                    </IconButton> : ( null )
-                  }
-                </InputAdornment>
-              }
-            />
-          </Search>
-          <ErrorList>
-            {errors.slice(0).reverse().map((e, i) => (
-              <ErrorListItem i={i} key={`e-${i}`} errorState={e} hive={hive} />
-            ))}
-          </ErrorList>
-        </Grid>
+    <Grid container spacing={0}>
+      <Grid md={3} sx={{ pl: 1 }} item>
+        <Toolbar />
+        <Search>
+          <SearchIconWrapper>
+            <SearchIcon />
+          </SearchIconWrapper>
+          <StyledInputBase
+            placeholder="Filter..."
+            inputProps={{ 'aria-label': 'filter' }}
+            fullWidth
+            value={filter}
+            onChange={handleSearchChange}
+            endAdornment={
+              <InputAdornment position="end">
+                {filter ?
+                  <IconButton
+                    aria-label="clear"
+                    size="small"
+                    sx={{ mr: 1 }}
+                    onClick={handleClearFilter}
+                  >
+                    <ClearOutlinedIcon />
+                  </IconButton> : ( null )
+                }
+              </InputAdornment>
+            }
+          />
+        </Search>
+        <ErrorList>
+          {errors.slice(0).reverse().map((e, i) => (
+            <ErrorListItem i={i} key={`e-${i}`} errorState={e} hive={hive} />
+          ))}
+        </ErrorList>
+      </Grid>
+      <Grid md={9} item>
+        <Toolbar />
         <ErrorBody hive={hive} />
       </Grid>
-    </Fragment>
-  );
+    </Grid>
+  )
 }

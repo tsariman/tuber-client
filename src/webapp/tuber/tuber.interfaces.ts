@@ -90,7 +90,6 @@ export interface ITuberBookmarksProps {
   setPlayerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-// export type TTuberPlatformMap = {[brand in TPlatform]: (...args: unknownnown) => JSX.Element | null }
 export type TTuberPlatformMap = {[brand in TPlatform]: JSX.Element | null };
 
 export interface IResearchToolbarProps {

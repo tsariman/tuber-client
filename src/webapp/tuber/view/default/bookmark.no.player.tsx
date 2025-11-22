@@ -5,7 +5,7 @@ import type { IBookmark } from '../../tuber.interfaces';
 import { gen_video_url, shorten_text } from '../../_tuber.common.logic';
 import React, { Fragment, useCallback, useMemo } from 'react';
 import { SHORTENED_NOTE_MAX_LENGTH } from '../../tuber.config';
-import BookmarkActionsToolbar from './list.actions';
+import BookmarkActionsToolbar from './bookmark.actions';
 import Thumbnail from './thumbnail';
 import { StateJsxIcon } from 'src/mui/icon';
 import PlatformIcon from './platform.icon';

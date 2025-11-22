@@ -7,7 +7,7 @@ import React, { Fragment, useCallback, useMemo } from 'react';
 import { ENDPOINT, PLAYER_OPEN, SET_TO_PLAY, SHORTENED_NOTE_MAX_LENGTH } from '../../tuber.config';
 import type { IBookmark } from '../../tuber.interfaces';
 import { gen_video_url, shorten_text } from '../../_tuber.common.logic';
-import BookmarkActionsToolbar from './list.actions';
+import BookmarkActionsToolbar from './bookmark.actions';
 import { StateJsxIcon } from 'src/mui/icon';
 import PlatformIcon from './platform.icon';
 import { useDispatch, useSelector } from 'react-redux';

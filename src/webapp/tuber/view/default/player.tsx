@@ -46,7 +46,10 @@ const VideoPlayer = React.memo<{ bookmark?: IBookmark }>(({ bookmark: receivedBo
   }), [bookmark]);
 
   // Memoize the selected player component
-  const selectedPlayer = useMemo(() => players[bookmark.platform as keyof TTuberPlatformMap], [players, bookmark.platform]);
+  const selectedPlayer = useMemo(
+    () => players[bookmark.platform],
+    [players, bookmark.platform]
+  );
 
   return selectedPlayer;
 });

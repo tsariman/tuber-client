@@ -1,5 +1,5 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import initialState from '../state/initial.state';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import initialState from '../state/initial.state'
 import {
   type TThemeMode,
   APP_IS_BOOTSTRAPPED,
@@ -9,72 +9,72 @@ import {
   APP_REQUEST_SUCCESS,
   APP_SWITCHED_PAGE,
   APP_BROWSER_SWITCHED_PAGE
-} from '@tuber/shared';
+} from '@tuber/shared'
 
 export const appSlice = createSlice({
   name: 'app',
   initialState: initialState.app,
   reducers: {
-    appSwitchPage: (state, action: PayloadAction<string>) => {
-      state.lastRoute = state.route;
-      state.route = action.payload;
-      state.status = APP_SWITCHED_PAGE;
+    appSwitchPage: (state, { payload }: PayloadAction<string>) => {
+      state.lastRoute = state.route
+      state.route = payload
+      state.status = APP_SWITCHED_PAGE
     },
     appBrowserSwitchPage: (state, action: PayloadAction<string>) => {
-      state.lastRoute = state.route;
-      state.route = action.payload;
-      state.status = APP_BROWSER_SWITCHED_PAGE;
+      state.lastRoute = state.route
+      state.route = action.payload
+      state.status = APP_BROWSER_SWITCHED_PAGE
     },
     appTitleUpdate: (state, action: PayloadAction<string>) => {
-      state.title = action.payload;
+      state.title = action.payload
     },
     appOriginUpdate: (state, action: PayloadAction<string>) => {
-      state.origin = action.payload;
+      state.origin = action.payload
     },
     appStatusUpdate: (state, action: PayloadAction<string>) => {
-      state.status = action.payload;
+      state.status = action.payload
     },
     appTaskCompleted: (state) => {
-      state.status = APP_IS_READY;
+      state.status = APP_IS_READY
     },
     appShowSpinner: (state) => {
-      state.showSpinner = true;
+      state.showSpinner = true
     },
     appHideSpinner: (state) => {
-      state.showSpinner = false;
+      state.showSpinner = false
     },
     appDisableSpinner: (state) => {
-      state.spinnerDisabled = true;
+      state.spinnerDisabled = true
     },
     appEnableSpinner: (state) => {
-      state.spinnerDisabled = false;
+      state.spinnerDisabled = false
     },
     appRequestStart: (state) => {
-      state.status = state.fetchMessage ?? APP_IS_FETCHING;
-      state.fetchMessage = undefined;
+      state.status = state.fetchMessage ?? APP_IS_FETCHING
+      state.fetchMessage = undefined
     },
     appRequestSuccess: (state) => {
-      state.status = APP_REQUEST_SUCCESS;
+      state.status = APP_REQUEST_SUCCESS
     },
     appRequestFailed: (state) => {
-      state.status = APP_REQUEST_FAILED;
+      state.status = APP_REQUEST_FAILED
     },
     appRequestEnd: (state) => {
-      state.status = APP_IS_BOOTSTRAPPED;
+      state.status = APP_IS_BOOTSTRAPPED
     },
     appRequestProcessEnd: (state) => {
-      state.status = APP_IS_BOOTSTRAPPED;
+      state.status = APP_IS_BOOTSTRAPPED
     },
     appSetFetchMessage: (state, action: PayloadAction<string>) => {
-      state.fetchMessage = action.payload;
+      state.fetchMessage = action.payload
     },
     appThemeModeUpdate: (state, action: PayloadAction<TThemeMode>) => {
-      state.themeMode = action.payload;
+      state.themeMode = action.payload
     },
   },
-});
+})
 
-export const appActions = appSlice.actions;
+export const appActions = appSlice.actions
 export const {
   appHideSpinner,
   appOriginUpdate,
@@ -93,6 +93,6 @@ export const {
   appBrowserSwitchPage,
   appSetFetchMessage,
   appThemeModeUpdate,
-} = appSlice.actions;
+} = appSlice.actions
 
-export default appSlice.reducer;
+export default appSlice.reducer

@@ -242,6 +242,7 @@ export async function post_fetch<T=unknown>(
   const response = await fetch(url, {
     method: 'post',
     headers,
+    credentials: 'include',
     body: JSON.stringify(body)
   })
   const json = await response.json()
@@ -257,7 +258,8 @@ export async function post_fetch<T=unknown>(
 export async function get_fetch<T=unknown>(url: string): Promise<T> {
   const response = await fetch(url, {
     method: 'get',
-    headers: DEFAULT_HEADERS
+    headers: DEFAULT_HEADERS,
+    credentials: 'include'
   })
   const json = await response.json()
   return json as T
@@ -292,6 +294,7 @@ export const post_req_state = (
       const response = await fetch(url, {
         method: 'post',
         headers,
+        credentials: 'include',
         body: JSON.stringify(body)
       })
       const json = _resolve_unexpected_nesting<IJsonapiBaseResponse>(
@@ -334,6 +337,7 @@ export const patch_req_state = (
       const response = await fetch(url, {
         method: 'PATCH',
         headers,
+        credentials: 'include',
         body: JSON.stringify(body)
       })
       const json = await response.json()
@@ -402,7 +406,11 @@ export const get_req_state = (
       const uri = `${origin}${endpoint}${query}`
       const headersState = new StateNet(rootState.net).headers
       const headers = { ...DEFAULT_HEADERS, ...headersState, ...customHeaders }
-      const response = await fetch(uri, { method: 'get', headers })
+      const response = await fetch(uri, {
+        method: 'get',
+        headers,
+        credentials: 'include'
+      })
       const json = await response.json()
       json.meta = json.meta ?? {}
       json.meta.status = response.status
@@ -427,7 +435,7 @@ export const get_req_state = (
 export const delete_req_state = (
   endpoint: string,
   args = '',
-  customHeaders?: RequestInit['headers']
+  customHeaders?: Record<string, string>
 ) => {
   return async (dispatch: Dispatch, getState: () => RootState) => {
     dispatch(appRequestStart())
@@ -439,7 +447,11 @@ export const delete_req_state = (
       const uri = `${origin}${endpoint}${query}`
       const headersState = new StateNet(rootState.net).headers
       const headers = { ...DEFAULT_HEADERS, ...headersState, ...customHeaders }
-      const response = await fetch(uri, { method: 'delete', headers })
+      const response = await fetch(uri, {
+        method: 'delete',
+        headers,
+        credentials: 'include'
+      })
       const json = await response.json()
       json.meta ??= {}
       json.meta.status = response.status
@@ -481,7 +493,8 @@ export const post_req = (
       const response = await fetch( url, {
         method: 'post',
         headers,
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
+        credentials: 'include'
       })
       const json = _resolve_unexpected_nesting<IJsonapiBaseResponse>(
         await response.json()

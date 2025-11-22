@@ -9,7 +9,7 @@ import { shorten_text } from '../../_tuber.common.logic';
 import type { IBookmark } from '../../tuber.interfaces';
 import LoadMoreBookmarksFromServer, {
   LoadEarlierBookmarksFromServer
-} from './list.load.more';
+} from './list.bookmark.loader';
 import Bookmark from './bookmark.no.player';
 
 const StyledList = styled(List)(({ theme }) => ({

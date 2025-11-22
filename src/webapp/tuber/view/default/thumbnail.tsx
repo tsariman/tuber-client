@@ -22,6 +22,7 @@ const ThumbnailGrid = styled(Grid)(({ theme: { spacing, palette } }) => ({
   width: 148,
   height: 83,
   backgroundSize: 'cover',
+  backgroundPosition: 'center top',
 }));
 
 const BookmarkThumbnail = ({ i, bookmark }: IThumbnailProps) => {

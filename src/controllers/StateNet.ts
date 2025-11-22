@@ -99,17 +99,30 @@ export default class StateNet extends AbstractState implements IStateNet {
   get restrictions(): string[] { return this._netState.restrictions || []; }
   /**
    * Run this function to log out.
+   * Forcefully deletes all cookies with multiple path/domain combinations.
    * @see https://www.tutorialspoint.com/How-to-clear-all-cookies-with-JavaScript
    */
   deleteCookie(): void {
     const cookies = document.cookie.split(';');
-    // set 1 Jan, 1970 expiry for every cookies
+    const expiry = new Date(0).toUTCString();
+    const paths = ['/', window.location.pathname];
+    const domains = [window.location.hostname, '.' + window.location.hostname, ''];
+    
+    // Attempt to delete each cookie with all path/domain combinations
     for (let i = 0; i < cookies.length; i++) {
       const [ name ] = cookies[i].trim().split('=') || [];
       if (name === 'mode') {
         continue;
       }
-      document.cookie = `${cookies[i]}=;expires=${new Date(0).toUTCString()}`;
+      
+      // Try multiple combinations to ensure deletion
+      for (const path of paths) {
+        for (const domain of domains) {
+          const domainAttr = domain ? `; domain=${domain}` : '';
+          document.cookie = `${name}=; expires=${expiry}; path=${path}${domainAttr}`;
+          document.cookie = `${name}=; max-age=0; path=${path}${domainAttr}`;
+        }
+      }
     }
   }
   get sessionValid(): boolean {
