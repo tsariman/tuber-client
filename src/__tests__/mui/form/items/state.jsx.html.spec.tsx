@@ -1,3 +1,4 @@
+import '@testing-library/jest-dom';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { renderWithProviders } from '../../../test-utils';
 import { StateJsxHtml } from '../../../../mui/form/items/state.jsx.html';
@@ -18,13 +19,11 @@ const mockPagesData = {
 };
 
 describe('src/mui/form/items/state.jsx.html.tsx', () => {
-  let factory: StateFactory;
-  let allForms: ReturnType<StateFactory['createStateAllForms']>;
+  let allForms: ReturnType<typeof StateFactory.createStateAllForms>;
   let form: StateForm;
 
   beforeEach(() => {
-    factory = new StateFactory();
-    allForms = factory.createStateAllForms();
+    allForms = StateFactory.createStateAllForms();
     form = new StateForm({}, allForms);
   });
 

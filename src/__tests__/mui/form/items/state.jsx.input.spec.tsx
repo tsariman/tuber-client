@@ -1,6 +1,24 @@
+import '@testing-library/jest-dom';
 import { describe, it, expect } from 'vitest';
 import { renderWithProviders } from '../../../test-utils';
 import StateJsxInput from '../../../../mui/form/items/state.jsx.input';
+import { StateFactory, StateForm } from '../../../../controllers';
+import stateMocks from './__mocks__/state.jsx.input.spec';
+
+const allForms = StateFactory.createStateAllForms()
+const form = new StateForm({
+  'items': [
+    stateMocks.state1,
+    stateMocks.state2,
+    stateMocks.state3,
+    stateMocks.state4,
+    stateMocks.state5,
+    stateMocks.state6,
+    stateMocks.state7,
+    stateMocks.state8,
+    stateMocks.state9
+  ]
+}, allForms)
 
 // Mock StateFormItem for input testing
 const createMockInput = (label: string = 'Input Field', type: string = 'text') => ({
@@ -31,7 +49,7 @@ describe('src/mui/form/items/state.jsx.input.tsx', () => {
       const mockInput = createMockInput('Username', 'text');
       
       const { getByTestId } = renderWithProviders(
-        <StateJsxInput def={mockInput} />
+        <StateJsxInput def={form.items[0]} />
       );
       
       expect(getByTestId('input-field')).toBeInTheDocument();
@@ -41,7 +59,7 @@ describe('src/mui/form/items/state.jsx.input.tsx', () => {
       const mockInput = createMockInput('Email Address');
       
       const { getByLabelText } = renderWithProviders(
-        <StateJsxInput def={mockInput} />
+        <StateJsxInput def={form.items[1]} />
       );
       
       expect(getByLabelText('Email Address')).toBeInTheDocument();
@@ -51,7 +69,7 @@ describe('src/mui/form/items/state.jsx.input.tsx', () => {
       const mockInput = createMockInput('Password', 'password');
       
       const { container } = renderWithProviders(
-        <StateJsxInput def={mockInput} />
+        <StateJsxInput def={form.items[2]} />
       );
       
       const input = container.querySelector('input[type="password"]');
@@ -62,7 +80,7 @@ describe('src/mui/form/items/state.jsx.input.tsx', () => {
       const mockInput = createMockInput('Phone Number');
       
       const { getByPlaceholderText } = renderWithProviders(
-        <StateJsxInput def={mockInput} />
+        <StateJsxInput def={form.items[3]} />
       );
       
       expect(getByPlaceholderText('Enter phone number')).toBeInTheDocument();
@@ -75,7 +93,7 @@ describe('src/mui/form/items/state.jsx.input.tsx', () => {
       } as unknown as Record<string, unknown>;
       
       const { getByTestId } = renderWithProviders(
-        <StateJsxInput def={mockInput} />
+        <StateJsxInput def={form.items[4]} />
       );
       
       expect(getByTestId('input-field')).toBeDisabled();
