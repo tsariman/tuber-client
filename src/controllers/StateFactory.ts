@@ -1,29 +1,29 @@
-import { type RootState, get_state } from '../state';
+import { type RootState, get_state } from '../state'
 
 // Import controller classes
-import StateApp from './StateApp';
-import StateAppbarDefault from './templates/StateAppbarDefault';
-import StateAppbarQueries from './StateAppbarQueries';
-import StateBackground from './StateBackground';
-import StateTypography from './StateTypography';
-import StateAllIcons from './StateAllIcons';
-import StateData from './StateData';
-import StateDialog from './StateDialog';
-import StateAllDialogs from './StateAllDialogs';
-import StateDrawer from './StateDrawer';
-import StateAllErrors from './StateAllErrors';
-import StateAllForms from './StateAllForms';
-import StateFormsData from './StateFormsData';
-import StateFormsDataErrors from './StateFormsDataErrors';
-import StateMeta from './StateMeta';
-import StateAllPages from './StateAllPages';
-import StatePagesData from './StatePagesData';
-import StateSnackbar from './StateSnackbar';
-import StateTmp from './StateTmp';
-import StateTopLevelLinks from './StateTopLevelLinks';
-import StateNet from './StateNet';
-import StatePathnames from './StatePathnames';
-import State from './State';
+import StateApp from './StateApp'
+import StateAppbarDefault from './templates/StateAppbarDefault'
+import StateAppbarQueries from './StateAppbarQueries'
+import StateBackground from './StateBackground'
+import StateTypography from './StateTypography'
+import StateAllIcons from './StateAllIcons'
+import StateData from './StateData'
+import StateDialog from './StateDialog'
+import StateAllDialogs from './StateAllDialogs'
+import StateDrawer from './StateDrawer'
+import StateAllErrors from './StateAllErrors'
+import StateAllForms from './StateAllForms'
+import StateFormsData from './StateFormsData'
+import StateFormsDataErrors from './StateFormsDataErrors'
+import StateMeta from './StateMeta'
+import StateAllPages from './StateAllPages'
+import StatePagesData from './StatePagesData'
+import StateSnackbar from './StateSnackbar'
+import StateTmp from './StateTmp'
+import StateTopLevelLinks from './StateTopLevelLinks'
+import StateNet from './StateNet'
+import StatePathnames from './StatePathnames'
+import State from './State'
 
 /**
  * Factory for creating state controller instances.
@@ -31,107 +31,110 @@ import State from './State';
  * and injecting the parent state instance via constructor.
  */
 export default class StateFactory {
-  private __rootState?: RootState;
-  private __parent?: State;
-  private get _rootState() {
-    return this.__rootState || (this.__rootState = get_state());
+  private static __rootState?: RootState
+  private static __parent?: State
+  
+  private static get _rootState() {
+    return StateFactory.__rootState || (StateFactory.__rootState = get_state())
   }
-  private get _parent() {
-    return this.__parent || (this.__parent = new State(this._rootState));
+  
+  private static get _parent() {
+    return StateFactory.__parent || (StateFactory.__parent = new State(StateFactory._rootState))
   }
-  get parent() { return this._parent };
+  
+  static get parent() { return StateFactory._parent }
 
-  createStateApp(): StateApp {
-    return new StateApp(this._rootState.app, this._parent);
+  static createStateApp(): StateApp {
+    return new StateApp(StateFactory._rootState.app, StateFactory._parent)
   }
 
-  createStateAppbarDefault(): StateAppbarDefault {
-    return new StateAppbarDefault(this._rootState.appbar, this._parent);
+  static createStateAppbarDefault(): StateAppbarDefault {
+    return new StateAppbarDefault(StateFactory._rootState.appbar, StateFactory._parent)
   }
 
-  createStateAppbarQueries(): StateAppbarQueries {
+  static createStateAppbarQueries(): StateAppbarQueries {
     return new StateAppbarQueries(
-      this._rootState.appbarQueries,
-      this._parent
-    );
+      StateFactory._rootState.appbarQueries,
+      StateFactory._parent
+    )
   }
 
-  createStateBackground(): StateBackground {
-    return new StateBackground(this._rootState.background, this._parent);
+  static createStateBackground(): StateBackground {
+    return new StateBackground(StateFactory._rootState.background, StateFactory._parent)
   }
 
-  createStateTypography(): StateTypography {
-    return new StateTypography(this._rootState.typography, this._parent);
+  static createStateTypography(): StateTypography {
+    return new StateTypography(StateFactory._rootState.typography, StateFactory._parent)
   }
 
-  createStateAllIcons(): StateAllIcons {
-    return new StateAllIcons(this._rootState.icons, this._parent);
+  static createStateAllIcons(): StateAllIcons {
+    return new StateAllIcons(StateFactory._rootState.icons, StateFactory._parent)
   }
 
-  createStateData(): StateData {
-    return new StateData(this._rootState.data, this._parent);
+  static createStateData(): StateData {
+    return new StateData(StateFactory._rootState.data, StateFactory._parent)
   }
 
-  createStateDialog(): StateDialog {
-    return new StateDialog(this._rootState.dialog, this._parent);
+  static createStateDialog(): StateDialog {
+    return new StateDialog(StateFactory._rootState.dialog, StateFactory._parent)
   }
 
-  createStateAllDialogs(): StateAllDialogs {
-    return new StateAllDialogs(this._rootState.dialogs, this._parent);
+  static createStateAllDialogs(): StateAllDialogs {
+    return new StateAllDialogs(StateFactory._rootState.dialogs, StateFactory._parent)
   }
 
-  createStateDrawer<T>(): StateDrawer<T> {
-    return new StateDrawer(this._rootState.drawer, this._parent as T);
+  static createStateDrawer<T>(): StateDrawer<T> {
+    return new StateDrawer(StateFactory._rootState.drawer, StateFactory._parent as T)
   }
 
-  createStateAllErrors(): StateAllErrors {
-    return new StateAllErrors(this._rootState.errors, this._parent);
+  static createStateAllErrors(): StateAllErrors {
+    return new StateAllErrors(StateFactory._rootState.errors, StateFactory._parent)
   }
 
-  createStateAllForms(): StateAllForms {
-    return new StateAllForms(this._rootState.forms, this._parent);
+  static createStateAllForms(): StateAllForms {
+    return new StateAllForms(StateFactory._rootState.forms, StateFactory._parent)
   }
 
-  createStateFormsData(): StateFormsData {
-    return new StateFormsData(this._rootState.formsData, this._parent);
+  static createStateFormsData(): StateFormsData {
+    return new StateFormsData(StateFactory._rootState.formsData, StateFactory._parent)
   }
 
-  createStateFormsDataErrors(): StateFormsDataErrors {
+  static createStateFormsDataErrors(): StateFormsDataErrors {
     return new StateFormsDataErrors(
-      this._rootState.formsDataErrors,
-      this._parent
-    );
+      StateFactory._rootState.formsDataErrors,
+      StateFactory._parent
+    )
   }
 
-  createStateMeta(): StateMeta {
-    return new StateMeta(this._rootState.meta, this._parent);
+  static createStateMeta(): StateMeta {
+    return new StateMeta(StateFactory._rootState.meta, StateFactory._parent)
   }
 
-  createStateAllPages(): StateAllPages {
-    return new StateAllPages(this._rootState.pages, this._parent);
+  static createStateAllPages(): StateAllPages {
+    return new StateAllPages(StateFactory._rootState.pages, StateFactory._parent)
   }
 
-  createStatePagesData(): StatePagesData {
-    return new StatePagesData(this._rootState.pagesData, this._parent);
+  static createStatePagesData(): StatePagesData {
+    return new StatePagesData(StateFactory._rootState.pagesData, StateFactory._parent)
   }
 
-  createStateSnackbar(): StateSnackbar {
-    return new StateSnackbar(this._rootState.snackbar, this._parent);
+  static createStateSnackbar(): StateSnackbar {
+    return new StateSnackbar(StateFactory._rootState.snackbar, StateFactory._parent)
   }
 
-  createStateTmp(): StateTmp {
-    return new StateTmp(this._rootState.tmp, this._parent);
+  static createStateTmp(): StateTmp {
+    return new StateTmp(StateFactory._rootState.tmp, StateFactory._parent)
   }
 
-  createStateTopLevelLinks(): StateTopLevelLinks {
-    return new StateTopLevelLinks(this._rootState.topLevelLinks, this._parent);
+  static createStateTopLevelLinks(): StateTopLevelLinks {
+    return new StateTopLevelLinks(StateFactory._rootState.topLevelLinks, StateFactory._parent)
   }
 
-  createStateNet(): StateNet {
-    return new StateNet(this._rootState.net);
+  static createStateNet(): StateNet {
+    return new StateNet(StateFactory._rootState.net)
   }
 
-  createStatePathnames(): StatePathnames {
-    return new StatePathnames(this._rootState.pathnames);
+  static createStatePathnames(): StatePathnames {
+    return new StatePathnames(StateFactory._rootState.pathnames)
   }
 }

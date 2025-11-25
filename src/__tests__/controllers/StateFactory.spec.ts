@@ -167,7 +167,6 @@ vi.mock('../../controllers/State', () => ({
 
 describe('StateFactory', () => {
   let mockRootState: RootState;
-  let stateFactory: StateFactory;
   let mockGetState: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {
@@ -179,183 +178,181 @@ describe('StateFactory', () => {
     mockGetState = stateMocks.get_state;
     mockGetState.mockReturnValue(mockRootState);
     
-    stateFactory = new StateFactory();
+    // Reset static state between tests
+    StateFactory['__rootState'] = undefined;
+    StateFactory['__parent'] = undefined;
   });
 
-  describe('constructor and initialization', () => {
-    it('should create StateFactory instance', () => {
-      expect(stateFactory).toBeInstanceOf(StateFactory);
-    });
-
+  describe('static initialization', () => {
     it('should lazy-load root state from get_state', () => {
       // Access private _rootState getter to trigger get_state call
-      const rootState = stateFactory['_rootState'];
+      const rootState = StateFactory['_rootState'];
       expect(mockGetState).toHaveBeenCalledOnce();
       expect(rootState).toBe(mockRootState);
     });
 
     it('should lazy-load parent State instance', () => {
-      const parent = stateFactory['_parent'];
+      const parent = StateFactory['_parent'];
       expect(parent).toBeDefined();
       expect(parent.state).toBe(mockRootState);
     });
 
     it('should expose parent getter', () => {
-      const parent = stateFactory.parent;
+      const parent = StateFactory.parent;
       expect(parent).toBeDefined();
     });
   });
 
   describe('controller factory methods', () => {
     it('should create StateApp controller', () => {
-      const stateApp = stateFactory.createStateApp();
+      const stateApp = StateFactory.createStateApp();
       expect(stateApp).toBeDefined();
       expect(stateApp.state).toBe(mockRootState.app);
-      expect(stateApp.parent).toBe(stateFactory['_parent']);
+      expect(stateApp.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateAppbarDefault controller', () => {
-      const stateAppbar = stateFactory.createStateAppbarDefault();
+      const stateAppbar = StateFactory.createStateAppbarDefault();
       expect(stateAppbar).toBeDefined();
       expect(stateAppbar.state).toBe(mockRootState.appbar);
-      expect(stateAppbar.parent).toBe(stateFactory['_parent']);
+      expect(stateAppbar.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateAppbarQueries controller', () => {
-      const stateAppbarQueries = stateFactory.createStateAppbarQueries();
+      const stateAppbarQueries = StateFactory.createStateAppbarQueries();
       expect(stateAppbarQueries).toBeDefined();
       expect(stateAppbarQueries.state).toBe(mockRootState.appbarQueries);
-      expect(stateAppbarQueries.parent).toBe(stateFactory['_parent']);
+      expect(stateAppbarQueries.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateBackground controller', () => {
-      const stateBackground = stateFactory.createStateBackground();
+      const stateBackground = StateFactory.createStateBackground();
       expect(stateBackground).toBeDefined();
       expect(stateBackground.state).toBe(mockRootState.background);
-      expect(stateBackground.parent).toBe(stateFactory['_parent']);
+      expect(stateBackground.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateTypography controller', () => {
-      const stateTypography = stateFactory.createStateTypography();
+      const stateTypography = StateFactory.createStateTypography();
       expect(stateTypography).toBeDefined();
       expect(stateTypography.state).toBe(mockRootState.typography);
-      expect(stateTypography.parent).toBe(stateFactory['_parent']);
+      expect(stateTypography.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateAllIcons controller', () => {
-      const stateAllIcons = stateFactory.createStateAllIcons();
+      const stateAllIcons = StateFactory.createStateAllIcons();
       expect(stateAllIcons).toBeDefined();
       expect(stateAllIcons.state).toBe(mockRootState.icons);
-      expect(stateAllIcons.parent).toBe(stateFactory['_parent']);
+      expect(stateAllIcons.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateData controller', () => {
-      const stateData = stateFactory.createStateData();
+      const stateData = StateFactory.createStateData();
       expect(stateData).toBeDefined();
       expect(stateData.state).toBe(mockRootState.data);
-      expect(stateData.parent).toBe(stateFactory['_parent']);
+      expect(stateData.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateDialog controller', () => {
-      const stateDialog = stateFactory.createStateDialog();
+      const stateDialog = StateFactory.createStateDialog();
       expect(stateDialog).toBeDefined();
       expect(stateDialog.state).toBe(mockRootState.dialog);
-      expect(stateDialog.parent).toBe(stateFactory['_parent']);
+      expect(stateDialog.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateAllDialogs controller', () => {
-      const stateAllDialogs = stateFactory.createStateAllDialogs();
+      const stateAllDialogs = StateFactory.createStateAllDialogs();
       expect(stateAllDialogs).toBeDefined();
       expect(stateAllDialogs.state).toBe(mockRootState.dialogs);
-      expect(stateAllDialogs.parent).toBe(stateFactory['_parent']);
+      expect(stateAllDialogs.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateDrawer controller', () => {
-      const stateDrawer = stateFactory.createStateDrawer();
+      const stateDrawer = StateFactory.createStateDrawer();
       expect(stateDrawer).toBeDefined();
       expect(stateDrawer.state).toBe(mockRootState.drawer);
-      expect(stateDrawer.parent).toBe(stateFactory['_parent']);
+      expect(stateDrawer.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateAllErrors controller', () => {
-      const stateAllErrors = stateFactory.createStateAllErrors();
+      const stateAllErrors = StateFactory.createStateAllErrors();
       expect(stateAllErrors).toBeDefined();
       expect(stateAllErrors.state).toBe(mockRootState.errors);
-      expect(stateAllErrors.parent).toBe(stateFactory['_parent']);
+      expect(stateAllErrors.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateAllForms controller', () => {
-      const stateAllForms = stateFactory.createStateAllForms();
+      const stateAllForms = StateFactory.createStateAllForms();
       expect(stateAllForms).toBeDefined();
       expect(stateAllForms.state).toBe(mockRootState.forms);
-      expect(stateAllForms.parent).toBe(stateFactory['_parent']);
+      expect(stateAllForms.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateFormsData controller', () => {
-      const stateFormsData = stateFactory.createStateFormsData();
+      const stateFormsData = StateFactory.createStateFormsData();
       expect(stateFormsData).toBeDefined();
       expect(stateFormsData.state).toBe(mockRootState.formsData);
-      expect(stateFormsData.parent).toBe(stateFactory['_parent']);
+      expect(stateFormsData.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateFormsDataErrors controller', () => {
-      const stateFormsDataErrors = stateFactory.createStateFormsDataErrors();
+      const stateFormsDataErrors = StateFactory.createStateFormsDataErrors();
       expect(stateFormsDataErrors).toBeDefined();
       expect(stateFormsDataErrors.state).toBe(mockRootState.formsDataErrors);
-      expect(stateFormsDataErrors.parent).toBe(stateFactory['_parent']);
+      expect(stateFormsDataErrors.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateMeta controller', () => {
-      const stateMeta = stateFactory.createStateMeta();
+      const stateMeta = StateFactory.createStateMeta();
       expect(stateMeta).toBeDefined();
       expect(stateMeta.state).toBe(mockRootState.meta);
-      expect(stateMeta.parent).toBe(stateFactory['_parent']);
+      expect(stateMeta.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateAllPages controller', () => {
-      const stateAllPages = stateFactory.createStateAllPages();
+      const stateAllPages = StateFactory.createStateAllPages();
       expect(stateAllPages).toBeDefined();
       expect(stateAllPages.state).toBe(mockRootState.pages);
-      expect(stateAllPages.parent).toBe(stateFactory['_parent']);
+      expect(stateAllPages.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StatePagesData controller', () => {
-      const statePagesData = stateFactory.createStatePagesData();
+      const statePagesData = StateFactory.createStatePagesData();
       expect(statePagesData).toBeDefined();
       expect(statePagesData.state).toBe(mockRootState.pagesData);
-      expect(statePagesData.parent).toBe(stateFactory['_parent']);
+      expect(statePagesData.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateSnackbar controller', () => {
-      const stateSnackbar = stateFactory.createStateSnackbar();
+      const stateSnackbar = StateFactory.createStateSnackbar();
       expect(stateSnackbar).toBeDefined();
       expect(stateSnackbar.state).toBe(mockRootState.snackbar);
-      expect(stateSnackbar.parent).toBe(stateFactory['_parent']);
+      expect(stateSnackbar.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateTmp controller', () => {
-      const stateTmp = stateFactory.createStateTmp();
+      const stateTmp = StateFactory.createStateTmp();
       expect(stateTmp).toBeDefined();
       expect(stateTmp.state).toBe(mockRootState.tmp);
-      expect(stateTmp.parent).toBe(stateFactory['_parent']);
+      expect(stateTmp.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateTopLevelLinks controller', () => {
-      const stateTopLevelLinks = stateFactory.createStateTopLevelLinks();
+      const stateTopLevelLinks = StateFactory.createStateTopLevelLinks();
       expect(stateTopLevelLinks).toBeDefined();
       expect(stateTopLevelLinks.state).toBe(mockRootState.topLevelLinks);
-      expect(stateTopLevelLinks.parent).toBe(stateFactory['_parent']);
+      expect(stateTopLevelLinks.parent).toBe(StateFactory['_parent']);
     });
 
     it('should create StateNet controller (without parent)', () => {
-      const stateNet = stateFactory.createStateNet();
+      const stateNet = StateFactory.createStateNet();
       expect(stateNet).toBeDefined();
       expect(stateNet.state).toBe(mockRootState.net);
       // StateNet doesn't take a parent parameter
     });
 
     it('should create StatePathnames controller (without parent)', () => {
-      const statePathnames = stateFactory.createStatePathnames();
+      const statePathnames = StateFactory.createStatePathnames();
       expect(statePathnames).toBeDefined();
       expect(statePathnames.state).toBe(mockRootState.pathnames);
       // StatePathnames doesn't take a parent parameter
@@ -364,13 +361,13 @@ describe('StateFactory', () => {
 
   describe('dependency injection', () => {
     it('should inject the same parent State instance to all controllers', () => {
-      const stateApp = stateFactory.createStateApp();
-      const stateDialog = stateFactory.createStateDialog();
-      const stateBackground = stateFactory.createStateBackground();
+      const stateApp = StateFactory.createStateApp();
+      const stateDialog = StateFactory.createStateDialog();
+      const stateBackground = StateFactory.createStateBackground();
       
       expect(stateApp.parent).toBe(stateDialog.parent);
       expect(stateDialog.parent).toBe(stateBackground.parent);
-      expect(stateBackground.parent).toBe(stateFactory['_parent']);
+      expect(stateBackground.parent).toBe(StateFactory['_parent']);
     });
 
     it('should inject the correct state data to each controller', () => {
@@ -384,11 +381,13 @@ describe('StateFactory', () => {
       });
       
       mockGetState.mockReturnValue(customRootState);
-      const customFactory = new StateFactory();
+      // Reset static state to pick up the new mock
+      StateFactory['__rootState'] = undefined;
+      StateFactory['__parent'] = undefined;
       
-      const stateApp = customFactory.createStateApp();
-      const stateDialog = customFactory.createStateDialog();
-      const stateBackground = customFactory.createStateBackground();
+      const stateApp = StateFactory.createStateApp();
+      const stateDialog = StateFactory.createStateDialog();
+      const stateBackground = StateFactory.createStateBackground();
       
       expect(stateApp.state).toBe(customRootState.app);
       expect(stateDialog.state).toBe(customRootState.dialog);
@@ -399,24 +398,24 @@ describe('StateFactory', () => {
   describe('caching behavior', () => {
     it('should cache root state access', () => {
       // Access root state multiple times to test caching
-      void stateFactory['_rootState'];
-      void stateFactory['_rootState'];
-      void stateFactory['_rootState'];
+      void StateFactory['_rootState'];
+      void StateFactory['_rootState'];
+      void StateFactory['_rootState'];
       
       // get_state should only be called once due to caching
       expect(mockGetState).toHaveBeenCalledOnce();
     });
 
     it('should cache parent State instance', () => {
-      const parent1 = stateFactory['_parent'];
-      const parent2 = stateFactory['_parent'];
+      const parent1 = StateFactory['_parent'];
+      const parent2 = StateFactory['_parent'];
       
       expect(parent1).toBe(parent2);
     });
 
     it('should create new controller instances on each call', () => {
-      const stateApp1 = stateFactory.createStateApp();
-      const stateApp2 = stateFactory.createStateApp();
+      const stateApp1 = StateFactory.createStateApp();
+      const stateApp2 = StateFactory.createStateApp();
       
       expect(stateApp1).not.toBe(stateApp2);
       expect(stateApp1.state).toBe(stateApp2.state); // Same state data
@@ -426,7 +425,7 @@ describe('StateFactory', () => {
 
   describe('generic type support', () => {
     it('should support generic StateDrawer type parameter', () => {
-      const stateDrawer = stateFactory.createStateDrawer<string>();
+      const stateDrawer = StateFactory.createStateDrawer<string>();
       expect(stateDrawer).toBeDefined();
       expect(stateDrawer.state).toBe(mockRootState.drawer);
     });
@@ -436,11 +435,13 @@ describe('StateFactory', () => {
     it('should handle missing state properties gracefully', () => {
       const incompleteState = {} as RootState;
       mockGetState.mockReturnValue(incompleteState);
-      const errorFactory = new StateFactory();
+      // Reset static state to pick up the new mock
+      StateFactory['__rootState'] = undefined;
+      StateFactory['__parent'] = undefined;
       
-      expect(() => errorFactory.createStateApp()).not.toThrow();
-      expect(() => errorFactory.createStateDialog()).not.toThrow();
-      expect(() => errorFactory.createStateBackground()).not.toThrow();
+      expect(() => StateFactory.createStateApp()).not.toThrow();
+      expect(() => StateFactory.createStateDialog()).not.toThrow();
+      expect(() => StateFactory.createStateBackground()).not.toThrow();
     });
   });
 
@@ -449,25 +450,25 @@ describe('StateFactory', () => {
       // This test demonstrates that StateFactory can create controllers
       // without each controller needing to import the others
       const controllers = [
-        stateFactory.createStateApp(),
-        stateFactory.createStateDialog(),
-        stateFactory.createStateBackground(),
-        stateFactory.createStateTypography(),
+        StateFactory.createStateApp(),
+        StateFactory.createStateDialog(),
+        StateFactory.createStateBackground(),
+        StateFactory.createStateTypography(),
       ];
       
       controllers.forEach(controller => {
         expect(controller).toBeDefined();
-        expect(controller.parent).toBe(stateFactory['_parent']);
+        expect(controller.parent).toBe(StateFactory['_parent']);
       });
     });
 
     it('should provide consistent state and parent injection', () => {
       // All controllers should receive the same state data and parent reference
       const controllers = [
-        stateFactory.createStateApp(),
-        stateFactory.createStateAllForms(),
-        stateFactory.createStateAllPages(),
-        stateFactory.createStateMeta(),
+        StateFactory.createStateApp(),
+        StateFactory.createStateAllForms(),
+        StateFactory.createStateAllPages(),
+        StateFactory.createStateMeta(),
       ];
       
       const parentInstances = controllers.map(c => c.parent);
