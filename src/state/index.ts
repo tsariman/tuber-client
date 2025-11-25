@@ -46,7 +46,6 @@ import {
 } from '@tuber/shared'
 import type { IState, TNetState } from '../localized/interfaces'
 import Config from '../config'
-import { error_id } from '../business.logic/errors'
 import initialState from './initial.state'
 import { clear_last_content_jsx } from '../business.logic/cache'
 import { err } from '../business.logic/logging'
@@ -147,7 +146,12 @@ const net_patch_state_reducer = <T=unknown>($oldState: unknown, $fragment: unkno
       }
     }
   } catch (e) {
-    error_id(27).remember_exception(e) // error 27
+    dispatch(errorsActions.errorsAdd({ // error 27
+      id: '27', 
+      code: 'EXCEPTION',
+      title: (e as Error).message,
+      detail: (e as Error).stack,
+    }));
     err((e as Error).stack ?? '')
   }
   return state as T
@@ -292,19 +296,6 @@ export type TReduxNetCallback<T=unknown> = (
 export const get_drawer_width = (): number => {
   return store.getState().drawer.width
     ?? DRAWER_DEFAULT_WIDTH
-}
-
-/** Get the bootstrap key from meta tag. */
-export function get_bootstrap_key(): string {
-  const savedKey = Config.read('bootstrap_key', '')
-  if (savedKey) { return savedKey }
-  const meta = document.querySelector('meta[name="bootstrap"]')
-  const key = (meta as HTMLMetaElement)?.content
-  if (key) {
-    Config.set('bootstrap_key', key)
-    return key
-  }
-  return ''
 }
 
 /**

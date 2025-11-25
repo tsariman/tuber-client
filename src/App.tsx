@@ -1,11 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  type AppDispatch,
-  type RootState,
-  get_bootstrap_key,
-  initialize
-} from './state'
+import { type AppDispatch, type RootState, initialize } from './state'
 import { post_req_state } from './state/net.actions'
 import Config from './config'
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material'
@@ -16,7 +11,7 @@ import {
   THEME_DEFAULT_MODE,
   THEME_MODE
 } from '@tuber/shared'
-import { get_cookie } from './business.logic/parsing'
+import { get_bootstrap_key, get_cookie } from './business.logic/parsing'
 import StateAllPages from './controllers/StateAllPages'
 import StateApp from './controllers/StateApp'
 
@@ -38,7 +33,7 @@ export default function App() {
       if (!key) { return }
       const bootstrapAttempts = Config.read<number>(BOOTSTRAP_ATTEMPTS, 0)
       if (bootstrapAttempts < ALLOWED_ATTEMPTS) {
-        dispatch(post_req_state(key, {}))
+        dispatch(post_req_state(`state/${key}`, {}))
         Config.write(BOOTSTRAP_ATTEMPTS, bootstrapAttempts + 1)
       }
     }

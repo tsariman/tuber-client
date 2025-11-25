@@ -1,6 +1,6 @@
-import { get_head_meta_content } from '../business.logic/parsing';
-import { orange } from '@mui/material/colors';
-import type { IState } from '../localized/interfaces';
+import { get_head_meta_content } from '../business.logic/parsing'
+import { orange } from '@mui/material/colors'
+import type { IState } from '../localized/interfaces'
 
 /**
  * Get global variable value.
@@ -14,23 +14,28 @@ import type { IState } from '../localized/interfaces';
  */
 const _get_global_var = <T=unknown>(varName: string): T => {
   try {
-    return window[varName] as T;
+    return window[varName] as T
   } catch (e) {
-    void e;
-    const message = `Global variable "${varName}" does not exist.`;
-    console.error(message);
+    void e
+    const message = `Global variable "${varName}" does not exist.`
+    console.error(message)
   }
-  return { } as T;
+  return { } as T
 }
 
 /** Allows you to rename global variables to prevent conflicts. */
-const GLOBAL_PREFIX = get_head_meta_content('web-ui');
+const GLOBAL_PREFIX = get_head_meta_content('web-ui')
 
 /**
  * Default background color
  * History: `#af74b0`
  */
-export const DEFAULT_BACKGROUND_COLOR = '#72A0C1';
+export const DEFAULT_BACKGROUND_COLOR = '#72A0C1'
+
+/** Bootstrap key */
+const key = (
+  document.querySelector('meta[name="bootstrap"]') as HTMLMetaElement
+)?.content ?? ''
 
 /**
  * Raw data obtained from the server will be stored in this object as arrays.
@@ -461,9 +466,9 @@ export default {
    * not available. The app will attempt to load it from the server.
    */
   'pathnames': {
-    'dialogs': 'state/dialogs',
-    'forms': 'state/forms',
-    'pages': 'state/pages',
+    'dialogs': `state/${key}/dialogs`,
+    'forms': `state/${key}/forms`,
+    'pages': `state/${key}/pages`,
     ..._get_global_var(`${GLOBAL_PREFIX}Pathnames`)
   },
 
@@ -472,4 +477,4 @@ export default {
 
   /** Bootstrap prefix/key for app initialization */
   'bootstrapPrefix': '',
-} as IState;
+} as IState

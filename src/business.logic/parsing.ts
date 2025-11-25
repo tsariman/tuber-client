@@ -10,9 +10,10 @@
 import {
   APP_CONTENT_VIEW,
   DEFAULT_LANDING_PAGE_VIEW,
-} from '@tuber/shared';
-import type { IStatePageContent } from '@tuber/shared';
-import { ler } from './logging';
+} from '@tuber/shared'
+import type { IStatePageContent } from '@tuber/shared'
+import { ler } from './logging'
+import Config from 'src/config'
 
 /**
  * Parses the definition string found in `PageState.content` and
@@ -30,27 +31,27 @@ import { ler } from './logging';
  */
 export function get_parsed_content(content?: unknown): IStatePageContent {
   if (typeof content !== 'string') {
-    throw new Error('Content is not a string.');
+    throw new Error('Content is not a string.')
   }
-  const options = content.replace(/\s+/g, '').split(':');
+  const options = content.replace(/\s+/g, '').split(':')
   if (options.length <= 1) {
-    ler('get_parsed_page_content: Invalid or missing `page` content definition');
+    ler('get_parsed_page_content: Invalid or missing `page` content definition')
     return {
       type: APP_CONTENT_VIEW,
       name: DEFAULT_LANDING_PAGE_VIEW
-    };
+    }
   }
   const contentObj: IStatePageContent = {
     type: options[0],
     name: options[1]
-  };
+  }
   if (options.length >= 3) {
-    contentObj.endpoint = options[2];
+    contentObj.endpoint = options[2]
   }
   if (options.length >= 4) {
-    contentObj.args = options[3];
+    contentObj.args = options[3]
   }
-  return contentObj;
+  return contentObj
 }
 
 /**
@@ -59,15 +60,15 @@ export function get_parsed_content(content?: unknown): IStatePageContent {
  * @returns An object containing all cookie key-value pairs
  */
 export function parse_cookies() {
-  const cookies = {} as Record<string, string>;
-  const pairs = document.cookie.split(';');
+  const cookies = {} as Record<string, string>
+  const pairs = document.cookie.split(';')
 
   pairs.forEach(pair => {
-    const [key, value] = pair.split('=').map(s => s.trim());
-    cookies[key] = value;
+    const [key, value] = pair.split('=').map(s => s.trim())
+    cookies[key] = value
   })
 
-  return cookies;
+  return cookies
 }
 
 /**
@@ -77,9 +78,9 @@ export function parse_cookies() {
  * @returns The cookie value as the specified type, or empty string if not found
  */
 export function get_cookie<T=string>(name: string): T {
-  const cookies = parse_cookies();
-  const cookie = cookies[name] ?? '';
-  return cookie as unknown as T;
+  const cookies = parse_cookies()
+  const cookie = cookies[name] ?? ''
+  return cookie as unknown as T
 }
 
 /**
@@ -93,17 +94,17 @@ export function get_cookie<T=string>(name: string): T {
  * @deprecated Not in use
  */
 export function set_url_query_val(url: string, param: string, val?: string) {
-  const urlObj = new URL(url);
-  const query = new URLSearchParams(urlObj.searchParams);
-  const { origin, pathname } = urlObj;
+  const urlObj = new URL(url)
+  const query = new URLSearchParams(urlObj.searchParams)
+  const { origin, pathname } = urlObj
   if (typeof val === 'undefined') {
-    query.delete(param);
-    const newUrl = `${origin}${pathname}?${query.toString()}`;
-    return newUrl;
+    query.delete(param)
+    const newUrl = `${origin}${pathname}?${query.toString()}`
+    return newUrl
   }
   query.set(param, val.toString())
-  const newUrl = `${origin}${pathname}?${query.toString()}`;
-  return newUrl;
+  const newUrl = `${origin}${pathname}?${query.toString()}`
+  return newUrl
 }
 
 /**
@@ -115,30 +116,43 @@ export function set_url_query_val(url: string, param: string, val?: string) {
  */
 export function set_val(obj: object, path: string, val: unknown): void {
   if (!obj || typeof obj !== 'object') {
-    throw new Error('set_val: obj must be an object');
+    throw new Error('set_val: obj must be an object')
   }
   if (!path || typeof path !== 'string') {
-    throw new Error('set_val: path must be a non-empty string');
+    throw new Error('set_val: path must be a non-empty string')
   }
 
-  const propArray = path.split('.');
-  let current = obj as Record<string, unknown>;
+  const propArray = path.split('.')
+  let current = obj as Record<string, unknown>
 
   // Navigate to the parent of the target property
   for (let i = 0; i < propArray.length - 1; i++) {
-    const prop = propArray[i];
+    const prop = propArray[i]
     
     // If property doesn't exist or isn't an object, create it
     if (!current[prop] || typeof current[prop] !== 'object' || Array.isArray(current[prop])) {
-      current[prop] = {};
+      current[prop] = {}
     }
     
-    current = current[prop] as Record<string, unknown>;
+    current = current[prop] as Record<string, unknown>
   }
 
   // Set the final property
-  const finalProp = propArray[propArray.length - 1];
-  current[finalProp] = val;
+  const finalProp = propArray[propArray.length - 1]
+  current[finalProp] = val
+}
+
+/** Get the bootstrap key from meta tag. */
+export function get_bootstrap_key(): string {
+  const savedKey = Config.read('bootstrap_key', '')
+  if (savedKey) { return savedKey }
+  const meta = document.querySelector('meta[name="bootstrap"]')
+  const key = (meta as HTMLMetaElement)?.content
+  if (key) {
+    Config.set('bootstrap_key', key)
+    return key
+  }
+  return ''
 }
 
 /**
@@ -149,9 +163,9 @@ export function set_val(obj: object, path: string, val: unknown): void {
  * @returns The content of the meta tag or the default value
  */
 export function get_head_meta_content(name: string, $default = 'app'): string {
-  const element = document.querySelector(`meta[name="${name}"]`);
-  const meta = element as HTMLMetaElement | null;
-  return meta && meta.content ? meta.content : $default;
+  const element = document.querySelector(`meta[name="${name}"]`)
+  const meta = element as HTMLMetaElement | null
+  return meta && meta.content ? meta.content : $default
 }
 
 /**
@@ -161,8 +175,8 @@ export function get_head_meta_content(name: string, $default = 'app'): string {
  * @returns The base route (e.g., "users")
  */
 export function get_base_route(templateRoute?: string): string {
-  if (!templateRoute) return '';
-  return templateRoute.replace(/^\/|\/$/g, '').split('/')[0];
+  if (!templateRoute) return ''
+  return templateRoute.replace(/^\/|\/$/g, '').split('/')[0]
 }
 
 /**
@@ -173,9 +187,9 @@ export function get_base_route(templateRoute?: string): string {
  */
 export function get_origin_ending_fixed(origin?: string): string {
   if (origin) {
-    return origin.slice(-1) === '/' ? origin : origin + '/';
+    return origin.slice(-1) === '/' ? origin : origin + '/'
   }
-  return window.location.origin + '/';
+  return window.location.origin + '/'
 }
 
 /**
@@ -186,9 +200,9 @@ export function get_origin_ending_fixed(origin?: string): string {
  */
 export function clean_endpoint_ending(endpoint?: string): string {
   if (endpoint) {
-    return endpoint.slice(-1) === '/' ? endpoint.slice(0, -1) : endpoint;
+    return endpoint.slice(-1) === '/' ? endpoint.slice(0, -1) : endpoint
   }
-  return '';
+  return ''
 }
 
 /**
@@ -199,9 +213,9 @@ export function clean_endpoint_ending(endpoint?: string): string {
  */
 export function get_query_starting_fixed(query?: string): string {
   if (query) {
-    return query.charAt(0) === '?' ? query : '?' + query;
+    return query.charAt(0) === '?' ? query : '?' + query
   }
-  return '';
+  return ''
 }
 
 /**
@@ -211,16 +225,16 @@ export function get_query_starting_fixed(query?: string): string {
  * @returns An object containing all query parameter key-value pairs
  */
 export function get_query_values(url: string): { [key: string]: string } {
-  const query = url.split('?')[1];
-  if (!query) return {};
-  const values: { [key: string]: string } = {};
-  const pairs = query.split('&');
+  const query = url.split('?')[1]
+  if (!query) return {}
+  const values: { [key: string]: string } = {}
+  const pairs = query.split('&')
   for (let i = 0; i < pairs.length; i++) {
-    const pair = pairs[i];
-    const [k, v] = pair.split('=');
-    values[k] = v;
+    const pair = pairs[i]
+    const [k, v] = pair.split('=')
+    values[k] = v
   }
-  return values;
+  return values
 }
 
 /**
@@ -230,7 +244,7 @@ export function get_query_values(url: string): { [key: string]: string } {
  * @returns string
  */
 export function get_state_form_name(name: string): string {
-  return name.slice(-4) === 'Form' ? name : name + 'Form';
+  return name.slice(-4) === 'Form' ? name : name + 'Form'
 }
 
 /**
@@ -242,7 +256,7 @@ export function get_state_form_name(name: string): string {
  * @deprecated Not in use
  */
 export function get_state_dialog_name(name: string): string {
-  return name.slice(-6) === 'Dialog' ? name : name + 'Dialog';
+  return name.slice(-6) === 'Dialog' ? name : name + 'Dialog'
 }
 
 /**
@@ -252,16 +266,16 @@ export function get_state_dialog_name(name: string): string {
  * @returns The string with leading and trailing slashes removed
  */
 export function trim_slashes(str: string): string {
-  let s = str;
+  let s = str
   while(s.charAt(0) === '/' || s.charAt(0) === '\\')
   {
-    s = s.substring(1);
+    s = s.substring(1)
   }
   while (s.charAt(s.length - 1) === '/' || s.charAt(s.length - 1) === '\\')
   {
-    s = s.substring(0, s.length - 1);
+    s = s.substring(0, s.length - 1)
   }
-  return s;
+  return s
 }
 
 /**
@@ -275,14 +289,14 @@ export function trim_slashes(str: string): string {
  * @returns The extracted endpoint (last segment of the path)
  */
 export function get_endpoint(pathname: string): string {
-  let pname = trim_slashes(pathname);
-  const argsIndex = pathname.indexOf('?');
+  let pname = trim_slashes(pathname)
+  const argsIndex = pathname.indexOf('?')
   if (argsIndex >= 0) {
-    pname = pathname.substring(0, argsIndex);
+    pname = pathname.substring(0, argsIndex)
   }
-  const params = pname.split(/\/|\\/);
+  const params = pname.split(/\/|\\/)
 
-  return params[params.length - 1];
+  return params[params.length - 1]
 }
 
 /**
@@ -292,5 +306,5 @@ export function get_endpoint(pathname: string): string {
  * @returns The camelCase version of the endpoint
  */
 export function camelize(endpoint: string): string {
-  return endpoint.replace(/-([a-zA-Z])/g, g => g[1].toUpperCase());
+  return endpoint.replace(/-([a-zA-Z])/g, g => g[1].toUpperCase())
 }
