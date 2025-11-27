@@ -6,7 +6,7 @@ import type {
   TypographyProps
 } from '@mui/material';
 import type { TObj } from '@tuber/shared';
-import type { IStateAppbar } from '../../localized/interfaces';
+import type { IStateAppbar } from '../../interfaces/localized';
 import type State from '../State';
 import StateAppbar from '../StateAppbar';
 import StateAppbarBackground from './StateAppbarBackground';

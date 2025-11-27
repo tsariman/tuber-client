@@ -45,7 +45,6 @@ describe('StateFormItem', () => {
       label: 'Test Field',
       disabled: false,
       props: { placeholder: 'Enter text' },
-      theme: { marginTop: '10px' },
       has: {
         color: 'primary',
         content: 'test content',
@@ -94,9 +93,8 @@ describe('StateFormItem', () => {
       expect(formItem.href).toBeUndefined();
     });
 
-    it('should return correct props and theme', () => {
+    it('should return correct props', () => {
       expect(formItem.props).toEqual({ placeholder: 'Enter text' });
-      expect(formItem.theme).toEqual({ marginTop: '10px' });
     });
 
     it('should handle missing properties gracefully', () => {
@@ -548,10 +546,6 @@ describe('StateFormItem', () => {
         props: {
           variant: 'outlined',
           size: 'small'
-        },
-        theme: {
-          backgroundColor: '#f5f5f5',
-          borderRadius: '4px'
         },
         has: {
           color: 'secondary',

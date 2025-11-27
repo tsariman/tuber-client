@@ -25,9 +25,6 @@ class TestableAbstractState extends AbstractState {
     return {};
   }
 
-  get theme(): unknown {
-    return {};
-  }
 }
 
 // Additional mock for this specific test
@@ -62,9 +59,6 @@ describe('AbstractState', () => {
       expect(abstractState.props).toBeDefined();
     });
 
-    it('should have theme property', () => {
-      expect(abstractState.theme).toBeDefined();
-    });
   });
 
   describe('die method', () => {

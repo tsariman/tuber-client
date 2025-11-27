@@ -1,6 +1,6 @@
 import { log } from '../../../business.logic/logging';
 import { error_id } from '../../../business.logic/errors';
-import type { IStateFormItem } from '../../../localized/interfaces';
+import type { IStateFormItem } from '../../../interfaces/localized';
 import { is_record } from '../../../business.logic/utility';
 import type { StateForm } from '../../../controllers';
 import type { TEventHandler, TObj } from '@tuber/shared';

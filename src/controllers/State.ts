@@ -1,68 +1,67 @@
-import type { IState } from '../localized/interfaces';
-import StateAllPages from './StateAllPages';
-import StateAllIcons from './StateAllIcons';
-import AbstractState from './AbstractState';
-import StateBackground from './StateBackground';
-import StateApp from './StateApp';
-import StateDrawer from './StateDrawer';
-import StateAllForms from './StateAllForms';
-import StateFormsData from './StateFormsData';
-import StateMeta from './StateMeta';
-import StateTypography from './StateTypography';
-import StateData from './StateData';
-import StateDialog from './StateDialog';
-import StateAllErrors from './StateAllErrors';
-import StateAllDialogs from './StateAllDialogs';
-import StatePagesData from './StatePagesData';
-import StateSnackbar from './StateSnackbar';
-import StateTmp from './StateTmp';
-import StateNet from './StateNet';
-import StateAppbarDefault from './templates/StateAppbarDefault';
-import StateAppbarQueries from './StateAppbarQueries';
-import StateTopLevelLinks from './StateTopLevelLinks';
-import StateFormsDataErrors from './StateFormsDataErrors';
-import StatePathnames from './StatePathnames';
-import type { ThemeOptions } from '@mui/material';
-import StateRegistry from './StateRegistry';
+import type { IState } from '../interfaces/localized'
+import StateAllPages from './StateAllPages'
+import StateAllIcons from './StateAllIcons'
+import AbstractState from './AbstractState'
+import StateBackground from './StateBackground'
+import StateApp from './StateApp'
+import StateDrawer from './StateDrawer'
+import StateAllForms from './StateAllForms'
+import StateFormsData from './StateFormsData'
+import StateMeta from './StateMeta'
+import StateTypography from './StateTypography'
+import StateData from './StateData'
+import StateDialog from './StateDialog'
+import StateAllErrors from './StateAllErrors'
+import StateAllDialogs from './StateAllDialogs'
+import StatePagesData from './StatePagesData'
+import StateSnackbar from './StateSnackbar'
+import StateTmp from './StateTmp'
+import StateNet from './StateNet'
+import StateAppbarDefault from './templates/StateAppbarDefault'
+import StateAppbarQueries from './StateAppbarQueries'
+import StateTopLevelLinks from './StateTopLevelLinks'
+import StateFormsDataErrors from './StateFormsDataErrors'
+import StatePathnames from './StatePathnames'
+import StateRegistry from './StateRegistry'
 
 export default class State extends AbstractState {
-  private _rootState: IState;
-  private _app?: StateApp;
-  private _appbar?: StateAppbarDefault;
-  private _appbarQueries?: StateAppbarQueries;
-  private _background?: StateBackground;
-  private _typography?: StateTypography;
-  private _allIcons?: StateAllIcons;
-  private _data?: StateData;
+  private _rootState: IState
+  private _app?: StateApp
+  private _appbar?: StateAppbarDefault
+  private _appbarQueries?: StateAppbarQueries
+  private _background?: StateBackground
+  private _typography?: StateTypography
+  private _allIcons?: StateAllIcons
+  private _data?: StateData
   // dataPagesRange
-  private _dialog?: StateDialog;
-  private _allDialogs?: StateAllDialogs;
-  private _drawer?: StateDrawer<this>;
-  private _allErrors?: StateAllErrors;
-  private _allForms?: StateAllForms;
-  private _formsData?: StateFormsData;
-  private _formsDataErrors?: StateFormsDataErrors;
-  private _meta?: StateMeta;
-  private _allPages?: StateAllPages;
-  private _pagesData?: StatePagesData;
+  private _dialog?: StateDialog
+  private _allDialogs?: StateAllDialogs
+  private _drawer?: StateDrawer<this>
+  private _allErrors?: StateAllErrors
+  private _allForms?: StateAllForms
+  private _formsData?: StateFormsData
+  private _formsDataErrors?: StateFormsDataErrors
+  private _meta?: StateMeta
+  private _allPages?: StateAllPages
+  private _pagesData?: StatePagesData
   // chips
-  private _snackbar?: StateSnackbar;
-  private _tmp?: StateTmp;
-  private _topLevelLinks?: StateTopLevelLinks;
+  private _snackbar?: StateSnackbar
+  private _tmp?: StateTmp
+  private _topLevelLinks?: StateTopLevelLinks
   // theme
-  private _net?: StateNet;
-  private _pathnames?: StatePathnames;
-  private _staticRegistry?: StateRegistry;
-  private _dynamicRegistry?: StateRegistry;
+  private _net?: StateNet
+  private _pathnames?: StatePathnames
+  private _staticRegistry?: StateRegistry
+  private _dynamicRegistry?: StateRegistry
 
   // State version tracking for automatic cache invalidation
-  private static _globalStateVersion = 0;
-  private _stateVersion: number;
+  private static _globalStateVersion = 0
+  private _stateVersion: number
 
   constructor(rootState: IState) {
-    super();
-    this._rootState = rootState;
-    this._stateVersion = State._globalStateVersion;
+    super()
+    this._rootState = rootState
+    this._stateVersion = State._globalStateVersion
   }
 
   /**
@@ -70,7 +69,7 @@ export default class State extends AbstractState {
    * Preferred method for creating State instances with updated root state data.
    */
   static fromRootState(rootState: IState): State {
-    return new State(rootState);
+    return new State(rootState)
   }
 
   /**
@@ -78,14 +77,14 @@ export default class State extends AbstractState {
    * Call this when you know the root state has changed significantly.
    */
   static incrementVersion(): void {
-    State._globalStateVersion++;
+    State._globalStateVersion++
   }
 
   /**
    * Check if this State instance has stale cache compared to global version.
    */
   private isStale(): boolean {
-    return this._stateVersion < State._globalStateVersion;
+    return this._stateVersion < State._globalStateVersion
   }
 
   /**
@@ -93,8 +92,8 @@ export default class State extends AbstractState {
    */
   private checkAndInvalidateIfStale(): void {
     if (this.isStale()) {
-      this.invalidateCache();
-      this._stateVersion = State._globalStateVersion;
+      this.invalidateCache()
+      this._stateVersion = State._globalStateVersion
     }
   }
 
@@ -102,37 +101,41 @@ export default class State extends AbstractState {
    * Get a copy of the (store) state.
    */
   get state(): IState {
-    this.checkAndInvalidateIfStale();
+    this.checkAndInvalidateIfStale()
     return this.die(
       `Access to the root state is NOT a good idea.`,
       this._rootState
-    );
+    )
   }
 
   /**
    * Chain-access to parent definition.
    */
   get parent(): null {
-    return this.die('Root state has no parent.', null);
+    return this.die('Root state has no parent.', null)
   }
 
   get props(): null {
     return this.die(
       'Root state props cannot be used for component spreading.',
       null
-    );
+    )
+  }
+
+  configure(conf: unknown): void {
+    void conf
   }
 
   /**
    * Chain-access to app definition.
    */
   get app(): StateApp {
-    this.checkAndInvalidateIfStale();
+    this.checkAndInvalidateIfStale()
     return this._app
       || (this._app = new StateApp(
           this._rootState.app,
           this
-        ));
+        ))
   }
 
   /**
@@ -143,7 +146,7 @@ export default class State extends AbstractState {
       || (this._appbar = new StateAppbarDefault(
           this._rootState.appbar,
           this
-        ));
+        ))
   }
 
   get appbarQueries(): StateAppbarQueries {
@@ -151,7 +154,7 @@ export default class State extends AbstractState {
       || (this._appbarQueries = new StateAppbarQueries(
             this._rootState.appbarQueries,
             this
-          ));
+          ))
   }
 
   /**
@@ -162,7 +165,7 @@ export default class State extends AbstractState {
       || (this._background = new StateBackground(
           this._rootState.background,
           this
-        ));
+        ))
   }
 
   get typography(): StateTypography {
@@ -170,7 +173,7 @@ export default class State extends AbstractState {
       || (this._typography = new StateTypography(
           this._rootState.typography,
           this
-        ));
+        ))
   }
 
   /**
@@ -181,17 +184,17 @@ export default class State extends AbstractState {
       || (this._allIcons = new StateAllIcons(
           this._rootState.icons,
           this
-        ));
+        ))
   }
 
-  get icons(): StateAllIcons { return this.allIcons; }
+  get icons(): StateAllIcons { return this.allIcons }
 
   get data(): StateData {
     return this._data
       || (this._data = new StateData(
         this._rootState.data,
         this
-      ));
+      ))
   }
 
   get dialog(): StateDialog {
@@ -199,7 +202,7 @@ export default class State extends AbstractState {
       || (this._dialog = new StateDialog(
           this._rootState.dialog,
           this
-        ));
+        ))
   }
 
   get allDialogs(): StateAllDialogs {
@@ -207,10 +210,10 @@ export default class State extends AbstractState {
       || (this._allDialogs = new StateAllDialogs(
           this._rootState.dialogs,
           this
-        ));
+        ))
   }
 
-  get dialogs(): StateAllDialogs { return this.allDialogs; }
+  get dialogs(): StateAllDialogs { return this.allDialogs }
 
   /**
    * Get the default drawer definition.
@@ -220,7 +223,7 @@ export default class State extends AbstractState {
       || (this._drawer = new StateDrawer(
           this._rootState.drawer,
           this
-        ));
+        ))
   }
 
   get allErrors(): StateAllErrors {
@@ -228,10 +231,10 @@ export default class State extends AbstractState {
       || (this._allErrors = new StateAllErrors(
           this._rootState.errors,
           this
-        ));
+        ))
   }
 
-  get errors(): StateAllErrors { return this.allErrors; }
+  get errors(): StateAllErrors { return this.allErrors }
 
   /**
    * Chain-access to all form definitions.
@@ -241,10 +244,10 @@ export default class State extends AbstractState {
       || (this._allForms = new StateAllForms(
           this._rootState.forms,
           this
-        ));
+        ))
   }
 
-  get forms(): StateAllForms { return this.allForms; }
+  get forms(): StateAllForms { return this.allForms }
 
   /**
    * Chain-access to forms data.
@@ -254,7 +257,7 @@ export default class State extends AbstractState {
       || (this._formsData = new StateFormsData(
           this._rootState.formsData,
           this
-        ));
+        ))
   }
 
   get formsDataErrors(): StateFormsDataErrors {
@@ -262,7 +265,7 @@ export default class State extends AbstractState {
       || (this._formsDataErrors = new StateFormsDataErrors(
           this._rootState.formsDataErrors,
           this
-        ));
+        ))
   }
 
   /**
@@ -273,7 +276,7 @@ export default class State extends AbstractState {
       || (this._meta = new StateMeta(
           this._rootState.meta,
           this
-        ));
+        ))
   }
 
   /**
@@ -284,17 +287,17 @@ export default class State extends AbstractState {
       || (this._allPages = new StateAllPages(
           this._rootState.pages,
           this
-        ));
+        ))
   }
 
-  get pages (): StateAllPages { return this.allPages; }
+  get pages (): StateAllPages { return this.allPages }
 
   get pagesData(): StatePagesData {
     return this._pagesData
       || (this._pagesData = new StatePagesData(
           this._rootState.pagesData,
           this
-        ));
+        ))
   }
 
   get snackbar(): StateSnackbar {
@@ -302,7 +305,7 @@ export default class State extends AbstractState {
       || (this._snackbar = new StateSnackbar(
           this._rootState.snackbar,
           this
-        ));
+        ))
   }
 
   get tmp(): StateTmp {
@@ -310,7 +313,7 @@ export default class State extends AbstractState {
       || (this._tmp = new StateTmp(
           this._rootState.tmp,
           this
-        ));
+        ))
   }
 
   get topLevelLinks(): StateTopLevelLinks {
@@ -318,23 +321,23 @@ export default class State extends AbstractState {
       || (this._topLevelLinks = new StateTopLevelLinks(
           this._rootState.topLevelLinks,
           this
-        ));
+        ))
   }
-
-  get theme(): ThemeOptions { return this._rootState.theme; }
 
   get net(): StateNet {
     return this._net
       || (this._net = new StateNet(
         this._rootState.net,
-      ));
+        this
+      ))
   }
 
   get pathnames(): StatePathnames {
     return this._pathnames
       || (this._pathnames = new StatePathnames(
-        this._rootState.pathnames
-      ));
+        this._rootState.pathnames,
+        this
+      ))
   }
 
   get staticRegistry(): StateRegistry {
@@ -358,30 +361,30 @@ export default class State extends AbstractState {
    * This forces fresh creation on next access with updated state data.
    */
   invalidateCache(): void {
-    this._app = undefined;
-    this._appbar = undefined;
-    this._appbarQueries = undefined;
-    this._background = undefined;
-    this._typography = undefined;
-    this._allIcons = undefined;
-    this._data = undefined;
-    this._dialog = undefined;
-    this._allDialogs = undefined;
-    this._drawer = undefined;
-    this._allErrors = undefined;
-    this._allForms = undefined;
-    this._formsData = undefined;
-    this._formsDataErrors = undefined;
-    this._meta = undefined;
-    this._allPages = undefined;
-    this._pagesData = undefined;
-    this._snackbar = undefined;
-    this._tmp = undefined;
-    this._topLevelLinks = undefined;
-    this._net = undefined;
-    this._pathnames = undefined;
-    this._staticRegistry = undefined;
-    this._dynamicRegistry = undefined;
+    this._app = undefined
+    this._appbar = undefined
+    this._appbarQueries = undefined
+    this._background = undefined
+    this._typography = undefined
+    this._allIcons = undefined
+    this._data = undefined
+    this._dialog = undefined
+    this._allDialogs = undefined
+    this._drawer = undefined
+    this._allErrors = undefined
+    this._allForms = undefined
+    this._formsData = undefined
+    this._formsDataErrors = undefined
+    this._meta = undefined
+    this._allPages = undefined
+    this._pagesData = undefined
+    this._snackbar = undefined
+    this._tmp = undefined
+    this._topLevelLinks = undefined
+    this._net = undefined
+    this._pathnames = undefined
+    this._staticRegistry = undefined
+    this._dynamicRegistry = undefined
   }
 
 } // END class ----------------------------------------------------------------

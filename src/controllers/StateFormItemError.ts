@@ -1,6 +1,7 @@
 import type { IStateFormItemError } from '@tuber/shared'
 import AbstractState from './AbstractState'
 
+/** Wrapper class */
 export default class StateFormItemError
   extends AbstractState
   implements IStateFormItemError
@@ -12,10 +13,10 @@ export default class StateFormItemError
     this._state = state
   }
 
+  configure(conf: unknown): void { void conf }
   get state(): IStateFormItemError { return this._state }
   get parent(): null { return null }
   get props(): null { return null }
-  get theme(): null { return null }
 
   get not() { return { required: !this._state.required } }
   get is() {

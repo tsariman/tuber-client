@@ -19,6 +19,7 @@ const createMockStore = (preloadedState?: any) => configureStore({
       showSpinner: false,
       spinnerDisabled: false,
       fetchingStateAllowed: true,
+      title: 'Test App',
     }, action) => {
       switch (action.type) {
         default:
@@ -32,6 +33,36 @@ const createMockStore = (preloadedState?: any) => configureStore({
       }
     },
     pagesData: (state = {}, action) => {
+      switch (action.type) {
+        default:
+          return state;
+      }
+    },
+    icons: (state = { 
+      menu: {},
+      close: {
+        svg: 'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z',
+        pathData: ['M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z']
+      }
+    }, action) => {
+      switch (action.type) {
+        default:
+          return state;
+      }
+    },
+    dialog: (state = { open: false }, action) => {
+      switch (action.type) {
+        case 'dialog/dialogClose':
+          return { ...state, open: false };
+        default:
+          return state;
+      }
+    },
+    pathnames: (state = {
+      forms: 'state/forms',
+      pages: 'state/pages',
+      dialogs: 'state/dialogs'
+    }, action) => {
       switch (action.type) {
         default:
           return state;

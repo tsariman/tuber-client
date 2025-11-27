@@ -54,8 +54,7 @@ export default class StateFactory {
 
   static createStateAppbarQueries(): StateAppbarQueries {
     return new StateAppbarQueries(
-      StateFactory._rootState.appbarQueries,
-      StateFactory._parent
+      StateFactory._rootState.appbarQueries
     )
   }
 

@@ -48,7 +48,6 @@ vi.mock('../../controllers/State', () => ({
     get appbar() {
       return {
         state: {},
-        theme: {},
         props: {},
         appbarStyle: 'basic',
         menuId: 'menu-id',
@@ -464,34 +463,6 @@ describe('StatePage', () => {
     });
   });
 
-  describe('Tab Title Methods', () => {
-    it('should return forcedTitle when available', () => {
-      expect(page.getTabTitle()).toBe('Forced Title');
-    });
-
-    it('should return app title with page title when no forced title', () => {
-      const pageWithoutForced = new StatePage({
-        title: 'Page Title'
-      }, mockAllPages);
-
-      expect(pageWithoutForced.getTabTitle()).toBe('Test App | Page Title');
-    });
-
-    it('should return just app title when no page title', () => {
-      const pageWithoutTitle = new StatePage({}, mockAllPages);
-      expect(pageWithoutTitle.getTabTitle()).toBe('Test App');
-    });
-
-    it('should set document title via setTabTitle', () => {
-      const originalTitle = document.title;
-      page.setTabTitle();
-      expect(document.title).toBe('Forced Title');
-
-      // Restore original title
-      document.title = originalTitle;
-    });
-  });
-
   describe('Private Initialization Methods', () => {
     // Note: Private methods are tested through their public interfaces
     it('should initialize appbar correctly when defined in state', () => {
@@ -525,7 +496,6 @@ describe('StatePage', () => {
   describe('Not Implemented Properties', () => {
     it('should return empty object for not implemented properties', () => {
       expect(page.props).toEqual({});
-      expect(page.theme).toEqual({});
     });
   });
 

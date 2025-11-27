@@ -1,31 +1,30 @@
-import AbstractState from './AbstractState';
-import type { IStateAllIcons, IStateIcon } from '@tuber/shared';
-import State from './State';
-import StateIcon from './StateIcon';
-import { get_state } from '../state';
+import AbstractState from './AbstractState'
+import type { IStateAllIcons, IStateIcon } from '@tuber/shared'
+import State from './State'
+import StateIcon from './StateIcon'
+import { get_state } from '../state'
 
+/** Wrapper class for `initial.state.icons` */
 export default class StateAllIcons extends AbstractState {
-  private _allIconsState: IStateAllIcons;
-  private _parent?: State;
+  private _state: IStateAllIcons
+  private _parent?: State
 
-  constructor(allIconsState: IStateAllIcons, parent?: State) {
-    super();
-    this._allIconsState = allIconsState;
-    this._parent = parent;
+  constructor(state: IStateAllIcons, parent?: State) {
+    super()
+    this._state = state
+    this._parent = parent
   }
 
   /** Get a copy of all icons definition. */
-  get state(): IStateAllIcons {  return this._allIconsState; }
+  get state(): IStateAllIcons {  return this._state }
   /** Chain-access to root definition. */
   get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()));
+    return this._parent ?? (this._parent = State.fromRootState(get_state()))
   }
   get props(): unknown { 
-    return this.die('Not implemented yet.', {}); 
+    return this.die('Not implemented yet.', {}) 
   }
-  get theme(): unknown {
-    return this.die('Not implemented yet.', {}); 
-  }
+  configure(conf: unknown): void { void conf }
   /**
    * Get an icon state by name.
    *
@@ -33,8 +32,8 @@ export default class StateAllIcons extends AbstractState {
    * @returns the icon state or null if not found
    */
   getIconState = (iconName: string): IStateIcon => {
-    return this._allIconsState[iconName] || this._allIconsState['no_icon'];
-  };
+    return this._state[iconName] || this._state['no_icon']
+  }
   /**
    * Get an icon controller instance.
    *
@@ -42,9 +41,9 @@ export default class StateAllIcons extends AbstractState {
    * @returns StateIcon instance or null if icon not found
    */
   iconAt = (iconName: string): StateIcon => {
-    const iconState = this.getIconState(iconName);
-    return new StateIcon(iconState, this);
-  };
+    const iconState = this.getIconState(iconName)
+    return new StateIcon(iconState, this)
+  }
   /**
    * Get an icon controller instance by name.
    * Alias for iconAt method.
@@ -53,8 +52,8 @@ export default class StateAllIcons extends AbstractState {
    * @returns StateIcon instance or null if icon not found
    */
   getIcon = (iconName: string): StateIcon => {
-    return this.iconAt(iconName);
-  };
+    return this.iconAt(iconName)
+  }
   /**
    * Check if an icon exists in the collection.
    *
@@ -62,24 +61,24 @@ export default class StateAllIcons extends AbstractState {
    * @returns true if icon exists, false otherwise
    */
   hasIcon = (iconName: string): boolean => {
-    return iconName in this._allIconsState;
-  };
+    return iconName in this._state
+  }
   /**
    * Get all available icon names.
    *
    * @returns array of icon names
    */
   getIconNames = (): string[] => {
-    return Object.keys(this._allIconsState);
-  };
+    return Object.keys(this._state)
+  }
   /**
    * Get the count of available icons.
    *
    * @returns number of icons in the collection
    */
   get iconCount(): number {
-    return Object.keys(this._allIconsState).length;
-  };
+    return Object.keys(this._state).length
+  }
   /**
    * Add or update an icon in the collection.
    *
@@ -87,8 +86,8 @@ export default class StateAllIcons extends AbstractState {
    * @param iconData the icon state data
    */
   setIcon = (iconName: string, iconData: IStateIcon): void => {
-    this._allIconsState[iconName] = iconData;
-  };
+    this._state[iconName] = iconData
+  }
   /**
    * Remove an icon from the collection.
    *
@@ -97,22 +96,22 @@ export default class StateAllIcons extends AbstractState {
    */
   removeIcon = (iconName: string): boolean => {
     if (this.hasIcon(iconName)) {
-      delete this._allIconsState[iconName];
-      return true;
+      delete this._state[iconName]
+      return true
     }
-    return false;
-  };
+    return false
+  }
   /**
    * Get all icons as an array of [name, StateIcon] pairs.
    *
    * @returns array of [iconName, StateIcon] tuples
    */
   getAllIcons = (): [string, StateIcon][] => {
-    return Object.entries(this._allIconsState).map(([name, iconState]) => [
+    return Object.entries(this._state).map(([name, iconState]) => [
       name,
       new StateIcon(iconState, this)
-    ]);
-  };
+    ])
+  }
   /**
    * Search for icons by name pattern.
    *
@@ -120,10 +119,10 @@ export default class StateAllIcons extends AbstractState {
    * @returns array of matching icon names
    */
   searchIcons = (pattern: string | RegExp): string[] => {
-    const iconNames = this.getIconNames();
+    const iconNames = this.getIconNames()
     if (typeof pattern === 'string') {
-      return iconNames.filter(name => name.includes(pattern));
+      return iconNames.filter(name => name.includes(pattern))
     }
-    return iconNames.filter(name => pattern.test(name));
-  };
+    return iconNames.filter(name => pattern.test(name))
+  }
 }

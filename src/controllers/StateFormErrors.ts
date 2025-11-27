@@ -5,6 +5,7 @@ import StateFormItemError from './StateFormItemError'
 
 type TProfile = Record<string, StateFormItemError>
 
+/** Wrapper class */
 export default class StateFormErrors extends AbstractState {
   private _state: IStateFormErrors
   private _parent: StateFormsDataErrors
@@ -16,10 +17,10 @@ export default class StateFormErrors extends AbstractState {
     this._parent = parent
   }
 
+  configure(conf: unknown): void { void conf }
   get state(): IStateFormErrors { return this._state }
   get parent(): StateFormsDataErrors { return this._parent }
   get props(): null { return null }
-  get theme(): null { return null }
 
   select(name: string): StateFormItemError | undefined {
     const errorState = this._state[name]

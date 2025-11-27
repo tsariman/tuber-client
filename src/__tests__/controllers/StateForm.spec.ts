@@ -61,7 +61,6 @@ describe('StateForm', () => {
         { _key: 'field2', type: 'number' }
       ],
       paperBackground: true,
-      theme: { backgroundColor: '#fff' },
       props: { className: 'test-form' },
       paperProps: { elevation: 2 }
     };
@@ -81,7 +80,6 @@ describe('StateForm', () => {
       expect(form._type).toBe('none');
       expect(form.name).toBe('test-form');
       expect(form.paperBackground).toBe(true);
-      expect(form.theme).toEqual({ backgroundColor: '#fff' });
     });
 
     it('should handle missing properties gracefully', () => {
@@ -92,7 +90,6 @@ describe('StateForm', () => {
       expect(minimalForm._type).toBe('none');
       expect(minimalForm.name).toBe('minimal');
       expect(minimalForm.paperBackground).toBe(false);
-      expect(minimalForm.theme).toEqual({});
       expect(minimalForm.items).toEqual([]);
     });
   });
@@ -167,7 +164,17 @@ describe('StateForm', () => {
 
   describe('Error Count', () => {
     it('should return error count from formsDataErrors', () => {
+      // Configure the form with mock formsDataErrors
+      const mockFormsDataErrors = {
+        getCount: vi.fn(() => 0)
+      };
+      form.configure({ formsDataErrors: mockFormsDataErrors });
       expect(form.errorCount).toBe(0);
+    });
+
+    it('should throw if not configured', () => {
+      const unconfiguredForm = new StateForm(basicFormState, mockAllForms);
+      expect(() => unconfiguredForm.errorCount).toThrow('StateForm instance not configured with formsDataErrors');
     });
   });
 
@@ -188,7 +195,6 @@ describe('StateForm', () => {
         _key: null as unknown as string,
         _type: null as unknown as IStateForm['_type'],
         items: null as unknown as IStateFormItem[],
-        theme: null as unknown as Record<string, unknown>,
         props: null as unknown as Record<string, unknown>,
         paperProps: null as unknown as Record<string, unknown>
       };
@@ -197,7 +203,6 @@ describe('StateForm', () => {
       expect(form._key).toBe('');
       expect(form._type).toBe('none');
       expect(form.items).toEqual([]);
-      expect(form.theme).toEqual({});
       expect(form.props).toEqual({
         autoComplete: 'off',
         component: 'form',

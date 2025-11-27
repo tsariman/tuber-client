@@ -70,6 +70,7 @@ export function createMockRootState(overrides: Partial<RootState> = {}): RootSta
     pathnames: {},
     staticRegistry: {},
     dynamicRegistry: {},
+    included: {},
     ...overrides,
   };
   

@@ -8,7 +8,7 @@ import type {
   IStateFormItem,
   IStateForm,
   IStateDialog
-} from '../../localized/interfaces';
+} from '../../interfaces/localized';
 import { error_id } from '../../business.logic/errors';
 import { ler } from '../../business.logic/logging';
 

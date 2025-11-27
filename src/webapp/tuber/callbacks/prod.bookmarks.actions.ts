@@ -249,12 +249,16 @@ export default function form_submit_delete_bookmark (redux: IRedux) {
   }
 }
 
+/** */
 export const bookmark_vote_up = (i: number) => (redux: IRedux) => async () => {
   void i
   void redux
+  // TODO: Implement me
 }
 
+/** */
 export const bookmark_vote_down = (i: number) => (redux: IRedux) => async () => {
   void i
   void redux
+  // TODO: Implement me
 }

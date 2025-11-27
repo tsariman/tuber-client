@@ -1,4 +1,4 @@
-import type { IFormChoices } from '../../localized/interfaces';
+import type { IFormChoices } from '../../interfaces/localized';
 import type StateFormItemCheckbox from './StateFormItemCheckbox';
 import StateFormItemCheckboxBox from '../StateFormItemCheckboxBox';
 import StateFormItemCustom from '../StateFormItemCustom';

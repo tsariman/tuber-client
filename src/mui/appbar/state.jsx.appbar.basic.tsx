@@ -4,22 +4,25 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { useMemo } from 'react'
 import type StatePage from '../../controllers/StatePage'
-import type { AppDispatch } from '../../state'
+import type { AppDispatch, RootState } from '../../state'
 import AppbarButton from '../link'
 import StateJsxLogo from './state.jsx.logo'
 import { StateJsxIcon } from '../icon'
 import { memo } from 'react'
+import StateApp from '../../controllers/StateApp'
 
-interface IBasic {
-  def: StatePage
-}
+interface IBasic { def: StatePage }
 
 const MenuIcon = memo(() => <StateJsxIcon name='menu' />)
 
 const StateJsxAppbarBasic = ({ def: page }: IBasic) => {
   const { appbar } = page
   const dispatch = useDispatch<AppDispatch>()
+  const appState = useSelector((state: RootState) => state.app)
+  const appTitle = useMemo(() => new StateApp(appState).title, [appState])
 
   const handleDrawerOpen = () => {
     dispatch({ type: 'drawer/drawerOpen' })
@@ -32,7 +35,7 @@ const StateJsxAppbarBasic = ({ def: page }: IBasic) => {
         position="fixed"
       >
         <Toolbar {...appbar.toolbarProps}>
-          {appbar.parent.hasDrawer ? (
+          {page.hasDrawer ? (
             <IconButton
               {...appbar.menuIconProps}
               onClick={handleDrawerOpen}
@@ -50,12 +53,14 @@ const StateJsxAppbarBasic = ({ def: page }: IBasic) => {
               }}
               {...appbar.textLogoProps}
             >
-              { page.parent.parent.app.title }
+              { appTitle }
             </Typography>
           )}
-          {appbar.items.map((item, i) => (
-            <AppbarButton def={item} key={`nav-menu-${i}`} />
-          ))}
+          <Box sx={{ ml: 'auto' }}>
+            {appbar.items.map((item, i) => (
+              <AppbarButton def={item} key={`nav-menu-${i}`} />
+            ))}
+          </Box>
         </Toolbar>
       </Appbar>
     </Box>

@@ -21,6 +21,7 @@ interface MockAppbarPage {
     textLogoProps: Record<string, unknown>;
     items: unknown[];
   };
+  hasDrawer: boolean;
   parent: {
     parent: {
       app: {
@@ -48,6 +49,7 @@ describe('src/mui/appbar/state.jsx.basic.appbar.tsx', () => {
         textLogoProps: {},
         items: [],
       },
+      hasDrawer: false,
       parent: {
         parent: {
           app: {
@@ -58,7 +60,7 @@ describe('src/mui/appbar/state.jsx.basic.appbar.tsx', () => {
     };
 
     const { container } = renderWithProviders(<AppbarBasic def={mockPage as unknown as StatePage} />);
-    expect(container.querySelector('[role="banner"]')).toBeInTheDocument();
+    expect(container.querySelector('.MuiAppBar-root')).toBeInTheDocument();
   });
 
   it('should render basic appbar with drawer menu icon', () => {
@@ -78,6 +80,7 @@ describe('src/mui/appbar/state.jsx.basic.appbar.tsx', () => {
         textLogoProps: {},
         items: [],
       },
+      hasDrawer: true,
       parent: {
         parent: {
           app: {
@@ -108,6 +111,7 @@ describe('src/mui/appbar/state.jsx.basic.appbar.tsx', () => {
         textLogoProps: {},
         items: [],
       },
+      hasDrawer: false,
       parent: {
         parent: {
           app: {
@@ -117,7 +121,9 @@ describe('src/mui/appbar/state.jsx.basic.appbar.tsx', () => {
       },
     };
 
-    const { getByText } = renderWithProviders(<AppbarBasic def={mockPage as unknown as StatePage} />);
+    const { getByText } = renderWithProviders(<AppbarBasic def={mockPage as unknown as StatePage} />, {
+      preloadedState: { app: { title: 'My Test App' } }
+    });
     expect(getByText('My Test App')).toBeInTheDocument();
   });
 });

@@ -14,6 +14,7 @@ import drawerReducer, { drawerActions } from '../slices/drawer.slice'
 import formsReducer, { formsActions } from '../slices/forms.slice'
 import pagesReducer, { pagesActions } from '../slices/pages.slice'
 import dataReducer, { dataActions } from '../slices/data.slice'
+import includedReducer, { includedActions } from '../slices/included.slice'
 import dataLoadedPagesSlice, { dataLoadedPagesActions } from '../slices/dataLoadedPages.slice'
 import errorsReducer, { errorsActions } from '../slices/errors.slice'
 import pagesDataReducer, { pagesDataActions } from '../slices/pagesData.slice'
@@ -44,7 +45,7 @@ import {
   type TEventHandler,
   type TObj
 } from '@tuber/shared'
-import type { IState, TNetState } from '../localized/interfaces'
+import type { IState, TNetState } from '../interfaces/localized'
 import Config from '../config'
 import initialState from './initial.state'
 import { clear_last_content_jsx } from '../business.logic/cache'
@@ -59,6 +60,7 @@ const appReducer = combineReducers({
   icons: iconsReducer,
   data: dataReducer,
   dataPagesRange: dataLoadedPagesSlice,
+  included: includedReducer,
   dialog: dialogReducer,
   dialogs: dialogsReducer,
   dialogsLight: dialogsLightReducer,
@@ -212,6 +214,7 @@ export const actions = {
   ...iconsActions,
   ...dataActions,
   ...dataLoadedPagesActions,
+  ...includedActions,
   ...dialogActions,
   ...dialogsAction,
   ...drawerActions,

@@ -9,17 +9,27 @@ import Layout from './layout'
 import Content from '../components/content'
 import Spinner from './spinner.cpn'
 import Snackbar from './snackbar'
+import { useSelector } from 'react-redux'
+import type { RootState } from '../state'
+import StateApp from '../controllers/StateApp'
 
-interface IComplexAppProps {
-  def: StatePage
-}
+interface IComplexAppProps { def: StatePage }
 
 const AppComplex = ({ def: page }: IComplexAppProps) => {
+  const appState = useSelector((state: RootState) => state.app)
+  const appTitle = useMemo(() => new StateApp(appState).title, [appState])
 
+  // Setting the browser's web page title
   // Move side effect to useEffect to prevent it running on every render
   useEffect(() => {
-    page.setTabTitle()
-  }, [page])
+    if (page.forcedTitle) {
+      document.title = page.forcedTitle
+    } else if (page.title) {
+      document.title = `${appTitle} | ${page.title}`
+    } else {
+      document.title = appTitle
+    }
+  }, [page, appTitle])
 
   // Memoize background to prevent unnecessary recalculation
   const background = useMemo(() => page.background, [page.background])

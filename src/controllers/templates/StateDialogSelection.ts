@@ -1,5 +1,5 @@
 import type { IStateDialogSelectionItem } from '@tuber/shared';
-import type { IStateDialog } from '../../localized/interfaces';
+import type { IStateDialog } from '../../interfaces/localized';
 import type State from '../State';
 import StateDialog from '../StateDialog';
 import StateDialogSelectionItem from './StateDialogSelectionItem';

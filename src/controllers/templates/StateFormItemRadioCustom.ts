@@ -1,4 +1,4 @@
-import { type IFormChoices } from '../../localized/interfaces';
+import { type IFormChoices } from '../../interfaces/localized';
 import StateFormItemCustom from '../StateFormItemCustom';
 import type StateFormItemRadio from './StateFormItemRadio';
 import StateFormItemRadioButton from '../StateFormItemRadioButton';

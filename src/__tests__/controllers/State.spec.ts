@@ -343,10 +343,6 @@ describe('State', () => {
       expect(result).toBeNull();
     });
 
-    it('should implement theme getter', () => {
-      const result = state.theme;
-      expect(result).toBe(mockRootState.theme);
-    });
   });
 
   describe('controller getters', () => {

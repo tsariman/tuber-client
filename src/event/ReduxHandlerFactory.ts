@@ -22,7 +22,7 @@ import StateNet from '../controllers/StateNet';
 import Config from '../config';
 import { net_patch_state } from '../state/actions';
 import type React from 'react';
-import type { TNetState } from '../localized/interfaces';
+import type { TNetState } from '../interfaces/localized';
 
 /**
  * Provides a default callback for buttons, links, ...etc, in case they need one.

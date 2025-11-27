@@ -1,7 +1,7 @@
 import { Fragment, useMemo, useCallback, type JSX } from 'react';
 import Config from '../../config';
 import { LAST_DRAWER_STATE } from '@tuber/shared';
-import type { IStateDrawer } from '../../localized/interfaces';
+import type { IStateDrawer } from '../../interfaces/localized';
 import type StatePage from '../../controllers/StatePage';
 import StateDrawerResponsive from '../../controllers/templates/StateDrawerResponsive';
 import MiniDrawer from './mini-variant.drawer';

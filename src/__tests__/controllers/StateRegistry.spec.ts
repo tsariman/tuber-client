@@ -71,10 +71,6 @@ describe('StateRegistry', () => {
       expect(props).toEqual({});
     });
 
-    it('should return error object for theme getter', () => {
-      const theme = stateRegistry.theme;
-      expect(theme).toEqual({});
-    });
   });
 
   describe('get method', () => {

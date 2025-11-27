@@ -28,7 +28,7 @@ import {
   TEXTAREA,
   TEXTFIELD,
 } from '@tuber/shared';
-import type { IStateFormItemGroup } from '../../../localized/interfaces';
+import type { IStateFormItemGroup } from '../../../interfaces/localized';
 import type StateForm from '../../../controllers/StateForm';
 import type StateFormItem from '../../../controllers/StateFormItem';
 import StateFormItemGroup from '../../../controllers/StateFormItemGroup';

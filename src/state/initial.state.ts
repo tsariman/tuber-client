@@ -1,6 +1,6 @@
 import { get_head_meta_content } from '../business.logic/parsing'
 import { orange } from '@mui/material/colors'
-import type { IState } from '../localized/interfaces'
+import type { IState } from '../interfaces/localized'
 
 /**
  * Get global variable value.
@@ -28,9 +28,9 @@ const GLOBAL_PREFIX = get_head_meta_content('web-ui')
 
 /**
  * Default background color
- * History: `#af74b0`
+ * History: `#72A0C1`, `#af74b0`
  */
-export const DEFAULT_BACKGROUND_COLOR = '#72A0C1'
+export const DEFAULT_BACKGROUND_COLOR = '#374654'
 
 /** Bootstrap key */
 const key = (
@@ -112,12 +112,19 @@ export default {
 
   'appbar': {
     'appbarStyle': 'basic',
-    'background': {
-      'color' : DEFAULT_BACKGROUND_COLOR, // 'radial-gradient(circle, #eeaeca 0%, #94bbe9 100%)'
-    },
+    'background': { 'color': 'transparent' },
     'items': [],
     'typography': { },
     ..._get_global_var(`${GLOBAL_PREFIX}Appbar`)
+  },
+
+  /**
+   * Application background color
+   */
+  'background': {
+    'color': 'transparent',
+
+    ..._get_global_var(`${GLOBAL_PREFIX}Background`)
   },
 
   /**
@@ -125,15 +132,6 @@ export default {
    */
   'appbarQueries': {},
   'queryHistory': {},
-
-  /**
-   * Application background color
-   */
-  'background': {
-    'color': DEFAULT_BACKGROUND_COLOR, // '#f0f0f0'
-
-    ..._get_global_var(`${GLOBAL_PREFIX}Background`)
-  },
 
   /** Application `font-family` and `color` */
   'typography': {
@@ -411,6 +409,7 @@ export default {
    */
   'data': { ..._get_global_var(`${GLOBAL_PREFIX}Data`)},
   'dataPagesRange': {},
+  'included': {},
 
   /**
    * The idea was to throw exceptions if something went wrong, even on a
@@ -444,16 +443,14 @@ export default {
   /**
    * For the complete structure of the theme object, visit:
    *
-   * @link https://v4.mui.com/customization/default-theme/#default-theme
+   * @link https://mui.com/material-ui/customization/default-theme/
    */
   'theme': { ...{
     'palette': {
-      // 'primary': {
-      //   'main': '#318ee8' // '#808000' // olive
-      // },
       'secondary': {
         'main': orange[800]
       },
+      'background': { 'default': DEFAULT_BACKGROUND_COLOR }
     },
   }, ..._get_global_var(`${GLOBAL_PREFIX}Theme`) },
   'themeLight': {},
@@ -473,8 +470,6 @@ export default {
   },
 
   'staticRegistry': {},
-  'dynamicRegistry': {},
+  'dynamicRegistry': {}
 
-  /** Bootstrap prefix/key for app initialization */
-  'bootstrapPrefix': '',
 } as IState

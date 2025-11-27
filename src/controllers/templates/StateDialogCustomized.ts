@@ -3,7 +3,7 @@ import type {
   DialogProps,
   DialogTitleProps
 } from '@mui/material';
-import type { IStateFormItem } from '../../localized/interfaces';
+import type { IStateFormItem } from '../../interfaces/localized';
 import StateDialog from '../StateDialog';
 
 export default class StateDialogCustomized extends StateDialog {

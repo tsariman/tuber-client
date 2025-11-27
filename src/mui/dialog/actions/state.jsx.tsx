@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import type StateDialog from '../../../controllers/StateDialog';
 import StateFormItem from '../../../controllers/StateFormItem';
 import StateJsxDialogActionButton from './state.jsx.button';
-import type { IStateFormItem } from '../../../localized/interfaces';
+import type { IStateFormItem } from '../../../interfaces/localized';
 import { STATE_BUTTON } from '@tuber/shared';
 
 interface IFieldItemProps {

@@ -13,7 +13,8 @@ import type { AppDispatch, RootState } from '../../state'
 import { styled } from '@mui/material/styles'
 import { get_drawer_width } from '../../state'
 import { StateJsxIcon } from '../icon'
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
+import StateApp from '../../controllers/StateApp'
 
 interface IMini {
   def: StatePage
@@ -45,6 +46,10 @@ const Appbar = styled(MuiAppbar, {
 
 const StateJsxAppbarMini = ({ def: page }: IMini) => {
   const { appbar } = page
+  const appState = useSelector((state: RootState) => state.app)
+  const appTitle =  useMemo(
+    () => new StateApp(appState).title, [appState]
+  )
   const open = useSelector((state: RootState) => state.drawer.open)
   const dispatch = useDispatch<AppDispatch>()
 
@@ -60,7 +65,7 @@ const StateJsxAppbarMini = ({ def: page }: IMini) => {
         open={open}
       >
         <Toolbar {...appbar.toolbarProps}>
-          {appbar.parent.hasDrawer ? (
+          {page.hasDrawer ? (
             <IconButton
               {...appbar.menuIconProps}
               sx={{
@@ -82,7 +87,7 @@ const StateJsxAppbarMini = ({ def: page }: IMini) => {
               }}
               {...appbar.textLogoProps}
             >
-              { page.parent.parent.app.title }
+              { appTitle }
             </Typography>
           )}
           {appbar.items.map((item, i) => (

@@ -1,32 +1,31 @@
-import AbstractState from './AbstractState';
-import State from './State';
-import { get_state } from '../state';
-import type StateDialogSelectionItem from './templates/StateDialogSelectionItem';
-import type { CSSProperties } from 'react';
-import type { DialogContentTextProps } from '@mui/material';
-import type { IStateDialog, IStateFormItem } from '../localized/interfaces';
+import AbstractState from './AbstractState'
+import type State from './State'
+import type StateDialogSelectionItem from './templates/StateDialogSelectionItem'
+import type { DialogContentTextProps } from '@mui/material'
+import type { IStateDialog, IStateFormItem } from '../interfaces/localized'
 
+/** Wrapper class for `initial.state.dialog` */
 export default class StateDialog<T = unknown>
   extends AbstractState
   implements IStateDialog<T>
 {
-  protected dialogState: IStateDialog<T>;
-  protected parentDef?: State;
+  protected dialogState: IStateDialog<T>
+  protected parentDef?: State
 
   constructor(dialogState: IStateDialog<T>, parent?: State) {
-    super();
-    this.dialogState = dialogState;
-    this.parentDef = parent;
+    super()
+    this.dialogState = dialogState
+    this.parentDef = parent
   }
 
-  get state(): IStateDialog<T> { return this.dialogState; }
+  get state(): IStateDialog<T> { return this.dialogState }
   get parent(): State {
-    return this.parentDef ?? (
-      this.parentDef = State.fromRootState(get_state())
-    );
+    return this.parentDef || this.missing_parent_state(
+      '[class] StateDialog: Parent is NOT defined'
+    )
   }
   get props() { return this.dialogState.props }
-  get theme(): CSSProperties { return this.die('Not implemented yet.', {}) }
+  configure(conf: unknown): void { void conf }
   get _type() { return this.dialogState._type || 'any' }
   get title(): string { return this.dialogState.title ?? '' }
   get label(): string { return this.dialogState.label ?? '' }
@@ -44,7 +43,7 @@ export default class StateDialog<T = unknown>
   get actionsProps() { return this.dialogState.actionsProps }
   get contentProps() { return this.dialogState.contentProps }
   get contentTextProps(): DialogContentTextProps {
-    return this.dialogState.contentTextProps ?? {};
+    return this.dialogState.contentTextProps ?? {}
   }
   get list() {
     return this.die<StateDialogSelectionItem<T>[]>(

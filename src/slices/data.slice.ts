@@ -1,10 +1,10 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { IJsonapiResource } from '@tuber/shared';
+import type { IJsonapiResponseResource } from '@tuber/shared';
 import initialState from '../state/initial.state';
 
 export interface IDataAdd {
   /** Collection of resources retrieved from server. */
-  data: IJsonapiResource;
+  data: IJsonapiResponseResource;
   /** The endpoint at which the collection was retrieved. */
   endpoint: string;
 }
@@ -16,14 +16,14 @@ export interface ICollectionRemove {
 
 export interface ICollectionStore {
   /** Collection of resources retrieved from server. */
-  collection: IJsonapiResource[];
+  collection: IJsonapiResponseResource[];
   /** The endpoint at which the collection was retrieved. */
   endpoint: string;
 }
 
 export interface ICollectionLimitedStore {
   /** Collection of resources retrieved from server. */
-  collection: IJsonapiResource[];
+  collection: IJsonapiResponseResource[];
   /** The endpoint at which the collection was retrieved. */
   endpoint: string;
   /** Maximum number of resources per page. */
@@ -42,7 +42,7 @@ export interface IMemberEditActionPayload {
 export interface IUpdateByIndex {
   endpoint: string;
   index: number;
-  resource: IJsonapiResource;
+  resource: IJsonapiResponseResource;
 }
 
 export interface IDeleteByIndex {
@@ -127,12 +127,12 @@ export const dataSlice = createSlice({
       payload: {
         collectionName: string;
         name: string;
-        resource: IJsonapiResource;
+        resource: IJsonapiResponseResource;
       };
     }) => {
       const { collectionName, name, resource } = action.payload;
       const collection = state[collectionName]
-        ?? [] as IJsonapiResource[];
+        ?? [] as IJsonapiResponseResource[];
       for (let i = 0; i < collection.length; i++) {
         if (collection[i].attributes?.name === name) {
           collection[i] = resource;
@@ -146,12 +146,12 @@ export const dataSlice = createSlice({
       payload: {
         collectionName: string;
         id: string;
-        resource: IJsonapiResource;
+        resource: IJsonapiResponseResource;
       };
     }) => {
       const { collectionName, id, resource } = action.payload;
       const collection = state[collectionName]
-        ?? [] as IJsonapiResource[];
+        ?? [] as IJsonapiResponseResource[];
       let found = false;
       for (let i = 0; i < collection.length; i++) {
         if (collection[i].id === id) {

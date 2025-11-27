@@ -1,40 +1,36 @@
-import type { TStateAllChips, TStateChips } from '../localized/interfaces';
-import AbstractState from './AbstractState';
-import StateFormItemCustomChip from './templates/StateFormItemCustomChip';
+import type { IStateAppbarInpuChipConfig } from '../interfaces/IControllerConfiguration'
+import type { TStateAllChips, TStateChips } from '../interfaces/localized'
+import AbstractState from './AbstractState'
+import StateFormItemCustomChip from './templates/StateFormItemCustomChip'
 
-interface IConfigure {
-  template?: string;
-  route?: string;
-}
-
+/** Wrapper class for `initial.state.chips` */
 export default class StateAppbarInputChip extends AbstractState {
   private _allChipState: TStateAllChips
-  private _route?: string;
-  private _template?: string;
+  private _route?: string
+  private _template?: string
 
   constructor(allChipState: TStateAllChips) {
-    super();
-    this._allChipState = allChipState;
+    super()
+    this._allChipState = allChipState
   }
 
-  get state(): TStateAllChips { return this._allChipState; }
-  get parent(): unknown { return this.die('\'parent\' not implemented yet.', {}); }
-  get props(): unknown { return this.die('\'props\' not implemented yet.', {}); }
-  get theme(): unknown { return this.die('\'theme\' not implemented yet.', {}); }
+  get state(): TStateAllChips { return this._allChipState }
+  get parent(): unknown { return this.die('\'parent\' not implemented yet.', {}) }
+  get props(): unknown { return this.die('\'props\' not implemented yet.', {}) }
 
-  configure = ({ template, route }: IConfigure) => {
-    this._route = route;
-    this._template = template;
-  };
+  configure = ({ template, route }: IStateAppbarInpuChipConfig) => {
+    this._route = route
+    this._template = template
+  }
 
   getRouteChipsState(route: string): TStateChips {
-    return this._allChipState[route] ?? [];
+    return this._allChipState[route] ?? []
   }
 
   private _breakPath(path: string): string[] {
-    const fixedPath = path.replace(/^\/|\/$/, '');
-    const parts = fixedPath.split('/');
-    return parts;
+    const fixedPath = path.replace(/^\/|\/$/, '')
+    const parts = fixedPath.split('/')
+    return parts
   }
 
   /**
@@ -56,36 +52,36 @@ export default class StateAppbarInputChip extends AbstractState {
       'tplParts': this._breakPath(tpl),
       'routeParts': this._breakPath(route),
       'match': false
-    };
+    }
     anal.match = anal.tplParts.length === anal.routeParts.length
-      && anal.tplParts[0] === anal.routeParts[0];
-    return anal;
+      && anal.tplParts[0] === anal.routeParts[0]
+    return anal
   }
 
   get(): StateFormItemCustomChip<this>[]|null {
     if (!this._route || !this._template) {
-      this.ler('call StateAppbarInputChip.configure() first.', null);
-      return null;
+      this.ler('call StateAppbarInputChip.configure() first.', null)
+      return null
     }
-    const anal = this._tplRouteAnal(this._template, this._route);
-    if (!anal.match) { return null; }
-    const routeParts = [ ...anal.routeParts ];
-    routeParts.shift();
-    const chips: StateFormItemCustomChip<this>[] = [];
-    const routeChipsState = this.getRouteChipsState(this._route);
+    const anal = this._tplRouteAnal(this._template, this._route)
+    if (!anal.match) { return null }
+    const routeParts = [ ...anal.routeParts ]
+    routeParts.shift()
+    const chips: StateFormItemCustomChip<this>[] = []
+    const routeChipsState = this.getRouteChipsState(this._route)
 
     for (const id of routeParts) { // The id is in the URL pathnames
-      const chipState = routeChipsState[id];
+      const chipState = routeChipsState[id]
       chips.push(
         new StateFormItemCustomChip<this>(chipState, this)
-      );
+      )
     }
   
-    return chips;
+    return chips
   }
 
   alwaysGet(): StateFormItemCustomChip[] {
-    return this.get() ?? [];
+    return this.get() ?? []
   }
 
 }

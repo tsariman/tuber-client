@@ -1,16 +1,11 @@
-import type { IconButtonProps } from '@mui/material/IconButton';
-import type { IStateAppbar, TStateAllChips } from '../../localized/interfaces';
-import StateAppbarInputChip from '../StateAppbarInputChip';
-import StateFormItemCustom from '../StateFormItemCustom';
-import StateLink from '../StateLink';
-import StateFormItemCustomChip from './StateFormItemCustomChip';
-import StatePageAppbar from './StatePageAppbar';
-
-interface TConfigure {
-  chips?: TStateAllChips;
-  route?: string;
-  template?: string;
-}
+import type { IconButtonProps } from '@mui/material/IconButton'
+import type { IStateAppbar } from '../../interfaces/localized'
+import type { IStatePageAppbarConfig } from '../../interfaces/IControllerConfiguration'
+import StateAppbarInputChip from '../StateAppbarInputChip'
+import StateFormItemCustom from '../StateFormItemCustom'
+import StateLink from '../StateLink'
+import StateFormItemCustomChip from './StateFormItemCustomChip'
+import StatePageAppbar from './StatePageAppbar'
 
 /** Appbar template for Middle Search Field app bars. */
 export default class StatePageAppbarMidSearch extends StatePageAppbar {
@@ -21,7 +16,7 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
   protected _route?: string;
   protected _template?: string;
 
-  configure = ({ chips, route, template }: TConfigure) => {
+  configure = ({ chips, route, template }: IStatePageAppbarConfig) => {
     if (chips) {
       this._chip = new StateAppbarInputChip(chips);
       this._chip.configure({ route, template });

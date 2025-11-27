@@ -1,5 +1,5 @@
-import type { TEventHandler } from '@tuber/shared';
-import Config from '../config';
+import type { TEventHandler } from '@tuber/shared'
+import Config from '../config'
 
 /** Base class for all wrapper classes. */
 export default abstract class AbstractState {
@@ -11,18 +11,18 @@ export default abstract class AbstractState {
    * a specific value could or should be undefined.
    * Whereas, with the object, values are most likely not undefined.
    */
-  abstract get state(): unknown;
+  abstract get state(): unknown
 
   /** Chain-access to parent definition. */
-  abstract get parent(): unknown;
+  abstract get parent(): unknown
 
   /**
    * Use to spread properties that are valid component props on a component.
    */
-  abstract get props(): unknown;
+  abstract get props(): unknown
 
-  /** Use to apply CSS styles. */
-  abstract get theme(): unknown;
+  /** Use if the state instance requires additional data from other sources. */
+  abstract configure(conf: unknown): void
 
   /**
    * Use when it's better to throw an exception.
@@ -31,9 +31,9 @@ export default abstract class AbstractState {
    */
   protected die<T=unknown>(msg: string, $return: T): T {
     if (Config.DEBUG) {
-      throw new Error(msg);
+      throw new Error(msg)
     }
-    return $return;
+    return $return
   }
 
   /**
@@ -43,9 +43,9 @@ export default abstract class AbstractState {
    */
   protected ler<T=unknown>(msg: string, $return: T): T {
     if (Config.DEBUG) {
-      console.error(msg);
+      console.error(msg)
     }
-    return $return;
+    return $return
   }
 
   /**
@@ -55,9 +55,9 @@ export default abstract class AbstractState {
    */
   protected warn<T=unknown>(msg: string, $return: T): T {
     if (Config.DEBUG) {
-      console.warn(msg);
+      console.warn(msg)
     }
-    return $return;
+    return $return
   }
 
   /** 
@@ -67,9 +67,9 @@ export default abstract class AbstractState {
    */
   protected notice<T=unknown>(msg: string, $return: T): T {
     if (Config.DEBUG) {
-      console.log(msg);
+      console.log(msg)
     }
-    return $return;
+    return $return
   }
 
   /**
@@ -77,10 +77,38 @@ export default abstract class AbstractState {
    * method will provide a dummy one.
    */
   protected dummy_factory_handler (arg: unknown): TEventHandler {
-    void arg;
-    return (e: unknown) => {
-      void e;
-      this.ler('No callback was assigned.', undefined);
+    void arg
+    return (e) => {
+      void e
+      this.ler('No callback was assigned.', undefined)
     }
+  }
+
+  /**
+   * Provides an alternative to defining a parent state by throwing an
+   * exception.
+   * @param message Error message
+   */
+  protected missing_parent_state(message?: string): never {
+    throw new Error(message || 'Parent state is undefined')
+  }
+
+  /**
+   * Use to indicate a critical configuration as missing.
+   * @param message Error message
+   */
+  protected throw_if_not_configured(message?: string): never {
+    const insertedMsg = message ? `${message}. ` : ''
+    throw new Error(`${insertedMsg}Did you call \`configure()\`?`)
+  }
+
+  /**
+   * Provides an alternative for implementing required abstract method by
+   * throwing an exception.
+   * @param message Error message
+   */
+  protected redundant_method_call(message?: string): never {
+    const insertedMsg = message ? ` ${message}` : ''
+    throw new Error(`Call to redundant method.${insertedMsg}`)
   }
 }

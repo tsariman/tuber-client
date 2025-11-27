@@ -3,7 +3,7 @@ import StateApp from '../controllers/StateApp';
 import StateAllPages from '../controllers/StateAllPages';
 import AppComplex from '../mui/app.complex.cpn';
 import AppGeneric from '../mui/app.generic.cpn';
-import type { IStatePage } from '../localized/interfaces';
+import type { IStatePage } from '../interfaces/localized';
 
 interface IGenericAppProps {
   def: StateAllPages;

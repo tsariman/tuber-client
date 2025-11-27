@@ -5,7 +5,7 @@ import { is_record } from '../../business.logic/utility';
 import type {
   IStateDialog,
   IStateFormItem
-} from '../../localized/interfaces';
+} from '../../interfaces/localized';
 
 /** 
  * Regular expression identifying a `true` or `false` boolean value.

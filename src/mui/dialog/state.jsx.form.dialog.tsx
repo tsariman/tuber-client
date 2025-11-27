@@ -1,32 +1,38 @@
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import { useDispatch, useSelector } from 'react-redux';
-import type StateDialogForm from '../../controllers/templates/StateDialogForm';
-import type { AppDispatch, RootState } from '../../state';
-import StateJsxDialogAction from './actions/state.jsx.form';
-import FormContent from '../../components/content/form.cpn';
-import { memo } from 'react';
-import { StateJsxIcon } from '../icon';
-import DialogContentText from '@mui/material/DialogContentText';
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import IconButton from '@mui/material/IconButton'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import { useDispatch, useSelector } from 'react-redux'
+import type StateDialogForm from '../../controllers/templates/StateDialogForm'
+import type { AppDispatch, RootState } from '../../state'
+import StateJsxDialogAction from './actions/state.jsx.form'
+import FormContent from '../../components/content/form.cpn'
+import { memo, useMemo } from 'react'
+import { StateJsxIcon } from '../icon'
+import DialogContentText from '@mui/material/DialogContentText'
+import { StateAllForms } from '../../controllers'
 
-interface IDialogForm { def: StateDialogForm; }
+interface IDialogForm { def: StateDialogForm }
 
-const CloseIcon = memo(() => <StateJsxIcon name='close' />);
+const CloseIcon = memo(() => <StateJsxIcon name='close' />)
 
 export default function StateJsxDialogForm({ def: dialog }: IDialogForm) {
-  const dispatch = useDispatch<AppDispatch>();
-  const open = useSelector((state: RootState) => state.dialog.open ?? false);
+  const dispatch = useDispatch<AppDispatch>()
+  const open = useSelector((state: RootState) => state.dialog.open ?? false)
+  const formsState = useSelector((state: RootState) => state.forms)
+  const form = useMemo(
+    () => new StateAllForms(formsState).getForm(dialog.contentName),
+    [dialog.contentName, formsState]
+  )
 
-  const handleDialogTitleClose = () => dispatch({ type: 'dialog/dialogClose' });
+  const handleDialogTitleClose = () => dispatch({ type: 'dialog/dialogClose' })
   const handleClose = (_e: unknown, reason: unknown) => {
     // Clicking on the backdrop no longer close the dialog
     if (reason && reason === "backdropClick")
-        return;
-    dispatch({ type: 'dialog/dialogClose' });
-  };
+        return
+    dispatch({ type: 'dialog/dialogClose' })
+  }
 
   return (
     <Dialog {...dialog.props} open={open} onClose={handleClose}>
@@ -53,15 +59,15 @@ export default function StateJsxDialogForm({ def: dialog }: IDialogForm) {
         ): ( null )}
         <FormContent
           type='dialog'
-          def={dialog.form}
+          def={form}
           formName={dialog.contentName}
         />
       </DialogContent>
-      {dialog.form && dialog.actions.length > 0 ? (
+      {form && dialog.actions.length > 0 ? (
         <DialogActions>
-          <StateJsxDialogAction def={dialog.actions} parent={dialog.form} />
+          <StateJsxDialogAction def={dialog.actions} form={form} />
         </DialogActions>
       ) : ( null )}
     </Dialog>
-  );
+  )
 }

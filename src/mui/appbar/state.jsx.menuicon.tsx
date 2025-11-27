@@ -1,10 +1,10 @@
 import { IconButton } from '@mui/material'
-import type StatePageAppbar from '../../controllers/templates/StatePageAppbar'
+import type StatePage from 'src/controllers/StatePage'
 import { StateJsxIcon } from '../icon'
 import { memo } from 'react'
 
 interface IMenuIcon {
-  def: StatePageAppbar
+  def: StatePage
   toggle: () => void
 }
 
@@ -19,8 +19,9 @@ const MenuIcon = memo(() => <StateJsxIcon name='menu' />)
  * To make use of the default drawer, the flag, `generateDefaultDrawer` needs
  * to be set to `true`.
  */
-const StateJsxMenuIcon = ({ def: appbar, toggle }: IMenuIcon) => {
-  if (appbar.parent.hasDrawer) {
+const StateJsxMenuIcon = ({ def: page, toggle }: IMenuIcon) => {
+  const { appbar } = page
+  if (page.hasDrawer) {
     return (
       <IconButton {...appbar.menuIconProps}>
         <MenuIcon />
@@ -28,7 +29,7 @@ const StateJsxMenuIcon = ({ def: appbar, toggle }: IMenuIcon) => {
     )
   }
 
-  if (appbar.parent.generateDefaultDrawer) {
+  if (page.generateDefaultDrawer) {
     return (
       <IconButton
         color="inherit"

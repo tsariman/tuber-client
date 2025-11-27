@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { styled } from '@mui/material/styles'
 import Appbar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
@@ -10,7 +10,8 @@ import {
   StatePage,
   StatePageAppbarMidSearch,
   StateLink,
-  StateAppbarQueries
+  StateAppbarQueries,
+  StateApp
 } from '../../controllers'
 import { useDispatch, useSelector } from 'react-redux'
 import { type AppDispatch, type RootState, redux } from '../../state'
@@ -68,7 +69,10 @@ const StateJsxAppbarMidSearch = ({ def: page }: IMidSearch) => {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
   const appbar = new StatePageAppbarMidSearch(page.appbarJson, page)
   const chips = useSelector((rootState: RootState) => rootState.chips)
-  const route = page.parent.parent.app.route
+  const appState = useSelector((state: RootState) => state.app)
+  const { route, title: appTitle } =  useMemo(
+    () => new StateApp(appState), [appState]
+  )
   appbar.configure({ chips, route, template: page._key })
   const dispatch = useDispatch<AppDispatch>()
   const queries = new StateAppbarQueries(
@@ -126,7 +130,7 @@ const StateJsxAppbarMidSearch = ({ def: page }: IMidSearch) => {
     <Box sx={{ flexGrow: 1 }}>
       <Appbar {...appbar.props} position="fixed">
         <Toolbar>
-          {appbar.parent.hasDrawer ? (
+          {page.hasDrawer ? (
             <IconButton
               {...appbar.menuIconProps}
               onClick={handleDrawerOpen}
@@ -144,7 +148,7 @@ const StateJsxAppbarMidSearch = ({ def: page }: IMidSearch) => {
               }}
               {...appbar.textLogoProps}
             >
-              { page.parent.parent.app.title }
+              { appTitle }
             </Typography>
           )}
           <Search {...appbar.searchContainerProps}>

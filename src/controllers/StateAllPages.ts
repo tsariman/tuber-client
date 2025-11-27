@@ -1,42 +1,41 @@
-import type { IStateAllPages, IStatePage } from '../localized/interfaces';
+import type { IStateAllPages, IStatePage } from '../interfaces/localized'
 import {
   DEFAULT_BLANK_PAGE,
   DEFAULT_LANDING_PAGE
-} from '@tuber/shared';
-import AbstractState from './AbstractState';
-import State from './State';
-import type StateApp from './StateApp';
-import StatePage from './StatePage';
-import { log } from '../business.logic/logging';
-import { get_state } from '../state';
+} from '@tuber/shared'
+import AbstractState from './AbstractState'
+import State from './State'
+import type StateApp from './StateApp'
+import StatePage from './StatePage'
+import { log } from '../business.logic/logging'
+import { get_state } from 'src/state'
 
-/** Wrapper class for `RootState.pages`. */
+/** Wrapper class for `initial.state.pages`. */
 export default class StateAllPages extends AbstractState {
-  private _allPagesState: IStateAllPages;
-  private _parent?: State;
-  constructor(allPagesState: IStateAllPages, parent?: State) {
-    super();
-    this._allPagesState = allPagesState;
-    this._parent = parent;
+  private _state: IStateAllPages
+  private _parent?: State
+  constructor(state: IStateAllPages, parent?: State) {
+    super()
+    this._state = state
+    this._parent = parent
   }
 
-  get state(): IStateAllPages { return this._allPagesState; }
+  get state(): IStateAllPages { return this._state }
   /** Chain-access root definition. */
   get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()));
+    return this._parent ?? (this._parent = State.fromRootState(get_state()))
   }
-  get props(): unknown { return this.die('Not implemented.', {}); }
-  get theme(): unknown { return this.die('Not implemented.', {}); }
-
+  get props(): unknown { return this.die('Not implemented.', {}) }
+  configure(conf: unknown): void { void conf }
   /** Check to see if the route has path variables. */
   private _has_path_vars(rawRoute: string): boolean {
-    if (!rawRoute) return false;
-    return rawRoute.replace(/^\/|\/$/g, '').split('/').length > 1;
+    if (!rawRoute) return false
+    return rawRoute.replace(/^\/|\/$/g, '').split('/').length > 1
   }
 
   /** Check to see if the route has path variables. */
   private _no_path_vars(rawRoute: string): boolean {
-    return !this._has_path_vars(rawRoute);
+    return !this._has_path_vars(rawRoute)
   }
 
   /**
@@ -50,16 +49,16 @@ export default class StateAllPages extends AbstractState {
     rawRoute: string
   ): boolean {
     if (rawRoute === '/') {
-      return template === rawRoute;
+      return template === rawRoute
     }
-    const routePaths = rawRoute.replace(/^\/|\/$/g, '').split('/');
-    const templatePaths = template.replace(/^\/|\/$/g, '').split('/');
+    const routePaths = rawRoute.replace(/^\/|\/$/g, '').split('/')
+    const templatePaths = template.replace(/^\/|\/$/g, '').split('/')
     if (routePaths[0] === templatePaths[0]
       && routePaths.length === templatePaths.length
     ) {
-      return true;
+      return true
     }
-    return false;
+    return false
   }
 
   /**
@@ -69,25 +68,25 @@ export default class StateAllPages extends AbstractState {
    * @returns the page state or null if not found
    */
   getPageState = (route: string): IStatePage | null => {
-    if (!route) return null;
+    if (!route) return null
     
     if (this._no_path_vars(route)) {
-      return this._allPagesState[route]
-      || this._allPagesState[`/${route}`]
-      || this._allPagesState[route.substring(1)]
-      || null;
+      return this._state[route]
+      || this._state[`/${route}`]
+      || this._state[route.substring(1)]
+      || null
     }
 
     // Handle routes with path variables
 
-    let pageState: IStatePage | null = null;
-    for (const template of Object.keys(this._allPagesState)) {
+    let pageState: IStatePage | null = null
+    for (const template of Object.keys(this._state)) {
       if (this._route_match_template(template, route)) {
-        pageState = this._allPagesState[template];
-        break;
+        pageState = this._state[template]
+        break
       }
     }
-    return pageState || null;
+    return pageState || null
   }
 
   /**
@@ -97,10 +96,10 @@ export default class StateAllPages extends AbstractState {
    *             they should not be accessed using the (dot) `.` operator.
    */
   pageAt = (route: string): StatePage | null => {
-    const pageState = this.getPageState(route);
+    const pageState = this.getPageState(route)
 
-    return pageState ? new StatePage(pageState, this) : null;
-  };
+    return pageState ? new StatePage(pageState, this) : null
+  }
 
   /**
    * Get a page definition
@@ -108,37 +107,37 @@ export default class StateAllPages extends AbstractState {
    * @returns 
    */
   getPage = (app: StateApp): StatePage => {
-    let pageState: IStatePage | null;
+    let pageState: IStatePage | null
     if (app.route === '/') {
-      pageState = this._allPagesState[app.homepage];
+      pageState = this._state[app.homepage]
       if (pageState) {
-        return new StatePage(pageState, this);
+        return new StatePage(pageState, this)
       }
     }
-    const route = app.route;
-    pageState = this.getPageState(route);
+    const route = app.route
+    pageState = this.getPageState(route)
     if (pageState) {
-      return new StatePage(pageState, this);
+      return new StatePage(pageState, this)
     }
     if (window.location.pathname.length > 1) {
-      pageState = this.getPageState(window.location.pathname);
+      pageState = this.getPageState(window.location.pathname)
       if (pageState) {
-        return new StatePage(pageState, this);
+        return new StatePage(pageState, this)
       }
     }
     // Oops! route is bad!
     if (route) {
-      log(`'${route}' page not loaded. Fetching now..`);
-      return new StatePage(this._allPagesState[DEFAULT_BLANK_PAGE], this);
+      log(`'${route}' page not loaded. Fetching now..`)
+      return new StatePage(this._state[DEFAULT_BLANK_PAGE], this)
     }
     if (app.homepage) {
-      pageState = this.getPageState(app.homepage);
+      pageState = this.getPageState(app.homepage)
       if (pageState) {
-        return new StatePage(pageState, this);
+        return new StatePage(pageState, this)
       }
     }
-    return new StatePage(this._allPagesState[DEFAULT_LANDING_PAGE], this);
-  };
+    return new StatePage(this._state[DEFAULT_LANDING_PAGE], this)
+  }
 
   // set app(app: StateApp) { this.appDef = app }
 } // END class AllPages -------------------------------------------------------

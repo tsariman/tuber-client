@@ -2,7 +2,7 @@ import type { FormControlProps, FormLabelProps } from '@mui/material';
 import type StateForm from '../StateForm';
 import StateFormItem from '../StateFormItem';
 import StateFormItemRadioCustom from './StateFormItemRadioCustom';
-import type { IFormChoices } from '../../localized/interfaces';
+import type { IFormChoices } from '../../interfaces/localized';
 
 export type TRadioStyle = 'default' | 'row';
 

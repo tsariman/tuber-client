@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import initialState from '../state/initial.state';
-import type { IStateChip } from '../localized/interfaces';
+import type { IStateChip } from '../interfaces/localized';
 
 interface IAdd {
   route: string;

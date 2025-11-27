@@ -1,45 +1,38 @@
-import type { TObj } from '@tuber/shared';
-import AbstractState from './AbstractState';
-import State from './State';
-import { get_state } from '../state';
+import type { TObj } from '@tuber/shared'
+import AbstractState from './AbstractState'
+import State from './State'
+import { get_state } from '../state'
+import type { IStatePagesDataConfig } from '../interfaces/IControllerConfiguration'
 
-interface IConfigure {
-  endpoint?: string;
-}
-
-/**
- * This class is a wrapper for the pages data JSON object.
- */
+/** Wrapper class for a page state data property */
 export default class StatePagesData extends AbstractState {
-  private _endpoint?: string;
-  private _pagesDataState: TObj;
-  private _parent?: State;
+  private _endpoint?: string
+  private _state: TObj
+  private _parent?: State
 
-  constructor(pagesDataState: TObj, parent?: State) {
-    super();
-    this._pagesDataState = pagesDataState;
-    this._parent = parent;
+  constructor(state: TObj, parent?: State) {
+    super()
+    this._state = state
+    this._parent = parent
   }
 
-  get state(): TObj { return this._pagesDataState; }
+  get state(): TObj { return this._state }
   /** Chain-access to the root definition. */
   get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()));
+    return this._parent ?? (this._parent = State.fromRootState(get_state()))
   }
-  get props(): TObj { return this.die('Not implemented.', {}); }
-  get theme(): TObj { return this.die('Not implemented.', {}); }
+  get props(): TObj { return this.die('Not implemented.', {}) }
 
-  configure(opts: IConfigure): this {
-    const { endpoint } = opts;
-    this._endpoint = endpoint;
+  configure({ endpoint }: IStatePagesDataConfig): this {
+    this._endpoint = endpoint
 
-    return this;
+    return this
   }
 
   get<T=unknown>(key: string): T {
     if (!this._endpoint) {
-      throw new Error('Endpoint must be configured to access page data.');
+      throw new Error('Endpoint must be configured to access page data.')
     }
-    return (this._pagesDataState[this._endpoint] as TObj<T>)[key];
-  };
+    return (this._state[this._endpoint] as TObj<T>)[key]
+  }
 }

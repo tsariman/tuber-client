@@ -1,5 +1,5 @@
 import type { AvatarProps, CardHeaderProps } from '@mui/material';
-import type { IStateCard } from '../../localized/interfaces';
+import type { IStateCard } from '../../interfaces/localized';
 import StateCard from '../StateCard';
 
 export default class StateCardComplex extends StateCard {

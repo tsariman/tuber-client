@@ -1,28 +1,31 @@
-import type StateForm from '../controllers/StateForm';
-import type { AppDispatch } from '../state';
-import { post_req_state } from '../state/net.actions';
+import StateFormsDataErrors from '../controllers/StateFormsDataErrors'
+import StateFormsData from '../controllers/StateFormsData'
+import type StateForm from '../controllers/StateForm'
+import type { AppDispatch } from '../state'
+import { post_req_state } from '../state/net.actions'
+import { get_state } from '../state'
 
 const defaultButtonHandle = (dispatch: AppDispatch, form: StateForm) =>
   async (e: MouseEvent) =>
 {
-  e.preventDefault();
+  e.preventDefault()
 
   // if there are errors, do not submit the form
-  const errors = form.parent.parent.formsDataErrors;
+  const errors = new StateFormsDataErrors(get_state().formsDataErrors)
   if (errors.getCount(form.name) > 0) {
-    return;
+    return
   }
 
   // if there are no errors, submit the form
-  const formsData = form.parent.parent.formsData;
-  const body = formsData.get(form.name);
+  const formsData = new StateFormsData(get_state().formsData)
+  const body = formsData.get(form.name)
   if (formsData.state[form.name] === undefined) {
-    return;
+    return
   }
   if (body) {
-    dispatch(post_req_state(form.endpoint, body));
-    dispatch({ type: 'formsData/formsDataClear', payload: form.name });
+    dispatch(post_req_state(form.endpoint, body))
+    dispatch({ type: 'formsData/formsDataClear', payload: form.name })
   }
 }
 
-export default defaultButtonHandle;
+export default defaultButtonHandle

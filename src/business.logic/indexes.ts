@@ -1,9 +1,11 @@
 import { error_id } from './errors'
 import type { IJsonapiResponseResource } from '@tuber/shared'
+// @ts-expect-error spark-md5 has no types
+import * as SparkMD5 from 'spark-md5'
 
 export interface IIndexes {
   [endpoint: string]: {
-    [id: string]: IJsonapiResponseResource
+    [id: string]: IJsonapiResponseResource<unknown>
   } | undefined
 }
 
@@ -31,6 +33,11 @@ export interface IIndexes {
 const indexes: IIndexes = {}
 
 /**
+ * Cache for indexed results to avoid recomputation if the input array hasn't changed.
+ */
+const indexHashes: Record<string, string> = {}
+
+/**
  * Use this method to convert an array of resource objects to an indexed object
  * for quick lookup by ID.
  *
@@ -49,18 +56,34 @@ const indexes: IIndexes = {}
  *
  * @param array - The array of resource objects to index.
  */
-export function index_by_id(array: IJsonapiResponseResource[]): void {
-  if (array.length < 1) { return }
+export function index_by_id<T>(
+  array: IJsonapiResponseResource<T>[]
+): Record<string, IJsonapiResponseResource<T>> | null {
+  if (array.length < 1) { return null }
   const collection = array[0].type
-  const object: Record<string, IJsonapiResponseResource> = {}
+  const arrayJson = JSON.stringify(array)
+  const hash = SparkMD5.hash(arrayJson)
+
+  // Check if already indexed and unchanged
+  const cachedHash = indexHashes[collection]
+  if (cachedHash === hash && indexes[collection]) {
+    return indexes[collection] as Record<string, IJsonapiResponseResource<T>>
+  }
+
+  // Compute new index
+  const object: Record<string, IJsonapiResponseResource<T>> = {}
   array.forEach(obj => {
     object[obj.id] = obj
   })
   indexes[collection] = object
+  indexHashes[collection] = hash
+
+  return object
 }
 
 export function drop_index(collection: string): void {
   delete indexes[collection]
+  delete indexHashes[collection]
 }
 
 /**

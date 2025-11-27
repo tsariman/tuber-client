@@ -1,44 +1,59 @@
-import { useMemo, useCallback, type JSX } from 'react';
-import View from '../view.cpn';
-import StatePage from '../../controllers/StatePage';
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '../../state';
-import { post_req_state } from '../../state/net.actions';
-import HtmlContent from '../../mui/content/html.cpn';
-import type { IStateApp } from '@tuber/shared';
-import { APP_CONTENT_VIEW } from '@tuber/shared';
-import type { TStateAllForms, IStatePage } from '../../localized/interfaces';
+import { useMemo, useCallback, type JSX } from 'react'
+import View from '../view.cpn'
+import StatePage from '../../controllers/StatePage'
+import { useDispatch, useSelector } from 'react-redux'
+import type { AppDispatch, RootState } from '../../state'
+import { post_req_state } from '../../state/net.actions'
+import HtmlContent from '../../mui/content/html.cpn'
+import type { IStateApp } from '@tuber/shared'
+import { APP_CONTENT_VIEW } from '@tuber/shared'
+import type { TStateAllForms, IStatePage } from '../../interfaces/localized'
 import {
   error_id,
   get_state_form_name,
   get_last_content_jsx,
   save_content_jsx,
   ler
-} from '../../business.logic';
-import FormContent from './form.cpn';
-import WebApps from './webapp.content.cpn';
-
+} from '../../business.logic'
+import FormContent from './form.cpn'
+import WebApps from './webapp.content.cpn'
+import { StateAllForms, StateApp, StatePathnames } from 'src/controllers'
 
 export interface IContentState {
-  stateApp: IStateApp;
-  stateForms: TStateAllForms;
-  statePage: IStatePage;
+  stateApp: IStateApp
+  stateForms: TStateAllForms
+  statePage: IStatePage
 }
 
 interface IContentProps {
-  def: StatePage;
+  def: StatePage
 }
 
 interface IContentTable {
-  [constant: string]: () => JSX.Element | null;
+  [constant: string]: () => JSX.Element | null
 }
 
 /**
  * Application content
  */
 export default function Content (props: IContentProps) {
-  const { def: page } = props;
-  const dispatch = useDispatch<AppDispatch>();
+  const { def: page } = props
+  const app = useSelector((state: RootState) => state.app)
+  const formsState = useSelector((state: RootState) => state.forms)
+  const pathnamesState = useSelector((state: RootState) => state.pathnames)
+  const fetchingStateAllowed = useMemo(
+    () => new StateApp(app).fetchingStateAllowed,
+    [app]
+  )
+  const getForm = useMemo(
+    () => new StateAllForms(formsState).getForm,
+    [formsState]
+  )
+  const FORMS = useMemo(
+    () => new StatePathnames(pathnamesState).FORMS,
+    [pathnamesState]
+  )
+  const dispatch = useDispatch<AppDispatch>()
 
   // Memoize constants to prevent re-creation on every render
   const contentConstants = useMemo(() => ({
@@ -47,47 +62,46 @@ export default function Content (props: IContentProps) {
     APP_CONTENT_HTML: '$html',
     APP_CONTENT_FORM_LOAD: '$form_load',
     APP_CONTENT_HTML_LOAD: '$html_load'
-  }), []);
+  }), [])
 
   // Memoize the page content type computation
-  const type = useMemo(() => page.contentType.toLowerCase(), [page.contentType]);
+  const type = useMemo(() => page.contentType.toLowerCase(), [page.contentType])
 
   // Memoize form computation for form content type
   const formData = useMemo(() => {
     if (type === contentConstants.APP_CONTENT_FORM) {
-      const form = page.parent.parent.allForms.getForm(page.contentName);
+      const form = getForm(page.contentName)
       if (form) { 
-        form.endpoint = page.contentEndpoint; 
+        form.endpoint = page.contentEndpoint 
       }
-      return form;
+      return form
     }
-
-    return null;
+    return null
   }, [
     type,
     contentConstants.APP_CONTENT_FORM,
-    page.parent.parent.allForms,
+    getForm,
     page.contentName,
-    page.contentEndpoint,
-  ]);
+    page.contentEndpoint
+  ])
 
   // Memoize form load state computation
   const formLoadState = useMemo(() => {
     if (type === contentConstants.APP_CONTENT_FORM_LOAD) {
       return {
-        fetchingStateAllowed: page.parent.parent.app.fetchingStateAllowed,
-        FORMS: page.parent.parent.pathnames.FORMS,
+        fetchingStateAllowed,
+        FORMS,
         key: get_state_form_name(page.contentName)
-      };
+      }
     }
-    return null;
+    return null
   }, [
     type,
     contentConstants.APP_CONTENT_FORM_LOAD,
-    page.parent.parent.app.fetchingStateAllowed,
-    page.parent.parent.pathnames.FORMS,
+    fetchingStateAllowed,
+    FORMS,
     page.contentName
-  ]);
+  ])
 
   // Memoize content handlers using useCallback
   const handleFormContent = useCallback(() => {
@@ -97,59 +111,59 @@ export default function Content (props: IContentProps) {
         def={formData}
         type={'page'}
       />
-    );
-    save_content_jsx(contentJsx);
-    return contentJsx;
-  }, [formData, page.contentName]);
+    )
+    save_content_jsx(contentJsx)
+    return contentJsx
+  }, [formData, page.contentName])
 
   const handleViewContent = useCallback(() => {
-    const contentJsx = <View def={page} />;
-    save_content_jsx(contentJsx);
-    return contentJsx;
-  }, [page]);
+    const contentJsx = <View def={page} />
+    save_content_jsx(contentJsx)
+    return contentJsx
+  }, [page])
 
   const handleWebAppContent = useCallback(() => {
-    let contentJsx: JSX.Element | null = null;
+    let contentJsx: JSX.Element | null = null
     try {
-      contentJsx = <WebApps def={page} />;
+      contentJsx = <WebApps def={page} />
       if (contentJsx) {
-        save_content_jsx(contentJsx);
+        save_content_jsx(contentJsx)
       } else {
-        save_content_jsx(contentJsx = null);
+        save_content_jsx(contentJsx = null)
       }
     } catch (e) {
-      const message = `Bad page content.\n${(e as Error).message}`;
-      ler(message);
-      error_id(4).remember_exception(e, message); // error 4
-      save_content_jsx(contentJsx = null);
+      const message = `Bad page content.\n${(e as Error).message}`
+      ler(message)
+      error_id(4).remember_exception(e, message) // error 4
+      save_content_jsx(contentJsx = null)
     }
-    return contentJsx;
-  }, [page]);
+    return contentJsx
+  }, [page])
 
   const handleHtmlContent = useCallback(() => {
-    const contentJsx = <HtmlContent def={page} />;
-    save_content_jsx(contentJsx);
-    return contentJsx;
-  }, [page]);
+    const contentJsx = <HtmlContent def={page} />
+    save_content_jsx(contentJsx)
+    return contentJsx
+  }, [page])
 
   const handleFormLoad = useCallback(() => {
     if (formLoadState?.fetchingStateAllowed) {
       dispatch(post_req_state(formLoadState.FORMS, {
         key: formLoadState.key,
-      }));
+      }))
     }
-    save_content_jsx(null);
-    return null;
-  }, [dispatch, formLoadState ]);
+    save_content_jsx(null)
+    return null
+  }, [dispatch, formLoadState ])
 
   const handleHtmlLoad = useCallback(() => {
-    save_content_jsx(null);
-    return null;
-  }, []);
+    save_content_jsx(null)
+    return null
+  }, [])
 
   const handleDefault = useCallback(() => {
-    return get_last_content_jsx();
-  }, []);
+    return get_last_content_jsx()
+  }, [])
 
   // Memoize the content table to prevent re-creation
   const contentTable: IContentTable = useMemo(() => ({
@@ -169,24 +183,24 @@ export default function Content (props: IContentProps) {
     handleFormLoad,
     handleHtmlLoad,
     handleDefault,
-  ]);
+  ])
 
   // Memoize the final content JSX computation
   const contentJsx = useMemo(() => {
-    let result: JSX.Element | null = null;
+    let result: JSX.Element | null = null
 
     try {
-      const handler = contentTable[type] || contentTable['$default'];
-      result = handler();
+      const handler = contentTable[type] || contentTable['$default']
+      result = handler()
     } catch (e) {
-      const message = `Bad page content. ${(e as Error).message}`;
-      ler(message);
-      error_id(5).remember_exception(e, message); // error 5
-      result = contentTable['$default']();
+      const message = `Bad page content. ${(e as Error).message}`
+      ler(message)
+      error_id(5).remember_exception(e, message) // error 5
+      result = contentTable['$default']()
     }
 
-    return result;
-  }, [ contentTable, type ]);
+    return result
+  }, [ contentTable, type ])
 
-  return contentJsx;
+  return contentJsx
 }

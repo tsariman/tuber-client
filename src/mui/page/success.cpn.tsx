@@ -1,12 +1,16 @@
-import StatePage from '../../controllers/StatePage';
-import { styled } from '@mui/material';
-import { StateJsxIcon } from '../icon';
-import { memo } from 'react';
+import { useSelector } from 'react-redux'
+import StatePage from '../../controllers/StatePage'
+import StateTmp from '../../controllers/StateTmp'
+import StateApp from '../../controllers/StateApp'
+import type { RootState } from '../../state'
+import { styled } from '@mui/material'
+import { StateJsxIcon } from '../icon'
+import { memo, useMemo } from 'react'
 
 const MsgDiv = styled('div')(() => ({
   width: '100%',
   textAlign: 'center'
-}));
+}))
 
 const CheckCircleOutlineIcon = memo(() => (
   <StateJsxIcon
@@ -15,7 +19,7 @@ const CheckCircleOutlineIcon = memo(() => (
       sx: { fontSize: '29.5rem !important' }
     }}
   />
-));
+))
 
 /**
  * Displays a generic page that indicates a successful operation.
@@ -37,11 +41,11 @@ const CheckCircleOutlineIcon = memo(() => (
  * Tags: `success`, `page`, `message`
  */
 export default function PageSuccess ({ def: page }:{ def: StatePage }) {
-  const msg = page.parent.parent.tmp.get<string>(
-    page.parent.parent.app.route,
-    'message',
-    page.data.message as string
-  );
+  const tmpState = useSelector((state: RootState) => state.tmp)
+  const appState = useSelector((state: RootState) => state.app)
+  const tmp = useMemo(() => new StateTmp(tmpState), [tmpState])
+  const route = useMemo(() => new StateApp(appState).route, [appState])
+  const msg = tmp.get<string>(route,'message',page.data.message as string)
 
   return (
     <>
@@ -50,6 +54,6 @@ export default function PageSuccess ({ def: page }:{ def: StatePage }) {
         <h1>{ msg }</h1>
       </MsgDiv>
     </>
-  );
+  )
 
 }

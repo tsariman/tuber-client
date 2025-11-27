@@ -14,7 +14,6 @@ interface IResponsive {
 const navItems = [ 'Home', 'About', 'Contact' ]
 
 const StateJsxAppbarResponsive = ({ def: page }: IResponsive) => {
-  const { appbar } = page
   const [ mobileOpen, setMobileOpen ] = React.useState(false)
 
   const handleDrawerToggle = () => {
@@ -25,7 +24,7 @@ const StateJsxAppbarResponsive = ({ def: page }: IResponsive) => {
     <Box sx={{ display: 'flex' }}>
       <Appbar component="nav">
         <Toolbar>
-          <StateJsxMenuIcon def={appbar} toggle={handleDrawerToggle} />
+          <StateJsxMenuIcon def={page} toggle={handleDrawerToggle} />
           <Typography
             variant="h6"
             component="div"

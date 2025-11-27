@@ -118,10 +118,6 @@ describe('StateAllPages', () => {
       expect(props).toEqual({});
     });
 
-    it('should return error object for theme getter', () => {
-      const theme = stateAllPages.theme;
-      expect(theme).toEqual({});
-    });
   });
 
   describe('path variable detection', () => {

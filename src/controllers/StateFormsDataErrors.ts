@@ -6,6 +6,7 @@ import StateFormErrors from './StateFormErrors'
 
 const EXCEPTION_MESSAGE = 'StateFormsDataErrors: configure instance with \'formName\''
 
+/** Wrapper class for `initial.state.formsDataErrors` */
 export default class StateFormsDataErrors<T=unknown> extends AbstractState {
   private _state: IStateFormsDataErrors
   private _parent?: State
@@ -22,7 +23,6 @@ export default class StateFormsDataErrors<T=unknown> extends AbstractState {
   }
   get state(): IStateFormsDataErrors { return this._state }
   get props(): unknown { return this.die('Not implemented yet.', {}) }
-  get theme(): unknown { return this.die('Not implemented yet.', {}) }
 
   configure({ formName }: { formName: string }) {
     this._formName = formName;

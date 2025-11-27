@@ -1,22 +1,23 @@
-import AbstractState from './AbstractState';
-import type { IStateTopLevelLinks } from '@tuber/shared';
-import State from './State';
-import { get_state } from '../state';
+import AbstractState from './AbstractState'
+import type { IStateTopLevelLinks } from '@tuber/shared'
+import State from './State'
+import { get_state } from 'src/state'
 
+/** Wrapper class for `initial.state.topLevelLinks` */
 export default class StateTopLevelLinks extends AbstractState {
-  private _topLevelLinksState: IStateTopLevelLinks;
-  private _parent?: State;
+  private _state: IStateTopLevelLinks
+  private _parent?: State
 
-  constructor(topLevelLinksState: IStateTopLevelLinks, parent?: State) {
-    super();
-    this._topLevelLinksState = topLevelLinksState;
-    this._parent = parent;
+  constructor(state: IStateTopLevelLinks, parent?: State) {
+    super()
+    this._state = state
+    this._parent = parent
   }
 
-  get state(): IStateTopLevelLinks { return this._topLevelLinksState; }
+  configure(conf: unknown): void { void conf }
+  get state(): IStateTopLevelLinks { return this._state }
   get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()));
+    return this._parent ?? (this._parent = State.fromRootState(get_state()))
   }
-  get props(): unknown { return this.die('Not implemented yet.', {}); }
-  get theme(): unknown { return this.die('Not implemented yet.', {}); }
+  get props(): unknown { return this.die('Not implemented yet.', {}) }
 }
