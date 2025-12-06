@@ -1,125 +1,146 @@
 // TODO - Install those import if or when needed.
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import Box from '@mui/material/Box'
+import FormGroup from '@mui/material/FormGroup'
+import Stack from '@mui/material/Stack'
+import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import type StateFormItemGroup from '../../controllers/StateFormItemGroup'
 import {
-  Box,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Stack,
-} from '@mui/material';
-import React, {
   Fragment,
+  memo,
+  type JSX,
   type ReactElement,
-  type ReactNode,
-  useMemo
-} from 'react';
-import type StateFormItemGroup from '../../controllers/StateFormItemGroup';
+  type ReactNode
+} from 'react'
 import {
   BOX,
-  STACK,
-  LOCALIZED,
-  FORM_GROUP,
+  DIV,
   FORM_CONTROL,
   FORM_CONTROL_LABEL,
+  FORM_GROUP,
   INDETERMINATE,
-  DIV,
-  NONE
-} from '@tuber/shared';
+  LOCALIZED,
+  NONE,
+  STACK
+} from '@tuber/shared'
+import { ler, log } from 'src/business.logic/logging'
+import { error_id } from 'src/business.logic/errors'
 
-interface IFormItemGroupProps {
-  def: StateFormItemGroup;
-  children: React.ReactNode;
+interface IGroup {
+  instance: StateFormItemGroup
+  children: React.ReactNode
 }
 
-// TODO - Delete following dummy values when imports are available ============
+const BoxGroup = ({ instance: group, children }: IGroup) => (
+  <Box {...group.props}>
+    { children }
+  </Box>
+)
+
+const StackGroup = ({ instance: group, children }: IGroup) => (
+  <Stack {...group.props}>
+    { children }
+  </Stack>
+)
+
+// TODO - Delete following dummy fields when imports are un-commented =========
 
 interface IFakeProps {
-  dateAdapter?: ReactElement;
-  children?: ReactNode;
+  dateAdapter?: ReactElement
+  children?: ReactNode
 }
 
-const AdapterDayjs = <></>;
+const AdapterDayjs = <></>
 
 const LocalizationProvider = (props: IFakeProps) => {
-  void props;
-  return null;
-};
+  log('Localization feature is not implemented.')
+  void props
+  return <Fragment />
+}
 
 // END - Delete ===============================================================
 
-const StateJsxFormItemGroup = React.memo<IFormItemGroupProps>(({ def: item, children }) => {
-  // Memoize the table to prevent recreation on every render
-  const table: Record<string, () => ReactElement> = useMemo(() => ({
-    [BOX]: () => (
-      <Box {...item.props}>
-        {children}
-      </Box>
-    ),
-    [STACK]: () => (
-      <Stack {...item.props}>
-        {children}
-      </Stack>
-    ),
-    [LOCALIZED]: () => (
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        {children}
-      </LocalizationProvider>
-    ),
-    [FORM_GROUP]: () => (
-      <FormGroup {...item.props}>
-        {children}
-      </FormGroup>
-    ),
-    [FORM_CONTROL]: () => (
-      <FormControl {...item.props}>
-        {children}
-      </FormControl>
-    ),
-    [FORM_CONTROL_LABEL]: () => {
-      return (
-        <FormControlLabel
-          label=''
-          {...item.props}
-          control={children as ReactElement}
-        />
-      );
-    },
-    [INDETERMINATE]: () => {
-      const childrenArray = Array.isArray(children) ? [...children] : [children];
-      const parent = childrenArray.shift();
-      return (
-        <div>
-          <FormControlLabel
-            {...item.getProps()}
-            control={parent}
-          />
-          {childrenArray}
-        </div>
-      );
-    },
-    [DIV]: () => (
-      <div {...item.props}>
-        {children}
-      </div>
-    ),
-    [NONE]: () => (
-      <Fragment>
-        {children}
-      </Fragment>
-    )
-  }), [item, children]);
+const LocalizedGroup = ({ children }: IGroup) => {
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      { children }
+    </LocalizationProvider>
+  )
+}
 
-  // Memoize the type lookup
-  const itemType = useMemo(() => item.type.toLowerCase(), [item.type]);
-  
-  // Get the renderer function, with fallback to Fragment
-  const renderer = table[itemType] || table[NONE];
-  
-  return renderer();
-});
+const FormGroupLocal = ({ instance: group, children }: IGroup) => (
+  <FormGroup {...group.props}>
+    { children }
+  </FormGroup>
+)
+
+const FormControlLocal = ({ instance: group, children }: IGroup) => (
+  <FormControl {...group.props}>
+    { children }
+  </FormControl>
+)
+
+const FormControlLabelLocal = ({ instance: group, children }: IGroup) => (
+  <FormControlLabel
+    label=''
+    {...group.props}
+    control={children as ReactElement}
+  />
+)
+
+const IndeterminateGroup = ({ instance: group, children }: IGroup) => {
+  const childrenArray = Array.isArray(children) ? [...children] : [children]
+  const parent = childrenArray.shift()
+  return (
+    <div>
+      <FormControlLabel
+        {...group.getProps()}
+        control={parent}
+      />
+      {childrenArray}
+    </div>
+  )
+}
+
+const DivGroup = ({ instance: group, children }: IGroup) => (
+  <div {...group.props}>
+    { children }
+  </div>
+)
+
+const NoneGroup = ({ children }: IGroup) => (
+  <>
+    { children }
+  </>
+)
+
+const map: {[constant: string]: (props: IGroup) => JSX.Element} = {
+  [BOX]: BoxGroup,
+  [STACK]: StackGroup,
+  [LOCALIZED]: LocalizedGroup,
+  [FORM_GROUP]: FormGroupLocal,
+  [FORM_CONTROL]: FormControlLocal,
+  [FORM_CONTROL_LABEL]: FormControlLabelLocal,
+  [INDETERMINATE]: IndeterminateGroup,
+  [DIV]: DivGroup,
+  [NONE]: NoneGroup
+}
+
+const StateJsxFormItemGroup = memo(({ instance: group, children }: IGroup) => {
+  try {
+    const groupType = group.type.toLowerCase()
+    const Group = map[groupType] ?? map[NONE]
+    return <Group instance={group}>{ children }</Group>
+  } catch (e) {
+    ler(`Form group selection exception. ${(e as Error).message}`)
+    error_id(48).remember_exception(e)
+    return <NoneGroup instance={group}>{ children }</NoneGroup>
+  }
+})
 
 // Set display name for debugging
-StateJsxFormItemGroup.displayName = 'StateJsxFormItemGroup';
+StateJsxFormItemGroup.displayName = 'StateJsxFormItemGroup'
 
-export default StateJsxFormItemGroup;
+export default StateJsxFormItemGroup

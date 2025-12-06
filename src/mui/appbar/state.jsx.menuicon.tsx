@@ -4,7 +4,7 @@ import { StateJsxIcon } from '../icon'
 import { memo } from 'react'
 
 interface IMenuIcon {
-  def: StatePage
+  instance: StatePage
   toggle: () => void
 }
 
@@ -19,7 +19,7 @@ const MenuIcon = memo(() => <StateJsxIcon name='menu' />)
  * To make use of the default drawer, the flag, `generateDefaultDrawer` needs
  * to be set to `true`.
  */
-const StateJsxMenuIcon = ({ def: page, toggle }: IMenuIcon) => {
+const StateJsxMenuIcon = ({ instance: page, toggle }: IMenuIcon) => {
   const { appbar } = page
   if (page.hasDrawer) {
     return (

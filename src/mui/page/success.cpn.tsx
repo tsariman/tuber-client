@@ -40,7 +40,7 @@ const CheckCircleOutlineIcon = memo(() => (
  *
  * Tags: `success`, `page`, `message`
  */
-export default function PageSuccess ({ def: page }:{ def: StatePage }) {
+export default function PageSuccess ({ instance: page }:{ instance: StatePage }) {
   const tmpState = useSelector((state: RootState) => state.tmp)
   const appState = useSelector((state: RootState) => state.app)
   const tmp = useMemo(() => new StateTmp(tmpState), [tmpState])

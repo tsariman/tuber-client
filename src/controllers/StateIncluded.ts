@@ -4,8 +4,7 @@ import type {
   IJsonapiResponseResource,
   IStateIncluded
 } from '@tuber/shared'
-import State from './State'
-import { get_state } from '../state'
+import type State from './State'
 import { index_by_id } from '../business.logic'
 
 interface IOpts {
@@ -31,10 +30,8 @@ export default class StateIncluded<T=IJsonapiDataAttributes>
     this._index = null
   }
 
-  get state() { return this._state }
-  get parent() {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get state(): IStateIncluded { return this._state }
+  get parent(): State | undefined { return this._parent }
   get props() { return this.die('Not implemented', {}) }
 
   configure(opts: IOpts): this {

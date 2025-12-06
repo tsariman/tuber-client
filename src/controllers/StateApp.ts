@@ -1,11 +1,10 @@
 import { get_origin_ending_fixed } from '../business.logic/parsing'
 import AbstractState from './AbstractState'
 import type { IStateApp, TThemeMode } from '@tuber/shared'
-import State from './State'
-import { get_state } from '../state'
+import type State from './State'
 import Config from '../config'
 
-/** Wrapper class for `initial.state.app` */
+/** Wrapper class for `initialState.app` */
 export default class StateApp extends AbstractState implements IStateApp {
   private _state: IStateApp
   private _parent?: State
@@ -20,9 +19,7 @@ export default class StateApp extends AbstractState implements IStateApp {
   /** Get a copy of the app definition. */
   get state(): IStateApp { return this._state }
   /** Chain-access to root definition. */
-  get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent(): State | undefined { return this._parent }
   get props(): unknown { return this.die('Not implemented yet.', {}) }
   configure(conf: unknown): void { void conf }
   get fetchingStateAllowed(): boolean {

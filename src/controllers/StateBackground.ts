@@ -4,7 +4,7 @@ import AbstractState from './AbstractState'
 import type { IStateBackground } from '@tuber/shared'
 import type State from './State'
 
-/** Wrapper class for `initial.state.background` */
+/** Wrapper class for `initialState.background` */
 export default class StateBackground<P = State>
   extends AbstractState
   implements IStateBackground

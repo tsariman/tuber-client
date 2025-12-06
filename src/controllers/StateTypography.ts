@@ -2,7 +2,7 @@ import AbstractState from './AbstractState'
 import type { IStateTypography } from '@tuber/shared'
 import type State from './State'
 
-/** Wrapper class for `initial.state.typography` */
+/** Wrapper class for `initialState.typography` */
 export default class StateTypography<P = State>
   extends AbstractState
   implements IStateTypography

@@ -8,12 +8,12 @@ import StateJsxMenuIcon from './state.jsx.menuicon'
 import type StatePage from '../../controllers/StatePage'
 
 interface IResponsive {
-  def: StatePage
+  instance: StatePage
 }
 
 const navItems = [ 'Home', 'About', 'Contact' ]
 
-const StateJsxAppbarResponsive = ({ def: page }: IResponsive) => {
+const StateJsxAppbarResponsive = ({ instance: page }: IResponsive) => {
   const [ mobileOpen, setMobileOpen ] = React.useState(false)
 
   const handleDrawerToggle = () => {
@@ -24,7 +24,7 @@ const StateJsxAppbarResponsive = ({ def: page }: IResponsive) => {
     <Box sx={{ display: 'flex' }}>
       <Appbar component="nav">
         <Toolbar>
-          <StateJsxMenuIcon def={page} toggle={handleDrawerToggle} />
+          <StateJsxMenuIcon instance={page} toggle={handleDrawerToggle} />
           <Typography
             variant="h6"
             component="div"

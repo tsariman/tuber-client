@@ -5,7 +5,7 @@ import type { TWithRequired } from '@tuber/shared'
 import type { IStateDrawer } from '../interfaces/localized'
 import type { DrawerProps } from '@mui/material'
 
-/** Wrapper class for `initial.state.drawer` */
+/** Wrapper class for `initialState.drawer` */
 export default class StateDrawer<P = State>
   extends AbstractState
   implements IStateDrawer

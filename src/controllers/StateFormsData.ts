@@ -1,9 +1,8 @@
 import type { TObj } from '@tuber/shared'
 import AbstractState from './AbstractState'
-import State from './State'
-import { get_state } from 'src/state'
+import type State from './State'
 
-/** Wrapper class for `initial.state.formsData` */
+/** Wrapper class for `initialState.formsData` */
 export default class StateFormsData extends AbstractState {
   private _state: TObj
   private _parent?: State
@@ -16,9 +15,7 @@ export default class StateFormsData extends AbstractState {
 
   configure(conf: unknown): void { void conf }
   get state(): TObj { return this._state }
-  get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent(): State | undefined { return this._parent }
   get props(): TObj { return this.die<TObj>('Not implemented.', {}) }
 
   /**

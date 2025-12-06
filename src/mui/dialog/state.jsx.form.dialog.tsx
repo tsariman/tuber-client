@@ -7,17 +7,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import type StateDialogForm from '../../controllers/templates/StateDialogForm'
 import type { AppDispatch, RootState } from '../../state'
 import StateJsxDialogAction from './actions/state.jsx.form'
-import FormContent from '../../components/content/form.cpn'
+import FormContent from '../../components/form.cpn'
 import { memo, useMemo } from 'react'
 import { StateJsxIcon } from '../icon'
 import DialogContentText from '@mui/material/DialogContentText'
-import { StateAllForms } from '../../controllers'
+import { StateAllForms, StateFormsDataErrors } from '../../controllers'
 
-interface IDialogForm { def: StateDialogForm }
+interface IDialogForm { instance: StateDialogForm }
 
 const CloseIcon = memo(() => <StateJsxIcon name='close' />)
 
-export default function StateJsxDialogForm({ def: dialog }: IDialogForm) {
+const StateJsxDialogForm = memo(({ instance: dialog }: IDialogForm) => {
   const dispatch = useDispatch<AppDispatch>()
   const open = useSelector((state: RootState) => state.dialog.open ?? false)
   const formsState = useSelector((state: RootState) => state.forms)
@@ -25,6 +25,12 @@ export default function StateJsxDialogForm({ def: dialog }: IDialogForm) {
     () => new StateAllForms(formsState).getForm(dialog.contentName),
     [dialog.contentName, formsState]
   )
+  const formsDataErrorsState = useSelector((state: RootState) => state.formsDataErrors)
+  const formsDataErrors = useMemo(
+    () => new StateFormsDataErrors(formsDataErrorsState),
+    [formsDataErrorsState]
+  )
+  form?.configure({ formsDataErrors })
 
   const handleDialogTitleClose = () => dispatch({ type: 'dialog/dialogClose' })
   const handleClose = (_e: unknown, reason: unknown) => {
@@ -59,15 +65,17 @@ export default function StateJsxDialogForm({ def: dialog }: IDialogForm) {
         ): ( null )}
         <FormContent
           type='dialog'
-          def={form}
+          instance={form}
           formName={dialog.contentName}
         />
       </DialogContent>
       {form && dialog.actions.length > 0 ? (
         <DialogActions>
-          <StateJsxDialogAction def={dialog.actions} form={form} />
+          <StateJsxDialogAction array={dialog.actions} form={form} />
         </DialogActions>
       ) : ( null )}
     </Dialog>
   )
-}
+}, (prevProps, nextProps) => prevProps.instance.state === nextProps.instance.state)
+
+export default StateJsxDialogForm

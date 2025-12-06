@@ -70,7 +70,7 @@ import type { IStateFormItem } from '../interfaces/localized'
 import StateFormsData from '../controllers/StateFormsData'
 
 interface IComponentsBuilderProps {
-  def: StateComponent[]
+  instance: StateComponent[]
   parent: unknown
 }
 
@@ -89,7 +89,7 @@ interface IComponentsTable {
 
 /** @deprecated */
 function RecursiveComponents({
-  def: allDefs,
+  instance: allDefs,
   parent
 }: IComponentsBuilderProps): JSX.Element {
   const parserFactory = new StateThemeParser({ alpha })
@@ -201,7 +201,7 @@ function RecursiveComponents({
     components.push(
       <StateJsxTextfield
         key={`${type}-${key}`}
-        def={textfield}
+        instance={textfield}
       />
     )
   }
@@ -214,7 +214,7 @@ function RecursiveComponents({
     components.push(
       <JsonPicker
         key={`${type}-${key}`}
-        def={picker}
+        instance={picker}
       />
     )
   }
@@ -223,7 +223,7 @@ function RecursiveComponents({
     [STATE_BUTTON]:({ type, key, getState: getJson }:IDefProps): number => components.push(
       <StateJsxButton
         key={`${type}-${key}`}
-        def={new StateFormItem(getJson(), parent as StateForm)}
+        instance={new StateFormItem(getJson(), parent as StateForm)}
       />
     ),
     [CHECKBOXES]:({ type, key, getState: getJson }:IDefProps): void => {
@@ -238,10 +238,10 @@ function RecursiveComponents({
     [FORM]:({ type, key, getState: getJson, items }:IDefProps): void => {
       const form = new StateForm(getJson(), parent as StateAllForms)
       components.push(
-        <StateJsxForm key={`${type}-${key}`} def={form}>
+        <StateJsxForm key={`${type}-${key}`} instance={form}>
           <RecursiveComponents
             key={`rc-${type}-${key}`}
-            def={items}
+            instance={items}
             parent={form}
           />
         </StateJsxForm>
@@ -250,7 +250,7 @@ function RecursiveComponents({
     [STATE_INPUT]:({ type, key, getState: getJson }:IDefProps): number => components.push(
       <StateJsxInput
         key={`${type}-${key}`}
-        def={new StateFormItem(getJson(), parent as StateForm)}
+        instance={new StateFormItem(getJson(), parent as StateForm)}
       />
     ),
     [INPUT_LABEL]:({ type, key, props }:IDefProps): number => components.push(
@@ -268,7 +268,7 @@ function RecursiveComponents({
     [RADIO_BUTTONS]:({ type, key, getState: getJson }:IDefProps): number => components.push(
       <StateJsxRadio
         key={`${type}-${key}`}
-        def={new StateFormItemRadio(getJson(), parent as StateForm)}
+        instance={new StateFormItemRadio(getJson(), parent as StateForm)}
       />
     ),
     [STATE_SELECT]:({ type, key, getState: getJson }:IDefProps): number => components.push(
@@ -284,7 +284,7 @@ function RecursiveComponents({
           ? onFormSubmitDefault(parent)
           : button.onClick
       }
-      components.push(<StateJsxButton key={`${type}-${key}`} def={button} />)
+      components.push(<StateJsxButton key={`${type}-${key}`} instance={button} />)
     },
     [SWITCH]:({ type, key, getState: getJson }:IDefProps): void => {
       const $witch = new StateFormItemSwitch(getJson(), parent as StateForm)
@@ -294,7 +294,7 @@ function RecursiveComponents({
       components.push(
         <StateJsxSwitch
           key={`${type}-${key}`}
-          def={$witch}
+          instance={$witch}
         />
       )
     },
@@ -324,7 +324,7 @@ function RecursiveComponents({
         <C key={`${type}-${key}`} {...props}>
           <RecursiveComponents
             key={`rc-${type}-${key}`}
-            def={items}
+            instance={items}
             parent={parent}
           />
         </C>
@@ -370,8 +370,8 @@ function RecursiveComponents({
 } // END RecursiveComponents()
 
 export default function ComponentsBuilder({
-  def: allDefs,
+  instance: allDefs,
   parent}: IComponentsBuilderProps
 ) {
-  return <RecursiveComponents def={allDefs} parent={parent} />
+  return <RecursiveComponents instance={allDefs} parent={parent} />
 }

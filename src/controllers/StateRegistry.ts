@@ -1,10 +1,9 @@
 import { ler } from '../business.logic/logging'
 import { error_id } from '../business.logic/errors'
-import { get_state } from '../state'
+import type State from './State'
 import AbstractState from './AbstractState'
-import State from './State'
 
-/** Wrapper class for `initial.state.staticRegistry` */
+/** Wrapper class for `initialState.staticRegistry` */
 export default class StateRegistry extends AbstractState {
   private _state: Record<string, unknown>
   private _parent?: State
@@ -17,9 +16,7 @@ export default class StateRegistry extends AbstractState {
   get state(): Record<string, unknown> {
     return this._state
   }
-  get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent(): State | undefined { return this._parent }
   get props(): Record<string, unknown> {
     return this.die('Not implemented', {})
   }

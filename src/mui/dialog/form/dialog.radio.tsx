@@ -1,26 +1,26 @@
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import type { StateFormItemRadio } from '../../../controllers';
-import type { THive } from '.';
-import { useState } from 'react';
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormControl from '@mui/material/FormControl'
+import FormLabel from '@mui/material/FormLabel'
+import type { StateFormItemRadio } from '../../../controllers'
+import type { THive } from '.'
+import { useState } from 'react'
 
 interface IDialogRadio {
-  def: StateFormItemRadio;
-  hive: THive;
+  instance: StateFormItemRadio
+  hive: THive
 }
 
-export default function DialogRadio(props: IDialogRadio) {
-  const radio = props.def;
-  const hive  = props.hive;
-  const [currentValue, setCurrentValue] = useState<string>(hive[radio.name] as string);
+const DialogRadio = (props: IDialogRadio) => {
+  const radio = props.instance
+  const hive  = props.hive
+  const [currentValue, setCurrentValue] = useState<string>(hive[radio.name] as string)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = (e.target as HTMLInputElement).value;
-    setCurrentValue(value);
-    hive[radio.name] = value;
+    const value = (e.target as HTMLInputElement).value
+    setCurrentValue(value)
+    hive[radio.name] = value
   }
 
   return (
@@ -45,5 +45,7 @@ export default function DialogRadio(props: IDialogRadio) {
         ))}
       </RadioGroup>
     </FormControl>
-  );
+  )
 }
+
+export default DialogRadio

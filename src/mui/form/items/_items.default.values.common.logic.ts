@@ -1,4 +1,4 @@
-import store from '../../../state';
+import { dispatch, get_state } from '../../../state'
 import {
   TEXTFIELD,
   TEXTAREA,
@@ -17,13 +17,13 @@ import {
   CHECKBOXES,
   DESKTOP_DATE_TIME_PICKER,
   type TObj
-} from '@tuber/shared';
+} from '@tuber/shared'
 import {
   formsDataUpdate,
   type IFormsDataArgs
-} from '../../../slices/formsData.slice';
-import type StateFormItem from '../../../controllers/StateFormItem';
-import { error_id } from '../../../business.logic/errors';
+} from '../../../slices/formsData.slice'
+import type StateFormItem from '../../../controllers/StateFormItem'
+import { error_id } from '../../../business.logic/errors'
 
 /**
  * Insert form data to the Redux store.
@@ -31,7 +31,7 @@ import { error_id } from '../../../business.logic/errors';
  * @param payload 
  */
 function save_form_data(payload: IFormsDataArgs): void {
-  store.dispatch(formsDataUpdate(payload));
+  dispatch(formsDataUpdate(payload))
 }
 
 /**
@@ -48,12 +48,12 @@ function save_form_data(payload: IFormsDataArgs): void {
 function no_form_data_exist (formName: string, name?: string): boolean {
   try {
     if (name) {
-      const formData = store.getState().formsData[formName] as TObj;
-      return formData[name] == null; // caches both undefined and null at the same time.
+      const formData = get_state().formsData[formName] as TObj
+      return formData[name] == null // caches both undefined and null at the same time.
     }
-  } catch (e) { error_id(24).remember_exception(e); /* error 24 */ }
+  } catch (e) { error_id(24).remember_exception(e) /* error 24 */ }
 
-  return true;
+  return true
 }
 
 /**
@@ -67,7 +67,7 @@ export function set_default_value(field: StateFormItem, formName: string): void 
     && field.name
     && no_form_data_exist(formName, field.name)
   ) {
-    const { type, name, has: { defaultValue : value } } = field;
+    const { type, name, has: { defaultValue : value } } = field
     switch (type.toLowerCase()) {
 
     // TODO Add more cases here to enable default values on additional types
@@ -88,37 +88,37 @@ export function set_default_value(field: StateFormItem, formName: string): void 
     case MOBILE_DATE_PICKER:
     case TIME_PICKER:
     case DATE_TIME_PICKER:
-      save_form_data({formName, name, value});
-      break;
+      save_form_data({formName, name, value})
+      break
 
     }
   }
 }
 
-export function store_default_values<T extends object>(obj: T, formName: string) {
-  Object.keys(obj).map(
+export function store_default_values<T extends object>(obj: T, formName: string): void {
+  Object.keys(obj).forEach(
     name => save_form_data({
       formName,
       name,
       value: obj[name as (keyof typeof obj)]
     })
-  );
+  )
 }
 
 /**
- * Populates redux store with default values found in form field's JSON
- * definition.
- * 
+ * Populates redux store with default values found in form field states.
+ *
  * ```ts
  * const fieldJson = {
  *   'has': {
  *      'defaulValue': '' // <-- here
  *    }
- * };
+ * }
  * ```
  *
  * @param items array of form field definition
  */
 export default function set_all_default_values (items: StateFormItem[]) {
-  items.map(field => set_default_value(field, field.parent.name));
+  items.forEach(field => set_default_value(field, field.parent.name))
+  items.length = 0
 }

@@ -1,27 +1,36 @@
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import NativeSelect from '@mui/material/NativeSelect';
-import TextField from '@mui/material/TextField';
-import { useSelector } from 'react-redux';
-import { NAME_NOT_SET } from '@tuber/shared';
-import {
-  type StateFormItemSelect,
-  StateFormsData
-} from '../../../../controllers';
-import type { RootState } from '../../../../state';
-import type { TFormItemDefaultEventHandler } from '../_items.common.logic';
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import NativeSelect from '@mui/material/NativeSelect'
+import TextField from '@mui/material/TextField'
+import { useDispatch, useSelector } from 'react-redux'
+import { NAME_NOT_SET } from '@tuber/shared'
+import type StateFormItemSelect from '../../../../controllers/templates/StateFormItemSelect'
+import StateFormsData from '../../../../controllers/StateFormsData'
+import { type AppDispatch, type RootState } from '../../../../state'
+import { useCallback, useMemo } from 'react'
 
-interface IDialogSelectNative { def: StateFormItemSelect; }
+interface IDialogSelectNative { instance: StateFormItemSelect }
 
-export default function StateJsxSelectNative (
-  { def: select }: IDialogSelectNative
-) {
-  const { name, parent: { name: formName } } = select;
-  select.configure('native');
-  const formsData = new StateFormsData(
-    useSelector((state: RootState) => state.formsData)
-  );
-  const getValue = () => formsData.getValue(formName, name, '');
+const StateJsxSelectNative = ({ instance: select }: IDialogSelectNative) => {
+  const { name, parent: { name: formName } } = select
+  select.configure('native')
+  const formsDataState = useSelector((state: RootState) => state.formsData)
+  const formsData = useMemo(
+    () => new StateFormsData(formsDataState),
+    [formsDataState]
+  )
+  const getValue = () => formsData.getValue(formName, name, '')
+  const dispatch = useDispatch<AppDispatch>()
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) =>
+  dispatch({
+    type: 'formsData/formsDataUpdate',
+    payload: {
+      formName,
+      name,
+      value: e.target.value
+    }
+  }), [dispatch, formName, name])
 
   return name ? (
     <FormControl {...select.formControlProps}>
@@ -35,7 +44,7 @@ export default function StateJsxSelectNative (
           name: select.name,
           id: select.config_id,
         }}
-        onChange={(select.onChange as TFormItemDefaultEventHandler)(name)}
+        onChange={handleChange}
       >
         <option value=''></option>
         {select.has.items.map((option, i) => (
@@ -47,5 +56,7 @@ export default function StateJsxSelectNative (
     </FormControl>
   ) : (
     <TextField value={`SELECT ${NAME_NOT_SET}`} disabled />
-  );
+  )
 }
+
+export default StateJsxSelectNative

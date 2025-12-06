@@ -17,7 +17,8 @@ import { memo, useMemo } from 'react'
 import StateApp from '../../controllers/StateApp'
 
 interface IMini {
-  def: StatePage
+  instance: StatePage
+  app: StateApp
 }
 
 interface AppbarProps extends MuiAppbarProps {
@@ -44,7 +45,7 @@ const Appbar = styled(MuiAppbar, {
   }),
 }))
 
-const StateJsxAppbarMini = ({ def: page }: IMini) => {
+const StateJsxAppbarMini = ({ instance: page }: IMini) => {
   const { appbar } = page
   const appState = useSelector((state: RootState) => state.app)
   const appTitle =  useMemo(
@@ -78,7 +79,7 @@ const StateJsxAppbarMini = ({ def: page }: IMini) => {
             </IconButton>
           ) : ( null )}
           {appbar.hasLogo ? (
-            <StateJsxLogo def={appbar} />
+            <StateJsxLogo instance={appbar} />
           ) : (
             <Typography
               sx={{

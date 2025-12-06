@@ -1,9 +1,8 @@
 import AbstractState from './AbstractState'
 import type { IStateTopLevelLinks } from '@tuber/shared'
-import State from './State'
-import { get_state } from 'src/state'
+import type State from './State'
 
-/** Wrapper class for `initial.state.topLevelLinks` */
+/** Wrapper class for `initialState.topLevelLinks` */
 export default class StateTopLevelLinks extends AbstractState {
   private _state: IStateTopLevelLinks
   private _parent?: State
@@ -16,8 +15,6 @@ export default class StateTopLevelLinks extends AbstractState {
 
   configure(conf: unknown): void { void conf }
   get state(): IStateTopLevelLinks { return this._state }
-  get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent(): State | undefined { return this._parent }
   get props(): unknown { return this.die('Not implemented yet.', {}) }
 }

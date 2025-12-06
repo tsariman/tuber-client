@@ -13,8 +13,8 @@ interface IDialogSelect {
 export default function DialogSelect ({def}: IDialogSelect) {
   const formItemSelect = new StateFormItemSelect(def.state, def.parent);
   const table: { [type: string]: JSX.Element } = {
-    'default': <StateJsxSelectDefault def={formItemSelect} />,
-    'native': <StateJsxSelectNative def={formItemSelect} />
+    'default': <StateJsxSelectDefault instance={formItemSelect} />,
+    'native': <StateJsxSelectNative instance={formItemSelect} />
   };
 
   return table[formItemSelect._type.toLowerCase()];

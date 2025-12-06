@@ -28,7 +28,7 @@ type TClasses = 'errorCardHover' | 'errorCardClicked'
 type TStyles = {[key in TClasses]: SxProps }
 type TGetErrorCardStyles = (theme: Theme) => TStyles
 
-interface IPageErrorsProps { def: StatePage }
+interface IPageErrorsProps { instance: StatePage }
 
 interface IHive {
   selected_i?: number
@@ -275,7 +275,7 @@ function ErrorBody({ hive }: { hive: IHive }): JSX.Element | null {
 }
 
 /** Error page */
-export default function PageErrors({ def: page }: IPageErrorsProps) {
+export default function PageErrors({ instance: page }: IPageErrorsProps) {
   void page
   const errors = get_errors_list()
   const [ filter, setFilter ] = useState<string>('')

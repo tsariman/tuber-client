@@ -1,4 +1,4 @@
-import { useMemo, memo, type ReactNode } from 'react'
+import { memo, useMemo, type ReactNode } from 'react'
 import type { StateBackground, StatePage } from '../../controllers'
 import Fade from '@mui/material/Fade'
 import { Box, styled } from '@mui/material'
@@ -13,15 +13,13 @@ const BackgroundStyledBox = styled(Box)(() => ({
 }))
 
 interface IBackgroundProps {
-  def: StateBackground<StatePage>
+  instance: StateBackground<StatePage>
   children?: ReactNode
 }
 
-const Background = memo(function Background(
-  { def: background, children }: IBackgroundProps
-) {
+const Background = memo(({ instance: background, children }: IBackgroundProps) => {
   // Memoize the sx prop to prevent unnecessary recalculations
-  const sx = useMemo(() => background.sx, [background])
+  const sx = useMemo(() => background.sx, [background.sx])
 
   return (
     <Fade in={true}>

@@ -1,37 +1,37 @@
 
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { IStateFormItem } from '@tuber/shared';
-import initialState from '../state/initial.state';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import type { IStateFormItem } from '@tuber/shared'
+import initialState from '../state/initial.state'
 
 export interface ISliceFormsDataErrorsArgs {
-  formName: string;
+  formName: string
   /** Field name */
-  name: string;
+  name: string
   /** Puts field in error status */
-  error: boolean;
+  error: boolean
   /** Field helper text to display */
-  message?: string;
+  message?: string
 
   // Values copied over from form item state
-  required?: boolean;
-  requiredMessage?: string;
-  maxLength?: number;
-  maxLengthMessage?: string;
-  disableOnError?: boolean;
-  invalidationRegex?: string;
-  invalidationMessage?: string;
-  validationRegex?: string;
-  validationMessage?: string;
+  required?: boolean
+  requiredMessage?: string
+  maxLength?: number
+  maxLengthMessage?: string
+  disableOnError?: boolean
+  invalidationRegex?: string
+  invalidationMessage?: string
+  validationRegex?: string
+  validationMessage?: string
 }
 
 interface IRemove {
-  formName: string;
-  name: string;
+  formName: string
+  name: string
 }
 
 interface IFormsDataErrorRemoveAction {
-  type: string;
-  payload: IRemove;
+  type: string
+  payload: IRemove
 }
 
 export function save_form_item_validation(
@@ -47,7 +47,7 @@ export function save_form_item_validation(
     invalidationMessage: state.has?.invalidationMessage,
     validationRegex: state.has?.validationRegex,
     validationMessage: state.has?.validationMessage
-  };
+  }
 }
 
 export const formsDataErrorsSlice = createSlice({
@@ -70,66 +70,68 @@ export const formsDataErrorsSlice = createSlice({
         validationRegex,
         validationMessage,
       } = payload
-      state[formName] = state[formName] || {};
-      state[formName][name] = state[formName][name] ?? {};
-      state[formName][name].error = error;
+      state[formName] = state[formName] || {}
+      state[formName][name] = state[formName][name] ?? {}
+      if (typeof error !== 'undefined') {
+        state[formName][name].error = error
+      }
       if (typeof message !== 'undefined') {
-        state[formName][name].message = message;
+        state[formName][name].message = message
       }
       if (typeof required === 'boolean') {
-        state[formName][name].required = required;
+        state[formName][name].required = required
       }
       if (typeof requiredMessage === 'string'
         && requiredMessage.length > 0
       ) {
-        state[formName][name].requiredMessage = requiredMessage;
+        state[formName][name].requiredMessage = requiredMessage
       }
       if (typeof maxLength !== 'undefined'
         && maxLength > 0
       ) {
-        state[formName][name].maxLength = maxLength;
+        state[formName][name].maxLength = maxLength
       }
       if (typeof maxLengthMessage !== 'undefined') {
-        state[formName][name].maxLengthMessage = maxLengthMessage;
+        state[formName][name].maxLengthMessage = maxLengthMessage
       }
       if (typeof disableOnError !== 'undefined') {
-        state[formName][name].disableOnError = disableOnError;
+        state[formName][name].disableOnError = disableOnError
       }
       if (typeof invalidationRegex !== 'undefined') {
-        state[formName][name].invalidationRegex = invalidationRegex;
+        state[formName][name].invalidationRegex = invalidationRegex
       }
       if (typeof invalidationMessage !== 'undefined') {
-        state[formName][name].invalidationMessage = invalidationMessage;
+        state[formName][name].invalidationMessage = invalidationMessage
       }
       if (typeof validationRegex !== 'undefined') {
-        state[formName][name].validationRegex = validationRegex;
+        state[formName][name].validationRegex = validationRegex
       }
       if (typeof validationMessage !== 'undefined') {
-        state[formName][name].validationMessage = validationMessage;
+        state[formName][name].validationMessage = validationMessage
       }
     },
     /** Deletes a form error data. Payload is the form name. */
     formsDataErrorsClear: (state, action: PayloadAction<string>) => {
-      delete state[action.payload];
+      delete state[action.payload]
     },
     /** [TODO] Does not work! */
     formsDataErrorsClearAll: (state) => {
-      Object.keys(state).forEach(key => delete state[key]);
+      Object.keys(state).forEach(key => delete state[key])
     },
     /** Delete a form field error data */
     formsDataErrorsRemove: (state, { payload }: IFormsDataErrorRemoveAction) => {
-      const { formName, name } = payload;
-      delete state[formName][name];
+      const { formName, name } = payload
+      delete state[formName][name]
     }
   }
-});
+})
 
-export const formsDataErrorsActions = formsDataErrorsSlice.actions;
+export const formsDataErrorsActions = formsDataErrorsSlice.actions
 export const {
   formsDataErrorsClear,
   formsDataErrorsClearAll,
   formsDataErrorsUpdate,
   formsDataErrorsRemove,
-} = formsDataErrorsSlice.actions;
+} = formsDataErrorsSlice.actions
 
-export default formsDataErrorsSlice.reducer;
+export default formsDataErrorsSlice.reducer

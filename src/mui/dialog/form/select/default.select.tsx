@@ -1,24 +1,24 @@
-import FormHelperText from '@mui/material/FormHelperText';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { type SelectChangeEvent } from '@mui/material/Select';
-import { useState } from 'react';
-import type { THive } from '..';
-import { type StateFormItemSelect } from '../../../../controllers';
+import FormHelperText from '@mui/material/FormHelperText'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select, { type SelectChangeEvent } from '@mui/material/Select'
+import { useState } from 'react'
+import type { THive } from '..'
+import { type StateFormItemSelect } from '../../../../controllers'
 
 interface IDialogSelectDefault {
-  def: StateFormItemSelect;
-  hive: THive;
+  instance: StateFormItemSelect
+  hive: THive
 }
 
-export default function DialogSelectDefault (props: IDialogSelectDefault) {
-  const { def: select, hive } = props;
-  const [value, setValue] = useState<string>((hive[select.name] ?? '') as string);
+const DialogSelectDefault = (props: IDialogSelectDefault) => {
+  const { instance: select, hive } = props
+  const [value, setValue] = useState<string>((hive[select.name] ?? '') as string)
 
   const handleChange = (event: SelectChangeEvent) => {
-    setValue(event.target.value as string);
-    hive[select.name] = event.target.value as string;
+    setValue(event.target.value as string)
+    hive[select.name] = event.target.value as string
   }
 
   return (
@@ -38,5 +38,7 @@ export default function DialogSelectDefault (props: IDialogSelectDefault) {
         { select.has.helperText }
       </FormHelperText>
     </FormControl>
-  );
+  )
 }
+
+export default DialogSelectDefault

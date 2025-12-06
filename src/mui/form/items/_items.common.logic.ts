@@ -108,30 +108,34 @@ export function get_locally_stored_value(
 }
 
 /**
- * Converts the data of checkboxes to an array of checked values. e.g. The
- * array will only contain the checkbox values that are checked.
+ * Updates the array of checked checkbox values.
+ * If a checkbox is checked, its value is added to the array.
+ * If a checkbox is unchecked, its value is removed from the array.
  *
- * It also takes a previous array of checked values and updates it with the
- * forms currently checked values.
- *
- * @param cb
+ * @param checkedValues - The current array of checked values.
+ * @param value - The value of the checkbox that changed.
+ * @param checked - Whether the checkbox is now checked.
+ * @returns The updated array of checked values.
  */
-export function update_checkboxes(cb: ICheckboxesData): void {
-  cb.checkedValues = [ ...cb.checkedValues ];
-  const valueIndex = cb.checkedValues.indexOf(cb.value);
-  const containsValue = (valueIndex >= 0);
-  if (containsValue && !cb.checked) {
-    cb.checkedValues.splice(valueIndex, 1);
-    cb.statuses[cb.value] = false;
-  } else if (!containsValue && cb.checked) {
-    cb.checkedValues.push(cb.value);
-    cb.statuses[cb.value] = true;
+export function update_checkboxes(
+  checkedValues: string[],
+  value: string,
+  checked: boolean
+): string[] {
+  const newCheckedValues = [...checkedValues];
+  const valueIndex = newCheckedValues.indexOf(value);
+  const containsValue = valueIndex >= 0;
+  if (containsValue && !checked) {
+    newCheckedValues.splice(valueIndex, 1);
+  } else if (!containsValue && checked) {
+    newCheckedValues.push(value);
   }
+  return newCheckedValues;
 }
 
 export function get_statuses(values: string[]): ICheckboxesData['statuses'] {
   const statuses: {[name: string]: boolean} = {};
-  values.map(value => statuses[value] = true);
+  values.forEach(value => statuses[value] = true);
   return statuses;
 }
 

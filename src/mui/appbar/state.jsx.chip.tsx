@@ -1,33 +1,29 @@
-import Chip from '@mui/material/Chip';
-import { useDispatch, useSelector } from 'react-redux';
-import store, {
-  type AppDispatch,
-  type RootState,
-  actions,
-  type IRedux
-} from '../../state';
-import StateFormItemCustomChip from '../../controllers/templates/StateFormItemCustomChip';
+import Chip from '@mui/material/Chip'
+import { useSelector } from 'react-redux'
+import { type RootState, get_redux } from '../../state'
+import StateFormItemCustomChip from '../../controllers/templates/StateFormItemCustomChip'
+import { useMemo } from 'react'
 
 interface IStateJsxChipProps {
-  def: StateFormItemCustomChip<unknown>[];
+  array: StateFormItemCustomChip<unknown>[]
 }
 
-export default function StateJsxChip ({ def: chips }: IStateJsxChipProps) {
-  const dispatch = useDispatch<AppDispatch>();
+const StateJsxChip = ({ array: chips }: IStateJsxChipProps) => {
   const route = useSelector(
     (rootState: RootState) => rootState.app.route ?? ''
   );
-  const chipsState = useSelector((rootState: RootState) => rootState.chips);
-  const routeChipsState = chipsState[route];
-  const redux = { store, dispatch, actions, route } as IRedux;
+  const chipsState = useSelector((rootState: RootState) => rootState.chips)
+  const routeChipsState = chipsState[route]
 
-  const fixedChips = chips.map(chip => {
-    const cState = routeChipsState[chip.id];
+  const fixedChips = useMemo(() => chips.map(chip => {
+    const cState = routeChipsState[chip.id]
     return new StateFormItemCustomChip({
       ...chip,
       ...cState,
-    }, {});
-  });
+    }, {})
+  }), [chips, routeChipsState])
+
+  const memoizedRedux = useMemo(() => get_redux(route), [route])
 
   return (
     <>
@@ -38,11 +34,12 @@ export default function StateJsxChip ({ def: chips }: IStateJsxChipProps) {
           label={chip.label}
           variant={chip.variant}
           color={chip.color}
-          onClick={chip.onClick(redux)}
-          onDelete={chip.onDelete(redux)}
+          onClick={chip.onClick(memoizedRedux)}
+          onDelete={chip.onDelete(memoizedRedux)}
         />
       ))}
     </>
-  );
-
+  )
 }
+
+export default StateJsxChip

@@ -14,7 +14,7 @@ import StateApp from '../../controllers/StateApp'
 import StateNet from '../../controllers/StateNet'
 import StatePathnames from '../../controllers/StatePathnames'
 
-export default function PageBlank ({ def: page }:{ def: StatePage }) {
+export default function PageBlank ({ instance: page }:{ instance: StatePage }) {
   const dispatch = useDispatch<AppDispatch>()
   const appState = useSelector((state: RootState) => state.app)
   const netState = useSelector((state: RootState) => state.net)

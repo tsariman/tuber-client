@@ -1,14 +1,14 @@
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import { type StateFormItemRadio, StateFormsData } from '../../../controllers';
-import { type RootState } from '../../../state';
-import { useSelector } from 'react-redux';
-import type { TFormItemDefaultEventHandler } from './_items.common.logic';
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormControl from '@mui/material/FormControl'
+import FormLabel from '@mui/material/FormLabel'
+import { type StateFormItemRadio, StateFormsData } from '../../../controllers'
+import { type AppDispatch, type RootState } from '../../../state'
+import { useDispatch, useSelector } from 'react-redux'
+import { useCallback, useMemo } from 'react'
 
-interface IDialogRadio { def: StateFormItemRadio; }
+interface IFormRadio { instance: StateFormItemRadio }
 
 /**
  * Example JSON defintion:
@@ -26,19 +26,35 @@ interface IDialogRadio { def: StateFormItemRadio; }
  *     ],
  *     'defaultValue': '' // [required] a radio selected by default
  *   }
- * };
+ * }
  * ```
  */
-export default function StateJsxRadio({ def: radioGroup }: IDialogRadio) {
-  const { name, parent: { name: formName } } = radioGroup;
-  const formsData = new StateFormsData(
-    useSelector((state: RootState) => state.formsData)
-  );
+export default function StateJsxRadio({ instance: radioGroup }: IFormRadio) {
+  const { name, parent: { name: formName } } = radioGroup
+  const formsDataState = useSelector((state: RootState) => state.formsData)
+  const formsData = useMemo(
+    () => new StateFormsData(formsDataState),
+    [formsDataState]
+  )
+  const dispatch = useDispatch<AppDispatch>()
+
+  /** Saves the form field value to the store. */
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) =>
+    dispatch(
+  {
+    type: 'formsData/formsDataUpdate',
+    payload: {
+      formName,
+      name,
+      value: e.target.value
+    }
+  }), [dispatch, formName, name])
+
   const storeValue = formsData.getValue(
     formName,
     name,
     radioGroup.has.items[0].name
-  );
+  )
 
   return (
     <FormControl {...radioGroup.formControlProps}>
@@ -48,7 +64,8 @@ export default function StateJsxRadio({ def: radioGroup }: IDialogRadio) {
       <RadioGroup
         {...radioGroup.props}
         name={name}
-        onChange={(radioGroup.onChange as TFormItemDefaultEventHandler)(name)}
+        value={storeValue}
+        onChange={handleChange}
       >
         {radioGroup.has.items.map((radio, i) => (
           <FormControlLabel
@@ -62,11 +79,10 @@ export default function StateJsxRadio({ def: radioGroup }: IDialogRadio) {
               />
             }
             label={radio.label}
-            checked={radio.name === storeValue}
             disabled={radio.disabled}
           />
         ))}
       </RadioGroup>
     </FormControl>
-  );
+  )
 }

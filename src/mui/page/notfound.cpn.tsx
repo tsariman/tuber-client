@@ -20,7 +20,7 @@ const H2 = styled('h2')(() => ({
   margin: 0
 }))
 
-export default function PageNotFound ({ def: page }: { def: StatePage }) {
+export default function PageNotFound ({ instance: page }: { instance: StatePage }) {
   const tmpState = useSelector((state: RootState) => state.tmp)
   const appState = useSelector((state: RootState) => state.app)
   const tmp = useMemo(() => new StateTmp(tmpState), [tmpState])

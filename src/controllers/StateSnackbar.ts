@@ -3,12 +3,11 @@ import type {
   IStateAnchorOrigin,
   IStateSnackbar
 } from '@tuber/shared'
-import State from './State'
-import { get_state } from '../state'
+import type State from './State'
 import StateAnchorOrigin from './StateAnchorOrigin'
 import type { JSX } from 'react'
 
-/** Wrapper class for `initial.state.snackbar` */
+/** Wrapper class for `initialState.snackbar` */
 export default class StateSnackbar
   extends AbstractState
   implements IStateSnackbar
@@ -25,9 +24,7 @@ export default class StateSnackbar
 
   configure(conf: unknown): void { void conf }
   get state(): IStateSnackbar { return this._state }
-  get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent(): State | undefined { return this._parent }
   get props(): unknown { return this.die('Not implemented yet.', {}) }
   get anchorOrigin(): StateAnchorOrigin {
     return this._snackbarAnchorOrigin

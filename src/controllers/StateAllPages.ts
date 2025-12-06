@@ -4,13 +4,12 @@ import {
   DEFAULT_LANDING_PAGE
 } from '@tuber/shared'
 import AbstractState from './AbstractState'
-import State from './State'
+import type State from './State'
 import type StateApp from './StateApp'
 import StatePage from './StatePage'
 import { log } from '../business.logic/logging'
-import { get_state } from 'src/state'
 
-/** Wrapper class for `initial.state.pages`. */
+/** Wrapper class for `initialState.pages`. */
 export default class StateAllPages extends AbstractState {
   private _state: IStateAllPages
   private _parent?: State
@@ -22,9 +21,7 @@ export default class StateAllPages extends AbstractState {
 
   get state(): IStateAllPages { return this._state }
   /** Chain-access root definition. */
-  get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent(): State | undefined { return this._parent }
   get props(): unknown { return this.die('Not implemented.', {}) }
   configure(conf: unknown): void { void conf }
   /** Check to see if the route has path variables. */

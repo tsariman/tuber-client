@@ -5,20 +5,19 @@ import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import type StatePage from '../../controllers/StatePage'
 import type { AppDispatch, RootState } from '../../state'
 import AppbarButton from '../link'
 import StateJsxLogo from './state.jsx.logo'
 import { StateJsxIcon } from '../icon'
-import { memo } from 'react'
 import StateApp from '../../controllers/StateApp'
 
-interface IBasic { def: StatePage }
+interface IBasic { instance: StatePage }
 
 const MenuIcon = memo(() => <StateJsxIcon name='menu' />)
 
-const StateJsxAppbarBasic = ({ def: page }: IBasic) => {
+const StateJsxAppbarBasic = ({ instance: page }: IBasic) => {
   const { appbar } = page
   const dispatch = useDispatch<AppDispatch>()
   const appState = useSelector((state: RootState) => state.app)
@@ -44,7 +43,7 @@ const StateJsxAppbarBasic = ({ def: page }: IBasic) => {
             </IconButton>
           ) : ( null )}
           {appbar.hasLogo ? (
-            <StateJsxLogo def={appbar} />
+            <StateJsxLogo instance={appbar} />
           ) : (
             <Typography
               sx={{

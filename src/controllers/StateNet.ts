@@ -7,10 +7,9 @@ import {
 } from '../business.logic'
 import AbstractState from './AbstractState'
 import type { IStateNet } from '@tuber/shared'
-import State from './State'
-import { get_state } from '../state'
+import type State from './State'
 
-/** Wrapper class for `initial.state.net` */
+/** Wrapper class for `initialState.net` */
 export default class StateNet extends AbstractState implements IStateNet {
   private _state: IStateNet
   private _parent?: State
@@ -26,9 +25,7 @@ export default class StateNet extends AbstractState implements IStateNet {
 
   configure(conf: unknown): void { void conf }
   get state(): IStateNet { return this._state }
-  get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent(): State | undefined { return this._parent }
   get props(): unknown { return this.die('Not implemented yet.', {}) }
   get csrfTokenName(): string { return this._state.csrfTokenName ?? '' }
   get csrfTokenMethod(): Required<IStateNet>['csrfTokenMethod'] {

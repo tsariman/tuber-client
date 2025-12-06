@@ -1,6 +1,6 @@
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardMedia from '@mui/material/CardMedia'
 import {
   Avatar,
   CardActionArea,
@@ -10,49 +10,49 @@ import {
   IconButton,
   type IconButtonProps,
   styled
-} from '@mui/material';
+} from '@mui/material'
 import {
   StateCard,
   StateCardMultiActionArea,
   StateCardBasic,
   StateCardComplex
-} from '../../controllers';
-import StateJsxCardActionButton from './state.jsx.card.action.button';
-import React, { memo, type JSX } from 'react';
-import { StateJsxIcon } from '../icon';
+} from '../../controllers'
+import StateJsxCardActionButton from './state.jsx.card.action.button'
+import React, { memo, useMemo, type JSX } from 'react'
+import { StateJsxIcon } from '../icon'
 
 interface ICardProps {
-  def: StateCard;
-  avatarText?: string;
-  avatarIcon?: string;
-  avatarImage?: string;
+  instance: StateCard
+  avatarText?: string
+  avatarIcon?: string
+  avatarImage?: string
 }
 
 interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
+  expand: boolean
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
-  void expand;
-  return <IconButton {...other} />;
+  const { expand, ...other } = props
+  void expand
+  return <IconButton {...other} />
 })(({ theme, expand }) => ({
   transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
   marginLeft: 'auto',
   transition: theme.transitions.create('transform', {
     duration: theme.transitions.duration.shortest,
   }),
-}));
+}))
 
-const MoreVertIcon = memo(() => <StateJsxIcon name='more_vert' />);
-const ExpandMoreIcon = memo(() => <StateJsxIcon name='expand_more' />);
-const ShareIcon = memo(() => <StateJsxIcon name='share' />);
-const FavoriteIcon = memo(() => <StateJsxIcon name='favorite_border' />);
+const MoreVertIcon = memo(() => <StateJsxIcon name='more_vert' />)
+const ExpandMoreIcon = memo(() => <StateJsxIcon name='expand_more' />)
+const ShareIcon = memo(() => <StateJsxIcon name='share' />)
+const FavoriteIcon = memo(() => <StateJsxIcon name='favorite_border' />)
 
-export default function StateJsxCard({ def: card }: ICardProps) {
+export default function StateJsxCard({ instance: card }: ICardProps) {
   const map: { [key in typeof card._type]: () => JSX.Element | null } = {
     'basic': () => {
-      const basic = new StateCardBasic(card.state);
+      const basic = new StateCardBasic(card.state)
       return (
         <Card {...basic.props}>
           <CardContent {...basic.contentProps}>
@@ -67,13 +67,13 @@ export default function StateJsxCard({ def: card }: ICardProps) {
             ))}
           </CardActions>
         </Card>
-      );
+      )
     },
     'card': () => null,
     'image_media': () => null,
     'media': () => null,
     'multi_action_area': () => {
-      const multi = new StateCardMultiActionArea(card.state);
+      const multi = new StateCardMultiActionArea(card.state)
       return (
         <Card {...multi.props}>
           <CardActionArea {...multi.actionArea}>
@@ -91,14 +91,14 @@ export default function StateJsxCard({ def: card }: ICardProps) {
             ))}
           </CardActions>
         </Card>
-      );
+      )
     },
     'complex': () => <StateJsxCardComplex def={card} />,
   }
 
-  const CardMap = map[card._type];
+  const CardMap = map[card._type]
 
-  return <CardMap />;
+  return <CardMap />
 }
 
 /**
@@ -107,11 +107,11 @@ export default function StateJsxCard({ def: card }: ICardProps) {
  * @see https://mui.com/material-ui/react-card/#complex-interaction
  */
 const StateJsxCardComplex: React.FC<{ def: StateCard }> = ({ def: card }) => {
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(false)
   const handleExpandClick = () => {
-    setExpanded(!expanded);
+    setExpanded(!expanded)
   }
-  const complex = new StateCardComplex(card.state);
+  const complex = useMemo(() => new StateCardComplex(card.state), [card.state])
 
   return (
     <Card {...complex.props}>
@@ -159,23 +159,23 @@ const StateJsxCardComplex: React.FC<{ def: StateCard }> = ({ def: card }) => {
         </CardContent>
       </Collapse>
     </Card>
-  );
-};
+  )
+}
 
 export interface IStateCardAvatarTypeProps {
-  img?: string;
-  icon?: string;
-  text?: string;
+  img?: string
+  icon?: string
+  text?: string
 }
 
 export function StateCardAvatar(props: IStateCardAvatarTypeProps) {
   if (props.img) {
-    return <img src={props.img} alt={props.text} />;
+    return <img src={props.img} alt={props.text} />
   }
   if (props.icon) {
-    return <img src={props.icon} alt={props.text} />;
+    return <img src={props.icon} alt={props.text} />
   }
   if (props.text) {
-    return <span>{props.text}</span>;
+    return <span>{props.text}</span>
   }
 }

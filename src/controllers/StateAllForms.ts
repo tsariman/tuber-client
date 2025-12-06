@@ -1,11 +1,10 @@
 import Controller from './AbstractState'
-import State from './State'
-import { get_state } from '../state'
+import type State from './State'
 import StateForm from './StateForm'
 import type { TStateAllForms } from '../interfaces/localized'
 import { log } from '../business.logic/logging'
 
-/** Wrapper class for `initial.state.forms` */
+/** Wrapper class for `initialState.forms` */
 export default class StateAllForms extends Controller {
   private _state: TStateAllForms
   private _parent?: State
@@ -18,12 +17,9 @@ export default class StateAllForms extends Controller {
     this._lastFormName = ''
   }
 
-  /** Get all forms json. */
   get state(): TStateAllForms { return this._state }
   /** Chain-access to root definition. */
-  get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent(): State | undefined { return this._parent }
   get props(): unknown { return this.die('Not implemented yet.', {}) }
   configure(conf: unknown): void { void conf }
 

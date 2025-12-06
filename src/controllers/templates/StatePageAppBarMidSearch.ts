@@ -10,28 +10,32 @@ import StatePageAppbar from './StatePageAppbar'
 /** Appbar template for Middle Search Field app bars. */
 export default class StatePageAppbarMidSearch extends StatePageAppbar {
   
-  protected searchFieldIconButtonDef?: StateLink<this>;
-  protected inputChipsDefs?: StateFormItemCustomChip[];
-  protected _chip?: StateAppbarInputChip;
-  protected _route?: string;
-  protected _template?: string;
+  protected searchFieldIconButtonDef?: StateLink<this>
+  protected inputChipsDefs?: StateFormItemCustomChip[]
+  protected _chip?: StateAppbarInputChip
+  protected _route?: string
+  protected _template?: string
 
-  configure = ({ chips, route, template }: IStatePageAppbarConfig) => {
+  configure = (opts: IStatePageAppbarConfig) => {
+    const { chips, route, template, $default, app, allPages } = opts
+    this.defaultDef = $default
+    this.appDef = app
+    this.allPagesDef = allPages
     if (chips) {
-      this._chip = new StateAppbarInputChip(chips);
-      this._chip.configure({ route, template });
+      this._chip = new StateAppbarInputChip(chips)
+      this._chip.configure({ route, template })
     }
-    this._route = route;
-    this._template = template;
-  };
+    this._route = route
+    this._template = template
+  }
 
   /** Whether the app bar has any chips in the search field. */
   get inputHasChips(): boolean {
-    return !!this.inputChipsDefs && this.inputChipsDefs.length > 0;
+    return !!this.inputChipsDefs && this.inputChipsDefs.length > 0
   }
 
   get inputHasNoChips(): boolean {
-    return !this.inputChipsDefs || this.inputChipsDefs.length === 0;
+    return !this.inputChipsDefs || this.inputChipsDefs.length === 0
   }
 
   get menuIconProps(): IconButtonProps {
@@ -42,7 +46,7 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
       'aria-label': 'open drawer',
       'sx': { 'mr': 2 },
       ...this.appbarState.menuIconProps
-    };
+    }
   }
 
   get searchFieldIcon(): StateFormItemCustom<this> {
@@ -52,7 +56,7 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
         'sx': { 'color': 'grey.500' }
       },
       ...this.appbarState.searchFieldIcon
-    }, this);
+    }, this)
   }
 
   get searchFieldIconButton(): StateLink<this> {
@@ -70,7 +74,7 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
         'sx': { 'mr': .5 },
         ...this.appbarState.searchFieldIconButtonProps
       },
-    }, this));
+    }, this))
   }
 
   get inputBaseProps(): Required<IStateAppbar>['inputBaseProps'] {
@@ -89,17 +93,17 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
           'paddingLeft': .5,
         }),
       },
-    };
+    }
   }
 
   get logoContainerProps(): Required<IStateAppbar>['logoContainerProps'] {
-    return this.appbarState.logoContainerProps ?? {};
+    return this.appbarState.logoContainerProps ?? {}
   }
 
   private _breakPath(path: string): string[] {
-    const fixedPath = path.replace(/^\/|\/$/, '');
-    const parts = fixedPath.split('/');
-    return parts;
+    const fixedPath = path.replace(/^\/|\/$/, '')
+    const parts = fixedPath.split('/')
+    return parts
   }
 
   /**
@@ -121,14 +125,14 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
       'tplParts': this._breakPath(tpl),
       'routeParts': this._breakPath(route),
       'match': false
-    };
+    }
     anal.match = anal.tplParts.length === anal.routeParts.length
-      && anal.tplParts[0] === anal.routeParts[0];
-    return anal;
+      && anal.tplParts[0] === anal.routeParts[0]
+    return anal
   }
 
   tplRouteAnal(tpl: string, route: string) {
-    this._tplRouteAnal(tpl, route);
+    this._tplRouteAnal(tpl, route)
   }
 
   /**
@@ -139,20 +143,20 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
    * @returns array of input chips definitions
    */
   get chips() {
-    if (this.inputChipsDefs) { return this.inputChipsDefs; }
+    if (this.inputChipsDefs) { return this.inputChipsDefs }
     if (!this._route || !this._template || !this._chip) {
       return this.ler(
         'call StatePageAppbarMidSearch.configure() first.',
         this.inputChips
-      );
+      )
     }
-    this.inputChipsDefs = [ ...this._chip.alwaysGet() ];
+    this.inputChipsDefs = [ ...this._chip.alwaysGet() ]
     for (const ic of this.appbarState.inputBaseChips ?? []) {
       this.inputChipsDefs.push(
         new StateFormItemCustomChip<this>(ic, this)
-      );
+      )
     }
-    return this.inputChipsDefs;
+    return this.inputChipsDefs
   }
 
   /** Get all chips in the search field. */
@@ -160,7 +164,7 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
     return this.inputChipsDefs
       || (this.inputChipsDefs = (this.appbarState.inputBaseChips || []).map(
         item => new StateFormItemCustomChip(item, this)
-      ));
+      ))
   }
 
 }

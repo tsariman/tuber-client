@@ -1,7 +1,6 @@
 import type { TObj } from '@tuber/shared'
 import AbstractState from './AbstractState'
-import State from './State'
-import { get_state } from '../state'
+import type State from './State'
 import type { IStatePagesDataConfig } from '../interfaces/IControllerConfiguration'
 
 /** Wrapper class for a page state data property */
@@ -18,9 +17,7 @@ export default class StatePagesData extends AbstractState {
 
   get state(): TObj { return this._state }
   /** Chain-access to the root definition. */
-  get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent(): State | undefined { return this._parent }
   get props(): TObj { return this.die('Not implemented.', {}) }
 
   configure({ endpoint }: IStatePagesDataConfig): this {

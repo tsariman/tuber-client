@@ -25,7 +25,7 @@ import type {
 import StateComponent from './StateComponent'
 import type { IStatePageConfig } from '../interfaces/IControllerConfiguration'
 
-/** Wrapper class for a page state found in `initial.state.pages` */
+/** Wrapper class for a page state located in the `initialState.pages` object */
 export default class StatePage extends AbstractState implements IStatePage {
   private _state: IStatePage
   private _parent: StateAllPages

@@ -1,39 +1,39 @@
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-import { type SwipeableDrawerProps } from '@mui/material/SwipeableDrawer';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import { useDispatch, useSelector } from 'react-redux';
-import React from 'react';
-import { get_redux, type AppDispatch, type RootState } from '../../state';
-import { type StatePageDrawer } from '../../controllers';
-import { StateJsxUnifiedIconProvider } from '../icon';
+import Box from '@mui/material/Box'
+import Drawer from '@mui/material/Drawer'
+import SwipeableDrawer from '@mui/material/SwipeableDrawer'
+import { type SwipeableDrawerProps } from '@mui/material/SwipeableDrawer'
+import List from '@mui/material/List'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import { useDispatch, useSelector } from 'react-redux'
+import React, { useMemo } from 'react'
+import { get_redux, type AppDispatch, type RootState } from '../../state'
+import { type StatePageDrawer } from '../../controllers'
+import { StateJsxUnifiedIconProvider } from '../icon'
 
 interface ITempDrawerProps {
-  def: StatePageDrawer;
+  instance: StatePageDrawer
 }
 
-type TAnchor = 'top' | 'left' | 'bottom' | 'right';
+type TAnchor = 'top' | 'left' | 'bottom' | 'right'
 
-export default function TempDrawer({ def: drawer }: ITempDrawerProps) {
-  const dispatch = useDispatch<AppDispatch>();
-  const open = useSelector((state: RootState) => state.drawer.open ?? false);
-  const toggleDrawer = (event: React.KeyboardEvent | React.MouseEvent) => {
+const TempDrawer = ({ instance: drawer }: ITempDrawerProps) => {
+  const dispatch = useDispatch<AppDispatch>()
+  const open = useSelector((state: RootState) => state.drawer.open ?? false)
+  const toggleDrawer = React.useCallback((event: React.KeyboardEvent | React.MouseEvent) => {
     if (
       event.type === 'keydown' &&
       ((event as React.KeyboardEvent).key === 'Tab' ||
         (event as React.KeyboardEvent).key === 'Shift')
     ) {
-      return;
+      return
     }
 
-    dispatch({ type: 'drawer/drawerClose' });
-  };
+    dispatch({ type: 'drawer/drawerClose' })
+  }, [dispatch])
 
-  const list = (anchor: TAnchor = 'left') => (
+  const list = React.useCallback((anchor: TAnchor = 'left') => (
     <Box
       sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : drawer.width }}
     >
@@ -51,9 +51,9 @@ export default function TempDrawer({ def: drawer }: ITempDrawerProps) {
         )) }
       </List>
     </Box>
-  );
+  ), [drawer.items, drawer.width])
 
-  const drawerTable: {[prop: string]: React.JSX.Element } = {
+  const drawerTable: {[prop: string]: React.JSX.Element } = useMemo(() => ({
     'temporary': (
       <Drawer
         {...drawer.props}
@@ -73,7 +73,9 @@ export default function TempDrawer({ def: drawer }: ITempDrawerProps) {
         { list(drawer.props.anchor) }
       </SwipeableDrawer>
     )
-  };
+  }), [dispatch, drawer.props, list, open, toggleDrawer])
 
-  return drawerTable[drawer._type.toLowerCase()];
+  return drawerTable[drawer._type.toLowerCase()]
 }
+
+export default TempDrawer

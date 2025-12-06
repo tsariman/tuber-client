@@ -1,12 +1,11 @@
 import AbstractState from './AbstractState'
 import type { IStateFormsDataErrors } from '@tuber/shared'
-import State from './State'
-import { get_state } from '../state'
+import type State from './State'
 import StateFormErrors from './StateFormErrors'
 
 const EXCEPTION_MESSAGE = 'StateFormsDataErrors: configure instance with \'formName\''
 
-/** Wrapper class for `initial.state.formsDataErrors` */
+/** Wrapper class for `initialState.formsDataErrors` */
 export default class StateFormsDataErrors<T=unknown> extends AbstractState {
   private _state: IStateFormsDataErrors
   private _parent?: State
@@ -18,9 +17,7 @@ export default class StateFormsDataErrors<T=unknown> extends AbstractState {
     this._parent = parent
   }
 
-  get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent(): State | undefined { return this._parent }
   get state(): IStateFormsDataErrors { return this._state }
   get props(): unknown { return this.die('Not implemented yet.', {}) }
 

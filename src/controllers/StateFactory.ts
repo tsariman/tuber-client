@@ -1,4 +1,5 @@
-import { type RootState, get_state } from '../state'
+import type { IState } from '../interfaces/localized'
+import { get_state, subscribe } from '../state'
 
 // Import controller classes
 import StateApp from './StateApp'
@@ -31,9 +32,17 @@ import State from './State'
  * and injecting the parent state instance via constructor.
  */
 export default class StateFactory {
-  private static __rootState?: RootState
+  private static __rootState?: IState
   private static __parent?: State
-  
+
+  static {
+    // Subscribe to store changes to renew __rootState if it's stale
+    subscribe(() => {
+      StateFactory.__rootState = get_state()
+      StateFactory.__parent = undefined
+    })
+  }
+
   private static get _rootState() {
     return StateFactory.__rootState || (StateFactory.__rootState = get_state())
   }

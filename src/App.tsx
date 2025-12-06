@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { type AppDispatch, type RootState, initialize } from './state'
 import { post_req_state } from './state/net.actions'
@@ -17,9 +17,8 @@ import StateApp from './controllers/StateApp'
 
 export default function App() {
   const dispatch = useDispatch<AppDispatch>()
-  const app = new StateApp(
-    useSelector((state: RootState) => state.app)
-  )
+  const appState = useSelector((state: RootState) => state.app)
+  const app = useMemo(() => new StateApp(appState), [appState])
   const allPages = new StateAllPages(
     useSelector((state: RootState) => state.pages)
   )
@@ -59,7 +58,7 @@ export default function App() {
   return (
     <ThemeProvider theme={createTheme(themeState)}>
       <CssBaseline />
-      <AppPage def={allPages} info={app} />
+      <AppPage instance={allPages} app={app} />
     </ThemeProvider>
   )
 }

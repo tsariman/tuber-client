@@ -1,25 +1,21 @@
-import FormControl from '@mui/material/FormControl';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
-import { forwardRef } from 'react';
-import type { ElementType } from 'react';
-import { IMaskInput } from '../../../components/IMaskInput';
-import { useSelector } from 'react-redux';
-import {
-  type StateFormItemInput,
-  StateFormsData
-} from '../../../controllers';
-import type {  RootState } from '../../../state';
-import type { TFormItemDefaultEventHandler } from './_items.common.logic';
+import FormControl from '@mui/material/FormControl'
+import Input from '@mui/material/Input'
+import InputLabel from '@mui/material/InputLabel'
+import { forwardRef, useCallback, type ElementType } from 'react'
+import { IMaskInput } from '../../../components/IMaskInput'
+import { useDispatch, useSelector } from 'react-redux'
+import type StateFormItemInput from '../../../controllers/templates/StateFormItemInput'
+import StateFormsData from '../../../controllers/StateFormsData'
+import type { AppDispatch, RootState } from '../../../state'
 
 interface CustomProps {
-  onChange: (event: { target: { name: string; value: string } }) => void;
-  name: string;
+  onChange: (event: { target: { name: string; value: string } }) => void
+  name: string
 }
 
 const TextMaskCustom = forwardRef<HTMLElement, CustomProps>(
   function TextMaskCustom(props, ref) {
-    const { onChange, ...other } = props;
+    const { onChange, ...other } = props
     return (
       <IMaskInput
         {...other}
@@ -31,16 +27,30 @@ const TextMaskCustom = forwardRef<HTMLElement, CustomProps>(
         onAccept={(value: string) => onChange({ target: { name: props.name, value } })}
         overwrite
       />
-    );
+    )
   },
 )
 
-interface IDialogPhoneInput { def: StateFormItemInput; }
+interface IDialogPhoneInput { instance: StateFormItemInput }
 
-export default function StateJsxPhoneInput({ def: input }: IDialogPhoneInput) {
-  input.configure('phone');
-  const formsData = new StateFormsData(useSelector((state: RootState) => state.formsData));
-  const value = formsData.getValue(input.parent.name, input.name, '');
+export default function StateJsxPhoneInput({ instance: input }: IDialogPhoneInput) {
+  const { name, parent: { name: formName} } = input
+  input.configure('phone')
+  const formsData = new StateFormsData(useSelector((state: RootState) => state.formsData))
+  const dispatch = useDispatch<AppDispatch>()
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => dispatch(
+  {
+    type: 'formsData/formsDataUpdate',
+    payload: {
+      formName,
+      name,
+      value: e.target.value
+    }
+  }), [dispatch, formName, name])
+
+  const value = formsData.getValue(input.parent.name, input.name, '')
 
   return (
     <FormControl {...input.formControlProps}>
@@ -49,9 +59,9 @@ export default function StateJsxPhoneInput({ def: input }: IDialogPhoneInput) {
         {...input.props}
         name={input.name}
         value={value}
-        onChange={(input.onChange as TFormItemDefaultEventHandler)(input.name)}
+        onChange={handleChange}
         inputComponent={TextMaskCustom as ElementType<unknown>}
       />
     </FormControl>
-  );
+  )
 }

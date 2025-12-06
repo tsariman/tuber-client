@@ -1,10 +1,9 @@
 import AbstractState from './AbstractState'
 import type { IStateAllIcons, IStateIcon } from '@tuber/shared'
-import State from './State'
+import type State from './State'
 import StateIcon from './StateIcon'
-import { get_state } from '../state'
 
-/** Wrapper class for `initial.state.icons` */
+/** Wrapper class for `initialState.icons` */
 export default class StateAllIcons extends AbstractState {
   private _state: IStateAllIcons
   private _parent?: State
@@ -18,9 +17,7 @@ export default class StateAllIcons extends AbstractState {
   /** Get a copy of all icons definition. */
   get state(): IStateAllIcons {  return this._state }
   /** Chain-access to root definition. */
-  get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent(): State | undefined { return this._parent }
   get props(): unknown { 
     return this.die('Not implemented yet.', {}) 
   }

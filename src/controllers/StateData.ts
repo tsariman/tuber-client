@@ -7,11 +7,10 @@ import type {
   IStateData,
   TObj
 } from '@tuber/shared'
-import State from './State'
-import { get_state } from '../state'
+import type State from './State'
 import type { IStateDataConfig } from '../interfaces/IControllerConfiguration'
 
-/** Wrapper class for `initial.state.data` */
+/** Wrapper class for `initialState.data` */
 export default class StateData extends AbstractState {
   private _state: IStateData
   private _parent?: State
@@ -28,9 +27,7 @@ export default class StateData extends AbstractState {
   }
 
   get state(): IStateData { return this._state }
-  get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent(): State | undefined { return this._parent }
   get props(): TObj { return this.die('Not implemented yet.', {}) }
 
   get noCollection(): boolean {

@@ -1,9 +1,8 @@
-import State from './State'
+import type State from './State'
 import AbstractState from './AbstractState'
 import type { IJsonapiError } from '@tuber/shared'
-import { get_state } from '../state'
 
-/** Wrapper class for `initial.state.errors` */
+/** Wrapper class for `initialState.errors` */
 export default class StateAllErrors extends AbstractState {
   private _state: IJsonapiError[]
   private _parent?: State
@@ -16,9 +15,7 @@ export default class StateAllErrors extends AbstractState {
 
   get state(): IJsonapiError[] { return this._state }
   /** Chain-access to root definition. */
-  get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent(): State | undefined { return this._parent }
   get props(): unknown { return this.die('Not implemented.', {}) }
   configure(conf: unknown): void { void conf }
 }

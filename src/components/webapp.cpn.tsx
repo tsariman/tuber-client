@@ -1,6 +1,6 @@
 import type { JSX } from 'react';
-import StatePage from '../../controllers/StatePage';
-import TubeResearcher from '../../webapp/tuber/view/default';
+import StatePage from '../controllers/StatePage';
+import TubeResearcher from '../webapp/tuber/view/default';
 
 export interface IWebApps {
   [app: string]: JSX.Element;
@@ -18,7 +18,7 @@ interface IWebAppsProps {
  * };
  * ```
  */
-const WebApps = ({ def: page }: IWebAppsProps) => {
+const WebappContent = ({ def: page }: IWebAppsProps) => {
   // <web-app-name> is a property of this object.
   const webAppsMap: IWebApps = {
     tubeResearcher: <TubeResearcher def={page} />,
@@ -29,4 +29,4 @@ const WebApps = ({ def: page }: IWebAppsProps) => {
   return webAppsMap[page.contentName] || ( null );
 }
 
-export default WebApps;
+export default WebappContent;

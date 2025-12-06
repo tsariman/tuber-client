@@ -1,11 +1,10 @@
 import AbstractState from './AbstractState'
-import State from './State'
-import { get_state } from '../state'
+import type State from './State'
 import Config from '../config'
 import type { TObj } from '@tuber/shared'
 import { error_id } from '../business.logic/errors'
 
-/** Wrapper class for `initial.state.meta` */
+/** Wrapper class for `initialState.meta` */
 export default class StateMeta extends AbstractState {
   private _state: TObj
   private _parent?: State
@@ -18,9 +17,7 @@ export default class StateMeta extends AbstractState {
 
   configure(conf: unknown): void { void conf }
   get state(): TObj { return this._state }
-  get parent (): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent (): State | undefined { return this._parent }
   get props(): unknown { return this.die('Not implemented.', {}) }
 
   /**

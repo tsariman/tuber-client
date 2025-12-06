@@ -8,19 +8,19 @@ import {
   ListItemText,
   styled,
   useTheme
-} from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { type StateDrawerPersistent } from '../../controllers';
-import { type AppDispatch, type RootState, get_redux } from '../../state';
-import { StateJsxIcon, StateJsxUnifiedIconProvider } from '../icon';
-import { Fragment, memo } from 'react';
+} from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
+import { type StateDrawerPersistent } from '../../controllers'
+import { type AppDispatch, type RootState, get_redux } from '../../state'
+import { StateJsxIcon, StateJsxUnifiedIconProvider } from '../icon'
+import { Fragment, memo } from 'react'
 
 /*
   [TODO] Duplicate this code so the drawer can appear on the right
 */
 
 interface PerDrawerProps {
-  def: StateDrawerPersistent;
+  instance: StateDrawerPersistent
 }
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -30,19 +30,19 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   justifyContent: 'flex-end',
-}));
+}))
 
-const ChevronLeftIcon = memo(() => <StateJsxIcon name={'chevron_left'} />);
-const ChevronRightIcon = memo(() => <StateJsxIcon name={'chevron_right'} />);
+const ChevronLeftIcon = memo(() => <StateJsxIcon name={'chevron_left'} />)
+const ChevronRightIcon = memo(() => <StateJsxIcon name={'chevron_right'} />)
 
-export default function PersistentDrawer({def: drawer }: PerDrawerProps) {
-  const open = useSelector((state: RootState) => state.drawer.open);
-  const dispatch = useDispatch<AppDispatch>();
-  const theme = useTheme();
+const PersistentDrawer = ({instance: drawer }: PerDrawerProps) => {
+  const open = useSelector((state: RootState) => state.drawer.open)
+  const dispatch = useDispatch<AppDispatch>()
+  const theme = useTheme()
 
   const handleDrawerClose = () => {
-    dispatch({ type: 'drawer/drawerClose' });
-  };
+    dispatch({ type: 'drawer/drawerClose' })
+  }
 
   return (
     <Drawer
@@ -75,5 +75,7 @@ export default function PersistentDrawer({def: drawer }: PerDrawerProps) {
         )) }
       </List>
     </Drawer>
-  );
+  )
 }
+
+export default PersistentDrawer

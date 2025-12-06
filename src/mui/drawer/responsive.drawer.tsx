@@ -6,19 +6,19 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar
-} from '@mui/material';
-import { Fragment } from 'react';
-import { useSelector } from 'react-redux';
-import { type StateDrawerResponsive } from '../../controllers';
-import { type RootState, get_redux } from '../../state';
-import { StateJsxUnifiedIconProvider } from '../icon';
+} from '@mui/material'
+import { Fragment, useMemo } from 'react'
+import { useSelector } from 'react-redux'
+import { type StateDrawerResponsive } from '../../controllers'
+import { type RootState, get_redux } from '../../state'
+import { StateJsxUnifiedIconProvider } from '../icon'
 
-interface IResDrawerProps { def: StateDrawerResponsive; }
+interface IResDrawerProps { instance: StateDrawerResponsive }
 
-export default function ResponsiveDrawer({ def: drawer }: IResDrawerProps) {
-  const open = useSelector((state: RootState) => state.drawer.open);
+const ResponsiveDrawer = ({ instance: drawer }: IResDrawerProps) => {
+  const open = useSelector((state: RootState) => state.drawer.open)
 
-  const drawerContent = (
+  const drawerContent = useMemo(() => (
     <Fragment>
       { !drawer.parent.hideAppbar && drawer.parent.hasAppbar ? (
         <Fragment>
@@ -41,7 +41,7 @@ export default function ResponsiveDrawer({ def: drawer }: IResDrawerProps) {
         )) }
       </List>
     </Fragment>
-  );
+  ), [drawer.items, drawer.parent.hasAppbar, drawer.parent.hideAppbar])
 
   return (
     <Fragment>
@@ -59,5 +59,7 @@ export default function ResponsiveDrawer({ def: drawer }: IResDrawerProps) {
         { drawerContent }
       </Drawer>
     </Fragment>
-  );
+  )
 }
+
+export default ResponsiveDrawer

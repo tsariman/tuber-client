@@ -20,7 +20,7 @@ import {
 } from '@tuber/shared'
 import type { IStateFormItem, IStateFormItemCustom } from '../interfaces/localized'
 import StateFormItemCustom from './StateFormItemCustom'
-import { dummy_redux_handler, type TReduxHandler } from '../state'
+import { default_callback, dummy_redux_handler, type TReduxHandler } from '../state'
 import StateFormItemInputProps from './StateFormItemInputProps'
 import { err } from '../business.logic/logging'
 
@@ -129,7 +129,7 @@ export default class StateFormItem<P = StateForm, T = unknown>
         this.reduxClick = this.has.getDirectiveHandle('onclick')
           || this.has.getHandler('onclick')
           || this.has.callback
-          || this._getDummyReduxHandler('onclick')
+          || default_callback // this._getDummyReduxHandler('onclick')
       )
   }
   get changeReduxHandler(): TReduxHandler {

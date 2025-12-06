@@ -25,9 +25,9 @@ export default class StatePageAppbar
   protected pageAppbarBackgroundDef?: StatePageAppbarBackground
   declare protected appbarTypography?: StatePageAppbarTypography
   private _appbarLogoProps?: IStateAppbar['logoProps']
-  private _defaultDef?: StateAppbarDefault
-  private _appDef?: StateApp
-  private _allPagesDef?: StateAllPages
+  protected defaultDef?: StateAppbarDefault
+  protected appDef?: StateApp
+  protected allPagesDef?: StateAllPages
 
   constructor(appbar: IStateAppbar, parent: StatePage) {
     super(appbar, parent)
@@ -37,25 +37,25 @@ export default class StatePageAppbar
   }
 
   configure({ $default, app, allPages }: IStatePageAppbarConfig): void {
-    this._defaultDef = $default
-    this._appDef = app
-    this._allPagesDef = allPages
+    this.defaultDef = $default
+    this.appDef = app
+    this.allPagesDef = allPages
   }
 
   private get _default(): StateAppbarDefault {
-    return this._defaultDef ?? this.throw_if_not_configured(
+    return this.defaultDef ?? this.throw_if_not_configured(
       'StateAppbarDefault instance is missing'
     )
   }
 
   private get _app(): StateApp {
-    return this._appDef ?? this.throw_if_not_configured(
+    return this.appDef ?? this.throw_if_not_configured(
       'StateApp instance is missing'
     )
   }
 
   private get _allPages(): StateAllPages {
-    return this._allPagesDef ?? this.throw_if_not_configured(
+    return this.allPagesDef ?? this.throw_if_not_configured(
       'StateAllPages instance is missing'
     )
   }

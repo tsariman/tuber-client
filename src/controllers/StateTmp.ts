@@ -1,12 +1,12 @@
 import AbstractState from './AbstractState'
-import State from './State'
-import { get_state, type AppDispatch } from '../state'
+import type State from './State'
+import { type AppDispatch } from '../state'
 import { ler } from '../business.logic/logging'
 import { tmpRemove } from '../slices/tmp.slice'
 import { is_record } from '../business.logic/utility'
 import type { IStateTmpConfig } from '../interfaces/IControllerConfiguration'
 
-/** Wrapper class for `initial.state.tmp` */
+/** Wrapper class for `initialState.tmp` */
 export default class StateTmp extends AbstractState {
   private _state: Record<string, unknown>
   private _parent?: State
@@ -19,9 +19,7 @@ export default class StateTmp extends AbstractState {
   }
 
   get state(): Record<string, unknown> { return this._state }
-  get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent(): State | undefined { return this._parent }
   get props(): Record<string, unknown> { return this.die('Not implemented yet.', {}) }
 
   configure ({ dispatch }: IStateTmpConfig): void {

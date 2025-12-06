@@ -1,19 +1,16 @@
-import Box from '@mui/material/Box';
-import { styled } from '@mui/material/styles';
-import { useSelector } from 'react-redux';
-import {
-  type StateForm,
-  type StateFormItem
-} from '../../../controllers';
-import { get_redux, type RootState } from '../../../state';
-import parse from 'html-react-parser';
-import { Fragment } from 'react';
-import Link from '@mui/material/Link';
-import type { TObj } from '@tuber/shared';
-import { parseHandlebars } from './_items.common.logic';
+import Box from '@mui/material/Box'
+import { styled } from '@mui/material/styles'
+import { useSelector } from 'react-redux'
+import { type StateForm, type StateFormItem } from '../../../controllers'
+import { get_redux, type RootState } from '../../../state'
+import parse from 'html-react-parser'
+import { Fragment } from 'react'
+import Link from '@mui/material/Link'
+import type { TObj } from '@tuber/shared'
+import { parseHandlebars } from './_items.common.logic'
 
 interface IHtmlProps {
-  def: StateFormItem<StateForm, string>;
+  instance: StateFormItem<StateForm, string>
 }
 
 /** Styled anchor element */
@@ -23,7 +20,7 @@ export const LinkStyled = styled(Link)(({ theme }) => ({
   '&:hover': {
     textDecoration: 'underline'
   }
-}));
+}))
 
 /**
  * Renders HTML as JSX.
@@ -45,31 +42,31 @@ export const LinkStyled = styled(Link)(({ theme }) => ({
  * },
  * ```
  */
-export function StateJsxHtml({ def: html }: { def: StateFormItem<StateForm, string> }) {
-  let htmlText =  html.has.text || html.has.content;
-  const pagesDataState = useSelector((state: RootState) => state.pagesData);
+export function StateJsxHtml({ instance: html }: { instance: StateFormItem<StateForm, string> }) {
+  let htmlText =  html.has.text || html.has.content
+  const pagesDataState = useSelector((state: RootState) => state.pagesData)
 
   if (html.has.key || html.has.route) {
-    const pageData = pagesDataState[html.has.key || html.has.route] as TObj;
-    htmlText = parseHandlebars(html.has.content || html.has.text, pageData);
+    const pageData = pagesDataState[html.has.key || html.has.route] as TObj
+    htmlText = parseHandlebars(html.has.content || html.has.text, pageData)
   }
 
-  return <Box {...html.props} dangerouslySetInnerHTML={{ __html: htmlText }} />;
+  return <Box {...html.props} dangerouslySetInnerHTML={{ __html: htmlText }} />
 }
 
 /** State html tag */
-export const StateJsxHtmlTag: React.FC<IHtmlProps> = ({ def: htmlTag }) => {
+export const StateJsxHtmlTag: React.FC<IHtmlProps> = ({ instance: htmlTag }) => {
   if (htmlTag.has.state.content) {
-    const tag = parse(htmlTag.has.content) || null;
+    const tag = parse(htmlTag.has.content) || null
     if (tag) {
-      return <Fragment>{ tag }</Fragment>;
+      return <Fragment>{ tag }</Fragment>
     }
   }
-  return ( null );
+  return ( null )
 }
 
 /** State version of the HTML anchor tag */
-export const StateJsxHtmlA: React.FC<IHtmlProps> = ({ def: link }) => {
+export const StateJsxHtmlA: React.FC<IHtmlProps> = ({ instance: link }) => {
   return (
     <Fragment>
       <Link
@@ -79,5 +76,5 @@ export const StateJsxHtmlA: React.FC<IHtmlProps> = ({ def: link }) => {
         { link.text }
       </Link>
     </Fragment>
-  );
+  )
 }

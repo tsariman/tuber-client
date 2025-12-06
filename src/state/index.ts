@@ -262,7 +262,10 @@ export interface IRedux {
   route?: string
 }
 
-/** Get Redux handler argument */
+/**
+ * Get Redux handler argument.
+ * @param route If you need to specify the route
+ */
 export const get_redux = (route = ''): IRedux => ({
   store,
   actions,

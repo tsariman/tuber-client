@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react'
+import React from 'react'
 import { styled } from '@mui/material/styles'
 import Appbar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
@@ -11,7 +11,9 @@ import {
   StatePageAppbarMidSearch,
   StateLink,
   StateAppbarQueries,
-  StateApp
+  StateApp,
+  StateAppbarDefault,
+  StateFactory,
 } from '../../controllers'
 import { useDispatch, useSelector } from 'react-redux'
 import { type AppDispatch, type RootState, redux } from '../../state'
@@ -25,7 +27,8 @@ import { appbarQueriesSet } from '../../slices/appbarQueries.slice'
 import { drawerOpen } from '../../slices/drawer.slice'
 
 interface IMidSearch {
-  def: StatePage
+  instance: StatePage
+  app: StateApp
 }
 
 const Search = styled('div')(({ theme }) => ({
@@ -60,23 +63,41 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }))
 
-const MenuIcon = memo(() => <StateJsxIcon name='menu' />)
-const MoreIcon = memo(() => <StateJsxIcon name='more_vert' />)
+const MenuIcon = React.memo(() => <StateJsxIcon name='menu' />)
+const MoreIcon = React.memo(() => <StateJsxIcon name='more_vert' />)
 
-const StateJsxAppbarMidSearch = ({ def: page }: IMidSearch) => {
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
-    React.useState<null | HTMLElement>(null)
+const StateJsxAppbarMidSearch = ({ instance: page, app }: IMidSearch) => {
+  const [
+    mobileMoreAnchorEl,
+    setMobileMoreAnchorEl
+  ] = React.useState<null | HTMLElement>(null)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
-  const appbar = new StatePageAppbarMidSearch(page.appbarJson, page)
-  const chips = useSelector((rootState: RootState) => rootState.chips)
-  const appState = useSelector((state: RootState) => state.app)
-  const { route, title: appTitle } =  useMemo(
-    () => new StateApp(appState), [appState]
+  const defaultAppbarState = useSelector((state: RootState) => state.appbar)
+  const $default = React.useMemo(
+    () => new StateAppbarDefault(defaultAppbarState, StateFactory.parent),
+    [defaultAppbarState]
   )
-  appbar.configure({ chips, route, template: page._key })
+  const appbar = React.useMemo(
+    () => new StatePageAppbarMidSearch(page.appbarJson, page),
+    [page]
+  )
+  const chips = useSelector((rootState: RootState) => rootState.chips)
+  const { route } = app
+  appbar.configure({
+    $default,
+    allPages: page.parent,
+    app,
+    chips,
+    route,
+    template: page._key
+  })
   const dispatch = useDispatch<AppDispatch>()
-  const queries = new StateAppbarQueries(
-    useSelector((rootState: RootState) => rootState.appbarQueries)
+  const appbarQueriesState = useSelector(
+    (rootState: RootState) => rootState.appbarQueries
+  )
+  const queries = React.useMemo(
+    () => new StateAppbarQueries(appbarQueriesState),
+    [appbarQueriesState]
   )
   const value = queries.alwaysGet(route).value
 
@@ -102,7 +123,7 @@ const StateJsxAppbarMidSearch = ({ def: page }: IMidSearch) => {
     setMobileMoreAnchorEl(event.currentTarget)
   }
 
-  const renderMobileMenu = (
+  const renderMobileMenu = React.useMemo(() => (
     <Menu
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{
@@ -122,9 +143,9 @@ const StateJsxAppbarMidSearch = ({ def: page }: IMidSearch) => {
         <AppbarButton def={item} key={`nav-menu-${i}`} />
       ))}
     </Menu>
-  )
+  ), [appbar.items, appbar.mobileMenuId, isMobileMenuOpen, mobileMoreAnchorEl])
 
-  const appbarChips = appbar.chips
+  const appbarChips = React.useMemo(() => appbar.chips, [appbar.chips])
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -139,7 +160,7 @@ const StateJsxAppbarMidSearch = ({ def: page }: IMidSearch) => {
             </IconButton>
           ) : ( null )}
           {appbar.hasLogo ? (
-            <StateJsxLogo def={appbar} />
+            <StateJsxLogo instance={appbar} />
           ) : (
             <Typography
               sx={{
@@ -148,7 +169,7 @@ const StateJsxAppbarMidSearch = ({ def: page }: IMidSearch) => {
               }}
               {...appbar.textLogoProps}
             >
-              { appTitle }
+              { app.title }
             </Typography>
           )}
           <Search {...appbar.searchContainerProps}>
@@ -161,7 +182,7 @@ const StateJsxAppbarMidSearch = ({ def: page }: IMidSearch) => {
               {...appbar.inputBaseProps}
               startAdornment={appbar.inputHasChips ? (
                 <InputAdornment position='start'>
-                  <StateJsxChip def={appbarChips} />
+                  <StateJsxChip array={appbarChips} />
                 </InputAdornment>
               ) : ( null )}
               endAdornment={

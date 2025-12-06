@@ -1,46 +1,46 @@
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { type RadioProps } from '@mui/material/Radio';
-import { Fragment, useState } from 'react';
-import type { THive } from '.';
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import { type RadioProps } from '@mui/material/Radio'
+import { Fragment, useState } from 'react'
+import type { THive } from '.'
 import type {
   StateForm,
   StateFormItem,
   StateFormItemCheckboxBox
-} from '../../../controllers';
+} from '../../../controllers'
 import {
   type ICheckboxesData,
   update_checkboxes
-} from '../../form/items/_items.common.logic';
+} from '../../form/items/_items.common.logic'
 
 interface IDialogCheckboxes {
-  def: StateFormItem<StateForm, StateFormItemCheckboxBox>;
-  hive: THive;
+  instance: StateFormItem<StateForm, StateFormItemCheckboxBox>
+  hive: THive
 }
 
-export default function DialogCheckboxes ({
-  def: checkboxes,
+const DialogCheckboxes = ({
+  instance: checkboxes,
   hive
-}: IDialogCheckboxes) {
-  const defaultCheckedValues = hive[checkboxes.name] as string[];
+}: IDialogCheckboxes) => {
+  const defaultCheckedValues = hive[checkboxes.name] as string[]
   const [
     checkedValues,
     setCheckedValues
-  ] = useState<string[]>(defaultCheckedValues);
+  ] = useState<string[]>(defaultCheckedValues)
   const data: ICheckboxesData = {
     checkedValues,
     value: '',
     checked: false,
     statuses: {}
-  };
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    data.value = e.target.value;
-    data.checked = e.target.checked;
-    update_checkboxes(data);
-    setCheckedValues(data.checkedValues);
-    hive[checkboxes.name] = data.checkedValues;
-  };
+    data.value = e.target.value
+    data.checked = e.target.checked
+    update_checkboxes(data)
+    setCheckedValues(data.checkedValues)
+    hive[checkboxes.name] = data.checkedValues
+  }
 
   return (
     <Fragment>
@@ -76,5 +76,7 @@ export default function DialogCheckboxes ({
         )
       ))}
     </Fragment>
-  );
+  )
 }
+
+export default DialogCheckboxes

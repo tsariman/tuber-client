@@ -1,5 +1,5 @@
-import { useMemo, useCallback, type JSX } from 'react'
-import View from '../view.cpn'
+import React, { useMemo, useCallback, type JSX } from 'react'
+import ViewContent from '../view.cpn'
 import StatePage from '../../controllers/StatePage'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../../state'
@@ -15,9 +15,11 @@ import {
   save_content_jsx,
   ler
 } from '../../business.logic'
-import FormContent from './form.cpn'
-import WebApps from './webapp.content.cpn'
-import { StateAllForms, StateApp, StatePathnames } from 'src/controllers'
+import FormContent from '../form.cpn'
+import WebappContent from '../webapp.cpn'
+import StateAllForms from '../../controllers/StateAllForms'
+import StateApp from '../../controllers/StateApp'
+import StatePathnames from '../../controllers/StatePathnames'
 
 export interface IContentState {
   stateApp: IStateApp
@@ -26,18 +28,16 @@ export interface IContentState {
 }
 
 interface IContentProps {
-  def: StatePage
+  instance: StatePage
 }
 
 interface IContentTable {
   [constant: string]: () => JSX.Element | null
 }
 
-/**
- * Application content
- */
-export default function Content (props: IContentProps) {
-  const { def: page } = props
+/** Page content */
+const Content = React.memo((props: IContentProps) => {
+  const { instance: page } = props
   const app = useSelector((state: RootState) => state.app)
   const formsState = useSelector((state: RootState) => state.forms)
   const pathnamesState = useSelector((state: RootState) => state.pathnames)
@@ -68,13 +68,13 @@ export default function Content (props: IContentProps) {
   const type = useMemo(() => page.contentType.toLowerCase(), [page.contentType])
 
   // Memoize form computation for form content type
-  const formData = useMemo(() => {
+  const form = useMemo(() => {
     if (type === contentConstants.APP_CONTENT_FORM) {
-      const form = getForm(page.contentName)
-      if (form) { 
-        form.endpoint = page.contentEndpoint 
+      const newForm = getForm(page.contentName)
+      if (newForm) { 
+        newForm.endpoint = page.contentEndpoint 
       }
-      return form
+      return newForm
     }
     return null
   }, [
@@ -108,16 +108,16 @@ export default function Content (props: IContentProps) {
     const contentJsx = (
       <FormContent
         formName={page.contentName}
-        def={formData}
+        instance={form}
         type={'page'}
       />
     )
     save_content_jsx(contentJsx)
     return contentJsx
-  }, [formData, page.contentName])
+  }, [form, page.contentName])
 
   const handleViewContent = useCallback(() => {
-    const contentJsx = <View def={page} />
+    const contentJsx = <ViewContent instance={page} />
     save_content_jsx(contentJsx)
     return contentJsx
   }, [page])
@@ -125,7 +125,7 @@ export default function Content (props: IContentProps) {
   const handleWebAppContent = useCallback(() => {
     let contentJsx: JSX.Element | null = null
     try {
-      contentJsx = <WebApps def={page} />
+      contentJsx = <WebappContent def={page} />
       if (contentJsx) {
         save_content_jsx(contentJsx)
       } else {
@@ -141,7 +141,7 @@ export default function Content (props: IContentProps) {
   }, [page])
 
   const handleHtmlContent = useCallback(() => {
-    const contentJsx = <HtmlContent def={page} />
+    const contentJsx = <HtmlContent instance={page} />
     save_content_jsx(contentJsx)
     return contentJsx
   }, [page])
@@ -203,4 +203,6 @@ export default function Content (props: IContentProps) {
   }, [ contentTable, type ])
 
   return contentJsx
-}
+})
+
+export default Content

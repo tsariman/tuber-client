@@ -8,37 +8,37 @@ import Dialog from './dialog'
 import Spinner from './spinner.cpn'
 import Snackbar from './snackbar'
 import StatePage from '../controllers/StatePage'
-import { useSelector } from 'react-redux'
-import type { RootState } from '../state'
 import StateApp from '../controllers/StateApp'
 
-interface IAppGeneric { def: StatePage }
+interface IAppGeneric {
+  instance: StatePage
+  app: StateApp
+}
 
-const AppGeneric = ({ def: page }: IAppGeneric) => {
-  const appState = useSelector((state: RootState) => state.app)
-  const appTitle = useMemo(() => new StateApp(appState).title, [appState])
+const AppGeneric = ({ instance: page, app }: IAppGeneric) => {
 
+  // Setting the browser's web page title
   // Move side effect to useEffect to prevent it running on every render
   useEffect(() => {
     if (page.forcedTitle) {
       document.title = page.forcedTitle
     } else if (page.title) {
-      document.title = `${appTitle} | ${page.title}`
+      document.title = `${app.title} | ${page.title}`
     } else {
-      document.title = appTitle
+      document.title = app.title
     }
-  }, [page, appTitle])
+  }, [page.forcedTitle, app.title, page.title])
 
   // Memoize background to prevent unnecessary recalculation
   const background = useMemo(() => page.background, [page.background])
 
   return (
     <Fragment>
-      <Background def={background} />
-      <Appbar def={page} />
-      <Drawer def={page} />
-      <Layout def={page}>
-        <Content def={page} />
+      <Background instance={background} />
+      <Appbar instance={page} app={app} />
+      <Drawer instance={page} />
+      <Layout instance={page}>
+        <Content instance={page} />
       </Layout>
       <Dialog />
       <Snackbar />

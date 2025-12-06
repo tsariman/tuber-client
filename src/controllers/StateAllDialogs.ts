@@ -1,7 +1,6 @@
 import AbstractState from './AbstractState'
 import type { IStateAllDialogs } from '../interfaces/localized'
-import State from './State'
-import { get_state } from '../state'
+import type State from './State'
 
 /** Wrapper class for `initialState.dialogs` */
 export default class StateAllDialogs extends AbstractState {
@@ -15,9 +14,7 @@ export default class StateAllDialogs extends AbstractState {
   }
 
   get state(): IStateAllDialogs { return this._state }
-  get parent(): State {
-    return this._parent ?? (this._parent = State.fromRootState(get_state()))
-  }
+  get parent(): State | undefined { return this._parent }
   get props(): unknown { return this.die('Not implemented yet.', {}) }
   configure(conf: unknown): void { void conf }
 }

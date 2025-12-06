@@ -1,96 +1,88 @@
 import {
   Fragment,
-  useMemo,
-  useCallback,
   type ReactNode,
-  type JSX
-} from 'react';
-import { Box, Paper, Stack } from '@mui/material';
-import type StateForm from '../../controllers/StateForm';
-import { error_id } from '../../business.logic/errors';
-import { log } from '../../business.logic/logging';
+  type JSX,
+  memo
+} from 'react'
+import { Box, Paper, Stack } from '@mui/material'
+import type StateForm from '../../controllers/StateForm'
+import { error_id } from '../../business.logic/errors'
+import { ler } from '../../business.logic/logging'
 
 interface IJsonFormProps {
-  def: StateForm;
-  children: ReactNode;
+  instance: StateForm
+  children: ReactNode
 }
 
-function ConditionalPaper (
-  { form, children }:{ form: StateForm; children: ReactNode; }
-) {
-  // Memoize the conditional paper rendering to avoid unnecessary re-renders
-  const paperContent = useMemo(() => {
-    if (form.paperBackground) {
-      return (
-        <Paper {...form.paperProps}>
-          { children }
-        </Paper>
-      );
-    } else {
-      return (
-        <Fragment>
-          { children }
-        </Fragment>
-      );
-    }
-  }, [form.paperBackground, form.paperProps, children]);
-
-  return paperContent;
+interface IConditionalPaper {
+  form: StateForm
+  children: ReactNode
 }
 
-export default function StateJsxForm (
-  { def: form, children }: IJsonFormProps
-) {
-  // Memoize the box component to prevent re-creation on every render
-  const BoxComponent = useCallback(() => (
-    <ConditionalPaper form={form}>
-      <Box
-        {...form.props}
-      >
-        { children }
-      </Box>
-    </ConditionalPaper>
-  ), [form, children]);
+interface IContainer {
+  form: StateForm
+  children: ReactNode
+}
 
-  // Memoize the stack component to prevent re-creation on every render
-  const StackComponent = useCallback(() => (
-    <ConditionalPaper form={form}>
-      <Stack {...form.props}>
+const ConditionalPaper = ({ form, children }: IConditionalPaper) => {
+  if (form.paperBackground) {
+    return (
+      <Paper {...form.paperProps}>
         { children }
-      </Stack>
-    </ConditionalPaper>
-  ), [form, children]);
+      </Paper>
+    )
+  } else {
+    return (
+      <Fragment>
+        { children }
+      </Fragment>
+    )
+  }
+}
 
-  // Memoize the none component to prevent re-creation on every render
-  const NoneComponent = useCallback(() => (
-    <ConditionalPaper form={form}>
+const BoxContainer = ({ form, children }: IContainer) => (
+  <ConditionalPaper form={form}>
+    <Box
+      {...form.props}
+    >
       { children }
-    </ConditionalPaper>
-  ), [form, children]);
+    </Box>
+  </ConditionalPaper>
+)
 
-  // Memoize the component map to prevent re-creation on every render
-  const map: {[constant: string]: () => JSX.Element} = useMemo(() => ({
-    'box': BoxComponent,
-    'stack': StackComponent,
-    'none': NoneComponent
-  }), [BoxComponent, StackComponent, NoneComponent]);
+const StackContainer = ({ form, children }: IContainer) => (
+  <ConditionalPaper form={form}>
+    <Stack {...form.props}>
+      { children }
+    </Stack>
+  </ConditionalPaper>
+)
 
-  // Memoize the final result to avoid unnecessary re-computations
-  const result = useMemo(() => {
-    try {
-      const componentRenderer = map[form._type];
-      if (componentRenderer) {
-        return componentRenderer();
-      }
-      // Fallback to box if type is not found
-      return map['box']();
-    } catch (e) {
-      error_id(20).remember_exception(e); // error 20
-      log((e as Error).message);
-      // Return box component as fallback
-      return map['box']();
-    }
-  }, [map, form._type]);
+const NoneContainer = ({ form, children }: IContainer) => (
+  <ConditionalPaper form={form}>
+    { children }
+  </ConditionalPaper>
+)
 
-  return result;
+const containerMap: {[constant: string]: (props: IContainer) => JSX.Element} = {
+  'box': BoxContainer,
+  'stack': StackContainer,
+  'none': NoneContainer
 }
+
+const StateJsxForm = memo(({ instance: form, children }: IJsonFormProps) => {
+  try {
+    const DynamicForm = containerMap[form._type] ?? containerMap['box']
+    return (
+      <DynamicForm form={form}>
+        { children }
+      </DynamicForm>
+    )
+  } catch (e) {
+    error_id(20).remember_exception(e) // error 20
+    ler((e as Error).message)
+    return <BoxContainer form={form}>{children}</BoxContainer>
+  }
+})
+
+export default StateJsxForm

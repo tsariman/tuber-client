@@ -1,23 +1,23 @@
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import NativeSelect from '@mui/material/NativeSelect';
-import { useState } from 'react';
-import type { THive } from '..';
-import { type StateFormItemSelect } from '../../../../controllers';
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import NativeSelect from '@mui/material/NativeSelect'
+import { useState } from 'react'
+import type { THive } from '..'
+import { type StateFormItemSelect } from '../../../../controllers'
 
 interface IDialogSelectNative {
-  def: StateFormItemSelect;
-  hive: THive;
+  instance: StateFormItemSelect
+  hive: THive
 }
 
-export default function DialogSelectNative (props: IDialogSelectNative) {
-  const { def: select, hive } = props;
-  select.configure('native');
-  const [value, setValue] = useState<string>((hive[select.name] ?? '') as string);
+const DialogSelectNative = (props: IDialogSelectNative) => {
+  const { instance: select, hive } = props
+  select.configure('native')
+  const [value, setValue] = useState<string>((hive[select.name] ?? '') as string)
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setValue(e.target.value as string);
-    hive[select.name] = e.target.value as string;
+    setValue(e.target.value as string)
+    hive[select.name] = e.target.value as string
   }
 
   return (
@@ -42,5 +42,7 @@ export default function DialogSelectNative (props: IDialogSelectNative) {
         ))}
       </NativeSelect>
     </FormControl>
-  );
+  )
 }
+
+export default DialogSelectNative

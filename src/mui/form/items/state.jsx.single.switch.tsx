@@ -1,16 +1,23 @@
-import { FormControl, FormHelperText } from '@mui/material';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import TextField from '@mui/material/TextField';
-import { useSelector } from 'react-redux';
-import { NAME_NOT_SET, type TBoolVal } from '@tuber/shared';
-import { type StateFormItemSwitch, StateFormsData } from '../../../controllers';
-import { type RootState } from '../../../state';
-import { to_bool_val } from '../_form.common.logic';
-import type { TSwitchEventHandlerFactory } from './_items.common.logic';
+import { FormControl, FormHelperText } from '@mui/material'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Switch from '@mui/material/Switch'
+import TextField from '@mui/material/TextField'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  BOOL_ONOFF,
+  BOOL_TRUEFALSE,
+  BOOL_YESNO,
+  NAME_NOT_SET,
+  type TBoolVal
+} from '@tuber/shared'
+import type StateFormItemSwitch from '../../../controllers/templates/StateFormItemSwitch'
+import StateFormsData from '../../../controllers/StateFormsData'
+import { type AppDispatch, type RootState } from '../../../state'
+import { get_bool_type, to_bool_val } from '../_form.common.logic'
+import { useCallback, useMemo } from 'react'
 
 interface IJsonSingleSwitch {
-  def: StateFormItemSwitch;
+  instance: StateFormItemSwitch
 }
 
 /**
@@ -28,17 +35,61 @@ interface IJsonSingleSwitch {
  * ```
  */
 export default function StateJsxSingleSwitch({ 
-  def: $witch
+  instance: $witch
 }: IJsonSingleSwitch) {
-  const { name, disabled, onChange: handleChange } = $witch;
-  const formsData = new StateFormsData(
-    useSelector((state: RootState) => state.formsData)
-  );
-  const getValue = () => formsData.getValue<TBoolVal>(
+  const { name, disabled, parent: { name: formName } } = $witch
+  const formsDataState = useSelector((state: RootState) => state.formsData)
+  const formsData = useMemo(
+    () => new StateFormsData(formsDataState),
+    [formsDataState]
+  )
+  const getValue = useCallback(() => formsData.getValue<TBoolVal>(
     $witch.parent.name,
     $witch.name,
     'false'
-  );
+  ), [$witch.name, $witch.parent.name, formsData])
+
+  const dispatch = useDispatch<AppDispatch>()
+
+  /** Save switches value to the Redux store. */
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) =>
+  {
+    const map: {[x: string]: () => void} = {
+      [BOOL_TRUEFALSE]: () => dispatch({
+        type: 'formsData/formsDataUpdate',
+        payload: {
+          formName,
+          name,
+          value: e.target.checked ? 'true' : 'false'
+        }
+      }),
+      [BOOL_ONOFF]: () => dispatch({
+        type: 'formsData/formsDataUpdate',
+        payload: {
+          formName,
+          name,
+          value: e.target.checked ? 'on' : 'off'
+        }
+      }),
+      [BOOL_YESNO]: () => dispatch({
+        type: 'formsData/formsDataUpdate',
+        payload: {
+          formName,
+          name,
+          value: e.target.checked ? 'yes' : 'no'
+        }
+      }),
+      'DEFAULT': () => dispatch({
+        type: 'formsData/formsDataUpdate',
+        payload: {
+          formName,
+          name,
+          value: e.target.checked ? 'true' : 'false'
+        }
+      })
+    }
+    map[get_bool_type(getValue())]()
+  }, [dispatch, formName, getValue, name])
 
   return name ? (
     <FormControl
@@ -54,7 +105,7 @@ export default function StateJsxSingleSwitch({
             {...$witch.props}
             disabled={disabled === true}
             checked={to_bool_val(getValue())}
-            onChange={(handleChange as TSwitchEventHandlerFactory)(name, getValue())}
+            onChange={handleChange}
             value={name}
             inputProps={{ 'aria-label': $witch.label }}
           />
@@ -70,5 +121,5 @@ export default function StateJsxSingleSwitch({
       value={`SWITCH ${NAME_NOT_SET}`}
       disabled
     />
-  );
+  )
 }

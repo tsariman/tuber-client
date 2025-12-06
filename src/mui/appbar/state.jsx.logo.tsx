@@ -1,7 +1,20 @@
-import { styled } from '@mui/material';
-import React from 'react';
-import { err } from '../../business.logic/logging';
-import type StatePageAppbar from '../../controllers/templates/StatePageAppbar';
+import { styled } from '@mui/material'
+import { useMemo, useRef, memo } from 'react'
+import { err } from '../../business.logic/logging'
+import type StatePageAppbar from '../../controllers/templates/StatePageAppbar'
+
+interface IStateJsxLogo {
+  instance: StatePageAppbar
+}
+
+/**
+ * @see https://codesandbox.io/s/7q80d?file=/src/MyAppBar.tsx
+ */
+const ImgLogo = styled('img')(() => ({ marginRight: 10 }))
+
+const PathLogo = styled('path')(() => ({}))
+const DivLogoContainer = styled('div')(() => ({}))
+const DivLogo = styled('div')(() => ({}))
 
 /**
  * To define a logo, set the `appbar.logoTag` and `appbar.logoProps`.
@@ -19,41 +32,34 @@ import type StatePageAppbar from '../../controllers/templates/StatePageAppbar';
  * set whatever attributes need to be set for the path tag in the
  * `appbar.logoProps` property.
  */
-export default function StateJsxLogo ({ def: appbar }: { def: StatePageAppbar }) {
-
-  /**
-   * @see https://codesandbox.io/s/7q80d?file=/src/MyAppBar.tsx
-   */
-  const ImgLogo = styled('img')(() => ({ marginRight: 10 }));
-
-  const PathLogo = styled('path')(() => ({}));
-  const DivLogoContainer = styled('div')(() => ({}));
-  const DivLogo = styled('div')(() => ({}));
-  const logoTag = appbar.logoTag.toLowerCase();
-  const logoProps = appbar.logoProps;
-  const logoContainerProps = appbar.logoContainerProps;
+const StateJsxLogo = memo(({ instance: appbar }: IStateJsxLogo) => {
+  const logoTag = appbar.logoTag.toLowerCase()
+  const logoProps = appbar.logoProps
+  const logoContainerProps = appbar.logoContainerProps
 
   // Used to apply logo image real size in the absence of user-defined height
   // and width.
-  const logoRef = React.createRef<HTMLDivElement>();
+  const logoRef = useRef<HTMLDivElement>(null)
 
-  const logoTagTable = {
+  const logoTagTable = useMemo(() => ({
     'img': <ImgLogo {...logoProps} />,
     'path': <PathLogo {...logoProps} />,
     'div': <DivLogo {...logoProps} ref={logoRef} />
-  }
+  }), [logoProps])
 
-  const Logo = logoTagTable[logoTag as keyof typeof logoTagTable];
+  const Logo = logoTagTable[logoTag as keyof typeof logoTagTable]
 
   if (Logo) {
     return (
       <DivLogoContainer {...logoContainerProps}>
         { Logo }
       </DivLogoContainer>
-    );
+    )
   }
 
-  err(`Invalid \`${logoTag}\` logo.`);
+  err(`Invalid \`${logoTag}\` logo.`)
 
-  return ( null );
-}
+  return ( null )
+}, (prevProps, nextProps) => prevProps.instance.state === nextProps.instance.state)
+
+export default StateJsxLogo
