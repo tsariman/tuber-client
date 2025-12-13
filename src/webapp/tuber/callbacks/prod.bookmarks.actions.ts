@@ -233,7 +233,7 @@ export default function form_submit_delete_bookmark (redux: IRedux) {
     if (!dialogState) {
       ler(`'${dialogKey}' does not exist.`)
       error_id(1100).remember_error({
-        code: 'MISSING_VALUE',
+        code: 'MISSING_DATA',
         title: `'${dialogKey}' does not exist.`,
         source: { parameter: 'dialogKey' }
       }) // error 1100

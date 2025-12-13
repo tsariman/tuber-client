@@ -28,7 +28,7 @@ export default function form_submit_new_facebook_bookmark(redux: IRedux) {
       const errorMsg = 'form_submit_new_facebook_bookmark: Form key not found.';
       ler(errorMsg);
       error_id(1074).remember_error({
-        code: 'MISSING_VALUE',
+        code: 'MISSING_DATA',
         title: errorMsg,
         source: { parameter: 'formKey' }
       }); // error 1074

@@ -28,7 +28,7 @@ export default function form_submit_edit_rumble_bookmark(redux: IRedux) {
       if (index === -1) {
         ler('index not found.');
         error_id(1085).remember_error({
-          code: 'MISSING_VALUE',
+          code: 'MISSING_DATA',
           title: 'Bookmark resource index not found',
         }); // error 1085
         return;
@@ -41,7 +41,7 @@ export default function form_submit_edit_rumble_bookmark(redux: IRedux) {
         const errorMsg = `No endpoint defined for '${_key}'.`;
         ler(errorMsg);
         error_id(1086).remember_error({
-          code: 'MISSING_VALUE',
+          code: 'MISSING_DATA',
           title: errorMsg,
           source: { parameter: 'endpoint' }
         }); // error 1086

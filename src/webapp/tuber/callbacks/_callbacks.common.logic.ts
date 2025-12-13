@@ -41,7 +41,7 @@ export function get_dialog_form_endpoint(
     const errorMsg = `'${dialogKey}' does not exist.`;
     ler(errorMsg);
     error_id(1065).remember_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: errorMsg,
       source: { parameter: 'dialogKey' }
     }); // error 1065
@@ -52,7 +52,7 @@ export function get_dialog_form_endpoint(
     const errorMsg = `No endpoint defined for '${dialogKey}'.`;
     ler(errorMsg);
     error_id(1066).remember_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: errorMsg,
       source: { parameter: 'endpoint' }
     }); // 1066
@@ -82,7 +82,7 @@ export function get_form_data<T=unknown>(
     const errorMsg = `'${formKey}' data not found.`;
     ler(errorMsg);
     error_id(1067).remember_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: errorMsg,
       source: { parameter: 'formData' }
     }); // error 1067

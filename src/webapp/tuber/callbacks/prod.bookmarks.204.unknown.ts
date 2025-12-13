@@ -28,7 +28,7 @@ export default function form_submit_edit_unknown_bookmark(redux: IRedux) {
       if (index === -1) {
         ler('index not found.')
         error_id(1091).remember_error({
-          code: 'MISSING_VALUE',
+          code: 'MISSING_DATA',
           title: 'Bookmark resource index not found',
         }); // 1091
         return;
@@ -41,7 +41,7 @@ export default function form_submit_edit_unknown_bookmark(redux: IRedux) {
         const errorMsg = `No endpoint defined for '${_key}'.`;
         ler(errorMsg);
         error_id(1092).remember_error({
-          code: 'MISSING_VALUE',
+          code: 'MISSING_DATA',
           title: errorMsg,
           source: { parameter: 'endpoint' }
         }); // error 1092

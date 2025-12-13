@@ -39,7 +39,7 @@ export default class StateMeta extends AbstractState {
         console.error((e as Error).stack)
       }
       error_id(13).remember_error({
-        code: 'MISSING_VALUE',
+        code: 'MISSING_DATA',
         title: `Bad values passed to State.meta:
           either endpoint: '${endpoint}' or key: '${key}' or the data does not
           exist yet.`,

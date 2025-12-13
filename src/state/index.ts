@@ -150,7 +150,7 @@ const net_patch_state_reducer = <T=unknown>($oldState: unknown, $fragment: unkno
   } catch (e) {
     dispatch(errorsActions.errorsAdd({ // error 27
       id: '27', 
-      code: 'EXCEPTION',
+      code: 'CAUGHT_EXCEPTION',
       title: (e as Error).message,
       detail: (e as Error).stack,
     }));
@@ -308,10 +308,11 @@ export const get_drawer_width = (): number => {
  * If a callback is required for a link or button but is not defined, then this
  * method will provide a dummy one.
  */
-export function dummy_redux_handler (redux: IRedux): TEventHandler {
-  return () => {
-    if (redux.store.getState().app.inDebugMode) {
-      console.error('[function] dummy_callback(): No callback was assigned.')
+export function dummy_redux_handler ({ store }: IRedux): TEventHandler {
+  return (e) => {
+    e.preventDefault()
+    if (store.getState().app.inDebugMode) {
+      console.error('[function] dummy_redux_handler(): No callback was assigned.')
     }
   }
 }
@@ -322,8 +323,9 @@ export function dummy_redux_handler (redux: IRedux): TEventHandler {
  *
  * The app page will be updated based on the URL change triggered by the link.
  */
-export function default_callback ({store, actions, route}:IRedux): TEventHandler {
-  return () => {
+export function default_handler ({ store, actions, route }:IRedux): TEventHandler {
+  return (e) => {
+    e.preventDefault()
     if (route) {
       store.dispatch(actions.appBrowserSwitchPage(route))
     }

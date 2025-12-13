@@ -28,7 +28,7 @@ export default function form_submit_edit_twitch_bookmark(redux: IRedux) {
       if (index === -1) {
         ler('index not found.');
         error_id(1088).remember_error({
-          code: 'MISSING_VALUE',
+          code: 'MISSING_DATA',
           title: 'Bookmark resource index is missing',
         }); // error 1088
         return;
@@ -41,7 +41,7 @@ export default function form_submit_edit_twitch_bookmark(redux: IRedux) {
         const errorMsg = `No endpoint defined for '${_key}'.`;
         ler(errorMsg);
         error_id(1089).remember_error({
-          code: 'MISSING_VALUE',
+          code: 'MISSING_DATA',
           title: errorMsg,
           source: { parameter: 'endpoint' }
         }); // error 1089

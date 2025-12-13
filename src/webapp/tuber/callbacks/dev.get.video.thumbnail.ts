@@ -42,7 +42,7 @@ export default function dev_get_video_thumbnail(redux: IRedux) {
       const errorMsg = `dev_get_video_thumbnail: form name not found.`;
       ler(errorMsg);
       error_id(1068).remember_error({
-        code: 'MISSING_VALUE',
+        code: 'MISSING_DATA',
         title: errorMsg,
         source: {
           pointer: `rootState.staticRegistry.${FORM_TEST_THUMBNAIL_ID}`,

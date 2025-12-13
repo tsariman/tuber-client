@@ -12,7 +12,7 @@ describe('JsonapiError', () => {
           }
         },
         status: '404',
-        code: 'RESOURCE_NOT_FOUND',
+        code: 'NOT_FOUND',
         title: 'Not Found',
         detail: 'The requested resource could not be found.',
         source: { parameter: 'id' },
@@ -38,14 +38,14 @@ describe('JsonapiError', () => {
     it('should return the id', () => {
       const error = new JsonapiError({
         id: '1',
-        code: 'RESOURCE_NOT_FOUND',
+        code: 'NOT_FOUND',
         title: 'Not Found'
       });
       expect(error.id).toEqual('1')
     });
     it('should return a new id if one is not provided', () => {
       const error = new JsonapiError({
-        code: 'RESOURCE_NOT_FOUND',
+        code: 'NOT_FOUND',
         title: 'Not Found'
       });
       expect(error.id).toBeDefined()
@@ -55,7 +55,7 @@ describe('JsonapiError', () => {
   describe('links', () => {
     it('should return the links', () => {
       const error = new JsonapiError({
-        code: 'RESOURCE_NOT_FOUND',
+        code: 'NOT_FOUND',
         title: 'Not Found',
         links: { about: { href: 'http://example.com'} }
       });
@@ -63,7 +63,7 @@ describe('JsonapiError', () => {
     });
     it('should return an empty object if links are not provided', () => {
       const error = new JsonapiError({
-        code: 'RESOURCE_NOT_FOUND',
+        code: 'NOT_FOUND',
         title: 'Not Found'
       });
       expect(error.links).toEqual({})
@@ -73,7 +73,7 @@ describe('JsonapiError', () => {
   describe('status', () => {
     it('should return the status', () => {
       const error = new JsonapiError({
-        code: 'RESOURCE_NOT_FOUND',
+        code: 'NOT_FOUND',
         title: 'Not Found',
         status: '404'
       });
@@ -81,7 +81,7 @@ describe('JsonapiError', () => {
     });
     it('should return an empty string if status is not provided', () => {
       const error = new JsonapiError({
-        code: 'RESOURCE_NOT_FOUND',
+        code: 'NOT_FOUND',
         title: 'Not Found'
       });
       expect(error.status).toEqual('');
@@ -91,7 +91,7 @@ describe('JsonapiError', () => {
   describe('code', () => {
     it('should return the code', () => {
       const error = new JsonapiError({
-        code: 'RESOURCE_NOT_FOUND',
+        code: 'NOT_FOUND',
         title: 'Not Found'
       })
       expect(error).toEqual({

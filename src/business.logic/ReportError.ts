@@ -163,7 +163,7 @@ export default class ReportError {
   ): IJsonapiError {
     return {
       id: this._registeringErrorId || this._id(), // Use set error ID if available, otherwise generate one
-      code: this._registeringErrorCode ?? 'EXCEPTION',
+      code: this._registeringErrorCode ?? 'CAUGHT_EXCEPTION',
       title: title ?? (e as Error).message,
       detail: (e as Error).stack
     };
@@ -260,7 +260,7 @@ export default class ReportError {
    * 
    * @example
    * const report = new ReportError();
-   * report.setErrorCode("EXCEPTION").as.exception(error);
+   * report.setErrorCode("CAUGHT_EXCEPTION").as.exception(error);
    */
   setErrorCode(code: TJsonapiErrorCode): ReportError {
     this._registeringErrorCode = code;
@@ -312,7 +312,7 @@ export default class ReportError {
     ler(eMsg);
     
     const error: IJsonapiError = {
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: eMsg,
       source: { pointer: `rootState.staticRegistry.${registryKey}` }
     };
@@ -392,7 +392,7 @@ export default class ReportError {
     ler(eMsg);
     
     const error: IJsonapiError = {
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: eMsg,
       source: { pointer: `rootState.staticRegistry.${registryKey}`}
     };

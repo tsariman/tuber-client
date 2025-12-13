@@ -234,7 +234,7 @@ describe('errors.ts', () => {
       
       const result = to_jsonapi_error(error);
       
-      expect(result.code).toBe('EXCEPTION');
+      expect(result.code).toBe('CAUGHT_EXCEPTION');
       expect(result.title).toBe('Test error message');
       expect(result.detail).toBe('Error stack trace');
       expect(result.id).toBeDefined();

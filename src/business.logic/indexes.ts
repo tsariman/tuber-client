@@ -100,7 +100,7 @@ export function select<T = IJsonapiResponseResource>(collection: string, id: str
     return indexes[collection]?.[id] as T
   } catch (e) {
     error_id(6).remember_error({ // error 6
-      'code': 'MISSING_VALUE',
+      'code': 'MISSING_DATA',
       'title': (e as Error).message,
       'detail': (e as Error).stack,
       'source': {

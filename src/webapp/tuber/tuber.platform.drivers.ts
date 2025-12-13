@@ -111,7 +111,7 @@ function _extract_data_from_youTube_url(url: string): IVideoData {
   const id = youtube_get_video_id(url);
   if (!id) {
     error_id(1053).remember_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: 'youtube_get_video_id failed',
       detail: 'The youtube_get_video_id function failed to retrieve the video'
         + ' id from the video URL',
@@ -122,7 +122,7 @@ function _extract_data_from_youTube_url(url: string): IVideoData {
   const startStr = youtube_get_start_time(url);
   if (!startStr) {
     error_id(1054).remember_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: 'youtube_get_video_start_time failed',
       detail: `The "youtube_get_video_start_time" function failed to retieve`
         + ` the video start time from the video URL.`,
@@ -154,7 +154,7 @@ function _extract_data_from_rumble_url(url: string): IVideoData {
   const slug  = get_rumble_slug(url);
   if (!slug) {
     error_id(1055).remember_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: 'rumble_get_slug failed',
       detail: 'The "rumble_get_slug" function failed to extract the video slug '
         + 'from the URL.',
@@ -165,7 +165,7 @@ function _extract_data_from_rumble_url(url: string): IVideoData {
   const start = rumble_get_start_time(url);
   if (!start) {
     error_id(1056).remember_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: 'rumble_get_start_time failed',
       detail: 'The "rumble_get_start_time" function failed to extract the video '
         + 'start time from the URL.',
@@ -197,7 +197,7 @@ function _extract_data_from_vimeo_url(url: string): IVideoData {
   const id = vimeo_get_video_id(url);
   if (!id) {
     error_id(1057).remember_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: 'vimeo_get_video_id failed',
       detail: 'The "vimeo_get_video_id" function failed to extract the video '
         + 'ID from the URL.',
@@ -208,7 +208,7 @@ function _extract_data_from_vimeo_url(url: string): IVideoData {
   const start = vimeo_get_start_time(url);
   if (!start) {
     error_id(1058).remember_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: 'vimeo_get_start_time failed',
       detail: 'The "vimeo_get_start_time" function failed to extract the video '
         + 'start time from the URL.',
@@ -240,7 +240,7 @@ function _extract_data_from_dailymotion_url(url: string): IVideoData {
   const id = daily_get_video_id(url);
   if (!id) {
     error_id(1059).remember_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: '[function] daily_get_video_id() failed',
       detail: 'Failed to extract the video ID from the URL.',
       source: { pointer: url }
@@ -284,7 +284,7 @@ function _extract_data_from_odysee_url(url: string): IVideoData {
   const { author, id , start } = odysee_get_url_data(url);
   if (!start) {
     error_id(1061).remember_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: '[function] odysee_get_url_data() failed',
       detail: 'Failed to extract the video start time from the URL.',
       source: { pointer: url }
@@ -299,7 +299,7 @@ function _extract_data_from_odysee_url(url: string): IVideoData {
   }
   if (!author || !id) {
     error_id(1062).remember_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: '[function] odysee_get_url_data() failed',
       detail: 'Failed to extract the video ID or author from the URL.',
       source: { pointer: url }
@@ -325,7 +325,7 @@ function _extract_data_from_twitch_url(url: string): IVideoData {
   const id = twitch_get_video_id(url);
   if (!id) {
     error_id(1063).remember_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: '[FUNCTION] twitch_get_video_id() failed',
       detail: 'The "twitch_get_video_id" function failed to extract the video ID from the URL.',
       source: { pointer: url }
@@ -335,7 +335,7 @@ function _extract_data_from_twitch_url(url: string): IVideoData {
   const start = twitch_get_start_time(url);
   if (!start) {
     error_id(1064).remember_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: 'twitch_get_start_time failed',
       detail: 'The "twitch_get_start_time" function failed to extract the video '
         + 'start time from the URL.',

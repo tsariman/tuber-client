@@ -34,7 +34,7 @@ function validateData(data: any) {
   if (!data) {
     set_error_id(3); // error # 3
     remember_possible_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: 'Data validation failed',
       meta: {
         receivedData: data
@@ -69,13 +69,13 @@ function complexOperation(data: any) {
   try {
     if (!data.user) {
       set_error_id(5); // error # 5 - missing user
-      remember_possible_error({code: 'MISSING_REQUIRED_FIELD', title: 'Missing user data'});
+      remember_possible_error({code: 'MISSING_DATA', title: 'Missing user data'});
       return;
     }
     
     if (!data.permissions) {
       set_error_id(6); // error # 6 - missing permissions
-      remember_possible_error({code: 'MISSING_REQUIRED_FIELD', title: 'Missing permissions data'});
+      remember_possible_error({code: 'MISSING_DATA', title: 'Missing permissions data'});
       return;
     }
     

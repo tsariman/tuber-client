@@ -141,7 +141,7 @@ export function to_jsonapi_error(
 ): IJsonapiError {
   return {
     id: _registeringErrorId || _id(), // Use set error ID if available, otherwise generate one
-    code: 'EXCEPTION',
+    code: 'CAUGHT_EXCEPTION',
     title: title ?? (e as Error).message,
     detail: (e as Error).stack,
     meta
@@ -220,7 +220,7 @@ export const report_missing_dialog_key = (registryKey: unknown): void => {
   const eMsg = 'The dialogId is undefined or an empty string:';
   ler(eMsg);
   remember_error({
-    code: 'MISSING_VALUE',
+    code: 'MISSING_DATA',
     title: eMsg,
     source: { pointer: `rootState.staticRegistry.${registryKey}` }
   });
@@ -264,7 +264,7 @@ export const log_2 = (context: unknown): void => {
   const eMsg = `Could not find dialogKey at staticRegistry.2`;
   ler(eMsg);
   remember_error({
-    code: 'MISSING_VALUE',
+    code: 'MISSING_DATA',
     title: eMsg,
     detail: 'Invalid dialogKey when creating a new bookmark from URL.',
     source: { pointer: 'rootState.staticRegistry.2' },
@@ -277,7 +277,7 @@ export const report_missing_registry_value = (registryKey: unknown): void => {
   const eMsg = `Missing value at staticRegistry.${registryKey}`;
   ler(eMsg);
   remember_error({
-    code: 'MISSING_VALUE',
+    code: 'MISSING_DATA',
     title: eMsg,
     source: { pointer: `rootState.staticRegistry.${registryKey}`}
   });

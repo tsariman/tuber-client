@@ -289,7 +289,7 @@ export function odysee_get_start_time(url: string): number {
 export function facebook_parse_iframe(iframe?: string): string[] {
   if (!iframe) {
     error_id(1049).remember_error({
-      code: 'MISSING_VALUE',
+      code: 'MISSING_DATA',
       title: 'iframe is undefined or empty.'
     }); // error 1049
     return [];
@@ -403,7 +403,7 @@ export function gen_video_url(bookmark: IBookmark): string {
           + `Try setting the bookmark's url`
         );
         error_id(1050).remember_error({
-          code: 'MISSING_VALUE',
+          code: 'MISSING_DATA',
           title: 'Failed to play a video from an unknown platform',
           detail: 'When playing a video from an unknown platform, the '
             + 'bookmark url must be set.',

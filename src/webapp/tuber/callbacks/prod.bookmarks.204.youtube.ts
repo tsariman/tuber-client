@@ -28,7 +28,7 @@ export default function form_submit_edit_youtube_bookmark(redux: IRedux) {
       if (index === -1) {
         ler('index not found.');
         error_id(1097).remember_error({
-          code: 'MISSING_VALUE',
+          code: 'MISSING_DATA',
           title: 'Bookmark resource index not found',
         }); // error 1097
         return;
@@ -41,7 +41,7 @@ export default function form_submit_edit_youtube_bookmark(redux: IRedux) {
         const errorMsg = `No endpoint defined for '${_key}'.`;
         ler(errorMsg);
         error_id(1098).remember_error({
-          code: 'MISSING_VALUE',
+          code: 'MISSING_DATA',
           title: errorMsg,
           source: { parameter: 'endpoint' }
         }); // error 1098
