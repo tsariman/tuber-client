@@ -1,20 +1,20 @@
-import { styled } from '@mui/material/styles';
-import React, { useMemo } from 'react';
+import { styled } from '@mui/material/styles'
+import React, { useMemo } from 'react'
 import {
   StateLink,
   StatePageAppbar,
   StateNet,
   StatePagesData
-} from 'src/controllers';
-import Link from 'src/mui/link';
-import type { IResearchToolbarProps } from '../tuber.interfaces';
-import { useSelector } from 'react-redux';
-import type { IRedux, RootState } from 'src/state';
-import { ENDPOINT, PLAYER_OPEN } from '../tuber.config';
-import { useMediaQuery, useTheme } from '@mui/material';
+} from 'src/controllers'
+import Link from 'src/mui/link'
+import type { IResearchToolbarProps } from '../tuber.interfaces'
+import { useSelector } from 'react-redux'
+import type { IRedux, RootState } from 'src/state'
+import { ENDPOINT, PLAYER_OPEN } from '../tuber.config'
+import { useMediaQuery, useTheme } from '@mui/material'
 
 interface IToolbarIcon {
-  def: StatePageAppbar;
+  def: StatePageAppbar
 }
 
 const Toolbar = styled('div')(({ theme }) => ({
@@ -26,7 +26,7 @@ const Toolbar = styled('div')(({ theme }) => ({
   position: 'fixed',
   bottom: 0,
   right: 0
-}));
+}))
 
 const ToggleWrapper = styled('div')(({ theme: { breakpoints } }) => ({
   [breakpoints.down('md')]: {
@@ -35,7 +35,7 @@ const ToggleWrapper = styled('div')(({ theme: { breakpoints } }) => ({
   [breakpoints.up('md')]: {
     display: 'block'
   }
-}));
+}))
 
 /** When clicked, this icon displays an interface to create a new video bookmark. */
 const AddBookmark = React.memo<IToolbarIcon>(({ def: appbar }) => {
@@ -53,19 +53,19 @@ const AddBookmark = React.memo<IToolbarIcon>(({ def: appbar }) => {
           'fontSize': 34
         }
       },
-      'onclickHandle': `tuberCallbacks.$3_C_1`,
+      'onclickHandler': `tuberCallbacks.$3_C_1`,
     },
-  }, appbar), [appbar]);
+  }, appbar), [appbar])
 
-  return <Link def={iconDef} />;
-});
+  return <Link def={iconDef} />
+})
 
 // Set display name for debugging
-AddBookmark.displayName = 'AddBookmark';
+AddBookmark.displayName = 'AddBookmark'
 
 const IntegratedPlayerToggle = React.memo<IToolbarIcon>(({ def: appbar }) => {
-  const theme = useTheme();
-  const greaterThanMid = useMediaQuery(theme.breakpoints.up('md'));
+  const theme = useTheme()
+  const greaterThanMid = useMediaQuery(theme.breakpoints.up('md'))
 
   // Memoize the StateLink configuration to prevent recreation
   const iconDef = useMemo(() => new StateLink({
@@ -83,38 +83,38 @@ const IntegratedPlayerToggle = React.memo<IToolbarIcon>(({ def: appbar }) => {
       },
     },
     'onClick': (redux: IRedux) => () => {
-      const { store: { getState, dispatch }, actions } = redux;
-      const reduxStore = new StatePagesData(getState().pagesData);
-      reduxStore.configure({ endpoint: ENDPOINT });
-      const playerOpen = reduxStore.get<boolean>(PLAYER_OPEN);
+      const { store: { getState, dispatch }, actions } = redux
+      const reduxStore = new StatePagesData(getState().pagesData)
+      reduxStore.configure({ endpoint: ENDPOINT })
+      const playerOpen = reduxStore.get<boolean>(PLAYER_OPEN)
       if (greaterThanMid) {
         dispatch(actions.pagesDataAdd({
           route: ENDPOINT,
           key: PLAYER_OPEN,
           value: !playerOpen
-        }));
+        }))
       } else {
         dispatch(actions.pagesDataAdd({
           route: ENDPOINT,
           key: PLAYER_OPEN,
           value: false
-        }));
+        }))
       }
     }
-  }, appbar), [appbar, greaterThanMid]);
+  }, appbar), [appbar, greaterThanMid])
 
-  return <Link def={iconDef} />;
-});
+  return <Link def={iconDef} />
+})
 
 // Set display name for debugging
-IntegratedPlayerToggle.displayName = 'IntegratedPlayerToggle';
+IntegratedPlayerToggle.displayName = 'IntegratedPlayerToggle'
 
 const ResearchToolbarFixed = React.memo<IResearchToolbarProps>((props) => {
-  const { def: appbar } = props;
+  const { def: appbar } = props
   
   // Memoize state selectors
-  const netState = useSelector((rootState: RootState) => rootState.net);
-  const { sessionValid } = useMemo(() => new StateNet(netState), [netState]);
+  const netState = useSelector((rootState: RootState) => rootState.net)
+  const { sessionValid } = useMemo(() => new StateNet(netState), [netState])
 
   return (
     <Toolbar>
@@ -127,10 +127,10 @@ const ResearchToolbarFixed = React.memo<IResearchToolbarProps>((props) => {
         ) : null}
       </ToggleWrapper>
     </Toolbar>
-  );
-});
+  )
+})
 
 // Set display name for debugging
-ResearchToolbarFixed.displayName = 'ResearchToolbarFixed';
+ResearchToolbarFixed.displayName = 'ResearchToolbarFixed'
 
-export default ResearchToolbarFixed;
+export default ResearchToolbarFixed

@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { type AppDispatch, type RootState, initialize } from './state'
 import { post_req_state } from './state/net.actions'
 import Config from './config'
-import { createTheme, CssBaseline, ThemeProvider } from '@mui/material'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
 import AppPage from './components/app.cpn'
 import {
   ALLOWED_ATTEMPTS,

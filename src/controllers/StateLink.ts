@@ -1,4 +1,4 @@
-import { default_callback, type TReduxHandler } from '../state'
+import { default_handler, type TReduxHandler } from '../state'
 import AbstractState from './AbstractState'
 import type {
   TStateFormITemCustomColor,
@@ -51,7 +51,7 @@ export default class StateLink<P = unknown>
         return this._handleOnClick = handleCallback
       }
     }
-    return this._handleOnClick = default_callback
+    return this._handleOnClick = default_handler
   }
   get onClick(): TReduxHandler {
     return this._handleOnClick || this.setHandleOnClick()

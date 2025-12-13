@@ -33,7 +33,7 @@ const HtmlContent = ({ instance: page }: IHtmlContent) => {
     return (
       <Wrapper
         dangerouslySetInnerHTML={{__html: domElement.innerHTML}}
-        style={{
+        sx={{
           fontFamily: page.typography.fontFamily,
           color: page.typography.color
         }}

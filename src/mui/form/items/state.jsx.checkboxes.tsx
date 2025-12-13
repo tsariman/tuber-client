@@ -40,7 +40,7 @@ export default function StateJsxCheckboxes ({ def: checkboxes }: IJsonCheckboxes
       data.checkedValues,
       e.target.name,
       e.target.checked
-    );
+    )
     dispatch({
       type: 'formsData/formsDataUpdate',
       payload: {

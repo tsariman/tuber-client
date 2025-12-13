@@ -55,7 +55,9 @@ export default function StateJsxTextfield({ instance: textfield }: IJsonTextfiel
           invalidationRegex: textfield.has.state.invalidationRegex,
           invalidationMessage: textfield.has.state.invalidationMessage,
           validationRegex: textfield.has.state.validationRegex,
-          validationMessage: textfield.has.state.validationMessage
+          validationMessage: textfield.has.state.validationMessage,
+          mustMatch: textfield.has.state.mustMatch,
+          mustMatchMessage: textfield.has.state.mustMatchMessage
         } as ISliceFormsDataErrorsArgs
       })
     }

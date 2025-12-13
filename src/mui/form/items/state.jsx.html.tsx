@@ -70,6 +70,7 @@ export const StateJsxHtmlA: React.FC<IHtmlProps> = ({ instance: link }) => {
   return (
     <Fragment>
       <Link
+        href='#'
         {...link.props}
         onClick={link.clickReduxHandler(get_redux(link.has.route))}
       >

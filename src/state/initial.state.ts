@@ -332,7 +332,7 @@ export default {
       '_key': 'default-blank',
       'content': '$view : default_blank_page_view',
       'layout': 'layout_centered_no_scroll',
-      'typography': { 'color': '#74d2b3' },
+      'typography': { 'color': 'text.primary' },
       'data': {
         'message': 'Blank page!'
       }
@@ -342,8 +342,9 @@ export default {
     'default-success': {
       '_key': 'default-success',
       'content': '$view : default_success_page_view',
+      'appbar': { 'items': [{ 'has': { 'text': 'Home', 'route': '/' }}]},
       'layout': 'layout_centered_no_scroll',
-      'typography': { 'color': '#74d2b3' },
+      'typography': { 'color': 'success.main' },
       'data': {
         'message': 'Successful!'
       }

@@ -37,9 +37,13 @@ const DialogCheckboxes = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     data.value = e.target.value
     data.checked = e.target.checked
-    update_checkboxes(data)
-    setCheckedValues(data.checkedValues)
-    hive[checkboxes.name] = data.checkedValues
+    const newCheckedValues = update_checkboxes(
+      data.checkedValues,
+      e.target.name,
+      e.target.checked
+    )
+    setCheckedValues(newCheckedValues)
+    hive[checkboxes.name] = newCheckedValues
   }
 
   return (

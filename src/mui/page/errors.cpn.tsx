@@ -106,7 +106,8 @@ const ErrorList = styled('div')(() => ({
 const ErrorJsonGrid = styled(Grid)(() => ({
   overflowY: 'auto',
   flex: 1,
-
+  height: 'calc(100vh - 64px)',
+  pl: 2
 }))
 
 const ErrorJsonWrapper = styled('div')(() => ({
@@ -264,7 +265,7 @@ function ErrorBody({ hive }: { hive: IHive }): JSX.Element | null {
   const [ json, setJson ] = useState<string>('')
   hive.setState = setJson
   return json ? (
-    <ErrorJsonGrid sx={{ height: '84vh', pl: 2 }} item>
+    <ErrorJsonGrid item>
       <ErrorJsonWrapper
         dangerouslySetInnerHTML={{
           __html: json

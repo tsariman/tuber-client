@@ -129,11 +129,11 @@ export interface IStateFormItemCustom<T = unknown>
   extends Omit<ISStateFormItemCustom<T>, 'callback'
     | 'onClick'
     | 'onDelete'
-    | 'clickReduxHandle'
-    | 'focusReduxHandle'
-    | 'keydownReduxHandle'
-    | 'changeReduxHandle'
-    | 'blurReduxHandle'
+    | 'clickReduxHandler'
+    | 'focusReduxHandler'
+    | 'keydownReduxHandler'
+    | 'changeReduxHandler'
+    | 'blurReduxHandler'
   >
 {
   callback?: TReduxHandler;
@@ -141,11 +141,11 @@ export interface IStateFormItemCustom<T = unknown>
   onClick?: TReduxHandler;
   /** Used by the Chip component */
   onDelete?: TReduxHandler;
-  clickReduxHandle?: TReduxHandler;
-  focusReduxHandle?: TReduxHandler;
-  keydownReduxHandle?: TReduxHandler;
-  changeReduxHandle?: TReduxHandler;
-  blurReduxHandle?: TReduxHandler;
+  clickReduxHandler?: TReduxHandler;
+  focusReduxHandler?: TReduxHandler;
+  keydownReduxHandler?: TReduxHandler;
+  changeReduxHandler?: TReduxHandler;
+  blurReduxHandler?: TReduxHandler;
 }
 
 export interface IStateFormSelect extends ISelectProps {

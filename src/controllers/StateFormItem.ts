@@ -16,11 +16,11 @@ import {
   STACK,
   DIV,
   type IStateFormItemError,
-  type THandleName,
+  type THandlerName,
 } from '@tuber/shared'
 import type { IStateFormItem, IStateFormItemCustom } from '../interfaces/localized'
 import StateFormItemCustom from './StateFormItemCustom'
-import { default_callback, dummy_redux_handler, type TReduxHandler } from '../state'
+import { default_handler, dummy_redux_handler, type TReduxHandler } from '../state'
 import StateFormItemInputProps from './StateFormItemInputProps'
 import { err } from '../business.logic/logging'
 
@@ -57,7 +57,7 @@ export default class StateFormItem<P = StateForm, T = unknown>
   protected recursiveItems?: StateFormItem<P, T>[]
   protected itemInputProps?: StateFormItemInputProps<StateFormItem<P, T>>
 
-  private _badReduxHandlers: { [key in THandleName]?: boolean }
+  private _badReduxHandlers: { [key in THandlerName]?: boolean }
 
   constructor(itemState: Readonly<IStateFormItem<T>>, parent: P) {
     super()
@@ -129,7 +129,7 @@ export default class StateFormItem<P = StateForm, T = unknown>
         this.reduxClick = this.has.getDirectiveHandle('onclick')
           || this.has.getHandler('onclick')
           || this.has.callback
-          || default_callback // this._getDummyReduxHandler('onclick')
+          || default_handler // this._getDummyReduxHandler('onclick')
       )
   }
   get changeReduxHandler(): TReduxHandler {
@@ -317,15 +317,15 @@ export default class StateFormItem<P = StateForm, T = unknown>
    * @param event Event name
    * @returns 
    */
-  private _getDummyReduxHandler(event: THandleName): TReduxHandler {
+  private _getDummyReduxHandler(event: THandlerName): TReduxHandler {
     this._badReduxHandlers[event] = true
     return dummy_redux_handler
   }
-  private _noReduxHandlerFor(event: THandleName): boolean {
+  private _noReduxHandlerFor(event: THandlerName): boolean {
     return !!this._badReduxHandlers[event]
   }
   /** Checks if a valid Redux handler is set for the event. */
-  hasReduxHandler(event: THandleName): boolean {
+  hasReduxHandler(event: THandlerName): boolean {
     return !this._noReduxHandlerFor(event)
   }
 

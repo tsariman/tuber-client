@@ -1,22 +1,24 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import StatePage from '../../controllers/StatePage'
 import StateTmp from '../../controllers/StateTmp'
 import StateApp from '../../controllers/StateApp'
-import type { RootState } from '../../state'
+import type { AppDispatch, RootState } from '../../state'
 import { styled } from '@mui/material'
 import { StateJsxIcon } from '../icon'
 import { memo, useMemo } from 'react'
+import { as } from '../../business.logic/utility'
+import parse from 'html-react-parser'
 
 const MsgDiv = styled('div')(() => ({
   width: '100%',
   textAlign: 'center'
 }))
 
-const CheckCircleOutlineIcon = memo(() => (
+const CheckCircleOutlineIcon = memo(({ color }: { color?: string }) => (
   <StateJsxIcon
     name='check_circle_outline'
     config={{
-      sx: { fontSize: '29.5rem !important' }
+      sx: { fontSize: '29.5rem !important', color }
     }}
   />
 ))
@@ -40,20 +42,24 @@ const CheckCircleOutlineIcon = memo(() => (
  *
  * Tags: `success`, `page`, `message`
  */
-export default function PageSuccess ({ instance: page }:{ instance: StatePage }) {
+const PageSuccess = ({ instance: page }:{ instance: StatePage }) => {
+  const dispatch = useDispatch<AppDispatch>()
   const tmpState = useSelector((state: RootState) => state.tmp)
   const appState = useSelector((state: RootState) => state.app)
   const tmp = useMemo(() => new StateTmp(tmpState), [tmpState])
+  tmp.configure({ dispatch })
   const route = useMemo(() => new StateApp(appState).route, [appState])
-  const msg = tmp.get<string>(route,'message',page.data.message as string)
+  const $default = as<string>(page.data.message)
+  const message = tmp.get<string>(route,'message', $default)
 
   return (
     <>
-      <CheckCircleOutlineIcon />
-      <MsgDiv style={{color: page.typography.color}}>
-        <h1>{ msg }</h1>
+      <CheckCircleOutlineIcon color={page.typography.color} />
+      <MsgDiv sx={{color: page.typography.color}}>
+        <h1>{parse(message)}</h1>
       </MsgDiv>
     </>
   )
-
 }
+
+export default PageSuccess

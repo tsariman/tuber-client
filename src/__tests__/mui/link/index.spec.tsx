@@ -1,11 +1,11 @@
-import { describe, it, expect, vi } from 'vitest';
-import { StateLink } from '../../../controllers';
-import type { IStateLink } from '../../../localized/interfaces';
+import { describe, it, expect, vi } from 'vitest'
+import { StateLink } from '../../../controllers'
+import type { IStateLink } from '../../../interfaces/localized'
 
 // Mock the redux state utilities for StateLink controller
 vi.mock('../../../state', () => ({
-  default_callback: vi.fn(() => () => {}),
-}));
+  default_handler: vi.fn(() => () => {}),
+}))
 
 /**
  * Test suite for StateJsxLink component and StateLink controller
@@ -32,14 +32,14 @@ describe('src/mui/link/index.tsx', () => {
       },
       props: {},
       ...overrides,
-    });
+    })
 
     it('should create StateLink instance', () => {
-      const linkState = createMockLinkState();
-      const stateLink = new StateLink(linkState);
-      expect(stateLink).toBeDefined();
-      expect(stateLink.type).toBe('text');
-    });
+      const linkState = createMockLinkState()
+      const stateLink = new StateLink(linkState)
+      expect(stateLink).toBeDefined()
+      expect(stateLink.type).toBe('text')
+    })
 
     it('should handle text property in has state', () => {
       const linkState = createMockLinkState({
@@ -48,12 +48,12 @@ describe('src/mui/link/index.tsx', () => {
           text: 'Home',
           label: 'Home Link'
         }
-      });
-      const stateLink = new StateLink(linkState);
+      })
+      const stateLink = new StateLink(linkState)
       
-      expect(stateLink.has.text).toBe('Home');
-      expect(stateLink.has.label).toBe('Home Link');
-    });
+      expect(stateLink.has.text).toBe('Home')
+      expect(stateLink.has.label).toBe('Home Link')
+    })
 
     it('should handle link type configuration', () => {
       const linkState = createMockLinkState({
@@ -62,12 +62,12 @@ describe('src/mui/link/index.tsx', () => {
           text: 'External Link',
           label: 'External Link Label'
         }
-      });
-      const stateLink = new StateLink(linkState);
+      })
+      const stateLink = new StateLink(linkState)
       
-      expect(stateLink.type).toBe('link');
-      expect(stateLink.has.text).toBe('External Link');
-    });
+      expect(stateLink.type).toBe('link')
+      expect(stateLink.has.text).toBe('External Link')
+    })
 
     it('should have correct state properties', () => {
       const linkState = createMockLinkState({
@@ -77,13 +77,13 @@ describe('src/mui/link/index.tsx', () => {
           label: 'Icon Link Label',
           icon: 'home'
         }
-      });
-      const stateLink = new StateLink(linkState);
+      })
+      const stateLink = new StateLink(linkState)
       
-      expect(stateLink.type).toBe('icon');
-      expect(stateLink.has.text).toBe('Icon Link');
-      expect(stateLink.has.label).toBe('Icon Link Label');
-    });
+      expect(stateLink.type).toBe('icon')
+      expect(stateLink.has.text).toBe('Icon Link')
+      expect(stateLink.has.label).toBe('Icon Link Label')
+    })
 
     it('should handle undefined type correctly', () => {
       const linkState = createMockLinkState({
@@ -92,12 +92,12 @@ describe('src/mui/link/index.tsx', () => {
           text: 'Default Link',
           label: 'Default Link Label'
         }
-      });
-      const stateLink = new StateLink(linkState);
+      })
+      const stateLink = new StateLink(linkState)
       
       // StateLink should default to 'text' type when not specified
-      expect(stateLink.type).toBe('text');
-    });
+      expect(stateLink.type).toBe('text')
+    })
 
     it('should handle href property', () => {
       const linkState = createMockLinkState({
@@ -107,14 +107,14 @@ describe('src/mui/link/index.tsx', () => {
           text: 'Route Link',
           label: 'Route Link Label'
         }
-      });
-      const stateLink = new StateLink(linkState);
+      })
+      const stateLink = new StateLink(linkState)
       
-      expect(stateLink.state.href).toBe('/test-route');
-    });
+      expect(stateLink.state.href).toBe('/test-route')
+    })
 
     it('should handle onClick handler property', () => {
-      const mockHandler = vi.fn();
+      const mockHandler = vi.fn()
       const linkState = createMockLinkState({
         type: 'text',
         onClick: mockHandler,
@@ -122,17 +122,17 @@ describe('src/mui/link/index.tsx', () => {
           text: 'Clickable Link',
           label: 'Clickable Link Label'
         }
-      });
-      const stateLink = new StateLink(linkState);
+      })
+      const stateLink = new StateLink(linkState)
       
-      expect(stateLink.state.onClick).toBe(mockHandler);
-    });
+      expect(stateLink.state.onClick).toBe(mockHandler)
+    })
 
     it('should handle props correctly', () => {
       const customProps = {
         'data-testid': 'custom-link',
         className: 'custom-class'
-      };
+      }
       const linkState = createMockLinkState({
         type: 'text',
         props: customProps,
@@ -140,14 +140,14 @@ describe('src/mui/link/index.tsx', () => {
           text: 'Custom Props Link',
           label: 'Custom Props Link Label'
         }
-      });
-      const stateLink = new StateLink(linkState);
+      })
+      const stateLink = new StateLink(linkState)
       
-      expect(stateLink.props).toEqual(customProps);
-    });
+      expect(stateLink.props).toEqual(customProps)
+    })
 
     it('should handle different link types', () => {
-      const types = ['text', 'textlogo', 'icon', 'hybrid', 'link', 'svg', 'svg_right', 'svg_left'] as const;
+      const types = ['text', 'textlogo', 'icon', 'hybrid', 'link', 'svg', 'svg_right', 'svg_left'] as const
       
       types.forEach(type => {
         const linkState = createMockLinkState({
@@ -156,11 +156,11 @@ describe('src/mui/link/index.tsx', () => {
             text: `${type} Link`,
             label: `${type} Link Label`
           }
-        });
-        const stateLink = new StateLink(linkState);
+        })
+        const stateLink = new StateLink(linkState)
         
-        expect(stateLink.type).toBe(type);
-      });
-    });
-  });
-});
+        expect(stateLink.type).toBe(type)
+      })
+    })
+  })
+})

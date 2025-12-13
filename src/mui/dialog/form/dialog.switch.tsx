@@ -32,8 +32,12 @@ const DialogSwitch = (props: IDialogSwitch) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     data.value = e.target.name
     data.checked = e.target.checked
-    update_checkboxes(data)
-    setValue(data.checkedValues)
+    const newCheckedValues = update_checkboxes(
+      data.checkedValues,
+      e.target.name,
+      e.target.checked
+    )
+    setValue(newCheckedValues)
   }
 
   return (

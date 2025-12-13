@@ -22,6 +22,8 @@ export interface ISliceFormsDataErrorsArgs {
   invalidationMessage?: string
   validationRegex?: string
   validationMessage?: string
+  mustMatch?: string
+  mustMatchMessage?: string
 }
 
 interface IRemove {
@@ -69,6 +71,8 @@ export const formsDataErrorsSlice = createSlice({
         invalidationMessage,
         validationRegex,
         validationMessage,
+        mustMatch,
+        mustMatchMessage
       } = payload
       state[formName] = state[formName] || {}
       state[formName][name] = state[formName][name] ?? {}
@@ -108,6 +112,12 @@ export const formsDataErrorsSlice = createSlice({
       }
       if (typeof validationMessage !== 'undefined') {
         state[formName][name].validationMessage = validationMessage
+      }
+      if (typeof mustMatch !== 'undefined') {
+        state[formName][name].mustMatch = mustMatch
+      }
+      if (typeof mustMatchMessage !== 'undefined') {
+        state[formName][name].mustMatchMessage = mustMatchMessage
       }
     },
     /** Deletes a form error data. Payload is the form name. */

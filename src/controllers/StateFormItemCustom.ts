@@ -1,4 +1,4 @@
-import { dummy_redux_handler, type IRedux, type TReduxHandler } from '../state'
+import type { IRedux, TReduxHandler } from '../state'
 import { ler, get_val } from '../business.logic'
 import AbstractState from './AbstractState'
 import type {
@@ -11,8 +11,8 @@ import type {
   SvgIconProps
 } from '@mui/material'
 import type {
-  IHandleDirective,
-  THandleName,
+  IHandlerDirective,
+  THandlerName,
   TStateFormITemCustomColor,
   TObj
 } from '@tuber/shared'
@@ -45,7 +45,7 @@ export default class StateFormItemCustom<P, T = unknown>
   get state(): IStateFormItemCustom<T> { return this.hasState }
   get parent(): P { return this.parentDef }
   get id(): string { return this.hasState.id ?? '' }
-  get callback(): TReduxHandler { return this.hasCallback || dummy_redux_handler }
+  get callback(): TReduxHandler | undefined { return this.hasCallback }
   get classes(): unknown { return this.hasClasses }
   get content(): string { return this.hasState.content ?? '' }
   get color(): TStateFormITemCustomColor { return this.hasState.color ?? 'default' }
@@ -111,29 +111,29 @@ export default class StateFormItemCustom<P, T = unknown>
    */
   get key(): string { return this.hasState.key ?? '' }
   /** Name of an internally defined callback to be executed. */
-  get onclickHandle(): string { return this.hasState.onclickHandle ?? '' }
-  get onfocusHandle(): string { return this.hasState.onfocusHandle ?? '' }
-  get onchangeHandle(): string { return this.hasState.onchangeHandle ?? '' }
-  get onkeydownHandle(): string { return this.hasState.onkeydownHandle ?? '' }
-  get onblurHandle(): string { return this.hasState.onblurHandle ?? '' }
-  get ondeleteHandle(): string { return this.hasState.ondeleteHandle ?? '' }
-  get onclickHandleDirective(): IHandleDirective | undefined {
-    return this.hasState.onclickHandleDirective
+  get onclickHandler(): string { return this.hasState.onclickHandler ?? '' }
+  get onfocusHandler(): string { return this.hasState.onfocusHandler ?? '' }
+  get onchangeHandler(): string { return this.hasState.onchangeHandler ?? '' }
+  get onkeydownHandler(): string { return this.hasState.onkeydownHandler ?? '' }
+  get onblurHandler(): string { return this.hasState.onblurHandler ?? '' }
+  get ondeleteHandler(): string { return this.hasState.ondeleteHandler ?? '' }
+  get onclickHandlerDirective(): IHandlerDirective | undefined {
+    return this.hasState.onclickHandlerDirective
   }
-  get onfocusHandleDirective(): IHandleDirective | undefined {
-    return this.hasState.onfocusHandleDirective
+  get onfocusHandlerDirective(): IHandlerDirective | undefined {
+    return this.hasState.onfocusHandlerDirective
   }
-  get onchangeHandleDirective(): IHandleDirective | undefined {
-    return this.hasState.onchangeHandleDirective
+  get onchangeHandlerDirective(): IHandlerDirective | undefined {
+    return this.hasState.onchangeHandlerDirective
   }
-  get onkeydownHandleDirective(): IHandleDirective | undefined {
-    return this.hasState.onkeydownHandleDirective
+  get onkeydownHandlerDirective(): IHandlerDirective | undefined {
+    return this.hasState.onkeydownHandlerDirective
   }
-  get onblurHandleDirective(): IHandleDirective | undefined {
-    return this.hasState.onblurHandleDirective
+  get onblurHandlerDirective(): IHandlerDirective | undefined {
+    return this.hasState.onblurHandlerDirective
   }
-  get ondeleteHandleDirective(): IHandleDirective | undefined {
-    return this.hasState.ondeleteHandleDirective
+  get ondeleteHandlerDirective(): IHandlerDirective | undefined {
+    return this.hasState.ondeleteHandlerDirective
   }
   get load(): string { return this.hasState.load ?? '' }
   get startAdornment(): IStateFormItemCustom<T>['startAdornment'] {
@@ -214,12 +214,12 @@ export default class StateFormItemCustom<P, T = unknown>
    * // Or, "handleSet.myOtherCallback", then:
    * const myOtherCallback = window.handleSet.myOtherCallback
    * ```
-   * @param {THandleName} event e.g., 'onclick', 'onfocus'... etc.
+   * @param {THandlerName} event e.g., 'onclick', 'onfocus'... etc.
    */
   getHandler = (
-    event: THandleName = 'onclick'
+    event: THandlerName = 'onclick'
   ): TReduxHandler | undefined => {
-    const callbackName = this.hasState[`${event}Handle`]
+    const callbackName = this.hasState[`${event}Handler`]
     if (!callbackName) {
       return
     }
@@ -233,31 +233,31 @@ export default class StateFormItemCustom<P, T = unknown>
 
   /** Generate callback */
   getDirectiveHandle = (
-    event: THandleName = 'onclick'
-  ): TReduxHandler | undefined => {
-    let handleDirective: IHandleDirective | undefined
+    event: THandlerName = 'onclick'
+  ): TReduxHandler | null => {
+    let handlerDirective: IHandlerDirective | undefined
     switch (event) {
       case 'onclick':
-        handleDirective = this.hasState.onclickHandleDirective
+        handlerDirective = this.hasState.onclickHandlerDirective
         break
       case 'onfocus':
-        handleDirective = this.hasState.onfocusHandleDirective
+        handlerDirective = this.hasState.onfocusHandlerDirective
         break
       case 'onchange':
-        handleDirective = this.hasState.onchangeHandleDirective
+        handlerDirective = this.hasState.onchangeHandlerDirective
         break
       case 'onkeydown':
-        handleDirective = this.hasState.onkeydownHandleDirective
+        handlerDirective = this.hasState.onkeydownHandlerDirective
         break
       case 'onblur':
-        handleDirective = this.hasState.onblurHandleDirective
+        handlerDirective = this.hasState.onblurHandlerDirective
         break
       case 'ondelete':
-        handleDirective = this.hasState.ondeleteHandleDirective
+        handlerDirective = this.hasState.ondeleteHandlerDirective
         break
     }
-    if (!handleDirective) { return undefined }
-    const handleFactory = new ReduxHandlerFactory(handleDirective)
+    if (!handlerDirective) { return null }
+    const handleFactory = new ReduxHandlerFactory(handlerDirective)
     const callback = handleFactory.getDirectiveCallback()
     return callback
   }

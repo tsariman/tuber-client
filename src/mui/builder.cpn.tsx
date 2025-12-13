@@ -45,10 +45,6 @@ import {
   TEXT_NODE,
   TIME_PICKER,
 } from '@tuber/shared'
-import {
-  type ICheckboxesData,
-  update_checkboxes
-} from './form/items/_items.common.logic'
 import StateJsxButton from './form/items/state.jsx.button'
 import StateJsxCheckboxes from './form/items/state.jsx.checkboxes'
 import StateJsxInput from './form/items/state.jsx.input'
@@ -122,22 +118,6 @@ function RecursiveComponents({
         }
       })
     }
-  }
-
-  /** Saves checkboxes values to the Redux store. */
-  const onHandleCheckbox = (form: StateForm) =>
-    (name: string, oldValue: unknown) => () => 
-  {
-    const value = (oldValue ? oldValue : []) as ICheckboxesData
-    update_checkboxes(value)
-    dispatch({
-      type: 'formsData/formsDataUpdate',
-      payload: {
-        formName: form.name,
-        name,
-        value
-      }
-    })
   }
 
   /** Save switches value to the Redux store. */
@@ -228,9 +208,6 @@ function RecursiveComponents({
     ),
     [CHECKBOXES]:({ type, key, getState: getJson }:IDefProps): void => {
       const checkboxes = new StateFormItemCheckbox(getJson(), parent as StateForm)
-      if (parent instanceof StateForm) {
-        checkboxes.onChange = onHandleCheckbox(parent)
-      }
       components.push(
         <StateJsxCheckboxes key={`${type}-${key}`} def={checkboxes} />
       )

@@ -76,7 +76,7 @@ const AddBookmark = React.memo<IToolbarIcon>(({ def: appbar }) => {
           'fontSize': 34
         }
       },
-      'onclickHandle': `tuberCallbacks.$3_C_1`,
+      'onclickHandler': `tuberCallbacks.$3_C_1`,
     },
   }, appbar), [appbar]);
 

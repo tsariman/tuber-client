@@ -3,7 +3,7 @@ import type { TObj, IStateFormsDataErrors } from '@tuber/shared'
 import StateFormsDataErrors from '../controllers/StateFormsDataErrors'
 import { is_record, is_non_empty_string } from './utility'
 
-interface IValidation<T> {
+interface IValidation<T = TObj> {
   name: keyof T
   error: boolean
   message?: string
@@ -119,7 +119,7 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
   applyValidationSchemes(): IValidation<T>[] {
     const formsData = this._getFormData()
     const formErrors = this._e.get()
-    const vError: IValidation<T>[] = []
+    const vError: IValidation[] = []
     Object.entries(formErrors.profile).forEach(entry => {
       const [name, field] = entry
       const value = formsData[name]
@@ -127,7 +127,7 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
         return;
       } else if (field.is.required && !value) {
         vError.push({
-          name: name as keyof T,
+          name,
           error: true,
           message: field.requiredMessage
         })
@@ -136,7 +136,7 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
         && value.length > field.maxLength
       ) {
         vError.push({
-          name: name as keyof T,
+          name,
           error: true,
           message: field.maxLengthMessage
         })
@@ -145,7 +145,7 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
         && new RegExp(field.invalidationRegex).test(value)
       ) {
         vError.push({
-          name: name as keyof T,
+          name,
           error: true,
           message: field.invalidationMessage
         })
@@ -154,13 +154,22 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
         && !new RegExp(field.validationRegex).test(value)
       ) {
         vError.push({
-          name: name as keyof T,
+          name,
           error: true,
           message: field.validationMessage
         })
+      } else if (field.mustMatch
+        && is_non_empty_string(value)
+        && value !== formsData[field.mustMatch]
+      ) {
+        vError.push({
+          name,
+          error: true,
+          message: field.mustMatchMessage
+        })
       }
     })
-    return vError
+    return vError as IValidation<T>[]
   }
 
 }
