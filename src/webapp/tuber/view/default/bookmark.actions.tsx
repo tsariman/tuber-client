@@ -5,7 +5,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { StateLink, StateNet } from 'src/controllers'
 import StateJsxLink from 'src/mui/link'
-import { type RootState, type TReduxHandler } from 'src/state'
+import type { RootState, TReduxHandler } from 'src/state'
 import {
   dialog_edit_bookmark,
   dialog_delete_bookmark,
@@ -13,7 +13,7 @@ import {
   bookmark_vote_down
 } from '../../callbacks/prod.bookmarks.actions'
 import type { IBookmark } from '../../tuber.interfaces'
-import { get_ratio_color } from './_default.common.logic'
+import { get_ratio_color, show } from './_default.common.logic'
 import type { IDefaultParent } from '@tuber/shared'
 import Config from 'src/config'
 
@@ -45,14 +45,12 @@ const RatingWrapper = styled('span')(({ theme }) => ({
   borderRadius: '10%'
 }))
 
-const Rating = styled(Grid)(() => ({
-  paddingTop: 4,
-}))
+const Rating = styled(Grid)(() => ({ paddingTop: 4 }))
 
 const SpanStyled = styled('span')(() => ({}))
 
 // Action types for the toolbar
-type ActionType = 'edit' | 'delete' | 'upvote' | 'downvote' | 'bookmark' | 'settings'
+type ActionType = 'edit' | 'delete' | 'upvote' | 'downvote' | 'bookmark' | 'more'
 
 interface IActionConfig {
   icon: string
@@ -66,7 +64,7 @@ const ACTION_CONFIGS: Record<ActionType, IActionConfig> = {
   upvote: { icon: 'far, thumbs-up', onClick: bookmark_vote_up },
   downvote: { icon: 'far, thumbs-down', onClick: bookmark_vote_down },
   bookmark: { icon: 'far, fa-bookmark' },
-  settings: { icon: 'fa-cog' }
+  more: { icon: 'more_vert' }
 }
 
 // Optimized action component
@@ -107,13 +105,9 @@ const ColorCodedRating = React.memo<IRatingProps>(({ bookmark }) => {
   )
 })
 
-const DevBookmarkIndex = ({ index }: { index: number }) => Config.DEV
-  ? <Grid item><div>{index}</div></Grid>
-  : null
-
-export default function BookmarkActionsToolbar({ i, bookmark }: IBookmarkActionToolbarProps) {
+const BookmarkActionsToolbar = React.memo(({ i, bookmark }: IBookmarkActionToolbarProps) => {
   const netState = useSelector((rootState: RootState) => rootState.net)
-  const { sessionValid } = useMemo(() => new StateNet(netState), [netState])
+  const net = useMemo(() => new StateNet(netState), [netState])
   const [visible, setVisible] = useState<boolean>(false)
 
   const handleOnMouseOver = useCallback(() => {
@@ -132,7 +126,7 @@ export default function BookmarkActionsToolbar({ i, bookmark }: IBookmarkActionT
       onMouseLeave={handleOnMouseLeave}
     >
       <ColorCodedRating bookmark={bookmark} />
-      {sessionValid && (
+      {net.sessionValid && (
         <PaperStyled
           elevation={0}
           sx={{ opacity: visible ? 1 : 0 }}
@@ -140,14 +134,16 @@ export default function BookmarkActionsToolbar({ i, bookmark }: IBookmarkActionT
           <Grid container direction='row'>
             <ActionButton type="upvote" />
             <ActionButton type="downvote" />
-            <ActionButton type="bookmark" />
-            <ActionButton type="edit" index={i} />
-            <ActionButton type="delete" index={i} />
-            <ActionButton type="settings" />
-            <DevBookmarkIndex index={i} />
+            {/* <ActionButton type="bookmark" /> */}
+            { show(net, bookmark) && <ActionButton type="edit" index={i} /> }
+            { show(net, bookmark) && <ActionButton type="delete" index={i} /> }
+            {/* {<ActionButton type="more" />} */}
+            {Config.DEV ? i : null}
           </Grid>
         </PaperStyled>
       )}
     </Grid>
   )
-}
+})
+
+export default BookmarkActionsToolbar

@@ -322,3 +322,32 @@ export function stretch_to_bottom(bottom: number): number {
 
   return height - bottom
 }
+
+/**
+ * Check if any keys in `updated` differ from `old`.
+ * Only compares keys present in `updated` (form data scope).
+ */
+export function has_changes(
+  old: unknown,
+  updated: unknown
+): boolean {
+  if (is_record(updated) === false || is_record(old) === false) {
+    return false
+  }
+  const keys = Object.keys(updated)
+  for (let i = 0; i < keys.length; i++) {
+    const k = keys[i]
+    const newVal = updated[k]
+    const oldVal = old[k]
+    if (Array.isArray(newVal) || typeof newVal === 'object') {
+      try {
+        if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) return true
+      } catch {
+        if (newVal !== oldVal) return true
+      }
+    } else {
+      if (newVal !== oldVal) return true
+    }
+  }
+  return false
+}

@@ -1,8 +1,8 @@
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import StatePage from '../../controllers/StatePage'
 import StateTmp from '../../controllers/StateTmp'
 import StateApp from '../../controllers/StateApp'
-import type { AppDispatch, RootState } from '../../state'
+import type { RootState } from '../../state'
 import { styled } from '@mui/material'
 import { StateJsxIcon } from '../icon'
 import { memo, useMemo } from 'react'
@@ -41,16 +41,16 @@ const CheckCircleOutlineIcon = memo(({ color }: { color?: string }) => (
  * ```
  *
  * Tags: `success`, `page`, `message`
+ *
+ * @deprecated Use FeedbackPage with severity='success' instead.
  */
 const PageSuccess = ({ instance: page }:{ instance: StatePage }) => {
-  const dispatch = useDispatch<AppDispatch>()
   const tmpState = useSelector((state: RootState) => state.tmp)
   const appState = useSelector((state: RootState) => state.app)
   const tmp = useMemo(() => new StateTmp(tmpState), [tmpState])
-  tmp.configure({ dispatch })
   const route = useMemo(() => new StateApp(appState).route, [appState])
   const $default = as<string>(page.data.message)
-  const message = tmp.get<string>(route,'message', $default)
+  const message = tmp.get<string>(route, 'message', $default)
 
   return (
     <>

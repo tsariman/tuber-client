@@ -1,3 +1,6 @@
+import type StateNet from 'src/controllers/StateNet'
+import type { IBookmark } from '../../tuber.interfaces'
+import { CLEARANCE_LEVEL, type TRole } from '@tuber/shared/dist/constants.server'
 
 /** @see https://www.quackit.com/css/css_color_codes.cfm */
 export function get_ratio_color (upvotes?: string, downvotes?: string) {
@@ -58,4 +61,31 @@ export function get_endpoint_search(param?: string): string {
     return param + search
   }
   return search
+}
+
+/**
+ * Use to check if the user is authorized if they are not the owner of the bookmark.
+ */
+const user_is_authorized = (net: StateNet, bookmark: IBookmark): boolean => {
+  const roleClearance = CLEARANCE_LEVEL[(net.role ?? 'guest') as TRole]
+  if (roleClearance >= CLEARANCE_LEVEL.moderator) {
+    const { inception_clearance } = bookmark
+    if (typeof inception_clearance === 'number'
+      && roleClearance > inception_clearance
+    ) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
+ * Use to show or hide bookmark actions based on user authorization.
+ * @param net 
+ * @param bookmark 
+ * @returns 
+ */
+export const show = (net: StateNet, bookmark: IBookmark) => {
+  return net._id === bookmark?.user_id
+    || user_is_authorized(net, bookmark)
 }

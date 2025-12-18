@@ -1,7 +1,7 @@
 // Tuber app types and interfaces gathered in one spot
-import type { JSX } from 'react';
-import type StatePageAppbar from '../../controllers/templates/StatePageAppbar';
-import type { TWithRequired } from '@tuber/shared';
+import type { JSX } from 'react'
+import type StatePageAppbar from '../../controllers/templates/StatePageAppbar'
+import type { TWithRequired } from '@tuber/shared'
 
 /**
  * Online video platform.
@@ -15,7 +15,7 @@ export type TPlatform = '_blank'
   | 'odysee'
   | 'facebook'
   | 'twitch'
-  | 'unknown';
+  | 'unknown'
 
 /**
  * Type for bookmark.  
@@ -24,52 +24,54 @@ export type TPlatform = '_blank'
  */
 export interface IBookmark {
   /** Same as `_id` field */
-  id?: string;
+  id?: string
   /** Server `id` field */
-  _id?: string;
+  _id?: string
   /** Same as `_type` field */
-  type?: string;
+  type?: string
   /** Server `type` field. This is the collection name. */
-  _type?: string;
+  _type?: string
   /** Server `created_at` field */
-  createdAt?: Date;
-  modifiedAt?: Date;
-  is_private?: boolean;
-  isPrivate?: boolean;
-  isPublished?: boolean;
-  is_published?: boolean;
-  userid?: string;
-  author?: string;
-  videoid: string;
-  url?: string;
+  createdAt?: Date
+  modifiedAt?: Date
+  is_private?: boolean
+  isPrivate?: boolean
+  isPublished?: boolean
+  is_published?: boolean
+  user_id?: string
+  userid?: string
+  inception_clearance?: number
+  author?: string
+  videoid: string
+  url?: string
   /** Server field */
-  embed_url?: string;
-  embedUrl?: string;
-  slug?: string;
-  platform: TPlatform;
+  embed_url?: string
+  embedUrl?: string
+  slug?: string
+  platform: TPlatform
   /** Server field */
-  start_time?: string;
-  startTime?: string;
+  start_time?: string
+  startTime?: string
   /** Server field */
-  start_seconds?: number;
-  startSeconds?: number;
+  start_seconds?: number
+  startSeconds?: number
   /** Server field */
-  end_seconds?: number;
-  endSeconds?: number;
-  title: string;
-  note?: string;
-  rating?: number;
-  upvotes?: string;
-  downvotes?: string;
+  end_seconds?: number
+  endSeconds?: number
+  title: string
+  note?: string
+  rating?: number
+  upvotes?: string
+  downvotes?: string
   /** Server field */
-  thumbnail_url?: string;
-  thumbnailUrl?: string;
-  tags?: string[];
-  groupid?: string;
+  thumbnail_url?: string
+  thumbnailUrl?: string
+  tags?: string[]
+  groupid?: string
   /** Server field */
-  html_tag?: string;
-  htmlTag?: string;
-  sortOrder?: number;
+  html_tag?: string
+  htmlTag?: string
+  sortOrder?: number
   // [TODO] Add properties what will help in bolding search terms.
 }
 
@@ -77,103 +79,103 @@ export interface IBookmark {
 export interface IBookmarkOrigin
   extends Omit<IBookmark, 'userid' | 'groupid' | 'startSeconds' | 'endSeconds' | 'embedUrl'>
 {
-  embed_url?: string;
-  user_id?: string;
-  group_id?: string;
-  start_seconds?: number;
-  end_seconds?: number;
+  embed_url?: string
+  user_id?: string
+  group_id?: string
+  start_seconds?: number
+  end_seconds?: number
 }
 
 export interface ITuberBookmarksProps {
-  playerOpen: boolean;
-  setBookmarkToPlay: React.Dispatch<React.SetStateAction<IBookmark|undefined>>;
-  setPlayerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  playerOpen: boolean
+  setBookmarkToPlay: React.Dispatch<React.SetStateAction<IBookmark|undefined>>
+  setPlayerOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export type TTuberPlatformMap = {[brand in TPlatform]: JSX.Element | null };
+export type TTuberPlatformMap = {[brand in TPlatform]: JSX.Element | null }
 
 export interface IResearchToolbarProps {
   // /** This callback shows and hides the list of bookmarks. */
-  // togglePlayerCallback: IStateLink['onClick'];
+  // togglePlayerCallback: IStateLink['onClick']
   // /**
   //  * This callback function displays an interface which is then used to create
   //  * a new bookmark.
   //  */
-  // bookmarkAddCallback: IStateLink['onClick'];
-  // toggleThumbnailsCallback: IStateLink['onClick'];
+  // bookmarkAddCallback: IStateLink['onClick']
+  // toggleThumbnailsCallback: IStateLink['onClick']
   // /** Parent definition for state links. It is required. */
-  def: StatePageAppbar;
+  def: StatePageAppbar
 }
 
 export interface ITuberPlayer {
-  isOpen?: boolean;
-  bookmark?: IBookmark;
-  toolbarProps: IResearchToolbarProps;
+  isOpen?: boolean
+  bookmark?: IBookmark
+  toolbarProps: IResearchToolbarProps
 }
 
 export interface ITuberProps {
-  open?: boolean;
-  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-  isOpen?: boolean;
-  bookmark?: IBookmark;
-  toolbarProps?: IResearchToolbarProps;
+  open?: boolean
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>
+  isOpen?: boolean
+  bookmark?: IBookmark
+  toolbarProps?: IResearchToolbarProps
 }
 
-export type TTPlayerProps = TWithRequired<ITuberProps, 'toolbarProps'>;
+export type TTPlayerProps = TWithRequired<ITuberProps, 'toolbarProps'>
 
 export interface TTPlayer {
-  toolbarDef: StatePageAppbar;
-  bookmark?: IBookmark;
+  toolbarDef: StatePageAppbar
+  bookmark?: IBookmark
 }
 
 export interface IUrlStatus {
-  message: string;
-  valid: boolean;
+  message: string
+  valid: boolean
 }
 
 export interface IVideoData {
-  id: string;
-  start: number;
-  platform: TPlatform;
-  author: string;
-  slug: string;
-  urlCheck: IUrlStatus;
-  dialogId: string;
-  thumbnailUrl: string;
+  id: string
+  start: number
+  platform: TPlatform
+  author: string
+  slug: string
+  urlCheck: IUrlStatus
+  dialogId: string
+  thumbnailUrl: string
 }
 
-export type TVideoData = Partial<IVideoData>;
+export type TVideoData = Partial<IVideoData>
 
 export interface IListing {
-  is_active?: boolean;
+  is_active?: boolean
   /** Only the user who created the listing can see it. */
-  is_private?: boolean;
+  is_private?: boolean
   /** Will come up in the global search result if this is true. */
-  is_published?: boolean;
-  name: string;
-  description?: string;
+  is_published?: boolean
+  name: string
+  description?: string
   /** The user who created the listing. */
-  user_id?: string;
-  created_at?: Date;
-  modified_at?: Date;
-  slug?: string;
-  tags?: string[];
+  user_id?: string
+  created_at?: Date
+  modified_at?: Date
+  slug?: string
+  tags?: string[]
   bookmarks?: {
-    is_active?: boolean;
+    is_active?: boolean
     /**
      * Only the user who created the listing can see this bookmark is
      * included.
      */
-    is_private?: boolean;
-    created_at?: Date;
-    modified_at?: Date;
+    is_private?: boolean
+    created_at?: Date
+    modified_at?: Date
     /** 
      * Within the context of a listing, this is the HTML tag that
      * the bookmark is associated with.
      */
-    html_tag?: string;
-    bookmark_id?: string;
-  }[];
-  restrict?: Record<string, string>;
-  rules?: Record<string, string>;
+    html_tag?: string
+    bookmark_id?: string
+  }[]
+  restrict?: Record<string, string>
+  rules?: Record<string, string>
 }

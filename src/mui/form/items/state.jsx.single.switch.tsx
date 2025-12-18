@@ -79,7 +79,7 @@ export default function StateJsxSingleSwitch({
           value: e.target.checked ? 'yes' : 'no'
         }
       }),
-      'DEFAULT': () => dispatch({
+      'default': () => dispatch({
         type: 'formsData/formsDataUpdate',
         payload: {
           formName,
@@ -88,7 +88,9 @@ export default function StateJsxSingleSwitch({
         }
       })
     }
-    map[get_bool_type(getValue())]()
+    const value = getValue()
+    const boolType = get_bool_type(value)
+    map[boolType]()
   }, [dispatch, formName, getValue, name])
 
   return name ? (

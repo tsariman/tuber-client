@@ -264,6 +264,33 @@ export default {
         { 'd': 'M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z' }
       ]
     },
+    'cancel_circle_outline': {
+      'height': 24,
+      'viewBox': '0 -960 960 960',
+      'width': 24,
+      'fill': 'currentColor',
+      'paths': [
+        { 'd': 'm336-280 144-144 144 144 56-56-144-144 144-144-56-56-144 144-144-144-56 56 144 144-144 144 56 56ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z' }
+      ]
+    },
+    'error_circle_outline': {
+      'height': 24,
+      'viewBox': '0 -960 960 960',
+      'width': 24,
+      'fill': 'currentColor',
+      'paths': [
+        { 'd': 'M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240Zm40 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z' }
+      ]
+    },
+    'info_circle_outline': {
+      'height': 24,
+      'viewBox': '0 -960 960 960',
+      'width': 24,
+      'fill': 'currentColor',
+      'paths': [
+        { 'd': 'M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z' }
+      ]
+    },
     ..._get_global_var(`${GLOBAL_PREFIX}Icons`)
   },
 
@@ -333,9 +360,7 @@ export default {
       'content': '$view : default_blank_page_view',
       'layout': 'layout_centered_no_scroll',
       'typography': { 'color': 'text.primary' },
-      'data': {
-        'message': 'Blank page!'
-      }
+      'data': { 'message': 'Blank page!' }
     },
 
     // Default success feedback page
@@ -345,9 +370,37 @@ export default {
       'appbar': { 'items': [{ 'has': { 'text': 'Home', 'route': '/' }}]},
       'layout': 'layout_centered_no_scroll',
       'typography': { 'color': 'success.main' },
-      'data': {
-        'message': 'Successful!'
-      }
+      'data': { 'message': 'Successful!' }
+    },
+
+    // Default error feedback page
+    'default-error': {
+      '_key': 'default-error',
+      'content': '$view : default_error_page_view',
+      'appbar': { 'items': [{ 'has': { 'text': 'Home', 'route': '/' }}]},
+      'typography': { 'color': 'error.main' },
+      'layout': 'layout_centered_no_scroll',
+      'data': { 'message': 'An error occurred!' }
+    },
+
+    // Default warning feedback page
+    'default-warning': {
+      '_key': 'default-warning',
+      'content': '$view : default_warning_page_view',
+      'appbar': { 'items': [{ 'has': { 'text': 'Home', 'route': '/' }}]},
+      'typography': { 'color': 'warning.main' },
+      'layout': 'layout_centered_no_scroll',
+      'data': { 'message': 'This is a warning!' }
+    },
+
+    // Default info feedback page
+    'default-info': {
+      '_key': 'default-info',
+      'content': '$view : default_info_page_view',
+      'appbar': { 'items': [{ 'has': { 'text': 'Home', 'route': '/' }}]},
+      'typography': { 'color': 'info.main' },
+      'layout': 'layout_centered_no_scroll',
+      'data': { 'message': 'This is an informational message!' }
     },
 
     // Default 404 not found page

@@ -3,7 +3,7 @@ import { get_req_state } from '../state/net.actions'
 import AbstractState from './AbstractState'
 import type {
   IJsonapiDataAttributes,
-  IJsonapiResource,
+  IJsonapiResponseResource,
   IStateData,
   TObj
 } from '@tuber/shared'
@@ -66,7 +66,7 @@ export default class StateData extends AbstractState {
    * @param endpoint
    * @param index
    */
-  getResourceById = <T = IJsonapiDataAttributes>(id: string): IJsonapiResource<T> | null => {
+  getResourceById = <T = IJsonapiDataAttributes>(id: string): IJsonapiResponseResource<T> | null => {
     if (!this._endpoint) {
       return this.die('StateData: Endpoint not set.', null)
     }
@@ -76,13 +76,13 @@ export default class StateData extends AbstractState {
     }
     for (const resource of collection) {
       if (resource.id === id) {
-        return resource as IJsonapiResource<T>
+        return resource as IJsonapiResponseResource<T>
       }
     }
     return null
   }
 
-  getResources = <T=IJsonapiDataAttributes>(): IJsonapiResource<T>[] => {
+  getResources = <T=IJsonapiDataAttributes>(): IJsonapiResponseResource<T>[] => {
     if (!this._endpoint) {
       return this.die('StateData: Endpoint not set.', [])
     }
@@ -93,7 +93,7 @@ export default class StateData extends AbstractState {
         []
       )
     }
-    return resources as IJsonapiResource<T>[]
+    return resources as IJsonapiResponseResource<T>[]
   }
 
    /** Include the 'id' or the 'type'. */
@@ -141,7 +141,7 @@ export default class StateData extends AbstractState {
   /** Delete array elements by index range. */
   rangeDelete(
     range: { startIndex: number, endIndex: number}
-  ): IJsonapiResource[] {
+  ): IJsonapiResponseResource[] {
     const { startIndex, endIndex } = range
     const arr = this.getResources()
     return arr.slice(0, startIndex).concat(arr.slice(endIndex + 1))

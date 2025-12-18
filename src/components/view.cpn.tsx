@@ -1,4 +1,3 @@
-import PageSuccess from '../mui/page/success.cpn'
 import PageNotFound from '../mui/page/notfound.cpn'
 import StatePage from '../controllers/StatePage'
 import PageErrors from '../mui/page/errors.cpn'
@@ -13,14 +12,19 @@ import {
   DEFAULT_SUCCESS_PAGE_VIEW
 } from '@tuber/shared'
 import PageBlank from './page/blank.cpn'
+import FeedbackPage from 'src/mui/page/feedback.cpn'
 
 interface IViewContent {
   instance: StatePage
 }
 
 interface IViewTable {
-  [constant: string]: (props: { instance: StatePage }) => JSX.Element | null
+  [constant: string]: (props: IViewContent) => JSX.Element | null
 }
+
+const DEFAULT_ERROR_PAGE_VIEW = 'default_error_page_view'
+const DEFAULT_WARNING_PAGE_VIEW = 'default_warning_page_view'
+const DEFAULT_INFO_PAGE_VIEW = 'default_info_page_view'
 
 const pageViewTable: IViewTable = {
   'table_view': () => {
@@ -28,7 +32,18 @@ const pageViewTable: IViewTable = {
     return <Fragment />
   },
   [DEFAULT_LANDING_PAGE_VIEW]: PageLanding,
-  [DEFAULT_SUCCESS_PAGE_VIEW]: PageSuccess,
+  [DEFAULT_SUCCESS_PAGE_VIEW]: ({ instance: page }: IViewContent) => (
+    <FeedbackPage instance={page} severity='success' />
+  ),
+  [DEFAULT_ERROR_PAGE_VIEW]: ({ instance: page }: IViewContent) => (
+    <FeedbackPage instance={page} severity='error' />
+  ),
+  [DEFAULT_WARNING_PAGE_VIEW]: ({ instance: page }: IViewContent) => (
+    <FeedbackPage instance={page} severity='warning' />
+  ),
+  [DEFAULT_INFO_PAGE_VIEW]: ({ instance: page }: IViewContent) => (
+    <FeedbackPage instance={page} severity='info' />
+  ),
   [DEFAULT_NOTFOUND_PAGE_VIEW]: PageNotFound,
   [DEFAULT_ERRORS_PAGE_VIEW]: PageErrors,
   [DEFAULT_BLANK_PAGE_VIEW]: PageBlank,

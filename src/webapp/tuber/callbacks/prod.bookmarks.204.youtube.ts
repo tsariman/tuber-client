@@ -9,6 +9,7 @@ import { patch_req_state } from 'src/state/net.actions';
 import type { IBookmark } from '../tuber.interfaces';
 import FormValidationPolicy from 'src/business.logic/FormValidationPolicy';
 import { ler, msg, pre } from '../../../business.logic/logging';
+import { has_changes } from 'src/business.logic/utility';
 
 /**
  * [ **YouTube** ] Save bookmark changes to server.
@@ -76,6 +77,13 @@ export default function form_submit_edit_youtube_bookmark(redux: IRedux) {
       }
       pre();
       const formData = policy.getFilteredData();
+
+      // Prevent submission if nothing changed compared to existing attributes
+      if (!has_changes(existingBookmarkResource.attributes, formData)) {
+        // No changes detected; submission skipped.
+        return
+      }
+
       const editedBookmarkResource = {
         ...existingBookmarkResource,
         attributes: {

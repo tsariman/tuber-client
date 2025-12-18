@@ -12,10 +12,17 @@ import AppbarButton from '../link'
 import StateJsxLogo from './state.jsx.logo'
 import { StateJsxIcon } from '../icon'
 import StateApp from '../../controllers/StateApp'
+import { styled } from '@mui/material/styles'
+
 
 interface IBasic { instance: StatePage }
 
 const MenuIcon = memo(() => <StateJsxIcon name='menu' />)
+
+/** Fixes navigation links collapsing unto the title */
+const TypographyStyled = styled(Typography)(() => ({
+  marginRight: 'auto'
+}))
 
 const StateJsxAppbarBasic = ({ instance: page }: IBasic) => {
   const { appbar } = page
@@ -45,15 +52,16 @@ const StateJsxAppbarBasic = ({ instance: page }: IBasic) => {
           {appbar.hasLogo ? (
             <StateJsxLogo instance={appbar} />
           ) : (
-            <Typography
+            <TypographyStyled
               sx={{
                 fontFamily: appbar.typography.fontFamily,
-                color: appbar.typography.color
+                color: appbar.typography.color,
               }}
               {...appbar.textLogoProps}
+
             >
               { appTitle }
-            </Typography>
+            </TypographyStyled>
           )}
           <Box sx={{ ml: 'auto' }}>
             {appbar.items.map((item, i) => (

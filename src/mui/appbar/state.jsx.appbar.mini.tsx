@@ -25,6 +25,11 @@ interface AppbarProps extends MuiAppbarProps {
   open?: boolean
 }
 
+/** Fixes navigation links collapsing unto the title */
+const TypographyStyled = styled(Typography)(() => ({
+  marginRight: 'auto'
+}))
+
 const HamburgerIcon = memo(() => <StateJsxIcon name='menu' />)
 
 const Appbar = styled(MuiAppbar, {
@@ -81,7 +86,7 @@ const StateJsxAppbarMini = ({ instance: page }: IMini) => {
           {appbar.hasLogo ? (
             <StateJsxLogo instance={appbar} />
           ) : (
-            <Typography
+            <TypographyStyled
               sx={{
                 fontFamily: appbar.typography.fontFamily,
                 color: appbar.typography.color
@@ -89,7 +94,7 @@ const StateJsxAppbarMini = ({ instance: page }: IMini) => {
               {...appbar.textLogoProps}
             >
               { appTitle }
-            </Typography>
+            </TypographyStyled>
           )}
           {appbar.items.map((item, i) => (
             <AppbarButton def={item} key={`nav-menu-${i}`} />

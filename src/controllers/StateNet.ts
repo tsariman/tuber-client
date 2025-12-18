@@ -91,7 +91,7 @@ export default class StateNet extends AbstractState implements IStateNet {
     this._netHeaders = this._netHeaders || {}
     this._netHeaders[prop] = parsedValue
   }
-  get jwt_version(): number { return this._state.jwt_version ?? 0 }
+  get _id(): string { return this._state._id ?? '' }
   get name(): string { return this._state.name ?? '' }
   get role(): string { return this._state.role ?? '' }
   get restrictions(): string[] { return this._state.restrictions || [] }
@@ -142,7 +142,7 @@ export default class StateNet extends AbstractState implements IStateNet {
     return !!this._state.name
       && !!this._state.role
       && !!this.token
-      && typeof this.jwt_version !== 'undefined'
+      && !!this._state._id
   }
 }
 

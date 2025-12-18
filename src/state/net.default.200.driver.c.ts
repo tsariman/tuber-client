@@ -106,6 +106,10 @@ export default function net_default_200_driver (
     remember_jsonapi_errors(doc.errors)
   }
 
+  if (Array.isArray(doc.included) && doc.included.length > 0) {
+    // TODO: Handle included resources
+  }
+
   // Handles redux state loaded from the server (remote).
   if (is_object(doc.state)) {
     dispatch(net_patch_state(doc.state))

@@ -13,6 +13,7 @@ import type { IBookmark } from '../tuber.interfaces'
 import { DIALOG_DELETE_BOOKMARK_ID } from '../tuber.config'
 import { ler, log, pre } from '../../../business.logic/logging'
 import type { IStateData } from '@tuber/shared'
+import { user_authorized } from './_callbacks.common.logic'
 
 /** Get bookmarks data from redux store. */
 function get_bookmark_resources (data: IStateData<IBookmark>) {
@@ -43,6 +44,10 @@ export function dialog_edit_bookmark (i: number) {
       const bookmark = resourceList[i]
       if (!bookmark) {
         ler(`resourceList['${i}'] does not exist.`)
+        return
+      }
+      if (user_authorized(bookmark, rootState.net) === false) {
+        ler('User not authorized to edit this bookmark.')
         return
       }
 
@@ -179,6 +184,11 @@ export function dialog_delete_bookmark (i: number) {
         return
       }
       pre()
+
+      if (user_authorized(bookmark, rootState.net) === false) {
+        ler('User not authorized to delete this bookmark.')
+        return
+      }
 
       // Open the dialog
       if (rootState.dialog._id !== dialogState._id) {// if the dialog was NOT mounted
