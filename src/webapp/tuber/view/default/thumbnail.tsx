@@ -33,7 +33,7 @@ const BookmarkThumbnail = ({ i, bookmark }: IThumbnailProps) => {
       }}
     >
       {!bookmark.thumbnail_url ? (
-        <StateJsxLink def={new StateLink({
+        <StateJsxLink instance={new StateLink({
           'type': 'icon',
           'onClick': dev_fix_missing_thumbnails(i),
           'props': {

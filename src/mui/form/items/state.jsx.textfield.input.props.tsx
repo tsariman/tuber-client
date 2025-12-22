@@ -32,7 +32,7 @@ export default function StateJsxTextfieldInputProps({
     if (!state) return null;
     const { icon, text, textProps } = state;
     if (icon) {
-      return <StateJsxLink def={new StateLink(icon)} />;
+      return <StateJsxLink instance={new StateLink(icon)} />;
     } else if (text) {
       return <span {...textProps}>{ text }</span>;
     }

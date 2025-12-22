@@ -61,8 +61,8 @@ export interface IBookmark {
   title: string
   note?: string
   rating?: number
-  upvotes?: string
-  downvotes?: string
+  upvotes?: number
+  downvotes?: number
   /** Server field */
   thumbnail_url?: string
   thumbnailUrl?: string
@@ -178,4 +178,16 @@ export interface IListing {
   }[]
   restrict?: Record<string, string>
   rules?: Record<string, string>
+}
+
+export interface IBookmarkVote {
+  bookmark_id?: string
+  user_id?: string
+  rating?: 1 | -1
+}
+
+export interface IBookmarkVoteResponse {
+  rating?: 1 | -1
+  upvotes?: number
+  downvotes?: number
 }

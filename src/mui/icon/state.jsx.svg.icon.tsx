@@ -1,37 +1,37 @@
-import { SvgIcon } from '@mui/material';
-import type StateIcon from '../../controllers/StateIcon';
+import { SvgIcon } from '@mui/material'
+import type StateIcon from '../../controllers/StateIcon'
 import {
   type IStateIconPolygon,
   type IStateIconPath,
   type IStateIconRect,
   type IStateIconGroup
-} from '@tuber/shared';
+} from '@tuber/shared'
 
 interface IJsonIconProps {
   def?: {
-    svgIconProps: React.ComponentProps<typeof SvgIcon>;
-  };
-  svgDef: StateIcon;
+    svgIconProps: React.ComponentProps<typeof SvgIcon>
+  }
+  svgDef: StateIcon
 }
 
 interface ICommonProps {
-  fill?: string;
+  fill?: string
 }
 
 interface IPathProps extends ICommonProps {
-  path: IStateIconPath;
+  path: IStateIconPath
 }
 
 interface IPolygonProps extends ICommonProps {
-  polygon: IStateIconPolygon;
+  polygon: IStateIconPolygon
 }
 
 interface IRectProps extends ICommonProps {
-  rect: IStateIconRect;
+  rect: IStateIconRect
 }
 
 const JsxIconGroup = ({ group, fill }: { group: IStateIconGroup; fill?: string }) => {
-  const { children, ...groupAttributes } = group;
+  const { children, ...groupAttributes } = group
   return (
     <g {...groupAttributes}>
       {children.map((element, i) => {
@@ -43,7 +43,7 @@ const JsxIconGroup = ({ group, fill }: { group: IStateIconGroup; fill?: string }
                 path={element.props as IStateIconPath}
                 fill={fill}
               />
-            );
+            )
           case 'rect':
             return (
               <JsxIconRect
@@ -51,7 +51,7 @@ const JsxIconGroup = ({ group, fill }: { group: IStateIconGroup; fill?: string }
                 rect={element.props as IStateIconRect}
                 fill={fill}
               />
-            );
+            )
           case 'polygon':
             return (
               <JsxIconPoly
@@ -59,7 +59,7 @@ const JsxIconGroup = ({ group, fill }: { group: IStateIconGroup; fill?: string }
                 polygon={element.props as IStateIconPolygon}
                 fill={fill}
               />
-            );
+            )
           case 'group':
             return (
               <JsxIconGroup
@@ -67,14 +67,14 @@ const JsxIconGroup = ({ group, fill }: { group: IStateIconGroup; fill?: string }
                 group={element.props as IStateIconGroup}
                 fill={fill}
               />
-            );
+            )
           default:
-            return null;
+            return null
         }
       })}
     </g>
-  );
-};
+  )
+}
 
 const JsxIconPath = ({ path, fill }: IPathProps) => (
   <path
@@ -82,7 +82,7 @@ const JsxIconPath = ({ path, fill }: IPathProps) => (
     fill={path.fill || fill}
     opacity={path.opacity}
   />
-);
+)
 
 const JsxIconPoly = ({ polygon: poly, fill }: IPolygonProps) => (
   <polygon
@@ -92,7 +92,7 @@ const JsxIconPoly = ({ polygon: poly, fill }: IPolygonProps) => (
     strokeWidth={poly.strokeWidth}
     transform={poly.transform}
   />
-);
+)
 
 const JsxIconRect = ({ rect, fill }: IRectProps) => (
   <rect
@@ -104,20 +104,20 @@ const JsxIconRect = ({ rect, fill }: IRectProps) => (
     ry={rect.ry}
     fill={rect.fill || fill}
   />
-);
+)
 
-export default function StateJsxSvgIcon({ def, svgDef: svg }: IJsonIconProps) {
+const StateJsxSvgIcon = ({ def, svgDef: svg }: IJsonIconProps) => {
   // Return early if no content to render
   if (!svg.hasContent) {
-    return null;
+    return null
   }
 
   // Only apply explicit width/height if no fontSize is specified in iconProps
-  const shouldApplyExplicitSize = !def?.svgIconProps?.fontSize;
+  const shouldApplyExplicitSize = !def?.svgIconProps?.fontSize
 
   const svgIconProps: Required<IJsonIconProps>['def']['svgIconProps'] = (
     def && def.svgIconProps
-  ) || {};
+  ) || {}
 
   return (
     <SvgIcon
@@ -179,5 +179,7 @@ export default function StateJsxSvgIcon({ def, svgDef: svg }: IJsonIconProps) {
         />
       ))}
     </SvgIcon>
-  );
-};
+  )
+}
+
+export default StateJsxSvgIcon

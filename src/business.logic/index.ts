@@ -40,11 +40,11 @@ export {
 export { default as FormValidationPolicy } from './FormValidationPolicy';
 
 // Indexes and data management
-export type { IIndexes } from './indexes';
+export type { TIndexes } from './indexes';
 export {
   index_by_id,
   drop_index,
-  select
+  select_by_id as select
 } from './indexes';
 
 // JSON:API related classes

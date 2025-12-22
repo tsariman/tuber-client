@@ -1,5 +1,15 @@
 
-# Development Changes
+# Development Changes Log
+
+## `202512212219` Refactor and enhance bookmark voting functionality
+
+- Updated the bookmark voting actions to handle upvotes and downvotes with improved type definitions.
+- Introduced new action creators for PUT requests to update the Redux store.
+- Enhanced the data slice to support accumulation of resources from server responses.
+- Refactored the bookmark components to utilize new action creators and improved state management.
+- Updated interfaces to reflect changes in data structure, specifically for upvotes and downvotes.
+- Improved the handling of included resources in the Redux state.
+- Cleaned up code by removing deprecated comments and ensuring consistent formatting.
 
 ## `202512181141` Refactor success page and state management
 

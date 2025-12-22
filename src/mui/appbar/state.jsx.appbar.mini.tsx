@@ -97,7 +97,7 @@ const StateJsxAppbarMini = ({ instance: page }: IMini) => {
             </TypographyStyled>
           )}
           {appbar.items.map((item, i) => (
-            <AppbarButton def={item} key={`nav-menu-${i}`} />
+            <AppbarButton instance={item} key={`nav-menu-${i}`} />
           ))}
         </Toolbar>
       </Appbar>

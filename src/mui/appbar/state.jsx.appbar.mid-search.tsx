@@ -140,7 +140,7 @@ const StateJsxAppbarMidSearch = ({ instance: page, app }: IMidSearch) => {
       onClose={handleMobileMenuClose}
     >
       {appbar.items.map((item, i) => (
-        <AppbarButton def={item} key={`nav-menu-${i}`} />
+        <AppbarButton instance={item} key={`nav-menu-${i}`} />
       ))}
     </Menu>
   ), [appbar.items, appbar.mobileMenuId, isMobileMenuOpen, mobileMoreAnchorEl])
@@ -175,7 +175,7 @@ const StateJsxAppbarMidSearch = ({ instance: page, app }: IMidSearch) => {
           <Search {...appbar.searchContainerProps}>
             {appbarChips.length < 1 ? (
               <UrlIconWrapper>
-                <StateJsxUnifiedIconProvider def={appbar.searchFieldIcon} />
+                <StateJsxUnifiedIconProvider instance={appbar.searchFieldIcon} />
               </UrlIconWrapper>
             ) : ( null )}
             <StyledInputBase
@@ -188,7 +188,7 @@ const StateJsxAppbarMidSearch = ({ instance: page, app }: IMidSearch) => {
               endAdornment={
                 <InputAdornment position='end'>
                   {value ? (
-                    <AppbarButton def={new StateLink({
+                    <AppbarButton instance={new StateLink({
                       'type': 'icon',
                       'has': {
                         'icon': 'clear_outline',
@@ -203,7 +203,7 @@ const StateJsxAppbarMidSearch = ({ instance: page, app }: IMidSearch) => {
                       }
                     })} />
                   ): ( null )}
-                  <AppbarButton def={appbar.searchFieldIconButton} />
+                  <AppbarButton instance={appbar.searchFieldIconButton} />
                 </InputAdornment>
               }
               onChange={handleSearchfieldOnChange}
@@ -213,7 +213,7 @@ const StateJsxAppbarMidSearch = ({ instance: page, app }: IMidSearch) => {
           </Search>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             {appbar.items.map((item, i) => (
-              <AppbarButton def={item} key={`nav-menu-${i}`} />
+              <AppbarButton instance={item} key={`nav-menu-${i}`} />
             ))}
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>

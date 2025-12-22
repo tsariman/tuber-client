@@ -78,7 +78,7 @@ const StateJsxSelectionDialog = memo((
             <ListItemAvatar>
               <Avatar {...info.avatar.props}>
                 {info.icon
-                  ? (<StateJsxUnifiedIconProvider def={info.avatar.jsonIcon} />)
+                  ? (<StateJsxUnifiedIconProvider instance={info.avatar.jsonIcon} />)
                   : info.avatar.text
                 }
               </Avatar>

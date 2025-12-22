@@ -1,5 +1,6 @@
 import type { Dispatch } from 'redux'
 import {
+  dataAccumulateByAppending,
   dataLimitQueueCol,
   dataLimitStackCol,
 } from '../slices/data.slice'
@@ -106,8 +107,13 @@ export default function net_default_200_driver (
     remember_jsonapi_errors(doc.errors)
   }
 
-  if (Array.isArray(doc.included) && doc.included.length > 0) {
-    // TODO: Handle included resources
+  // included member
+  if (Array.isArray(doc.included)) {
+    const collectionName = doc.included[0]?.type || 'unknown'
+    dispatch(dataAccumulateByAppending({
+      identifier: collectionName,
+      collection: doc.included
+    }))
   }
 
   // Handles redux state loaded from the server (remote).

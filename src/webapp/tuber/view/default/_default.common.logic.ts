@@ -1,11 +1,12 @@
 import type StateNet from 'src/controllers/StateNet'
-import type { IBookmark } from '../../tuber.interfaces'
+import type { IBookmark, IBookmarkVote } from '../../tuber.interfaces'
 import { CLEARANCE_LEVEL, type TRole } from '@tuber/shared/dist/constants.server'
+import type { StateData } from 'src/controllers'
 
 /** @see https://www.quackit.com/css/css_color_codes.cfm */
-export function get_ratio_color (upvotes?: string, downvotes?: string) {
-  const up = parseInt(upvotes || '0')
-  const down = parseInt(downvotes || '0')
+export function get_ratio_color (upvotes?: number, downvotes?: number) {
+  const up = upvotes ?? 0
+  const down = downvotes ?? 0
   if (!up && !down) { // no votes
     return 'inherit'
   }
@@ -64,7 +65,7 @@ export function get_endpoint_search(param?: string): string {
 }
 
 /**
- * Use to check if the user is authorized if they are not the owner of the bookmark.
+ * Use to check if the user is authorized if they are not the owner of the bookmark
  */
 const user_is_authorized = (net: StateNet, bookmark: IBookmark): boolean => {
   const roleClearance = CLEARANCE_LEVEL[(net.role ?? 'guest') as TRole]
@@ -80,7 +81,7 @@ const user_is_authorized = (net: StateNet, bookmark: IBookmark): boolean => {
 }
 
 /**
- * Use to show or hide bookmark actions based on user authorization.
+ * Use to show or hide bookmark actions based on user authorization
  * @param net 
  * @param bookmark 
  * @returns 
@@ -88,4 +89,35 @@ const user_is_authorized = (net: StateNet, bookmark: IBookmark): boolean => {
 export const show = (net: StateNet, bookmark: IBookmark) => {
   return net._id === bookmark?.user_id
     || user_is_authorized(net, bookmark)
+}
+
+/**
+ * Check if the user has voted on a bookmark
+ * @param data - The data state
+ * @param bookmarkId - The bookmark ID
+ * @returns `'up'`, `'down'`, or `'none'`
+ * @deprecated Doesn't account for changing votes
+ */
+export const has_voted = (data: StateData, bookmarkId?: string): 'down' | 'none' | 'up' => {
+  if (!bookmarkId) { return 'none' }
+  const resource = data.configure<IBookmarkVote>({
+    endpoint: 'bookmark-votes',
+    attribute: 'bookmark_id'
+  })
+  .getByResourceAttribute<IBookmarkVote>(bookmarkId)
+
+  if (resource) {
+    const { attributes: { rating } } = resource
+    switch (rating) {
+      case undefined:
+      case null:
+      default:
+        break
+      case 1:
+        return 'up'
+      case -1:
+        return 'down'
+    }
+  }
+  return 'none'
 }

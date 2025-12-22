@@ -1,18 +1,55 @@
-import { Badge, Icon, SvgIcon } from '@mui/material';
-import getSvgIcon from '../state.jsx.imported.svg.icons';
-import {type StateFormItemCustom, StateAllIcons } from '../../controllers';
-import { Fragment, useMemo, useCallback } from 'react';
-import { useSelector } from 'react-redux';
-import type { RootState } from '../../state';
-import StateJsxSvgIcon from './state.jsx.svg.icon';
+import { Badge, Icon as MuiIcon, SvgIcon } from '@mui/material'
+import {type StateFormItemCustom } from '../../controllers'
+import StateAllIcons from '../../controllers/StateAllIcons'
+import type StateIcon from '../../controllers/StateIcon'
+import { Fragment, useMemo, type JSX } from 'react'
+import { useSelector } from 'react-redux'
+import type { RootState } from '../../state'
+import StateJsxSvgIcon from './state.jsx.svg.icon'
 
 interface IJsonIconProps {
-  def: StateFormItemCustom<unknown>; // StateFormItem | StateLink
+  instance: StateFormItemCustom<unknown> // StateFormItem | StateLink
 }
 
 export interface IStateJsxIconProps {
-  name: string;
-  config?:  React.ComponentProps<typeof SvgIcon>;
+  name: string
+  config?: React.ComponentProps<typeof SvgIcon>
+}
+
+interface IxProps {
+  svg: StateIcon
+  has: StateFormItemCustom<unknown>
+}
+
+const LocalIconSelection = ({ svg, has }: IxProps) => (
+  <StateJsxSvgIcon def={has} svgDef={svg} />
+)
+
+/** @deprecated RenderSvgIcon */
+const LocalSvgIconSelection = ({ has }: IxProps) => (
+  <MuiIcon {...has.iconProps}>{ has.svgIcon }</MuiIcon>
+)
+
+/** @deprecated RenderMuiIcon */
+const LocalMuiIconSelection = ({ has }: IxProps) => (
+  <MuiIcon {...has.iconProps}>{ has.muiIcon }</MuiIcon>
+)
+
+/** @deprecated RenderFaIcon */
+const LocalFaIconSelection = () => {
+  console.error('.faIcon is no longer a valid icon.')
+  return <Fragment />
+}
+
+/** @deprecated RenderNone */
+const NoneIconSelection = () => <Fragment>❌</Fragment>
+
+const map: Record<string, (props: IxProps) => JSX.Element> = {
+  icon: LocalIconSelection,
+  svgIcon: LocalSvgIconSelection,
+  muiIcon: LocalMuiIconSelection,
+  faIcon: LocalFaIconSelection,
+  none: NoneIconSelection
 }
 
 /**
@@ -26,80 +63,55 @@ export interface IStateJsxIconProps {
  * }
  * ```
  */
-export const StateJsxUnifiedIconProvider = (({ def: has }: IJsonIconProps) => {
-  const iconsState = useSelector((state: RootState) => state.icons);
-
-  const renderIcon = useCallback(() => {
-    const allIcons = new StateAllIcons(iconsState);
-    const svg = allIcons.getIcon(has.icon);
-    return <StateJsxSvgIcon def={has} svgDef={svg} />;
-  }, [iconsState, has]);
-
-  const renderSvgIcon = useCallback(() =>
-    getSvgIcon({ iconName: has.svgIcon, props: has.iconProps }) ||
-    <Icon {...has.iconProps}>{ has.svgIcon }</Icon>
-  , [has.svgIcon, has.iconProps]);
-
-  const renderMuiIcon = useCallback(() => 
-    getSvgIcon({ iconName: has.muiIcon, props: has.iconProps }) || 
-    <Icon {...has.iconProps}>{ has.muiIcon }</Icon>
-  , [has.muiIcon, has.iconProps]);
-
-  const renderFaIcon = useCallback(() => {
-    console.error('.faIcon is no longer a valid icon.');
-    return ( null );
-  }, []);
-
-  const renderNone = useCallback(() => <Fragment>❌</Fragment>, []);
-
-  const map = useMemo(() => ({
-    icon: renderIcon,
-    svgIcon: renderSvgIcon,
-    muiIcon: renderMuiIcon,
-    faIcon: renderFaIcon,
-    none: renderNone
-  }), [renderIcon, renderSvgIcon, renderMuiIcon, renderFaIcon, renderNone]);
+export const StateJsxUnifiedIconProvider = (({ instance: has }: IJsonIconProps) => {
+  const iconsState = useSelector((state: RootState) => state.icons)
+  const allIcons = useMemo(() => new StateAllIcons(iconsState), [iconsState])
+  const svg = useMemo(() => allIcons.getIcon(has.icon), [allIcons, has.icon])
 
   const type = useMemo(() => {
-    if (has.svgIcon && has.svgIcon !== 'none') return 'svgIcon';
-    if (has.icon) return 'icon';
-    if (has.faIcon) return 'faIcon';
-    return 'none';
-  }, [has.svgIcon, has.icon, has.faIcon]);
+    if (has.svgIcon && has.svgIcon !== 'none') return 'svgIcon'
+    if (has.icon) return 'icon'
+    if (has.faIcon) return 'faIcon'
+    return 'none'
+  }, [has.svgIcon, has.icon, has.faIcon])
 
-  return map[type]();
-});
+  const SelectedIcon = map[type]
+  return (
+    <SelectedIcon svg={svg} has={has} />
+  )
+})
 
 export const StateJsxIcon = ({ name, config } : IStateJsxIconProps) => {
-  const iconsState = useSelector((state: RootState) => state.icons);
-  const allIcons = new StateAllIcons(iconsState);
-  const iconSvg = allIcons.getIcon(name);
+  const iconsState = useSelector((state: RootState) => state.icons)
+  const allIcons = useMemo(() => new StateAllIcons(iconsState), [iconsState])
+  const iconSvg = useMemo(() => allIcons.getIcon(name), [allIcons, name])
 
   return (
     <StateJsxSvgIcon def={{ svgIconProps: config || {} }} svgDef={iconSvg} />
-  );
-};
+  )
+}
 
-export const StateJsxBadgedIcon = (({ def: has }: IJsonIconProps) => {
+const StateJsxBadgedIcon = (({ instance: has }: IJsonIconProps) => {
   const badgeProps = useMemo(() => ({
     color: 'error' as const,
     ...has.badge,
     badgeContent: '-'
-  }), [has.badge]);
-
-  const iconComponent = useMemo(() => <StateJsxUnifiedIconProvider def={has} />, [has]);
+  }), [has.badge])
+  const iconsState = useSelector((state: RootState) => state.icons)
+  const allIcons = useMemo(() => new StateAllIcons(iconsState), [iconsState])
+  const svg = useMemo(() => allIcons.getIcon(has.icon), [allIcons, has.icon])
 
   return (
     <Fragment>
       {has.badge ? (
         <Badge {...badgeProps}>
-          {iconComponent}
+          <StateJsxSvgIcon def={has} svgDef={svg} />
         </Badge>
       ) : (
-        iconComponent
+        <StateJsxSvgIcon def={has} svgDef={svg} />
       )}
     </Fragment>
-  );
-});
+  )
+})
 
-export default StateJsxBadgedIcon;
+export default StateJsxBadgedIcon

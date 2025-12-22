@@ -12,8 +12,6 @@ export const includedSlice = createSlice({
 })
 
 export const includedActions = includedSlice.actions
-export const {
-  includedClear
-} = includedSlice.actions
+export const { includedClear } = includedSlice.actions
 
 export default includedSlice.reducer

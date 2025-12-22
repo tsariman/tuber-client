@@ -12,9 +12,9 @@ import {
   bookmark_vote_up,
   bookmark_vote_down
 } from '../../callbacks/prod.bookmarks.actions'
-import type { IBookmark } from '../../tuber.interfaces'
+import type { IBookmark, IBookmarkVote } from '../../tuber.interfaces'
 import { get_ratio_color, show } from './_default.common.logic'
-import type { IDefaultParent } from '@tuber/shared'
+import type { IDefaultParent, IJsonapiResponseResource } from '@tuber/shared'
 import Config from 'src/config'
 
 interface IBookmarkActionToolbarProps {
@@ -26,6 +26,11 @@ interface IRatingProps {
   bookmark: IBookmark
 }
 
+interface IActionButton {
+  type: TActionType
+  index?: number
+}
+
 const PaperStyled = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark'
     ? '#141a1f'
@@ -33,6 +38,9 @@ const PaperStyled = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   textAlign: 'center',
   color: theme.palette.grey[600],
+}))
+
+const Fader = styled('div')(() => ({
   opacity: 0,
   transition: 'opacity 0.25s ease-in-out 0s'
 }))
@@ -50,45 +58,54 @@ const Rating = styled(Grid)(() => ({ paddingTop: 4 }))
 const SpanStyled = styled('span')(() => ({}))
 
 // Action types for the toolbar
-type ActionType = 'edit' | 'delete' | 'upvote' | 'downvote' | 'bookmark' | 'more'
+type TActionType = 'edit'
+| 'delete'
+| 'upvote'
+| 'upvoted'
+| 'downvote'
+| 'downvoted'
+| 'bookmark'
+| 'more'
 
 interface IActionConfig {
   icon: string
   onClick?: (index: number) => TReduxHandler
+  props?: Record<string, unknown>
 }
 
 // Memoized action configurations
-const ACTION_CONFIGS: Record<ActionType, IActionConfig> = {
+const ACTION_CONFIGS: Record<TActionType, IActionConfig> = {
   edit: { icon: 'fa-pen-to-square', onClick: dialog_edit_bookmark },
   delete: { icon: 'fa-trash-can', onClick: dialog_delete_bookmark },
   upvote: { icon: 'far, thumbs-up', onClick: bookmark_vote_up },
+  upvoted: { icon: 'far, thumbs-up-voted', onClick: bookmark_vote_up },
   downvote: { icon: 'far, thumbs-down', onClick: bookmark_vote_down },
+  downvoted: { icon: 'far, thumbs-down-voted', onClick: bookmark_vote_down },
   bookmark: { icon: 'far, fa-bookmark' },
   more: { icon: 'more_vert' }
 }
 
 // Optimized action component
-const ActionButton = React.memo<{ type: ActionType; index?: number }>(({ type, index }) => {
+const ActionButton = React.memo<IActionButton>(({ type, index }) => {
   const config = ACTION_CONFIGS[type]
-  
-  const linkDef = useMemo(() => new StateLink<IDefaultParent>({
+
+  const link = useMemo(() => new StateLink<IDefaultParent>({
     type: 'icon',
     onClick: config.onClick && index !== undefined ? config.onClick(index) : undefined,
     props: { size: 'small' },
     has: { icon: config.icon }
   }), [config, index])
-
-  return <StateJsxLink def={linkDef} />
+  return <StateJsxLink instance={link} />
 })
 
 const ColorCodedRating = React.memo<IRatingProps>(({ bookmark }) => {
   const { upvotes, downvotes } = bookmark
   
   const { ratioColor, rating } = useMemo(() => {
-    const up = parseInt(upvotes || '0')
-    const down = parseInt(downvotes || '0')
-    const rating = up - down
-    const ratioColor = get_ratio_color(upvotes, downvotes)
+  const up = upvotes ?? 0
+  const down = downvotes ?? 0
+  const rating = up - down
+  const ratioColor = get_ratio_color(upvotes, downvotes)
     
     return { ratioColor, rating }
   }, [upvotes, downvotes])
@@ -108,6 +125,17 @@ const ColorCodedRating = React.memo<IRatingProps>(({ bookmark }) => {
 const BookmarkActionsToolbar = React.memo(({ i, bookmark }: IBookmarkActionToolbarProps) => {
   const netState = useSelector((rootState: RootState) => rootState.net)
   const net = useMemo(() => new StateNet(netState), [netState])
+  const bookmarkVotesState = useSelector((rootState: RootState) => rootState.data['bookmark-votes'] || [])
+  const voteIndex = useMemo(() => {
+    return bookmarkVotesState.findIndex((
+      vote: IJsonapiResponseResource<IBookmarkVote>
+    ) => vote.id === bookmark.id)
+  }, [bookmarkVotesState, bookmark.id])
+  const rating = useMemo(() => {
+    if (voteIndex === -1) { return undefined }
+    return bookmarkVotesState[voteIndex]?.attributes?.rating as -1 | 1 | undefined
+  }, [bookmarkVotesState, voteIndex])
+
   const [visible, setVisible] = useState<boolean>(false)
 
   const handleOnMouseOver = useCallback(() => {
@@ -127,18 +155,33 @@ const BookmarkActionsToolbar = React.memo(({ i, bookmark }: IBookmarkActionToolb
     >
       <ColorCodedRating bookmark={bookmark} />
       {net.sessionValid && (
-        <PaperStyled
-          elevation={0}
-          sx={{ opacity: visible ? 1 : 0 }}
-        >
+        <PaperStyled elevation={0}>
           <Grid container direction='row'>
-            <ActionButton type="upvote" />
-            <ActionButton type="downvote" />
+            <Fader sx={{opacity: visible || rating === 1 ? 1 : 0}}>
+              {rating === 1
+                ? <ActionButton type="upvoted" index={i} />
+                : <ActionButton type="upvote" index={i} />}
+            </Fader>
+            <Fader sx={{opacity: visible || rating === -1 ? 1 : 0}}>
+              {rating === -1
+                ? <ActionButton type="downvoted" index={i} />
+                : <ActionButton type="downvote" index={i} />}
+            </Fader>
             {/* <ActionButton type="bookmark" /> */}
-            { show(net, bookmark) && <ActionButton type="edit" index={i} /> }
-            { show(net, bookmark) && <ActionButton type="delete" index={i} /> }
+            {show(net, bookmark) && (
+              <Fader sx={{opacity: visible ? 1 : 0}}>
+                <ActionButton type="edit" index={i} />
+              </Fader>
+            )}
+            {show(net, bookmark) && (
+              <Fader sx={{opacity: visible ? 1 : 0}}>
+                <ActionButton type="delete" index={i} />
+              </Fader>
+            )}
             {/* {<ActionButton type="more" />} */}
-            {Config.DEV ? i : null}
+            {Config.DEV ? (
+              <Fader sx={{opacity: visible ? 1 : 0}}>{i}</Fader>
+            ) : null}
           </Grid>
         </PaperStyled>
       )}

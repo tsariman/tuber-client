@@ -41,7 +41,7 @@ export default function net_default_201_driver (
       ler('more than one resource received on a 201 response.')
     } else if (is_object(doc.data)) {
       dispatch(dataStack({
-        endpoint: clean_endpoint_ending(endpoint),
+        collectionName: clean_endpoint_ending(endpoint),
         data: doc.data as IJsonapiResponseResource
       }))
     }

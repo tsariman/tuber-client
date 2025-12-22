@@ -1,19 +1,21 @@
 import {
+  get_origin_ending_cleaned,
   get_parsed_content,
   get_state_form_name
 } from 'src/business.logic/parsing'
-import type { IJsonapiResponseResource } from '@tuber/shared'
+import type { IJsonapiDataResponse, IJsonapiResponseResource } from '@tuber/shared'
 import StateTmp from 'src/controllers/StateTmp'
 import { type IRedux } from 'src/state'
 import { error_id } from 'src/business.logic/errors'
 import { delete_req_state, get_dialog_state } from 'src/state/net.actions'
 import { get_val, safely_get_as } from 'src/business.logic/utility'
 import { get_dialog_registry_key_for_edit } from '../_tuber.common.logic'
-import type { IBookmark } from '../tuber.interfaces'
+import type { IBookmark, IBookmarkVoteResponse } from '../tuber.interfaces'
 import { DIALOG_DELETE_BOOKMARK_ID } from '../tuber.config'
 import { ler, log, pre } from '../../../business.logic/logging'
 import type { IStateData } from '@tuber/shared'
 import { user_authorized } from './_callbacks.common.logic'
+import StateNet from 'src/controllers/StateNet'
 
 /** Get bookmarks data from redux store. */
 function get_bookmark_resources (data: IStateData<IBookmark>) {
@@ -259,16 +261,139 @@ export default function form_submit_delete_bookmark (redux: IRedux) {
   }
 }
 
-/** */
+/** Handler for bookmark vote up action */
 export const bookmark_vote_up = (i: number) => (redux: IRedux) => async () => {
-  void i
-  void redux
-  // TODO: Implement me
+  const { store: { getState, dispatch }, actions: A } = redux
+  const rootState = getState()
+
+  const resources = safely_get_as<IJsonapiResponseResource<IBookmark>[]>(
+    rootState,
+    'data.bookmarks',
+    []
+  )
+  if (resources.length === 0) {
+    ler("No 'bookmarks' found.")
+    return
+  }
+  const resource = resources[i]
+  if (!resource) {
+    ler(`resourceList['${i}'] does not exist.`)
+    return
+  }
+
+  try {
+    const origin = get_origin_ending_cleaned(rootState.app.origin)
+    const headersState = new StateNet(rootState.net).headers
+    const url = `${origin}/bookmarks/${resource.id}/vote`
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        ...headersState
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        data: { type: 'votes', attributes: { rating: 1 } }
+      })
+    })
+    const jsonapiResponse = await response.json() as IJsonapiDataResponse<IBookmarkVoteResponse>
+    if (jsonapiResponse.data === null || Array.isArray(jsonapiResponse.data)) {
+      ler('No vote data returned from server.')
+      return
+    }
+    const upvotes = jsonapiResponse.data.attributes?.upvotes
+    const downvotes = jsonapiResponse.data.attributes?.downvotes
+    if (upvotes) {
+      dispatch(A.dataSetAttrByIndex({
+        endpoint: 'bookmarks',
+        index: i,
+        prop: 'upvotes',
+        val: upvotes
+      }))
+    }
+    if (downvotes) {
+      dispatch(A.dataSetAttrByIndex({
+        endpoint: 'bookmarks',
+        index: i,
+        prop: 'downvotes',
+        val: downvotes
+      }))
+    }
+    dispatch(A.dataUpdateById({
+      collectionName: jsonapiResponse.data.type,
+      id: jsonapiResponse.data.id,
+      resource: jsonapiResponse.data as IJsonapiResponseResource
+    }))
+  } catch (e) {
+    ler((e as Error).message)
+  }
 }
 
-/** */
+/** Handler for bookmark vote down action */
 export const bookmark_vote_down = (i: number) => (redux: IRedux) => async () => {
-  void i
-  void redux
-  // TODO: Implement me
+  const { store: { getState, dispatch }, actions: A } = redux
+  const rootState = getState()
+  const resources = safely_get_as<IJsonapiResponseResource<IBookmark>[]>(
+    rootState,
+    'data.bookmarks',
+    []
+  )
+  if (resources.length === 0) {
+    ler("No 'bookmarks' found.")
+    return
+  }
+  const resource = resources[i]
+  if (!resource) {
+    ler(`resourceList['${i}'] does not exist.`)
+    return
+  }
+
+  try {
+    const origin = get_origin_ending_cleaned(rootState.app.origin)
+    const headersState = new StateNet(rootState.net).headers
+    const url = `${origin}/bookmarks/${resource.id}/vote`
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        ...headersState
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        data: { type: 'votes', attributes: { rating: -1 } }
+      })
+    })
+    const jsonapiResponse = await response.json() as IJsonapiDataResponse<IBookmarkVoteResponse>
+    if (jsonapiResponse.data === null || Array.isArray(jsonapiResponse.data)) {
+      ler('No vote data returned from server.')
+      return
+    }
+    const upvotes = jsonapiResponse.data.attributes?.upvotes
+    const downvotes = jsonapiResponse.data.attributes?.downvotes
+    if (upvotes) {
+      dispatch(A.dataSetAttrByIndex({
+        endpoint: 'bookmarks',
+        index: i,
+        prop: 'upvotes',
+        val: upvotes
+      }))
+    }
+    if (downvotes) {
+      dispatch(A.dataSetAttrByIndex({
+        endpoint: 'bookmarks',
+        index: i,
+        prop: 'downvotes',
+        val: downvotes
+      }))
+    }
+    dispatch(A.dataUpdateById({
+      collectionName: jsonapiResponse.data.type,
+      id: jsonapiResponse.data.id,
+      resource: jsonapiResponse.data as IJsonapiResponseResource
+    }))
+  } catch (e) {
+    ler((e as Error).message)
+  }
 }

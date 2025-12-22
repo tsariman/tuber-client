@@ -65,7 +65,7 @@ const StateJsxAppbarBasic = ({ instance: page }: IBasic) => {
           )}
           <Box sx={{ ml: 'auto' }}>
             {appbar.items.map((item, i) => (
-              <AppbarButton def={item} key={`nav-menu-${i}`} />
+              <AppbarButton instance={item} key={`nav-menu-${i}`} />
             ))}
           </Box>
         </Toolbar>

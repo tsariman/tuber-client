@@ -239,7 +239,7 @@ function RecursiveComponents({
     [LINK]:({ type, key, getState: getJson }:IDefProps): number => components.push(
       <StateJsxLink
         key={`${type}-${key}`}
-        def={new StateLink(getJson(), parent)}
+        instance={new StateLink(getJson(), parent)}
       />
     ),
     [RADIO_BUTTONS]:({ type, key, getState: getJson }:IDefProps): number => components.push(

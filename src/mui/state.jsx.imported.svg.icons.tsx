@@ -1,11 +1,12 @@
-import type { TObj } from '@tuber/shared';
-import { type JSX, Fragment } from 'react';
+import type { TObj } from '@tuber/shared'
+import { type JSX, Fragment } from 'react'
 
+/** @deprecated */
 function getImportedSvgIcon (
   iconName: string,
   props?: unknown
 ) {
-  void props;
+  void props
   const iconTable: TObj<JSX.Element | null> = {
     'phone_outline': null,
     'call_outline': null,
@@ -96,15 +97,15 @@ function getImportedSvgIcon (
     'filterlistoutlined': null,
     'filter_list_outline': null,
     'none': <Fragment />
-  };
-  return iconTable[iconName] ?? null;
+  }
+  return iconTable[iconName] ?? null
 }
 
 const ImportedSvgIcon = ({
   iconName,
   props
 }: {iconName:string;props?:unknown}) => {
-  return <>{ getImportedSvgIcon(iconName, props) }</>;
-};
+  return <>{ getImportedSvgIcon(iconName, props) }</>
+}
 
-export default ImportedSvgIcon;
+export default ImportedSvgIcon

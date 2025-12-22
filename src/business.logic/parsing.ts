@@ -193,6 +193,20 @@ export function get_origin_ending_fixed(origin?: string): string {
 }
 
 /**
+ * Ensures the origin URL does not have a trailing forward slash.
+ *
+ * @param origin The origin URL to process (optional)
+ * @returns The origin URL without a trailing slash, or window.location.origin
+ *          without a trailing slash if no origin provided
+ */
+export const get_origin_ending_cleaned = (origin?: string): string => {
+  if (origin) {
+    return origin.slice(-1) === '/' ? origin.slice(0, -1) : origin
+  }
+  return window.location.origin
+}
+
+/**
  * Removes the trailing forward slash from an endpoint if present.
  *
  * @param endpoint The endpoint string to clean

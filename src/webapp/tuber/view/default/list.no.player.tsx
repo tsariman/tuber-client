@@ -10,7 +10,8 @@ import type { IBookmark } from '../../tuber.interfaces';
 import LoadMoreBookmarksFromServer, {
   LoadEarlierBookmarksFromServer
 } from './list.bookmark.loader';
-import Bookmark from './bookmark.no.player';
+import BookmarkNoPlayer from './bookmark.no.player';
+import { EP_BOOKMARKS } from '@tuber/shared';
 
 const StyledList = styled(List)(({ theme }) => ({
   paddingLeft: theme.spacing(1),
@@ -24,7 +25,8 @@ export default function TuberBookmarkSearchWithThumbnails() {
   
   // Memoize bookmark collection
   const bookmarks = useMemo(() => {
-    return data.configure({ endpoint: 'bookmarks' })
+    return data.configure({ endpoint: EP_BOOKMARKS })
+      .include('id')
       .flatten()
       .get<IBookmark>();
   }, [data]);
@@ -82,13 +84,13 @@ export default function TuberBookmarkSearchWithThumbnails() {
       <LoadEarlierBookmarksFromServer def={data} />
       <StyledList>
         {bookmarks.map((bookmark, i) => (
-          <Bookmark
+          <BookmarkNoPlayer
             key={`bookmark-${i}-${bookmark.id || bookmark.url}`}
             handleExpandDetailIconOnClick={handleExpandDetailIconOnClick}
             index={i}
           >
             {bookmark}
-          </Bookmark>
+          </BookmarkNoPlayer>
         ))}
       </StyledList>
       <LoadMoreBookmarksFromServer def={data} />

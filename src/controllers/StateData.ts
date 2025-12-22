@@ -1,5 +1,3 @@
-import { type AppDispatch } from '../state'
-import { get_req_state } from '../state/net.actions'
 import AbstractState from './AbstractState'
 import type {
   IJsonapiDataAttributes,
@@ -9,21 +7,22 @@ import type {
 } from '@tuber/shared'
 import type State from './State'
 import type { IStateDataConfig } from '../interfaces/IControllerConfiguration'
+import { index_by_attribute_member, index_by_id } from '../business.logic/indexes'
 
 /** Wrapper class for `initialState.data` */
 export default class StateData extends AbstractState {
   private _state: IStateData
   private _parent?: State
-  private _reduxDispatch?: AppDispatch
   private _endpoint?: string
+  private _attribute?: string
   private _flattenedCollection?: IJsonapiDataAttributes[]
-  private _includedProps: { id: boolean, types: boolean }
+  private _includedProps: { id: boolean, type: boolean }
 
   constructor(state: IStateData, parent?: State) {
     super()
     this._state = state
     this._parent = parent
-    this._includedProps = { id: false, types: false }
+    this._includedProps = { id: false, type: false }
   }
 
   get state(): IStateData { return this._state }
@@ -34,54 +33,73 @@ export default class StateData extends AbstractState {
     return this._state && Object.keys(this._state).length === 0
   }
 
-  /** Enable redux dispach here if you didn't supply it when instantiating. */
-  configure(opts: IStateDataConfig): this {
-    const { dispatch, endpoint } = opts
-    this._reduxDispatch = dispatch
+  configure<T>(opts: IStateDataConfig<T>): this {
+    const { endpoint, attribute } = opts
     this._endpoint = endpoint
+    if (attribute) { this._attribute = attribute as string }
     return this
   }
 
   /**
-   * Retrieve a page from server.
-   * [TODO] Not tested yet.
-   *
-   * @param page
-   */
-  fetch(page: number): void {
-    if (!this._endpoint) {
-      return this.die('StateData: Endpoint not set.', undefined)
-    }
-    if (this._reduxDispatch) {
-      this._reduxDispatch(get_req_state(this._endpoint, `page[number]=${page}`))
-    } else {
-      this.die('StateData: Redux dispatch not enabled.', undefined)
-    }
-  }
-
-  /**
    * Get a collection or a single document in a collection.
-   * [TODO] Not tested yet.
    *
    * @param endpoint
    * @param index
    */
-  getResourceById = <T = IJsonapiDataAttributes>(id: string): IJsonapiResponseResource<T> | null => {
+  getResourceById = <T = IJsonapiDataAttributes>(id: string): IJsonapiResponseResource<T> | undefined => {
     if (!this._endpoint) {
-      return this.die('StateData: Endpoint not set.', null)
+      return this.die('StateData: Endpoint not set.', undefined)
     }
     const collection = this._state[this._endpoint]
     if (!collection) {
-      return null
+      return undefined
     }
-    for (const resource of collection) {
-      if (resource.id === id) {
-        return resource as IJsonapiResponseResource<T>
-      }
-    }
-    return null
+    return index_by_id<T>(
+      collection as IJsonapiResponseResource<T>[]
+    )?.[id] || undefined
   }
 
+  /** Get a resource document by an attribute's member value. */
+  getByResourceAttribute = <T = IJsonapiDataAttributes>(
+    value: string
+  ): IJsonapiResponseResource<T> | undefined => {
+    if (!this._endpoint || !this._attribute) {
+      return this.die('StateData: Endpoint not set.', undefined)
+    }
+    return index_by_attribute_member(
+      this._state[this._endpoint] as IJsonapiResponseResource<T>[],
+      this._attribute as keyof T
+    )?.[value] || undefined
+  }
+
+  /** Get a resource document by its index in the collection array. */
+  getResourceByIndex = <T = IJsonapiDataAttributes>(
+    index: number
+  ): IJsonapiResponseResource<T> | undefined => {
+    if (!this._endpoint) {
+      return this.die('StateData: Endpoint not set', undefined)
+    }
+    return this._state[this._endpoint]?.[index] as IJsonapiResponseResource<T> | undefined
+  }
+
+  /** Search resources in the collection by a predicate function. */
+  searchResources = <T=IJsonapiDataAttributes>(
+    predicate: (value: IJsonapiResponseResource<T>, index: number, array: IJsonapiResponseResource<T>[]) => boolean
+  ): IJsonapiResponseResource<T>[] => {
+    if (!this._endpoint) {
+      return this.die('StateData: Endpoint not set.', [])
+    }
+    const resources = this._state[this._endpoint]
+    if (!resources) {
+      return this.notice(
+        `StateData: '${this._endpoint}' collection not found.`,
+        []
+      )
+    }
+    return (resources as IJsonapiResponseResource<T>[]).filter(predicate)
+  }
+
+  /** Get all resources in the collection. */
   getResources = <T=IJsonapiDataAttributes>(): IJsonapiResponseResource<T>[] => {
     if (!this._endpoint) {
       return this.die('StateData: Endpoint not set.', [])
@@ -97,29 +115,26 @@ export default class StateData extends AbstractState {
   }
 
    /** Include the 'id' or the 'type'. */
-   include(prop: 'id' | 'types'): this {
-    if (this._flattenedCollection) {
-      return this.die('StateData: Run \'include()\' before flatten().', this)
-    }
+   include(prop: 'id' | 'type'): this {
     this._includedProps[prop] = true
     return this
   }
 
-  /** Merges id, type, and the attributes members. */
+  /** Merges id, type, and the attributes members */
   flatten(): this {
     if (!this._endpoint) {
       return this.die('StateData: Endpoint not set.', this)
     }
-    const { id, types } = this._includedProps
+    const { id, type } = this._includedProps
     this._flattenedCollection = this.getResources().map(resource => {
-      if (!id && !types) {
+      if (!id && !type) {
         return resource.attributes || {}
-      } else if (id && !types) {
+      } else if (id && !type) {
         return { id: resource.id, ...resource.attributes }
-      } else if (!id && types) {
-        return { types: resource.type, ...resource.attributes }
+      } else if (!id && type) {
+        return { type: resource.type, ...resource.attributes }
       } else {
-        return { id: resource.id, types: resource.type, ...resource.attributes }
+        return { id: resource.id, type: resource.type, ...resource.attributes }
       }
     })
     return this
@@ -138,7 +153,7 @@ export default class StateData extends AbstractState {
     return this.getResources().length === 0
   }
 
-  /** Delete array elements by index range. */
+  /** Delete array elements by index range */
   rangeDelete(
     range: { startIndex: number, endIndex: number}
   ): IJsonapiResponseResource[] {

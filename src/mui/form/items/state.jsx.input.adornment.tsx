@@ -5,7 +5,7 @@ import type { IAdornment } from '@tuber/shared';
 
 const StateJsxAdornmentIcon = ({ i }: { i?: string; fa?: string;}) => {
   const icon = new StateFormItemCustom({ icon: i }, {});
-  return <StateJsxUnifiedIconProvider def={icon} />;
+  return <StateJsxUnifiedIconProvider instance={icon} />;
 }
 
 /**

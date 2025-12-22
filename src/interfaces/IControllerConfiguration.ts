@@ -11,9 +11,10 @@ export interface IStateAppbarInpuChipConfig {
   route?: string
 }
 
-export interface IStateDataConfig {
+export interface IStateDataConfig<T = unknown> {
   dispatch?: AppDispatch
   endpoint?: string
+  attribute?: keyof T
 }
 
 export interface IStateDataPagesRangConfig {

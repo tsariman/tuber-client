@@ -32,6 +32,7 @@ export default function TuberThumbnailedBookmarkList() {
   // Memoize bookmark collection
   const bookmarks = useMemo(() => {
     return data.configure({ endpoint: 'bookmarks' })
+      .include('id')
       .flatten()
       .get<IBookmark>();
   }, [data]);

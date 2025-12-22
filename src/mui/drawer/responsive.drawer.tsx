@@ -34,7 +34,7 @@ const ResponsiveDrawer = ({ instance: drawer }: IResDrawerProps) => {
             onClick={item.onClick(get_redux(item.has.route))}
           >
             <ListItemIcon>
-              <StateJsxUnifiedIconProvider def={item.has} />
+              <StateJsxUnifiedIconProvider instance={item.has} />
             </ListItemIcon>
             <ListItemText primary={item.has.state.text} />
           </ListItemButton>

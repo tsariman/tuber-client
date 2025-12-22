@@ -80,7 +80,7 @@ const AddBookmark = React.memo<IToolbarIcon>(({ def: appbar }) => {
     },
   }, appbar), [appbar]);
 
-  return <Link def={iconDef} />;
+  return <Link instance={iconDef} />;
 });
 
 // Set display name for debugging
@@ -136,7 +136,7 @@ const ShowThumbnailsToggle = React.memo<IToolbarIcon>(({ def: appbar }) => {
     }
   }, appbar), [appbar]);
 
-  return <Link def={iconDef} />;
+  return <Link instance={iconDef} />;
 });
 
 // Set display name for debugging
@@ -183,7 +183,7 @@ const IntegratedPlayerToggle = React.memo<IToolbarIcon>(({ def: appbar }) => {
     }
   }, appbar), [appbar, greaterThanMid]);
 
-  return <Link def={iconDef} />;
+  return <Link instance={iconDef} />;
 });
 
 // Set display name for debugging

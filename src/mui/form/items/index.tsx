@@ -175,7 +175,7 @@ const FormInputLabel = ({ instance: item }: IItemProps) => (
 )
 
 const Icon = ({ instance: item }: IItemProps) => (
-  <StateJsxUnifiedIconProvider def={item.has} />
+  <StateJsxUnifiedIconProvider instance={item.has} />
 )
 
 const Div = ({ instance: item, depth }: IItemProps) => {

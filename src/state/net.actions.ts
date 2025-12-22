@@ -354,6 +354,47 @@ export const patch_req_state = (
 }
 
 /**
+ * Makes a PUT request using Fetch to update the Redux store.
+ *
+ * @param endpoint Usually an entity name. Otherwise, it's a valid URI endpoint.
+ * @param body The data you want to send to the server.
+ * @param customHeaders Additional headers to include in the request.
+ * @returns A Redux thunk action.
+ */
+export const put_req_state = (
+  endpoint: string,
+  body?: unknown,
+  customHeaders?: RequestInit['headers']
+) => {
+  return async (dispatch: Dispatch, getState: () => RootState) => {
+    dispatch(appRequestStart())
+    schedule_spinner()
+    try {
+      const rootState = getState()
+      const origin = get_origin_ending_fixed(rootState.app.origin)
+      const url = `${origin}${endpoint}`
+      const headersState = new StateNet(rootState.net).headers
+      const headers = { ...DEFAULT_HEADERS, ...headersState, ...customHeaders }
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers,
+        credentials: 'include',
+        body: JSON.stringify(body)
+      })
+      const json = await response.json() as IJsonapiBaseResponse
+      json.meta ??= {}
+      json.meta.status = response.status
+      json.meta.statusText = response.statusText
+      json.meta.ok = response.ok
+      delegate_data_handling(dispatch, getState, endpoint, json)
+    } catch (e) {
+      error_id(48).remember_exception(e) // error 48
+      delegate_error_handling(dispatch)
+    }
+  }
+}
+
+/**
  * Makes a POST request using Axios to update the Redux store.
  *
  * [TODO] Implement this function using Axios.
@@ -462,6 +503,48 @@ export const delete_req_state = (
       error_id(32).remember_exception(e) // error 32
       delegate_error_handling(dispatch)
     }
+  }
+}
+
+/**
+ * Makes a `PUT` request to server and handle the response yourself.
+ *
+ * @param endpoint 
+ * @param body 
+ * @param success 
+ * @param failure 
+ * @returns 
+ */
+export const put_req = (endpoint: string,
+  body: unknown,
+  success?: (state: IJsonapiBaseResponse, endpoint: string) => void,
+  failure?: (error: unknown) => void
+) => async (dispatch: Dispatch, getState: () => RootState) => {
+  dispatch(appRequestStart())
+  schedule_spinner()
+  try {
+    const rootState = getState()
+    const origin = get_origin_ending_fixed(rootState.app.origin)
+    const url = `${origin}${endpoint}`
+    const headersState = new StateNet(rootState.net).headers
+    const headers = { ...DEFAULT_HEADERS, ...headersState }
+    const response = await fetch( url, {
+      method: 'put',
+      headers,
+      body: JSON.stringify(body),
+      credentials: 'include'
+    })
+    const json = _resolve_unexpected_nesting<IJsonapiBaseResponse>(
+      await response.json()
+    )
+    if (success) {
+      success(json, endpoint)
+    } else {
+      delegate_data_handling(dispatch, getState, endpoint, json)
+    }
+  } catch (e) {
+    error_id(49).remember_exception(e) // error 49
+    if (failure) { failure(e) } else { delegate_error_handling(dispatch) }
   }
 }
 

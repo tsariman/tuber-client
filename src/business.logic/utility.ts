@@ -16,31 +16,31 @@ export const s_ = (str: TU, fallback = '') => (str ?? fallback) as string
 export const n_ = (num: TU) => num as number | undefined
 /** Sets the value type to a record object */
 export const r_ = <T = TU>(obj: TU) => obj as Record<string, T> | undefined
-/** Checks the argument is an `object`. Returns `true` if it is. */
+/** Checks if the argument is an `object`. Returns `true` if it is */
 export const is_object = (obj: TU): obj is object => {
   return typeof obj === 'object' && obj !== null && !Array.isArray(obj)
 }
-/** Checks if the argument is an `object` with `string` indexes. Returns `true` if it is. */
+/** Checks if the argument is an `object` with `string` indexes. Returns `true` if it is */
 export const is_record = <T>(obj: TU): obj is Record<string, T> => {
   return obj !==null && typeof obj === 'object' && !Array.isArray(obj)
 }
-/** Checks if the argument is an `object` or an `array`. Returns `true` if it is. */
+/** Checks if the argument is an `object` or an `array`. Returns `true` if it is */
 export const is_struct = <T=object>(obj: TU): obj is T => {
   return obj !== null && typeof obj === 'object'
 }
-/** Checks if the argument is a `string`. Returns `true` if it is. */
+/** Checks if the argument is a `string` that is non-empty. Returns `true` if it is */
 export const is_non_empty_string = (arg: TU): arg is string => {
   return typeof arg === 'string' && arg.length > 0
 }
-/** Checks if the argument is a `string`. Returns `true` if it is. */
+/** Checks if the argument is a `number`. Returns `true` if it is */
 export const is_number = (arg: TU): arg is number => {
   return typeof arg === 'number'
 }
-/** Checks if the argument is `undefined`. Returns `true` if it is. */
+/** Checks if the argument is `undefined`. Returns `true` if it is */
 export const is_undefined = (arg: TU): arg is undefined => {
   return typeof arg === 'undefined'
 }
-/** Assigns a type to argument if its unknown. */
+/** Assigns a type to argument if its unknown */
 export const as = <T>(arg: unknown): T => arg as T
 
 interface IReadme {
