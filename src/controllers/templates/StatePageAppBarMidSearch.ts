@@ -7,7 +7,7 @@ import StateLink from '../StateLink'
 import StateFormItemCustomChip from './StateFormItemCustomChip'
 import StatePageAppbar from './StatePageAppbar'
 
-/** Appbar template for Middle Search Field app bars. */
+/** Wrapper template class for a page appbar state */
 export default class StatePageAppbarMidSearch extends StatePageAppbar {
   
   protected searchFieldIconButtonDef?: StateLink<this>

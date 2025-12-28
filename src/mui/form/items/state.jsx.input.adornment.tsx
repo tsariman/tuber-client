@@ -9,7 +9,7 @@ const StateJsxAdornmentIcon = ({ i }: { i?: string; fa?: string;}) => {
 }
 
 /**
- * Converts the adornment's json definition to a component.
+ * Converts the adornment's state to a component.
  * 
  * i.e.
  * ```ts

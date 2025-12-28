@@ -46,7 +46,7 @@ export default class StateAppbar<P = State>
     this.appbarComponents = {}
   }
 
-  /** Get a copy of the `appbar` json. */
+  /** Get a copy of the `appbar` state */
   get state(): IStateAppbar { return this.appbarState }
   get parent(): P { return this.parentDef }
   get props(): AppBarProps { return this.appbarState.props ?? {} }

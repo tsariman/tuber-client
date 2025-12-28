@@ -323,10 +323,13 @@ export function dummy_redux_handler ({ store }: IRedux): TEventHandler {
  *
  * The app page will be updated based on the URL change triggered by the link.
  */
-export function default_handler ({ store, actions, route }:IRedux): TEventHandler {
+export function default_handler ({ store, actions, route }: IRedux): TEventHandler {
   return (e) => {
     e.preventDefault()
     if (route) {
+      // Update URL first so getPage() can use window.location.pathname fallback
+      window.history.pushState(null, '', route)
+      // Then dispatch the browser page switch
       store.dispatch(actions.appBrowserSwitchPage(route))
     }
   }

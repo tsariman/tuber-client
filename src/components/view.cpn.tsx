@@ -18,7 +18,7 @@ interface IViewContent {
   instance: StatePage
 }
 
-interface IViewTable {
+interface IViewMap {
   [constant: string]: (props: IViewContent) => JSX.Element | null
 }
 
@@ -26,7 +26,7 @@ const DEFAULT_ERROR_PAGE_VIEW = 'default_error_page_view'
 const DEFAULT_WARNING_PAGE_VIEW = 'default_warning_page_view'
 const DEFAULT_INFO_PAGE_VIEW = 'default_info_page_view'
 
-const pageViewTable: IViewTable = {
+const map: IViewMap = {
   'table_view': () => {
     err('Not implemented yet.')
     return <Fragment />
@@ -52,13 +52,13 @@ const pageViewTable: IViewTable = {
 const ViewContent = ({ instance: page }: IViewContent): JSX.Element|null => {
   const view = (page.contentName).toLowerCase()
   try {
-    const PageView = pageViewTable[view]
+    const PageView = map[view]
     return <PageView instance={page} />
   } catch (e) {
     error_id(3).remember_exception(e) // error 3
     log((e as Error).message)
   }
-  return ( null )
+  return null
 }
 
 export default ViewContent

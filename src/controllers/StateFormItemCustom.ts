@@ -12,7 +12,7 @@ import type {
 } from '@mui/material'
 import type {
   IHandlerDirective,
-  THandlerName,
+  TEventName,
   TStateFormITemCustomColor,
   TObj
 } from '@tuber/shared'
@@ -66,7 +66,7 @@ export default class StateFormItemCustom<P, T = unknown>
 
   /**
    * 
-   * When defining a regular expression in JSON document, you can either
+   * When defining a regular expression in document, you can either
    * use one of the following identifier to get a default regular expression
    * or pass in your own
    * 
@@ -214,26 +214,26 @@ export default class StateFormItemCustom<P, T = unknown>
    * // Or, "handleSet.myOtherCallback", then:
    * const myOtherCallback = window.handleSet.myOtherCallback
    * ```
-   * @param {THandlerName} event e.g., 'onclick', 'onfocus'... etc.
+   * @param {TEventName} event e.g., 'onclick', 'onfocus'... etc.
    */
   getHandler = (
-    event: THandlerName = 'onclick'
+    event: TEventName = 'onclick'
   ): TReduxHandler | undefined => {
-    const callbackName = this.hasState[`${event}Handler`]
-    if (!callbackName) {
+    const handlerName = this.hasState[`${event}Handler`]
+    if (!handlerName) {
       return
     }
-    const callback = get_val(window, callbackName)
-    if (typeof callback !== 'function') {
-      ler(`getHandle(): '${callbackName}' not a function`)
+    const handler = get_val<TReduxHandler>(window, handlerName)
+    if (typeof handler !== 'function') {
+      ler(`getHandler(): '${handlerName}' not a function`)
       return
     }
-    return callback as TReduxHandler
+    return handler
   } // END of method
 
   /** Generate callback */
-  getDirectiveHandle = (
-    event: THandlerName = 'onclick'
+  getDirectiveHandler = (
+    event: TEventName = 'onclick'
   ): TReduxHandler | null => {
     let handlerDirective: IHandlerDirective | undefined
     switch (event) {
@@ -257,8 +257,8 @@ export default class StateFormItemCustom<P, T = unknown>
         break
     }
     if (!handlerDirective) { return null }
-    const handleFactory = new ReduxHandlerFactory(handlerDirective)
-    const callback = handleFactory.getDirectiveCallback()
+    const factory = new ReduxHandlerFactory(handlerDirective)
+    const callback = factory.getDirectiveCallback()
     return callback
   }
 

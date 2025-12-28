@@ -16,7 +16,7 @@ import {
   STACK,
   DIV,
   type IStateFormItemError,
-  type THandlerName,
+  type TEventName,
 } from '@tuber/shared'
 import type { IStateFormItem, IStateFormItemCustom } from '../interfaces/localized'
 import StateFormItemCustom from './StateFormItemCustom'
@@ -57,7 +57,7 @@ export default class StateFormItem<P = StateForm, T = unknown>
   protected recursiveItems?: StateFormItem<P, T>[]
   protected itemInputProps?: StateFormItemInputProps<StateFormItem<P, T>>
 
-  private _badReduxHandlers: { [key in THandlerName]?: boolean }
+  private _badReduxHandlers: { [key in TEventName]?: boolean }
 
   constructor(itemState: Readonly<IStateFormItem<T>>, parent: P) {
     super()
@@ -118,7 +118,7 @@ export default class StateFormItem<P = StateForm, T = unknown>
   get focusReduxHandler(): TReduxHandler {
     return this.reduxFocus
       || (
-        this.reduxFocus = this.has.getDirectiveHandle('onfocus')
+        this.reduxFocus = this.has.getDirectiveHandler('onfocus')
           || this.has.getHandler('onfocus')
           || this._getDummyReduxHandler('onfocus')
       )
@@ -126,7 +126,7 @@ export default class StateFormItem<P = StateForm, T = unknown>
   get clickReduxHandler(): TReduxHandler {
     return this.reduxClick
       || (
-        this.reduxClick = this.has.getDirectiveHandle('onclick')
+        this.reduxClick = this.has.getDirectiveHandler('onclick')
           || this.has.getHandler('onclick')
           || this.has.callback
           || default_handler // this._getDummyReduxHandler('onclick')
@@ -135,7 +135,7 @@ export default class StateFormItem<P = StateForm, T = unknown>
   get changeReduxHandler(): TReduxHandler {
     return this.reduxChange
       || (
-        this.reduxChange = this.has.getDirectiveHandle('onchange')
+        this.reduxChange = this.has.getDirectiveHandler('onchange')
           || this.has.getHandler('onchange')
           || this._getDummyReduxHandler('onchange')
       )
@@ -143,7 +143,7 @@ export default class StateFormItem<P = StateForm, T = unknown>
   get keydownReduxHandler(): TReduxHandler {
     return this.reduxKeydown
       || (
-        this.reduxKeydown = this.has.getDirectiveHandle('onkeydown')
+        this.reduxKeydown = this.has.getDirectiveHandler('onkeydown')
           || this.has.getHandler('onkeydown')
           || this._getDummyReduxHandler('onkeydown')
       )
@@ -151,7 +151,7 @@ export default class StateFormItem<P = StateForm, T = unknown>
   get blurReduxHandler(): TReduxHandler {
     return this.reduxBlur
       || (
-        this.reduxBlur = this.has.getDirectiveHandle('onblur')
+        this.reduxBlur = this.has.getDirectiveHandler('onblur')
           || this.has.getHandler('onblur')
           || this._getDummyReduxHandler('onblur')
       )
@@ -317,15 +317,15 @@ export default class StateFormItem<P = StateForm, T = unknown>
    * @param event Event name
    * @returns 
    */
-  private _getDummyReduxHandler(event: THandlerName): TReduxHandler {
+  private _getDummyReduxHandler(event: TEventName): TReduxHandler {
     this._badReduxHandlers[event] = true
     return dummy_redux_handler
   }
-  private _noReduxHandlerFor(event: THandlerName): boolean {
+  private _noReduxHandlerFor(event: TEventName): boolean {
     return !!this._badReduxHandlers[event]
   }
   /** Checks if a valid Redux handler is set for the event. */
-  hasReduxHandler(event: THandlerName): boolean {
+  hasReduxHandler(event: TEventName): boolean {
     return !this._noReduxHandlerFor(event)
   }
 

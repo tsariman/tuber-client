@@ -18,7 +18,7 @@ export default class StateBackground<P = State>
     this._parent = parent
   }
 
-  /** Get the background json. */
+  /** Get the background state */
   get state(): IStateBackground { return this._backgroundState }
   get parent(): P { return this._parent }
   get props(): unknown { return this.die('Not implemented yet.', {}) }

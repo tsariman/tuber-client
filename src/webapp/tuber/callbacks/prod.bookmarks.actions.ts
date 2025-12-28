@@ -304,7 +304,7 @@ export const bookmark_vote_up = (i: number) => (redux: IRedux) => async () => {
     }
     const upvotes = jsonapiResponse.data.attributes?.upvotes
     const downvotes = jsonapiResponse.data.attributes?.downvotes
-    if (upvotes) {
+    if (typeof upvotes === 'number') {
       dispatch(A.dataSetAttrByIndex({
         endpoint: 'bookmarks',
         index: i,
@@ -312,7 +312,7 @@ export const bookmark_vote_up = (i: number) => (redux: IRedux) => async () => {
         val: upvotes
       }))
     }
-    if (downvotes) {
+    if (typeof downvotes === 'number') {
       dispatch(A.dataSetAttrByIndex({
         endpoint: 'bookmarks',
         index: i,
@@ -372,7 +372,7 @@ export const bookmark_vote_down = (i: number) => (redux: IRedux) => async () => 
     }
     const upvotes = jsonapiResponse.data.attributes?.upvotes
     const downvotes = jsonapiResponse.data.attributes?.downvotes
-    if (upvotes) {
+    if (typeof upvotes === 'number') {
       dispatch(A.dataSetAttrByIndex({
         endpoint: 'bookmarks',
         index: i,
@@ -380,7 +380,7 @@ export const bookmark_vote_down = (i: number) => (redux: IRedux) => async () => 
         val: upvotes
       }))
     }
-    if (downvotes) {
+    if (typeof downvotes === 'number') {
       dispatch(A.dataSetAttrByIndex({
         endpoint: 'bookmarks',
         index: i,

@@ -45,10 +45,10 @@ export default class StateLink<P = unknown>
       return this._handleOnClick = this._linkState.onClick
     }
     if (this._linkHas) {
-      const handleCallback = this._linkHas.getDirectiveHandle()
+      const handler = this._linkHas.getDirectiveHandler()
         || this._linkHas.getHandler()
-      if (handleCallback) {
-        return this._handleOnClick = handleCallback
+      if (handler) {
+        return this._handleOnClick = handler
       }
     }
     return this._handleOnClick = default_handler

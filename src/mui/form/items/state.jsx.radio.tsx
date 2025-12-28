@@ -11,7 +11,7 @@ import { useCallback, useMemo } from 'react'
 interface IFormRadio { instance: StateFormItemRadio }
 
 /**
- * Example JSON defintion:
+ * Example state:
  * ```ts
  * const jsonRadio = {
  *   'label': 'Choose your gender', // human-readable

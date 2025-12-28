@@ -4,10 +4,8 @@ import { CLEARANCE_LEVEL, type TRole } from '@tuber/shared/dist/constants.server
 import type { StateData } from 'src/controllers'
 
 /** @see https://www.quackit.com/css/css_color_codes.cfm */
-export function get_ratio_color (upvotes?: number, downvotes?: number) {
-  const up = upvotes ?? 0
-  const down = downvotes ?? 0
-  if (!up && !down) { // no votes
+export function get_ratio_color (up: number, down: number) {
+  if (up == 0 && down == 0) { // no votes
     return 'inherit'
   }
   const good = .1

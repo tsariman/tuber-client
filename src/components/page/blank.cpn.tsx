@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { post_req_state } from '../../state/net.actions'
 import StatePage from '../../controllers/StatePage'
@@ -40,5 +40,5 @@ export default function PageBlank ({ instance: page }:{ instance: StatePage }) {
     }
   }, [PAGES, dispatch, fetchingStateAllowed, headers, key, page])
 
-  return <Fragment />
+  return <></>
 }

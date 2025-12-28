@@ -53,11 +53,6 @@ export default class StatePage extends AbstractState implements IStatePage {
   private _defaultDrawerState?: IStateDrawer
   private _defaultBackgroundState?: IStateBackground
 
-  /**
-   * Constructor
-   *
-   * @param state 
-   */
   constructor(state: IStatePage, parent: StateAllPages) {
     super()
     this._state = state
@@ -68,7 +63,7 @@ export default class StatePage extends AbstractState implements IStatePage {
     this._pageTypographyState = this._state.typography || {}
   }
 
-  /** Get the page json. */
+  /** Get the page state */
   get state(): IStatePage { return this._state }
   /** Chain-access to all pages definition. */
   get parent(): StateAllPages { return this._parent }
@@ -79,13 +74,12 @@ export default class StatePage extends AbstractState implements IStatePage {
     this._defaultBackgroundState ??= conf.defaultBackgroundState
   }
   /**
-   * Returns the page appbar json implementation or an empty object.  
+   * Returns the page appbar state implementation or an empty object.  
    * The purpose is to initialize different instances of appbars using
    * templates.  
    * **Note:** Inheritances and swaps are ignored.
-   * 
    */
-  get appbarJson(): IStateAppbar { return this.state.appbar || {} }
+  get appbarState(): IStateAppbar { return this.state.appbar || {} }
 
   /**
    * A unique id is assigned if you would like to use an identifier for the

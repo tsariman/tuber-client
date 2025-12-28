@@ -19,7 +19,7 @@ export default class StateThemeParser {
   private _theme?: Theme;
 
   /**
-   * If a function is called from the JSON theme definitions but it is not a
+   * If a function is called from the state theme instance but it is not a
    * theme function, it can be stored in an object saved to this field.
    * When it is needed, it will be called from this field.
    */

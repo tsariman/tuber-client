@@ -137,10 +137,10 @@ const JsxIconButton = (
 )
 
 const HybridButton = (
-  { color, commonSx, props, handleClick, has }: IxProps
+  { commonSx, props, handleClick, has }: IxProps
 ) => (
-  <IconButton
-    color={color}
+  <Button
+    color='inherit'
     aria-label={has.label}
     sx={commonSx}
     {...props}
@@ -149,7 +149,7 @@ const HybridButton = (
     <StateJsxBadgedIcon instance={has} />
     &nbsp;
     {has.text}
-  </IconButton>
+  </Button>
 )
 
 const ChipButton = (
@@ -163,13 +163,14 @@ const ChipButton = (
 )
 
 const DefaultButton = (
-  { commonSx, props, has }: IxProps
+  { commonSx, props, handleClick, has }: IxProps
 ) => (
   <Link
     variant='body2'
     color='inherit'
     sx={commonSx}
     {...props}
+    onClick={handleClick}
   >
     {has.text}
   </Link>

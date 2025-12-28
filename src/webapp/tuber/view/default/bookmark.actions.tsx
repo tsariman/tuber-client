@@ -98,16 +98,15 @@ const ActionButton = React.memo<IActionButton>(({ type, index }) => {
   return <StateJsxLink instance={link} />
 })
 
-const ColorCodedRating = React.memo<IRatingProps>(({ bookmark }) => {
+const ColorCodedScore = React.memo<IRatingProps>(({ bookmark }) => {
   const { upvotes, downvotes } = bookmark
   
-  const { ratioColor, rating } = useMemo(() => {
-  const up = upvotes ?? 0
-  const down = downvotes ?? 0
-  const rating = up - down
-  const ratioColor = get_ratio_color(upvotes, downvotes)
-    
-    return { ratioColor, rating }
+  const { ratioColor, score } = useMemo(() => {
+    const up = upvotes ?? 0
+    const down = downvotes ?? 0
+    const score = up - down
+    const ratioColor = get_ratio_color(up, down)
+    return { ratioColor, score }
   }, [upvotes, downvotes])
 
   return (
@@ -115,7 +114,7 @@ const ColorCodedRating = React.memo<IRatingProps>(({ bookmark }) => {
       <RatingWrapper>
         <SpanStyled sx={{ color: 'grey.700' }}>Rank:&nbsp;</SpanStyled>
         <SpanStyled sx={{ color: ratioColor }}>
-          {rating !== 0 ? rating : '--'}
+          {score !== 0 ? score : '--'}
         </SpanStyled>
       </RatingWrapper>
     </Rating>
@@ -153,7 +152,7 @@ const BookmarkActionsToolbar = React.memo(({ i, bookmark }: IBookmarkActionToolb
       onMouseOver={handleOnMouseOver}
       onMouseLeave={handleOnMouseLeave}
     >
-      <ColorCodedRating bookmark={bookmark} />
+      <ColorCodedScore bookmark={bookmark} />
       {net.sessionValid && (
         <PaperStyled elevation={0}>
           <Grid container direction='row'>

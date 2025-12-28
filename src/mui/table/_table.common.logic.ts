@@ -13,7 +13,7 @@ import { err } from "../../business.logic/logging"
  * }
  * ```
  *
- * @param data data member of response. See previous JSON example.
+ * @param data data member of response. See previous state example.
  *              Should be an array or an object.
  *
  * @see https://jsonapi.org/format/#document-top-level

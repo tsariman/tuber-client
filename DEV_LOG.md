@@ -1,6 +1,18 @@
 
 # Development Changes Log
 
+## `202512281653` Refactor content components and remove cacheable wrappers
+
+- Deleted cacheable components: HtmlContentCacheable, HtmlLoadContentCacheable, ViewContentCacheable, WebappContentCacheable.
+- Consolidated content handling into a single ContentSwitch component.
+- Updated content handling logic to use memoization and callbacks for improved performance.
+- Refactored form handling logic and integrated form load state management.
+- Improved error handling and logging in content rendering.
+- Updated StatePage and related controllers to reflect state instead of JSON.
+- Adjusted various components to use state instead of JSON definitions for better clarity.
+- Renamed ColorCodedRating to ColorCodedScore for better semantic meaning.
+- Enhanced documentation and comments for clarity.
+
 ## `202512212219` Refactor and enhance bookmark voting functionality
 
 - Updated the bookmark voting actions to handle upvotes and downvotes with improved type definitions.

@@ -78,7 +78,7 @@ const StateJsxAppbarMidSearch = ({ instance: page, app }: IMidSearch) => {
     [defaultAppbarState]
   )
   const appbar = React.useMemo(
-    () => new StatePageAppbarMidSearch(page.appbarJson, page),
+    () => new StatePageAppbarMidSearch(page.appbarState, page),
     [page]
   )
   const chips = useSelector((rootState: RootState) => rootState.chips)

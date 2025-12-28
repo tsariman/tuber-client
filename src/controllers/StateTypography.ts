@@ -22,9 +22,9 @@ export default class StateTypography<P = State>
   }
 
   configure(conf: unknown): void { void conf }
-  /** Get the typography json. */
+  /** Get the typography state */
   get state(): IStateTypography { return this.typographyState }
-  /** Chain-access to root, page, or appbar definition. */
+  /** Chain-access to root, page, or appbar definition */
   get parent(): P { return this.parentDef }
   get props(): unknown { return this.die('Not implemented yet.', {}) }
   get color(): string|undefined { return this.typographyState.color }
