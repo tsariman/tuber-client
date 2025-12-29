@@ -327,9 +327,6 @@ export function default_handler ({ store, actions, route }: IRedux): TEventHandl
   return (e) => {
     e.preventDefault()
     if (route) {
-      // Update URL first so getPage() can use window.location.pathname fallback
-      window.history.pushState(null, '', route)
-      // Then dispatch the browser page switch
       store.dispatch(actions.appBrowserSwitchPage(route))
     }
   }

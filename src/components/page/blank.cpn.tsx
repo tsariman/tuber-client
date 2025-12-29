@@ -40,5 +40,5 @@ export default function PageBlank ({ instance: page }:{ instance: StatePage }) {
     }
   }, [PAGES, dispatch, fetchingStateAllowed, headers, key, page])
 
-  return <></>
+  return null
 }

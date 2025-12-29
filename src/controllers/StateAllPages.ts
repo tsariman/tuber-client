@@ -116,12 +116,6 @@ export default class StateAllPages extends AbstractState {
     if (pageState) {
       return new StatePage(pageState, this)
     }
-    if (window.location.pathname.length > 1) {
-      pageState = this.getPageState(window.location.pathname)
-      if (pageState) {
-        return new StatePage(pageState, this)
-      }
-    }
     // Oops! route is bad!
     if (route) {
       log(`'${route}' page not loaded. Fetching now..`)
