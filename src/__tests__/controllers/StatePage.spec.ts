@@ -93,7 +93,7 @@ import StatePageDrawer from '../../controllers/templates/StatePageDrawer';
 import StatePageBackground from '../../controllers/templates/StatePageBackground';
 import StatePageTypography from '../../controllers/templates/StatePageTypography';
 import StateComponent from '../../controllers/StateComponent';
-import type { IStatePage, IStateDrawer } from '../../localized/interfaces';
+import type { IStatePage, IStateDrawer } from '../../interfaces/localized';
 import * as parsing from '../../business.logic/parsing';
 import initialState from '../../state/initial.state';
 
@@ -194,18 +194,18 @@ describe('StatePage', () => {
   });
 
   describe('Appbar Properties', () => {
-    it('should return appbarJson from state', () => {
+    it('should return appbarState from state', () => {
       const pageWithAppbar = new StatePage({
         ...basicPageState,
         appbar: { items: [{ type: 'link', href: '/test' }] }
       }, mockAllPages);
 
-      expect(pageWithAppbar.appbarJson).toEqual({ items: [{ type: 'link', href: '/test' }] });
+      expect(pageWithAppbar.appbarState).toEqual({ items: [{ type: 'link', href: '/test' }] });
     });
 
-    it('should return empty appbarJson when no appbar defined', () => {
+    it('should return empty appbarState when no appbar defined', () => {
       const pageWithoutAppbar = new StatePage({}, mockAllPages);
-      expect(pageWithoutAppbar.appbarJson).toEqual({});
+      expect(pageWithoutAppbar.appbarState).toEqual({});
     });
 
     it('should create and cache StatePageAppbar instance', () => {

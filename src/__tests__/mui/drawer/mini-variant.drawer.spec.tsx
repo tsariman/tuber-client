@@ -33,7 +33,7 @@ describe('src/mui/drawer/mini-variant.drawer.tsx', () => {
     const mockDrawer = createMockMiniDrawer(true);
     
     const { getByTestId } = renderWithProviders(
-      <MiniDrawer def={mockDrawer} />
+      <MiniDrawer instance={mockDrawer} />
     );
     
     expect(getByTestId('mini-drawer')).toBeInTheDocument();
@@ -43,7 +43,7 @@ describe('src/mui/drawer/mini-variant.drawer.tsx', () => {
     const mockDrawer = createMockMiniDrawer(true);
     
     const { getByTestId } = renderWithProviders(
-      <MiniDrawer def={mockDrawer} />
+      <MiniDrawer instance={mockDrawer} />
     );
     
     expect(getByTestId('drawer-item-dashboard')).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe('src/mui/drawer/mini-variant.drawer.tsx', () => {
     const mockDrawer = createMockMiniDrawer(false);
     
     const { container } = renderWithProviders(
-      <MiniDrawer def={mockDrawer} />
+      <MiniDrawer instance={mockDrawer} />
     );
     
     expect(container.firstChild).toBeInTheDocument();
@@ -64,7 +64,7 @@ describe('src/mui/drawer/mini-variant.drawer.tsx', () => {
     const mockDrawer = createMockMiniDrawer(true);
     
     const { getByTestId } = renderWithProviders(
-      <MiniDrawer def={mockDrawer} />
+      <MiniDrawer instance={mockDrawer} />
     );
     
     const drawer = getByTestId('mini-drawer');
@@ -75,7 +75,7 @@ describe('src/mui/drawer/mini-variant.drawer.tsx', () => {
     const mockDrawer = createMockMiniDrawer(true);
     
     const { container } = renderWithProviders(
-      <MiniDrawer def={mockDrawer} />
+      <MiniDrawer instance={mockDrawer} />
     );
     
     const drawerElement = container.querySelector('[class*="MuiDrawer"]');

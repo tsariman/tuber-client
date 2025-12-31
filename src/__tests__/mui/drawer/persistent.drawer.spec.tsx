@@ -33,7 +33,7 @@ describe('src/mui/drawer/persistent.drawer.tsx', () => {
     const mockDrawer = createMockPersistentDrawer(true);
     
     const { getByTestId } = renderWithProviders(
-      <PersistentDrawer def={mockDrawer} />
+      <PersistentDrawer instance={mockDrawer} />
     );
     
     expect(getByTestId('persistent-drawer')).toBeInTheDocument();
@@ -43,7 +43,7 @@ describe('src/mui/drawer/persistent.drawer.tsx', () => {
     const mockDrawer = createMockPersistentDrawer(true);
     
     const { getByTestId } = renderWithProviders(
-      <PersistentDrawer def={mockDrawer} />
+      <PersistentDrawer instance={mockDrawer} />
     );
     
     expect(getByTestId('drawer-item-home')).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe('src/mui/drawer/persistent.drawer.tsx', () => {
     const mockDrawer = createMockPersistentDrawer(false);
     
     const { container } = renderWithProviders(
-      <PersistentDrawer def={mockDrawer} />
+      <PersistentDrawer instance={mockDrawer} />
     );
     
     expect(container.firstChild).toBeInTheDocument();
@@ -64,7 +64,7 @@ describe('src/mui/drawer/persistent.drawer.tsx', () => {
     const mockDrawer = createMockPersistentDrawer(true);
     
     const { getByTestId } = renderWithProviders(
-      <PersistentDrawer def={mockDrawer} />
+      <PersistentDrawer instance={mockDrawer} />
     );
     
     const drawer = getByTestId('persistent-drawer');
@@ -75,7 +75,7 @@ describe('src/mui/drawer/persistent.drawer.tsx', () => {
     const mockDrawer = createMockPersistentDrawer(true);
     
     const { getByText } = renderWithProviders(
-      <PersistentDrawer def={mockDrawer} />
+      <PersistentDrawer instance={mockDrawer} />
     );
     
     expect(getByText('Navigation Menu')).toBeInTheDocument();

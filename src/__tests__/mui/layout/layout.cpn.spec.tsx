@@ -59,7 +59,7 @@ describe('Layout Component', () => {
     const mockPage = createMockPage('layout_centered_no_scroll')
 
     renderWithProviders(
-      <Layout def={mockPage as Parameters<typeof Layout>[0]['def']}>
+      <Layout instance={mockPage as Parameters<typeof Layout>[0]['instance']}>
         {testChildren}
       </Layout>
     )
@@ -72,7 +72,7 @@ describe('Layout Component', () => {
     const mockPage = createMockPage('layout_centered')
 
     renderWithProviders(
-      <Layout def={mockPage as Parameters<typeof Layout>[0]['def']}>
+      <Layout instance={mockPage as Parameters<typeof Layout>[0]['instance']}>
         {testChildren}
       </Layout>
     )
@@ -85,7 +85,7 @@ describe('Layout Component', () => {
     const mockPage = createMockPage('layout_default')
 
     renderWithProviders(
-      <Layout def={mockPage as Parameters<typeof Layout>[0]['def']}>
+      <Layout instance={mockPage as Parameters<typeof Layout>[0]['instance']}>
         {testChildren}
       </Layout>
     )
@@ -100,7 +100,7 @@ describe('Layout Component', () => {
     const mockPage = createMockPage('layout_md')
 
     renderWithProviders(
-      <Layout def={mockPage as Parameters<typeof Layout>[0]['def']}>
+      <Layout instance={mockPage as Parameters<typeof Layout>[0]['instance']}>
         {testChildren}
       </Layout>
     )
@@ -113,7 +113,7 @@ describe('Layout Component', () => {
     const mockPage = createMockPage('layout_sm')
 
     renderWithProviders(
-      <Layout def={mockPage as Parameters<typeof Layout>[0]['def']}>
+      <Layout instance={mockPage as Parameters<typeof Layout>[0]['instance']}>
         {testChildren}
       </Layout>
     )
@@ -126,7 +126,7 @@ describe('Layout Component', () => {
     const mockPage = createMockPage('layout_xl')
 
     renderWithProviders(
-      <Layout def={mockPage as Parameters<typeof Layout>[0]['def']}>
+      <Layout instance={mockPage as Parameters<typeof Layout>[0]['instance']}>
         {testChildren}
       </Layout>
     )
@@ -139,7 +139,7 @@ describe('Layout Component', () => {
     const mockPage = createMockPage('layout_xs')
 
     renderWithProviders(
-      <Layout def={mockPage as Parameters<typeof Layout>[0]['def']}>
+      <Layout instance={mockPage as Parameters<typeof Layout>[0]['instance']}>
         {testChildren}
       </Layout>
     )
@@ -152,7 +152,7 @@ describe('Layout Component', () => {
     const mockPage = createMockPage('layout_table_virtualized')
 
     renderWithProviders(
-      <Layout def={mockPage as Parameters<typeof Layout>[0]['def']}>
+      <Layout instance={mockPage as Parameters<typeof Layout>[0]['instance']}>
         {testChildren}
       </Layout>
     )
@@ -165,7 +165,7 @@ describe('Layout Component', () => {
     const mockPage = createMockPage('layout_none', true)
 
     renderWithProviders(
-      <Layout def={mockPage as Parameters<typeof Layout>[0]['def']}>
+      <Layout instance={mockPage as Parameters<typeof Layout>[0]['instance']}>
         {testChildren}
       </Layout>
     )
@@ -178,7 +178,7 @@ describe('Layout Component', () => {
     const mockPage = createMockPage('layout_none', false)
 
     const { container } = renderWithProviders(
-      <Layout def={mockPage as Parameters<typeof Layout>[0]['def']}>
+      <Layout instance={mockPage as Parameters<typeof Layout>[0]['instance']}>
         {testChildren}
       </Layout>
     )
@@ -192,7 +192,7 @@ describe('Layout Component', () => {
     const mockPage = createMockPage('layout_none_no_appbar')
 
     const { container } = renderWithProviders(
-      <Layout def={mockPage as Parameters<typeof Layout>[0]['def']}>
+      <Layout instance={mockPage as Parameters<typeof Layout>[0]['instance']}>
         {testChildren}
       </Layout>
     )
@@ -205,7 +205,7 @@ describe('Layout Component', () => {
     const mockPage = createMockPage('unknown_layout')
 
     const { container } = renderWithProviders(
-      <Layout def={mockPage as Parameters<typeof Layout>[0]['def']}>
+      <Layout instance={mockPage as Parameters<typeof Layout>[0]['instance']}>
         {testChildren}
       </Layout>
     )
@@ -218,7 +218,7 @@ describe('Layout Component', () => {
     const mockPage = createMockPage('')
 
     const { container } = renderWithProviders(
-      <Layout def={mockPage as Parameters<typeof Layout>[0]['def']}>
+      <Layout instance={mockPage as Parameters<typeof Layout>[0]['instance']}>
         {testChildren}
       </Layout>
     )
@@ -231,7 +231,7 @@ describe('Layout Component', () => {
     const mockPage = createMockPage('  LAYOUT_CENTERED_NO_SCROLL  ')
 
     renderWithProviders(
-      <Layout def={mockPage as Parameters<typeof Layout>[0]['def']}>
+      <Layout instance={mockPage as Parameters<typeof Layout>[0]['instance']}>
         {testChildren}
       </Layout>
     )
@@ -250,7 +250,7 @@ describe('Layout Component', () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
     renderWithProviders(
-      <Layout def={mockPage as Parameters<typeof Layout>[0]['def']}>
+      <Layout instance={mockPage as Parameters<typeof Layout>[0]['instance']}>
         {testChildren}
       </Layout>
     )

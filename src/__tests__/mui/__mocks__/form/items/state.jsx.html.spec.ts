@@ -1,4 +1,4 @@
-import type { IStateFormItem } from '../../../../../localized/interfaces'
+import type { IStateFormItem } from '../../../../../interfaces/localized'
 
 /**
  * This is a mock to test the `src/mui/form/items/state.jsx.html.tsx` file.

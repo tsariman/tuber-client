@@ -27,7 +27,7 @@ describe('src/mui/form/items/state.jsx.button/index.tsx', () => {
     const mockButton = createMockButton('Click Me');
     
     const { getByTestId, getByText } = renderWithProviders(
-      <StateJsxButton def={mockButton} />
+      <StateJsxButton instance={mockButton} />
     );
     
     expect(getByTestId('form-button')).toBeInTheDocument();
@@ -38,7 +38,7 @@ describe('src/mui/form/items/state.jsx.button/index.tsx', () => {
     const mockButton = createMockButton('Submit', 'submit');
     
     const { getByTestId } = renderWithProviders(
-      <StateJsxButton def={mockButton} />
+      <StateJsxButton instance={mockButton} />
     );
     
     const button = getByTestId('form-button');
@@ -49,7 +49,7 @@ describe('src/mui/form/items/state.jsx.button/index.tsx', () => {
     const mockButton = createMockButton('Cancel', 'button');
     
     const { getByTestId } = renderWithProviders(
-      <StateJsxButton def={mockButton} />
+      <StateJsxButton instance={mockButton} />
     );
     
     const button = getByTestId('form-button');
@@ -60,7 +60,7 @@ describe('src/mui/form/items/state.jsx.button/index.tsx', () => {
     const mockButton = createMockButton('');
     
     const { getByTestId } = renderWithProviders(
-      <StateJsxButton def={mockButton} />
+      <StateJsxButton instance={mockButton} />
     );
     
     expect(getByTestId('form-button')).toBeInTheDocument();
@@ -70,7 +70,7 @@ describe('src/mui/form/items/state.jsx.button/index.tsx', () => {
     const mockButton = createMockButton('Click Me');
     
     const { getByTestId } = renderWithProviders(
-      <StateJsxButton def={mockButton} />
+      <StateJsxButton instance={mockButton} />
     );
     
     const button = getByTestId('form-button');

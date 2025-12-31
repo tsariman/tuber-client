@@ -26,7 +26,7 @@ describe('src/mui/drawer/index.tsx', () => {
   it('should return null when drawer is hidden', () => {
     const mockPage = createMockPage(false, true);
     
-    const { container } = render(<StateJsxDrawer def={mockPage} />);
+    const { container } = render(<StateJsxDrawer instance={mockPage} />);
     
     expect(container.firstChild).toBeNull();
   });
@@ -34,7 +34,7 @@ describe('src/mui/drawer/index.tsx', () => {
   it('should return null when no drawer is available', () => {
     const mockPage = createMockPage(false, false);
     
-    const { container } = render(<StateJsxDrawer def={mockPage} />);
+    const { container } = render(<StateJsxDrawer instance={mockPage} />);
     
     expect(container.firstChild).toBeNull();
   });
@@ -42,7 +42,7 @@ describe('src/mui/drawer/index.tsx', () => {
   it('should render mini drawer when hasDrawer is true', () => {
     const mockPage = createMockPage(true, false, 'mini');
     
-    const { container } = render(<StateJsxDrawer def={mockPage} />);
+    const { container } = render(<StateJsxDrawer instance={mockPage} />);
     
     // Should render some drawer content
     expect(container.firstChild).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe('src/mui/drawer/index.tsx', () => {
   it('should render responsive drawer', () => {
     const mockPage = createMockPage(true, false, 'responsive');
     
-    const { container } = render(<StateJsxDrawer def={mockPage} />);
+    const { container } = render(<StateJsxDrawer instance={mockPage} />);
     
     expect(container.firstChild).toBeInTheDocument();
   });
@@ -59,7 +59,7 @@ describe('src/mui/drawer/index.tsx', () => {
   it('should render fragment for none type', () => {
     const mockPage = createMockPage(true, false, 'none');
     
-    const { container } = render(<StateJsxDrawer def={mockPage} />);
+    const { container } = render(<StateJsxDrawer instance={mockPage} />);
     
     // Fragment should render as empty
     expect(container.firstChild).toBeNull();

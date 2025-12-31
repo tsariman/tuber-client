@@ -26,7 +26,7 @@ describe('src/mui/dialog/form/dialog.switch.tsx', () => {
     const hive = {} as Record<string, unknown>;
     
     const { getByTestId } = renderWithProviders(
-      <DialogSwitch def={mockSwitch} hive={hive} />
+      <DialogSwitch instance={mockSwitch} hive={hive} />
     );
     
     expect(getByTestId('dialog-switch')).toBeInTheDocument();
@@ -37,7 +37,7 @@ describe('src/mui/dialog/form/dialog.switch.tsx', () => {
     const hive = {} as Record<string, unknown>;
     
     const { getByText } = renderWithProviders(
-      <DialogSwitch def={mockSwitch} hive={hive} />
+      <DialogSwitch instance={mockSwitch} hive={hive} />
     );
     
     expect(getByText('Dark Mode')).toBeInTheDocument();
@@ -48,7 +48,7 @@ describe('src/mui/dialog/form/dialog.switch.tsx', () => {
     const hive = {} as Record<string, unknown>;
     
     const { getByRole } = renderWithProviders(
-      <DialogSwitch def={mockSwitch} hive={hive} />
+      <DialogSwitch instance={mockSwitch} hive={hive} />
     );
     
     const switchElement = getByRole('checkbox');
@@ -60,7 +60,7 @@ describe('src/mui/dialog/form/dialog.switch.tsx', () => {
     const hive = {} as Record<string, unknown>;
     
     const { getByRole } = renderWithProviders(
-      <DialogSwitch def={mockSwitch} hive={hive} />
+      <DialogSwitch instance={mockSwitch} hive={hive} />
     );
     
     const switchElement = getByRole('checkbox');
@@ -75,7 +75,7 @@ describe('src/mui/dialog/form/dialog.switch.tsx', () => {
     const hive = {} as Record<string, unknown>;
     
     const { getByRole } = renderWithProviders(
-      <DialogSwitch def={mockSwitch} hive={hive} />
+      <DialogSwitch instance={mockSwitch} hive={hive} />
     );
     
     const switchElement = getByRole('checkbox');

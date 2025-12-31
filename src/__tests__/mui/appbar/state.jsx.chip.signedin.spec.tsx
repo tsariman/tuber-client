@@ -40,40 +40,40 @@ const createMockSignedInPage = (): StatePage => ({
 
 describe('src/mui/appbar/state.jsx.signedin.appbar.tsx', () => {
   it('should render signed in appbar correctly', () => {
-    const mockPage = createMockSignedInPage()
+    // const mockPage = createMockSignedInPage()
     
     const { getByTestId } = renderWithProviders(
-      <ChipSignedIn def={mockPage} />
+      <ChipSignedIn />
     )
     
     expect(getByTestId('signedin-appbar')).toBeInTheDocument()
   })
 
   it('should render user avatar', () => {
-    const mockPage = createMockSignedInPage()
+    // const mockPage = createMockSignedInPage()
     
     const { getByTestId } = renderWithProviders(
-      <ChipSignedIn def={mockPage} />
+      <ChipSignedIn />
     )
     
     expect(getByTestId('user-avatar')).toBeInTheDocument()
   })
 
   it('should render appbar title', () => {
-    const mockPage = createMockSignedInPage()
+    // const mockPage = createMockSignedInPage()
     
     const { getByText } = renderWithProviders(
-      <ChipSignedIn def={mockPage} />
+      <ChipSignedIn />
     )
     
     expect(getByText('Dashboard')).toBeInTheDocument()
   })
 
   it('should render user menu items', () => {
-    const mockPage = createMockSignedInPage()
+    // const mockPage = createMockSignedInPage()
     
     const { getByTestId } = renderWithProviders(
-      <ChipSignedIn def={mockPage} />
+      <ChipSignedIn />
     )
     
     expect(getByTestId('menu-profile')).toBeInTheDocument()
@@ -82,20 +82,20 @@ describe('src/mui/appbar/state.jsx.signedin.appbar.tsx', () => {
   })
 
   it('should display user name', () => {
-    const mockPage = createMockSignedInPage()
+    // const mockPage = createMockSignedInPage()
     
     const { getByText } = renderWithProviders(
-      <ChipSignedIn def={mockPage} />
+      <ChipSignedIn />
     )
     
     expect(getByText('John Doe')).toBeInTheDocument()
   })
 
   it('should render with signed in layout', () => {
-    const mockPage = createMockSignedInPage()
+    // const mockPage = createMockSignedInPage()
     
     const { container } = renderWithProviders(
-      <ChipSignedIn def={mockPage} />
+      <ChipSignedIn />
     )
     
     const toolbar = container.querySelector('[class*="MuiToolbar"]')

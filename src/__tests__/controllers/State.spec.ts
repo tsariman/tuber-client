@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import State from '../../controllers/State';
 import { createMockRootState } from './test-utils';
 import type { RootState } from '../../state';
-import type { IState } from '../../localized/interfaces';
+import type { IState } from '../../interfaces/localized';
 
 // Mock all the controller imports
 vi.mock('../../controllers/StateAllPages', () => ({
@@ -261,7 +261,6 @@ describe('State', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockRootState = createMockRootState() as RootState;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     state = new State(mockRootState as any as IState);
   });
 
@@ -282,7 +281,6 @@ describe('State', () => {
 
   describe('static factory method', () => {
     it('should create new State instance using fromRootState', () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const newState = State.fromRootState(mockRootState as any);
       expect(newState).toBeInstanceOf(State);
       expect(newState['_rootState']).toBe(mockRootState);
@@ -587,7 +585,6 @@ describe('State', () => {
   describe('controller dependency injection', () => {
     it('should pass correct state data to controllers', () => {
       const customAppState = { ...mockRootState.app, title: 'Custom App' };
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const customState = new State({ ...mockRootState, app: customAppState } as any);
       
       const appController = customState.app;
@@ -608,9 +605,7 @@ describe('State', () => {
     });
 
     it('should maintain state integrity across multiple instances', () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const state1 = new State(mockRootState as any);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const state2 = new State(mockRootState as any);
       
       expect(state1).not.toBe(state2);

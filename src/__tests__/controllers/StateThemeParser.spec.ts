@@ -457,7 +457,6 @@ describe('StateThemeParser', () => {
 
   describe('Error Handling', () => {
     let parseFunction: (theme: Theme, rules: Record<string, unknown>) => TObj;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let consoleSpy: any;
 
     beforeEach(() => {

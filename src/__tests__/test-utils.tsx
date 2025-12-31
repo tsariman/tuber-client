@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { render } from '@testing-library/react';
 import type { RenderOptions } from '@testing-library/react';
 import { Provider } from 'react-redux';
@@ -21,6 +20,12 @@ const createMockStore = (preloadedState?: any) => configureStore({
       fetchingStateAllowed: true,
       title: 'Test App',
     }, action) => {
+      switch (action.type) {
+        default:
+          return state;
+      }
+    },
+    appbar: (state = {}, action) => {
       switch (action.type) {
         default:
           return state;

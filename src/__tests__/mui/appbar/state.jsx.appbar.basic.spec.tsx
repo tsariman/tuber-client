@@ -59,7 +59,7 @@ describe('src/mui/appbar/state.jsx.basic.appbar.tsx', () => {
       },
     };
 
-    const { container } = renderWithProviders(<AppbarBasic def={mockPage as unknown as StatePage} />);
+    const { container } = renderWithProviders(<AppbarBasic instance={mockPage as unknown as StatePage} />);
     expect(container.querySelector('.MuiAppBar-root')).toBeInTheDocument();
   });
 
@@ -90,7 +90,7 @@ describe('src/mui/appbar/state.jsx.basic.appbar.tsx', () => {
       },
     };
 
-    const { container } = renderWithProviders(<AppbarBasic def={mockPage as unknown as StatePage} />);
+    const { container } = renderWithProviders(<AppbarBasic instance={mockPage as unknown as StatePage} />);
     expect(container.querySelector('button')).toBeInTheDocument();
   });
 
@@ -121,7 +121,7 @@ describe('src/mui/appbar/state.jsx.basic.appbar.tsx', () => {
       },
     };
 
-    const { getByText } = renderWithProviders(<AppbarBasic def={mockPage as unknown as StatePage} />, {
+    const { getByText } = renderWithProviders(<AppbarBasic instance={mockPage as unknown as StatePage} />, {
       preloadedState: { app: { title: 'My Test App' } }
     });
     expect(getByText('My Test App')).toBeInTheDocument();

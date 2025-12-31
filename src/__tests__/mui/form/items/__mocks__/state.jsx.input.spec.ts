@@ -1,4 +1,4 @@
-import { IStateFormItem } from '../../../../../localized/interfaces'
+import { IStateFormItem } from '../../../../../interfaces/localized'
 
 const stateMocks: Record<string, IStateFormItem> = {
   state1: { // all possible keys

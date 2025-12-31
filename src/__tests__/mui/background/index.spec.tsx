@@ -17,7 +17,7 @@ describe('src/mui/background/index.tsx', () => {
     const mockBackground = createMockBackground('color', '#ff0000');
     
     const { container } = render(
-      <Background def={mockBackground}>
+      <Background instance={mockBackground}>
         <div data-testid="background-content">Content with background</div>
       </Background>
     );
@@ -29,7 +29,7 @@ describe('src/mui/background/index.tsx', () => {
     const mockBackground = createMockBackground('image', '/path/to/image.jpg');
     
     const { container } = render(
-      <Background def={mockBackground}>
+      <Background instance={mockBackground}>
         <div>Content with image background</div>
       </Background>
     );
@@ -41,7 +41,7 @@ describe('src/mui/background/index.tsx', () => {
     const mockBackground = createMockBackground();
     
     const { getByText } = render(
-      <Background def={mockBackground}>
+      <Background instance={mockBackground}>
         <div>Test content</div>
       </Background>
     );
@@ -53,7 +53,7 @@ describe('src/mui/background/index.tsx', () => {
     const mockBackground = createMockBackground('gradient', 'linear-gradient(45deg, #ff0000, #0000ff)');
     
     const { container } = render(
-      <Background def={mockBackground}>
+      <Background instance={mockBackground}>
         <div>Gradient content</div>
       </Background>
     );

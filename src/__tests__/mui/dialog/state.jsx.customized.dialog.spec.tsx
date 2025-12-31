@@ -24,7 +24,7 @@ describe('src/mui/dialog/state.jsx.customized.dialog.tsx', () => {
     const mockDialog = createMockCustomizedDialog(true, 'Settings');
     
     const { getByTestId, getByText } = renderWithProviders(
-      <StateJsxCustomizedDialog def={mockDialog} />
+      <StateJsxCustomizedDialog instance={mockDialog} />
     );
     
     expect(getByTestId('customized-dialog')).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('src/mui/dialog/state.jsx.customized.dialog.tsx', () => {
     const mockDialog = createMockCustomizedDialog(true);
     
     const { getByText } = renderWithProviders(
-      <StateJsxCustomizedDialog def={mockDialog} />
+      <StateJsxCustomizedDialog instance={mockDialog} />
     );
     
     expect(getByText('Customized dialog content')).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe('src/mui/dialog/state.jsx.customized.dialog.tsx', () => {
     const mockDialog = createMockCustomizedDialog(false);
     
     const { container } = renderWithProviders(
-      <StateJsxCustomizedDialog def={mockDialog} />
+      <StateJsxCustomizedDialog instance={mockDialog} />
     );
     
     const dialog = container.querySelector('[role="dialog"]');
@@ -56,7 +56,7 @@ describe('src/mui/dialog/state.jsx.customized.dialog.tsx', () => {
     const mockDialog = createMockCustomizedDialog(true);
     
     const { getByTestId } = renderWithProviders(
-      <StateJsxCustomizedDialog def={mockDialog} />
+      <StateJsxCustomizedDialog instance={mockDialog} />
     );
     
     expect(getByTestId('customized-dialog')).toBeInTheDocument();

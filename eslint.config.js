@@ -6,6 +6,8 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
+  // Global linter options
+  { linterOptions: { reportUnusedDisableDirectives: 'off' } },
   globalIgnores(['dist', 'src/**/*.example.ts']),
   {
     files: ['**/*.{ts,tsx}'],
@@ -18,6 +20,18 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+    },
+  },
+  // Allow explicit `any` in test files for pragmatic testing ergonomics
+  {
+    files: [
+      'src/**/__tests__/**/*.{ts,tsx}',
+      'src/**/*.spec.{ts,tsx}',
+      'src/**/*.test.{ts,tsx}',
+    ],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
 ])

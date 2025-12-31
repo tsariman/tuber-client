@@ -22,7 +22,7 @@ describe('src/mui/appbar/state.jsx.logo.tsx', () => {
       alt: 'Test Logo'
     });
     
-    const { container } = render(<StateJsxLogo def={mockAppbar} />);
+    const { container } = render(<StateJsxLogo instance={mockAppbar} />);
     const imgElement = container.querySelector('img');
     
     expect(imgElement).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('src/mui/appbar/state.jsx.logo.tsx', () => {
       d: 'M10 10 L20 20'
     });
     
-    const { container } = render(<StateJsxLogo def={mockAppbar} />);
+    const { container } = render(<StateJsxLogo instance={mockAppbar} />);
     const pathElement = container.querySelector('path');
     
     expect(pathElement).toBeInTheDocument();
@@ -47,7 +47,7 @@ describe('src/mui/appbar/state.jsx.logo.tsx', () => {
       className: 'custom-logo'
     });
     
-    const { container } = render(<StateJsxLogo def={mockAppbar} />);
+    const { container } = render(<StateJsxLogo instance={mockAppbar} />);
     const divElement = container.querySelector('div.custom-logo');
     
     expect(divElement).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe('src/mui/appbar/state.jsx.logo.tsx', () => {
       src: '/test-logo.png'
     });
     
-    const { container } = render(<StateJsxLogo def={mockAppbar} />);
+    const { container } = render(<StateJsxLogo instance={mockAppbar} />);
     const imgElement = container.querySelector('img');
     
     expect(imgElement).toBeInTheDocument();
@@ -70,7 +70,7 @@ describe('src/mui/appbar/state.jsx.logo.tsx', () => {
       { className: 'logo-container', 'data-testid': 'logo-wrapper' }
     );
     
-    const { container } = render(<StateJsxLogo def={mockAppbar} />);
+    const { container } = render(<StateJsxLogo instance={mockAppbar} />);
     const containerElement = container.querySelector('.logo-container');
     
     expect(containerElement).toBeInTheDocument();
@@ -81,7 +81,7 @@ describe('src/mui/appbar/state.jsx.logo.tsx', () => {
     const { err } = await import('../../../business.logic/logging');
     const mockAppbar = createMockAppbar('invalid', { src: '/test-logo.png' });
     
-    const { container } = render(<StateJsxLogo def={mockAppbar} />);
+    const { container } = render(<StateJsxLogo instance={mockAppbar} />);
     
     expect(container.firstChild).toBeNull();
     expect(err).toHaveBeenCalledWith('Invalid `invalid` logo.');
@@ -90,7 +90,7 @@ describe('src/mui/appbar/state.jsx.logo.tsx', () => {
   it('should render with empty props gracefully', () => {
     const mockAppbar = createMockAppbar('img');
     
-    const { container } = render(<StateJsxLogo def={mockAppbar} />);
+    const { container } = render(<StateJsxLogo instance={mockAppbar} />);
     const imgElement = container.querySelector('img');
     
     expect(imgElement).toBeInTheDocument();

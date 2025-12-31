@@ -26,10 +26,10 @@ export default class StatePagesData extends AbstractState {
     return this
   }
 
-  get<T=unknown>(key: string): T {
+  get<T=unknown>(key: string): T | undefined {
     if (!this._endpoint) {
       throw new Error('Endpoint must be configured to access page data.')
     }
-    return (this._state[this._endpoint] as TObj<T>)[key]
+    return (this._state[this._endpoint] as TObj<T>)?.[key]
   }
 }

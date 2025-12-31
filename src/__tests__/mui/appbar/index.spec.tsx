@@ -3,22 +3,23 @@ import '@testing-library/jest-dom';
 import { renderWithProviders } from '../../test-utils';
 import StateJsxAppbar from '../../../mui/appbar';
 import type StatePage from '../../../controllers/StatePage';
+import type StateApp from '../../../controllers/StateApp';
 import stateMocks from '../__mocks__/appbar/index.spec';
 
 // Mock the appbar components to avoid complex rendering
-vi.mock('../../../mui/appbar/state.jsx.basic.appbar', () => ({
+vi.mock('../../../mui/appbar/state.jsx.appbar.basic', () => ({
   default: () => <div data-testid="basic-appbar">Basic Appbar</div>
 }));
 
-vi.mock('../../../mui/appbar/state.jsx.responsive.appbar', () => ({
+vi.mock('../../../mui/appbar/state.jsx.appbar.responsive', () => ({
   default: () => <div data-testid="responsive-appbar">Responsive Appbar</div>
 }));
 
-vi.mock('../../../mui/appbar/state.jsx.mini.appbar', () => ({
+vi.mock('../../../mui/appbar/state.jsx.appbar.mini', () => ({
   default: () => <div data-testid="mini-appbar">Mini Appbar</div>
 }));
 
-vi.mock('../../../mui/appbar/state.jsx.middle-search.appbar', () => ({
+vi.mock('../../../mui/appbar/state.jsx.appbar.mid-search', () => ({
   default: () => <div data-testid="middle-search-appbar">Middle Search Appbar</div>
 }));
 
@@ -27,10 +28,10 @@ vi.mock('../../../mui/builder.cpn', () => ({
 }));
 
 // Mock appbar object that matches the component's expectations
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createMockAppbar = (config: any) => ({
   appbarStyle: config.appbarStyle,
   _type: config._type,
+  configure: vi.fn(),
   ...config
 });
 
@@ -51,10 +52,12 @@ const createMockPage = (overrides: Partial<{
 } as unknown as StatePage);
 
 describe('StateJsxAppbar Component', () => {
+  // Minimal mock of StateApp; components under test don't read fields
+  const mockApp = {} as unknown as StateApp;
   describe('Early Returns and Edge Cases', () => {
     it('should return null when hideAppbar is true', () => {
       const mockPage = createMockPage({ hideAppbar: true });
-      const { container } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { container } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(container.firstChild).toBeNull();
     });
 
@@ -62,10 +65,10 @@ describe('StateJsxAppbar Component', () => {
       const mockPage = createMockPage({
         hasAppbar: false,
         hasCustomAppbar: false,
-        appbar: null,
+        appbar: { configure: vi.fn() } as any,
         appbarCustom: null
       });
-      const { container } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { container } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(container.firstChild).toBeNull();
     });
 
@@ -74,7 +77,7 @@ describe('StateJsxAppbar Component', () => {
         hasAppbar: true,
         appbar: createMockAppbar({})
       });
-      const { container } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { container } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(container.firstChild).toBeNull();
     });
   });
@@ -85,7 +88,7 @@ describe('StateJsxAppbar Component', () => {
         hasAppbar: true,
         appbar: createMockAppbar(stateMocks.state1)
       });
-      const { getByTestId } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { getByTestId } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(getByTestId('basic-appbar')).toBeInTheDocument();
     });
 
@@ -94,7 +97,7 @@ describe('StateJsxAppbar Component', () => {
         hasAppbar: true,
         appbar: createMockAppbar(stateMocks.state2)
       });
-      const { getByTestId } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { getByTestId } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(getByTestId('basic-appbar')).toBeInTheDocument();
     });
 
@@ -103,7 +106,7 @@ describe('StateJsxAppbar Component', () => {
         hasAppbar: true,
         appbar: createMockAppbar(stateMocks.state5)
       });
-      const { getByTestId } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { getByTestId } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(getByTestId('responsive-appbar')).toBeInTheDocument();
     });
 
@@ -112,7 +115,7 @@ describe('StateJsxAppbar Component', () => {
         hasAppbar: true,
         appbar: createMockAppbar(stateMocks.state8)
       });
-      const { getByTestId } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { getByTestId } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(getByTestId('mini-appbar')).toBeInTheDocument();
     });
 
@@ -121,7 +124,7 @@ describe('StateJsxAppbar Component', () => {
         hasAppbar: true,
         appbar: createMockAppbar(stateMocks.state3)
       });
-      const { getByTestId } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { getByTestId } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(getByTestId('middle-search-appbar')).toBeInTheDocument();
     });
 
@@ -130,7 +133,7 @@ describe('StateJsxAppbar Component', () => {
         hasAppbar: true,
         appbar: createMockAppbar({ appbarStyle: 'none' })
       });
-      const { container } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { container } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(container.firstChild).toBeNull();
     });
   });
@@ -142,7 +145,7 @@ describe('StateJsxAppbar Component', () => {
         hasAppbar: true,
         appbar: createMockAppbar(stateMocks.state4)
       });
-      const { getByTestId } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { getByTestId } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(getByTestId('mini-appbar')).toBeInTheDocument();
     });
 
@@ -152,7 +155,7 @@ describe('StateJsxAppbar Component', () => {
         hasAppbar: true,
         appbar: createMockAppbar(stateMocks.state6)
       });
-      const { getByTestId } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { getByTestId } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(getByTestId('responsive-appbar')).toBeInTheDocument();
     });
 
@@ -162,7 +165,7 @@ describe('StateJsxAppbar Component', () => {
         hasAppbar: true,
         appbar: createMockAppbar(stateMocks.state7)
       });
-      const { getByTestId } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { getByTestId } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(getByTestId('basic-appbar')).toBeInTheDocument();
     });
   });
@@ -172,9 +175,10 @@ describe('StateJsxAppbar Component', () => {
       const mockPage = createMockPage({
         hasAppbar: false,
         hasCustomAppbar: true,
+        appbar: { configure: vi.fn() } as any,
         appbarCustom: { items: [] }
       });
-      const { getByTestId } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { getByTestId } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(getByTestId('custom-appbar')).toBeInTheDocument();
     });
 
@@ -185,7 +189,7 @@ describe('StateJsxAppbar Component', () => {
         appbar: createMockAppbar(stateMocks.state1),
         appbarCustom: { items: [] }
       });
-      const { getByTestId } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { getByTestId } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(getByTestId('basic-appbar')).toBeInTheDocument();
     });
 
@@ -193,9 +197,10 @@ describe('StateJsxAppbar Component', () => {
       const mockPage = createMockPage({
         hasAppbar: false,
         hasCustomAppbar: true,
+        appbar: { configure: vi.fn() } as any,
         appbarCustom: null
       });
-      const { container } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { container } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(container.firstChild).toBeNull();
     });
   });
@@ -206,7 +211,7 @@ describe('StateJsxAppbar Component', () => {
         hasAppbar: true,
         appbar: createMockAppbar({ appbarStyle: 'unknown-style' })
       });
-      const { container } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { container } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(container.firstChild).toBeNull();
     });
 
@@ -215,7 +220,7 @@ describe('StateJsxAppbar Component', () => {
         hasAppbar: true,
         appbar: createMockAppbar({ _type: 'unknown-type' })
       });
-      const { container } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { container } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(container.firstChild).toBeNull();
     });
   });
@@ -227,7 +232,7 @@ describe('StateJsxAppbar Component', () => {
         hasAppbar: true,
         appbar: createMockAppbar(stateMocks.state9)
       });
-      const { container } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { container } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(container.firstChild).toBeNull();
     });
 
@@ -236,7 +241,7 @@ describe('StateJsxAppbar Component', () => {
         hasAppbar: true,
         appbar: createMockAppbar({ _type: 'basic' })
       });
-      const { getByTestId } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { getByTestId } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(getByTestId('basic-appbar')).toBeInTheDocument();
     });
 
@@ -245,7 +250,7 @@ describe('StateJsxAppbar Component', () => {
         hasAppbar: true,
         appbar: createMockAppbar({ appbarStyle: 'responsive' })
       });
-      const { getByTestId } = renderWithProviders(<StateJsxAppbar def={mockPage} />);
+      const { getByTestId } = renderWithProviders(<StateJsxAppbar instance={mockPage} app={mockApp} />);
       expect(getByTestId('responsive-appbar')).toBeInTheDocument();
     });
   });

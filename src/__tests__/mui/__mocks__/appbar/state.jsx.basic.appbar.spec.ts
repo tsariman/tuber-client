@@ -1,4 +1,4 @@
-import { IStateAppbar } from '../../../../localized/interfaces'
+import { IStateAppbar } from '../../../../interfaces/localized'
 
 const stateMocks: Record<string, IStateAppbar> = {
   state1: {

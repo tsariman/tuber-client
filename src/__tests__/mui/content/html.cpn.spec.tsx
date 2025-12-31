@@ -31,7 +31,7 @@ describe('HtmlContent Component', () => {
 
   it('should render HTML content when element exists', () => {
     renderWithProviders(
-      <HtmlContent def={mockPage as Parameters<typeof HtmlContent>[0]['def']} />
+      <HtmlContent instance={mockPage as Parameters<typeof HtmlContent>[0]['instance']} />
     );
 
     expect(screen.getByText('Test HTML content')).toBeInTheDocument();
@@ -40,7 +40,7 @@ describe('HtmlContent Component', () => {
 
   it('should apply typography styles', () => {
     const { container } = renderWithProviders(
-      <HtmlContent def={mockPage as Parameters<typeof HtmlContent>[0]['def']} />
+      <HtmlContent instance={mockPage as Parameters<typeof HtmlContent>[0]['instance']} />
     );
 
     const wrapper = container.firstChild as HTMLElement;
@@ -52,7 +52,7 @@ describe('HtmlContent Component', () => {
 
   it('should have full width styling', () => {
     const { container } = renderWithProviders(
-      <HtmlContent def={mockPage as Parameters<typeof HtmlContent>[0]['def']} />
+      <HtmlContent instance={mockPage as Parameters<typeof HtmlContent>[0]['instance']} />
     );
 
     const wrapper = container.firstChild as HTMLElement;
@@ -69,7 +69,7 @@ describe('HtmlContent Component', () => {
     } as unknown;
 
     const { container } = renderWithProviders(
-      <HtmlContent def={mockPageWithMissingElement as Parameters<typeof HtmlContent>[0]['def']} />
+      <HtmlContent instance={mockPageWithMissingElement as Parameters<typeof HtmlContent>[0]['instance']} />
     );
 
     expect(container.firstChild).toBeNull();
@@ -90,7 +90,7 @@ describe('HtmlContent Component', () => {
     } as unknown;
 
     const { container } = renderWithProviders(
-      <HtmlContent def={mockPageWithEmptyElement as Parameters<typeof HtmlContent>[0]['def']} />
+      <HtmlContent instance={mockPageWithEmptyElement as Parameters<typeof HtmlContent>[0]['instance']} />
     );
 
     const wrapper = container.firstChild as HTMLElement;
@@ -103,7 +103,7 @@ describe('HtmlContent Component', () => {
 
   it('should use dangerouslySetInnerHTML correctly', () => {
     const { container } = renderWithProviders(
-      <HtmlContent def={mockPage as Parameters<typeof HtmlContent>[0]['def']} />
+      <HtmlContent instance={mockPage as Parameters<typeof HtmlContent>[0]['instance']} />
     );
 
     const wrapper = container.firstChild as HTMLElement;
@@ -125,7 +125,7 @@ describe('HtmlContent Component', () => {
     } as unknown;
 
     renderWithProviders(
-      <HtmlContent def={mockPageWithSpecialContent as Parameters<typeof HtmlContent>[0]['def']} />
+      <HtmlContent instance={mockPageWithSpecialContent as Parameters<typeof HtmlContent>[0]['instance']} />
     );
 
     expect(screen.getByText('Content with & special <characters>')).toBeInTheDocument();

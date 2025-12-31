@@ -1,4 +1,4 @@
-import { IStateAppbar } from '../../../../localized/interfaces'
+import { IStateAppbar } from '../../../../interfaces/localized'
 
 /**
  * This is a mock to test the `src/mui/appbar/index.tsx` file.

@@ -85,7 +85,7 @@ export default {
      * UI, like transitioning from one page to another but without loading anything
      * from the server.
      */
-    'route': '',
+    'route': window.location.pathname,
     'title': 'web-ui',
     'origin': get_head_meta_content('origin') || undefined,
 

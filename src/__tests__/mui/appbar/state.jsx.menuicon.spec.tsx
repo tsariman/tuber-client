@@ -17,7 +17,7 @@ describe('src/mui/appbar/state.jsx.menuicon.appbar.tsx', () => {
     const mockAppbar = createMockAppbar(true, false, { 'data-testid': 'menu-icon' })
     const mockToggle = () => {}
     
-    const { container } = render(<MenuIcon def={mockAppbar} toggle={mockToggle} />)
+    const { container } = render(<MenuIcon instance={mockAppbar} toggle={mockToggle} />)
     const iconButton = container.querySelector('button')
     
     expect(iconButton).toBeInTheDocument()
@@ -27,7 +27,7 @@ describe('src/mui/appbar/state.jsx.menuicon.appbar.tsx', () => {
     const mockAppbar = createMockAppbar(false, true)
     const mockToggle = () => {}
     
-    const { container } = render(<MenuIcon def={mockAppbar} toggle={mockToggle} />)
+    const { container } = render(<MenuIcon instance={mockAppbar} toggle={mockToggle} />)
     const iconButton = container.querySelector('button')
     
     expect(iconButton).toBeInTheDocument()
@@ -38,7 +38,7 @@ describe('src/mui/appbar/state.jsx.menuicon.appbar.tsx', () => {
     const mockAppbar = createMockAppbar(false, false)
     const mockToggle = () => {}
     
-    const { container } = render(<MenuIcon def={mockAppbar} toggle={mockToggle} />)
+    const { container } = render(<MenuIcon instance={mockAppbar} toggle={mockToggle} />)
     
     expect(container.firstChild).toBeNull()
   })
@@ -47,7 +47,7 @@ describe('src/mui/appbar/state.jsx.menuicon.appbar.tsx', () => {
     const mockAppbar = createMockAppbar(true, false, { className: 'custom-menu-icon' })
     const mockToggle = () => {}
     
-    const { container } = render(<MenuIcon def={mockAppbar} toggle={mockToggle} />)
+    const { container } = render(<MenuIcon instance={mockAppbar} toggle={mockToggle} />)
     const iconButton = container.querySelector('button.custom-menu-icon')
     
     expect(iconButton).toBeInTheDocument()

@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { renderWithProviders, screen } from '../../test-utils';
 import StateJsxDialogForm from '../../../mui/dialog/state.jsx.form.dialog';
 import type StateDialogForm from '../../../controllers/templates/StateDialogForm';
-import type { IStateFormItem } from '../../../localized/interfaces';
+import type { IStateFormItem } from '../../../interfaces/localized';
 
 // Minimal mock of StateDialogForm matching component usage
 const createMockFormDialog = (
@@ -51,7 +51,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       const preloadedState = createPreloadedState(mockDialog.contentName);
 
       const { getByTestId, getByText } = renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
 
       expect(getByTestId('form-dialog')).toBeInTheDocument();
@@ -63,7 +63,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       const preloadedState = createPreloadedState(mockDialog.contentName);
 
       renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
 
       const dialog = screen.getByRole('dialog');
@@ -75,7 +75,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       const preloadedState = createPreloadedState(mockDialog.contentName, false);
 
       const { container } = renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
 
       // MUI Dialog removes from DOM when not open by default
@@ -87,7 +87,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       const preloadedState = createPreloadedState(mockDialog.contentName);
 
       renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
 
       const closeButton = screen.getByRole('button', { name: /close/i });
@@ -101,7 +101,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       const preloadedState = createPreloadedState(mockDialog.contentName);
 
       const { getByTestId } = renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
 
       expect(getByTestId('custom-dialog')).toBeInTheDocument();
@@ -116,7 +116,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       const preloadedState = createPreloadedState(mockDialog.contentName);
 
       const { getByText } = renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
 
       expect(getByText('Please fill out the form below.')).toBeInTheDocument();
@@ -127,7 +127,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       const preloadedState = createPreloadedState(mockDialog.contentName);
 
       const { container } = renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
 
       // Should not find DialogContentText component
@@ -150,7 +150,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       const preloadedState = createPreloadedState(mockDialog.contentName, true, formItems);
 
       const { getByRole, getByText } = renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
 
       // Dialog should render with form state
@@ -169,7 +169,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       };
 
       const { getByText } = renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
 
       // Should render the dialog with correct title
@@ -195,7 +195,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       const preloadedState = createPreloadedState(mockDialog.contentName);
 
       const { getByRole } = renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
 
       // Dialog renders even when actions are provided (actions render only if dialog.form exists)
@@ -207,7 +207,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       const preloadedState = createPreloadedState(mockDialog.contentName);
 
       const { container } = renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
 
       // DialogActions should not be rendered
@@ -222,7 +222,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       const preloadedState = createPreloadedState(mockDialog.contentName);
 
       renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
 
       // Close button is always rendered
@@ -235,7 +235,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       const preloadedState = createPreloadedState(mockDialog.contentName);
 
       renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
       
       // The component has handleClose logic that prevents backdropClick from closing
@@ -254,7 +254,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       };
 
       const { getByText } = renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
 
       // Should still render dialog title
@@ -266,7 +266,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       const preloadedState = createPreloadedState(mockDialog.contentName);
 
       const { container } = renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
 
       expect(container).toBeInTheDocument();
@@ -284,7 +284,7 @@ describe('src/mui/dialog/state.jsx.form.dialog.tsx', () => {
       };
 
       const { getByText } = renderWithProviders(
-        <StateJsxDialogForm def={mockDialog} />, { preloadedState }
+        <StateJsxDialogForm instance={mockDialog} />, { preloadedState }
       );
 
       expect(getByText('Multi Form Dialog')).toBeInTheDocument();

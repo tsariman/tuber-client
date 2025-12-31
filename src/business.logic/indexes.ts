@@ -190,3 +190,16 @@ export const select_by_attr = <T>(
   }
   return undefined
 }
+
+/**
+ * Selects a resource document from the indexes cache.
+ * @param collection - The collection name.
+ * @param identifier - The resource identifier (ID).
+ * @returns The resource document or undefined if not found.
+ */
+export const select = <T = IJsonapiResponseResource>(
+  collection: string,
+  identifier: string
+): T | undefined => {
+  return indexesCache[collection]?.[identifier] as T
+}

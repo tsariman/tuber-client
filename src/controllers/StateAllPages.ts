@@ -64,7 +64,7 @@ export default class StateAllPages extends AbstractState {
    * @param route the specified route
    * @returns the page state or null if not found
    */
-  getPageState = (route: string): IStatePage | null => {
+  getPageState = (route?: string): IStatePage | null => {
     if (!route) return null
     
     if (this._no_path_vars(route)) {

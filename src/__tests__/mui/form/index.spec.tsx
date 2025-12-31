@@ -20,7 +20,7 @@ describe('src/mui/form/index.tsx', () => {
       const mockForm = createMockForm('box');
       
       const { getByTestId } = render(
-        <StateJsxForm def={mockForm}>
+        <StateJsxForm instance={mockForm}>
           <div>Form content</div>
         </StateJsxForm>
       );
@@ -32,7 +32,7 @@ describe('src/mui/form/index.tsx', () => {
       const mockForm = createMockForm('stack');
       
       const { getByTestId } = render(
-        <StateJsxForm def={mockForm}>
+        <StateJsxForm instance={mockForm}>
           <div>Stack content</div>
         </StateJsxForm>
       );
@@ -44,7 +44,7 @@ describe('src/mui/form/index.tsx', () => {
       const mockForm = createMockForm('box', true);
       
       const { container } = render(
-        <StateJsxForm def={mockForm}>
+        <StateJsxForm instance={mockForm}>
           <div>Paper content</div>
         </StateJsxForm>
       );
@@ -57,7 +57,7 @@ describe('src/mui/form/index.tsx', () => {
       const mockForm = createMockForm('box', false);
       
       const { container } = render(
-        <StateJsxForm def={mockForm}>
+        <StateJsxForm instance={mockForm}>
           <div>No paper content</div>
         </StateJsxForm>
       );
@@ -70,7 +70,7 @@ describe('src/mui/form/index.tsx', () => {
       const mockForm = createMockForm('unknown');
       
       const { getByTestId } = render(
-        <StateJsxForm def={mockForm}>
+        <StateJsxForm instance={mockForm}>
           <div>Fallback content</div>
         </StateJsxForm>
       );
@@ -82,7 +82,7 @@ describe('src/mui/form/index.tsx', () => {
       const mockForm = createMockForm('none');
       
       const { getByText } = render(
-        <StateJsxForm def={mockForm}>
+        <StateJsxForm instance={mockForm}>
           <div>None type content</div>
         </StateJsxForm>
       );

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { IStateFormItem } from '../../../localized/interfaces';
+import type { IStateFormItem } from '../../../interfaces/localized';
 import * as F from '../../../mui/dialog/_dialog.business.logic';
 
 describe('get_state_dialog_form', () => {

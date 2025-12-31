@@ -32,7 +32,7 @@ describe('src/mui/dialog/state.jsx.selection.dialog.tsx', () => {
     const mockDialog = createMockSelectionDialog(true, 'Choose Item');
     
     const { getByTestId, getByText } = renderWithProviders(
-      <StateJsxSelectionDialog def={mockDialog} />
+      <StateJsxSelectionDialog instance={mockDialog} />
     );
     
     expect(getByTestId('selection-dialog')).toBeInTheDocument();
@@ -43,7 +43,7 @@ describe('src/mui/dialog/state.jsx.selection.dialog.tsx', () => {
     const mockDialog = createMockSelectionDialog(true);
     
     const { getByTestId, getByText } = renderWithProviders(
-      <StateJsxSelectionDialog def={mockDialog} />
+      <StateJsxSelectionDialog instance={mockDialog} />
     );
     
     expect(getByTestId('option-1')).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe('src/mui/dialog/state.jsx.selection.dialog.tsx', () => {
     const mockDialog = createMockSelectionDialog(true);
     
     const { getByTestId } = renderWithProviders(
-      <StateJsxSelectionDialog def={mockDialog} />
+      <StateJsxSelectionDialog instance={mockDialog} />
     );
     
     expect(getByTestId('option-1')).toBeInTheDocument();
@@ -66,7 +66,7 @@ describe('src/mui/dialog/state.jsx.selection.dialog.tsx', () => {
     const mockDialog = createMockSelectionDialog(false);
     
     const { container } = renderWithProviders(
-      <StateJsxSelectionDialog def={mockDialog} />
+      <StateJsxSelectionDialog instance={mockDialog} />
     );
     
     const dialog = container.querySelector('[role="dialog"]');

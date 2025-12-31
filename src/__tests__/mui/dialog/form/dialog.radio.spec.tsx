@@ -43,7 +43,7 @@ describe('src/mui/dialog/form/dialog.radio.tsx', () => {
     const mockRadio = createMockRadio('Choose Priority');
     
     const { getByTestId } = renderWithProviders(
-      <DialogRadio def={mockRadio} hive={hive} />
+      <DialogRadio instance={mockRadio} hive={hive} />
     );
     
     expect(getByTestId('dialog-radio')).toBeInTheDocument();
@@ -53,7 +53,7 @@ describe('src/mui/dialog/form/dialog.radio.tsx', () => {
     const mockRadio = createMockRadio('Select Mode');
     
     const { getByTestId } = renderWithProviders(
-      <DialogRadio def={mockRadio} hive={hive} />
+      <DialogRadio instance={mockRadio} hive={hive} />
     );
     
     expect(getByTestId('radio-option-1')).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe('src/mui/dialog/form/dialog.radio.tsx', () => {
     const mockRadio = createMockRadio();
     
     const { getByRole } = renderWithProviders(
-      <DialogRadio def={mockRadio} hive={hive} />
+      <DialogRadio instance={mockRadio} hive={hive} />
     );
     
     const radioGroup = getByRole('radiogroup');
@@ -76,7 +76,7 @@ describe('src/mui/dialog/form/dialog.radio.tsx', () => {
     const mockRadio = createMockRadio();
     
     const { getByText } = renderWithProviders(
-      <DialogRadio def={mockRadio} hive={hive} />
+      <DialogRadio instance={mockRadio} hive={hive} />
     );
     
     expect(getByText('Option 1')).toBeInTheDocument();
@@ -91,7 +91,7 @@ describe('src/mui/dialog/form/dialog.radio.tsx', () => {
     } as unknown as StateFormItemRadio;
     
     const { getByRole } = renderWithProviders(
-      <DialogRadio def={mockRadio} hive={hive} />
+      <DialogRadio instance={mockRadio} hive={hive} />
     );
     
     const radioGroup = getByRole('radiogroup');

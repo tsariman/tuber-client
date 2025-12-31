@@ -35,7 +35,7 @@ describe('src/mui/dialog/form/dialog.picker.tsx', () => {
     const mockPicker = createMockPicker('Birth Date', 'date');
     
     const { getByTestId } = renderWithProviders(
-      <DialogPicker def={mockPicker} hive={hive} />
+      <DialogPicker instance={mockPicker} hive={hive} />
     );
     
     expect(getByTestId('dialog-picker')).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe('src/mui/dialog/form/dialog.picker.tsx', () => {
     const mockPicker = createMockPicker('Event Date');
     
     const { getByLabelText } = renderWithProviders(
-      <DialogPicker def={mockPicker} hive={hive} />
+      <DialogPicker instance={mockPicker} hive={hive} />
     );
     
     expect(getByLabelText('Event Date')).toBeInTheDocument();
@@ -55,7 +55,7 @@ describe('src/mui/dialog/form/dialog.picker.tsx', () => {
     const mockPicker = createMockPicker('Appointment', 'datetime');
     
     const { container } = renderWithProviders(
-      <DialogPicker def={mockPicker} hive={hive} />
+      <DialogPicker instance={mockPicker} hive={hive} />
     );
     
     const input = container.querySelector('input');
@@ -66,7 +66,7 @@ describe('src/mui/dialog/form/dialog.picker.tsx', () => {
     const mockPicker = createMockPicker();
     
     const { container } = renderWithProviders(
-      <DialogPicker def={mockPicker} hive={hive} />
+      <DialogPicker instance={mockPicker} hive={hive} />
     );
     
     const input = container.querySelector('input');
@@ -80,7 +80,7 @@ describe('src/mui/dialog/form/dialog.picker.tsx', () => {
     } as unknown as StateFormItem<StateForm>;
     
     const { getByTestId } = renderWithProviders(
-      <DialogPicker def={mockPicker} hive={hive} />
+      <DialogPicker instance={mockPicker} hive={hive} />
     );
     
     expect(getByTestId('dialog-picker')).toBeDisabled();

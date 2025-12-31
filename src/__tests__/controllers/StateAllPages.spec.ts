@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import './setup-mocks'; // Import centralized mocks
 import StateAllPages from '../../controllers/StateAllPages';
-import type { IStateAllPages, IStatePage } from '../../localized/interfaces';
+import type { IStateAllPages, IStatePage } from '../../interfaces/localized';
 import StateApp from '../../controllers/StateApp';
 import { log } from '../../business.logic/logging';
 
@@ -29,7 +29,6 @@ vi.mock('../../controllers/StatePage', () => ({
 // Mock State class
 const mockParentState = {
   die: vi.fn((_msg: string, defaultVal: unknown) => defaultVal),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 } as any;
 
 vi.mock('../../controllers/State', () => ({
@@ -337,13 +336,11 @@ describe('StateAllPages', () => {
     });
 
     it('should handle undefined route gracefully', () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const page = stateAllPages.getPageState(undefined as any);
       expect(page).toBeNull();
     });
 
     it('should handle null route gracefully', () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const page = stateAllPages.getPageState(null as any);
       expect(page).toBeNull();
     });

@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { renderWithProviders } from '../../test-utils'
 import AppbarMidSearch from '../../../mui/appbar/state.jsx.appbar.mid-search'
 import type StatePage from '../../../controllers/StatePage'
+import StateApp from '../../../controllers/StateApp'
 
 // Mock StatePage with middle search appbar for testing
 const createMockPage = (): StatePage => ({
@@ -22,11 +23,13 @@ const createMockPage = (): StatePage => ({
 } as unknown as StatePage)
 
 describe('src/mui/appbar/state.jsx.middle-search.appbar.tsx', () => {
+  // Minimal mock of StateApp; components under test don't read fields
+    const mockApp = {} as unknown as StateApp;
   it('should render middle search appbar correctly', () => {
     const mockPage = createMockPage()
     
     const { getByTestId } = renderWithProviders(
-      <AppbarMidSearch def={mockPage} />
+      <AppbarMidSearch instance={mockPage} app={mockApp} />
     )
     
     expect(getByTestId('middle-search-appbar')).toBeInTheDocument()
@@ -36,7 +39,7 @@ describe('src/mui/appbar/state.jsx.middle-search.appbar.tsx', () => {
     const mockPage = createMockPage()
     
     const { getByTestId } = renderWithProviders(
-      <AppbarMidSearch def={mockPage} />
+      <AppbarMidSearch instance={mockPage} app={mockApp} />
     )
     
     expect(getByTestId('search-input')).toBeInTheDocument()
@@ -46,7 +49,7 @@ describe('src/mui/appbar/state.jsx.middle-search.appbar.tsx', () => {
     const mockPage = createMockPage()
     
     const { getByText } = renderWithProviders(
-      <AppbarMidSearch def={mockPage} />
+      <AppbarMidSearch instance={mockPage} app={mockApp} />
     )
     
     expect(getByText('Search Page')).toBeInTheDocument()
@@ -56,7 +59,7 @@ describe('src/mui/appbar/state.jsx.middle-search.appbar.tsx', () => {
     const mockPage = createMockPage()
     
     const { getByPlaceholderText } = renderWithProviders(
-      <AppbarMidSearch def={mockPage} />
+      <AppbarMidSearch instance={mockPage} app={mockApp} />
     )
     
     expect(getByPlaceholderText('Search...')).toBeInTheDocument()
@@ -66,7 +69,7 @@ describe('src/mui/appbar/state.jsx.middle-search.appbar.tsx', () => {
     const mockPage = createMockPage()
     
     const { container } = renderWithProviders(
-      <AppbarMidSearch def={mockPage} />
+      <AppbarMidSearch instance={mockPage} app={mockApp} />
     )
     
     const toolbar = container.querySelector('[class*="MuiToolbar"]')

@@ -19,7 +19,7 @@ describe('src/mui/card/index.tsx', () => {
   it('should render basic card correctly', () => {
     const mockCard = createMockCard('basic');
     
-    const { getByTestId, getByText } = render(<Card def={mockCard} />);
+    const { getByTestId, getByText } = render(<Card instance={mockCard} />);
     
     expect(getByTestId('card')).toBeInTheDocument();
     expect(getByText('Test content')).toBeInTheDocument();
@@ -28,7 +28,7 @@ describe('src/mui/card/index.tsx', () => {
   it('should render multi action area card', () => {
     const mockCard = createMockCard('multi_action_area');
     
-    const { container } = render(<Card def={mockCard} />);
+    const { container } = render(<Card instance={mockCard} />);
     const cardElement = container.querySelector('.MuiCard-root');
     
     expect(cardElement).toBeInTheDocument();
@@ -37,7 +37,7 @@ describe('src/mui/card/index.tsx', () => {
   it('should render complex card', () => {
     const mockCard = createMockCard('complex');
     
-    const { container } = render(<Card def={mockCard} />);
+    const { container } = render(<Card instance={mockCard} />);
     const cardElement = container.querySelector('.MuiCard-root');
     
     expect(cardElement).toBeInTheDocument();
@@ -46,7 +46,7 @@ describe('src/mui/card/index.tsx', () => {
   it('should handle card without actions', () => {
     const mockCard = createMockCard('basic');
     
-    const { container } = render(<Card def={mockCard} />);
+    const { container } = render(<Card instance={mockCard} />);
     const actionsElement = container.querySelector('.MuiCardActions-root');
     
     expect(actionsElement).toBeInTheDocument();

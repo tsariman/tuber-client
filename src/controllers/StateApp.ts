@@ -15,8 +15,6 @@ export default class StateApp extends AbstractState implements IStateApp {
     this._state = state
     this._parent = parent
   }
-
-  /** Get a copy of the app definition. */
   get state(): IStateApp { return this._state }
   /** Chain-access to root definition. */
   get parent(): State | undefined { return this._parent }

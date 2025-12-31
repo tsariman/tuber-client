@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { renderWithProviders } from '../../../test-utils';
 import StateJsxDialogAction from '../../../../mui/dialog/actions/state.jsx';
 import type StateDialog from '../../../../controllers/StateDialog';
-import type { IStateFormItem } from '../../../../localized/interfaces';
+import type { IStateFormItem } from '../../../../interfaces/localized';
 
 // Mock form items and dialog for testing
 const createMockFormItems = (hasButtons: boolean = true): IStateFormItem[] => {
@@ -33,7 +33,7 @@ describe('src/mui/dialog/actions/state.jsx', () => {
     const mockDialog = createMockDialog();
     
     const { container } = renderWithProviders(
-      <StateJsxDialogAction def={mockFormItems} parent={mockDialog} />
+      <StateJsxDialogAction array={mockFormItems} parent={mockDialog} />
     );
     
     const buttons = container.querySelectorAll('button');
@@ -45,7 +45,7 @@ describe('src/mui/dialog/actions/state.jsx', () => {
     const mockDialog = createMockDialog();
     
     const { container } = renderWithProviders(
-      <StateJsxDialogAction def={mockFormItems} parent={mockDialog} />
+      <StateJsxDialogAction array={mockFormItems} parent={mockDialog} />
     );
     
     const buttons = container.querySelectorAll('button');
@@ -71,7 +71,7 @@ describe('src/mui/dialog/actions/state.jsx', () => {
     const mockDialog = createMockDialog();
     
     const { container } = renderWithProviders(
-      <StateJsxDialogAction def={mockFormItems} parent={mockDialog} />
+      <StateJsxDialogAction array={mockFormItems} parent={mockDialog} />
     );
     
     const buttons = container.querySelectorAll('button');
@@ -82,7 +82,7 @@ describe('src/mui/dialog/actions/state.jsx', () => {
     const mockDialog = createMockDialog();
     
     const { container } = renderWithProviders(
-      <StateJsxDialogAction def={[]} parent={mockDialog} />
+      <StateJsxDialogAction array={[]} parent={mockDialog} />
     );
     
     expect(container.firstChild).toBeEmptyDOMElement();

@@ -23,7 +23,6 @@ vi.mock('../../state', () => ({
 const mockParentState = {
   // Mock basic State methods used by StateApp
   die: vi.fn((_msg: string, defaultVal: unknown) => defaultVal),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 } as any;
 
 vi.mock('../../controllers/State', () => ({

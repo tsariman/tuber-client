@@ -34,7 +34,7 @@ describe('src/mui/drawer/responsive.drawer.tsx', () => {
     const mockDrawer = createMockResponsiveDrawer(true, false);
     
     const { getByTestId } = renderWithProviders(
-      <ResponsiveDrawer def={mockDrawer} />
+      <ResponsiveDrawer instance={mockDrawer} />
     );
     
     expect(getByTestId('responsive-drawer')).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe('src/mui/drawer/responsive.drawer.tsx', () => {
     const mockDrawer = createMockResponsiveDrawer(true, false);
     
     const { getByTestId } = renderWithProviders(
-      <ResponsiveDrawer def={mockDrawer} />
+      <ResponsiveDrawer instance={mockDrawer} />
     );
     
     expect(getByTestId('drawer-item-overview')).toBeInTheDocument();
@@ -55,7 +55,7 @@ describe('src/mui/drawer/responsive.drawer.tsx', () => {
     const mockDrawer = createMockResponsiveDrawer(false, true);
     
     const { getByTestId } = renderWithProviders(
-      <ResponsiveDrawer def={mockDrawer} />
+      <ResponsiveDrawer instance={mockDrawer} />
     );
     
     expect(getByTestId('responsive-drawer')).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe('src/mui/drawer/responsive.drawer.tsx', () => {
     const mockDrawer = createMockResponsiveDrawer(false, false);
     
     const { container } = renderWithProviders(
-      <ResponsiveDrawer def={mockDrawer} />
+      <ResponsiveDrawer instance={mockDrawer} />
     );
     
     expect(container.firstChild).toBeInTheDocument();
@@ -75,7 +75,7 @@ describe('src/mui/drawer/responsive.drawer.tsx', () => {
     const mockDrawer = createMockResponsiveDrawer(true, false);
     
     const { getByTestId } = renderWithProviders(
-      <ResponsiveDrawer def={mockDrawer} />
+      <ResponsiveDrawer instance={mockDrawer} />
     );
     
     const drawer = getByTestId('responsive-drawer');

@@ -33,7 +33,7 @@ describe('src/mui/drawer/temporary.drawer.tsx', () => {
     const mockDrawer = createMockTempDrawer(true);
     
     const { getByTestId } = renderWithProviders(
-      <TempDrawer def={mockDrawer} />
+      <TempDrawer instance={mockDrawer} />
     );
     
     expect(getByTestId('temp-drawer')).toBeInTheDocument();
@@ -43,7 +43,7 @@ describe('src/mui/drawer/temporary.drawer.tsx', () => {
     const mockDrawer = createMockTempDrawer(true);
     
     const { getByTestId } = renderWithProviders(
-      <TempDrawer def={mockDrawer} />
+      <TempDrawer instance={mockDrawer} />
     );
     
     expect(getByTestId('drawer-item-1')).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe('src/mui/drawer/temporary.drawer.tsx', () => {
     const mockDrawer = createMockTempDrawer(false);
     
     const { container } = renderWithProviders(
-      <TempDrawer def={mockDrawer} />
+      <TempDrawer instance={mockDrawer} />
     );
     
     expect(container.firstChild).toBeInTheDocument();
@@ -64,7 +64,7 @@ describe('src/mui/drawer/temporary.drawer.tsx', () => {
     const mockDrawer = createMockTempDrawer(true);
     
     const { getByTestId } = renderWithProviders(
-      <TempDrawer def={mockDrawer} />
+      <TempDrawer instance={mockDrawer} />
     );
     
     const drawer = getByTestId('temp-drawer');
@@ -75,7 +75,7 @@ describe('src/mui/drawer/temporary.drawer.tsx', () => {
     const mockDrawer = createMockTempDrawer(true);
     
     const { container } = renderWithProviders(
-      <TempDrawer def={mockDrawer} />
+      <TempDrawer instance={mockDrawer} />
     );
     
     const drawerElement = container.querySelector('[class*="MuiDrawer"]');

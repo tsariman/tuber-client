@@ -21,7 +21,7 @@ import StateForm from '../../controllers/StateForm';
 import StateAllForms from '../../controllers/StateAllForms';
 import State from '../../controllers/State';
 import StateFormItem from '../../controllers/StateFormItem';
-import type { IStateForm, IStateFormItem } from '../../localized/interfaces';
+import type { IStateForm, IStateFormItem } from '../../interfaces/localized';
 import initialState from '../../state/initial.state';
 
 // Mock State class
@@ -168,7 +168,7 @@ describe('StateForm', () => {
       const mockFormsDataErrors = {
         getCount: vi.fn(() => 0)
       };
-      form.configure({ formsDataErrors: mockFormsDataErrors });
+      form.configure({ formsDataErrors: mockFormsDataErrors as any });
       expect(form.errorCount).toBe(0);
     });
 

@@ -24,7 +24,7 @@ describe('src/mui/dialog/actions/state.jsx.form.button.tsx', () => {
     const mockButton = createMockFormButton('Submit Form');
     
     const { getByTestId, getByText } = renderWithProviders(
-      <StateJsxDialogAction def={mockButton} />
+      <StateJsxDialogAction instance={mockButton} />
     );
     
     expect(getByTestId('form-button')).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('src/mui/dialog/actions/state.jsx.form.button.tsx', () => {
     const mockButton = createMockFormButton('Save');
     
     const { getByTestId } = renderWithProviders(
-      <StateJsxDialogAction def={mockButton} />
+      <StateJsxDialogAction instance={mockButton} />
     );
     
     const button = getByTestId('form-button');
@@ -46,7 +46,7 @@ describe('src/mui/dialog/actions/state.jsx.form.button.tsx', () => {
     const mockButton = createMockFormButton('');
     
     const { container } = renderWithProviders(
-      <StateJsxDialogAction def={mockButton} />
+      <StateJsxDialogAction instance={mockButton} />
     );
     
     const button = container.querySelector('button');

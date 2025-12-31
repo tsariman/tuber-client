@@ -58,7 +58,7 @@ describe('View Component', () => {
     const mockPage = createMockPage('default_landing_page_view');
 
     renderWithProviders(
-      <View def={mockPage as Parameters<typeof View>[0]['def']} />
+      <View instance={mockPage as Parameters<typeof View>[0]['instance']} />
     );
 
     expect(screen.getByTestId('page-landing')).toBeInTheDocument();
@@ -69,7 +69,7 @@ describe('View Component', () => {
     const mockPage = createMockPage('default_success_page_view');
 
     renderWithProviders(
-      <View def={mockPage as Parameters<typeof View>[0]['def']} />
+      <View instance={mockPage as Parameters<typeof View>[0]['instance']} />
     );
 
     expect(screen.getByTestId('page-success')).toBeInTheDocument();
@@ -80,7 +80,7 @@ describe('View Component', () => {
     const mockPage = createMockPage('default_notfound_page_view');
 
     renderWithProviders(
-      <View def={mockPage as Parameters<typeof View>[0]['def']} />
+      <View instance={mockPage as Parameters<typeof View>[0]['instance']} />
     );
 
     expect(screen.getByTestId('page-notfound')).toBeInTheDocument();
@@ -91,7 +91,7 @@ describe('View Component', () => {
     const mockPage = createMockPage('default_errors_page_view');
 
     renderWithProviders(
-      <View def={mockPage as Parameters<typeof View>[0]['def']} />
+      <View instance={mockPage as Parameters<typeof View>[0]['instance']} />
     );
 
     expect(screen.getByTestId('page-errors')).toBeInTheDocument();
@@ -102,7 +102,7 @@ describe('View Component', () => {
     const mockPage = createMockPage('default_blank_page_view');
 
     renderWithProviders(
-      <View def={mockPage as Parameters<typeof View>[0]['def']} />
+      <View instance={mockPage as Parameters<typeof View>[0]['instance']} />
     );
 
     expect(screen.getByTestId('page-blank')).toBeInTheDocument();
@@ -113,7 +113,7 @@ describe('View Component', () => {
     const mockPage = createMockPage('DEFAULT_SUCCESS_PAGE_VIEW');
 
     renderWithProviders(
-      <View def={mockPage as Parameters<typeof View>[0]['def']} />
+      <View instance={mockPage as Parameters<typeof View>[0]['instance']} />
     );
 
     expect(screen.getByTestId('page-success')).toBeInTheDocument();
@@ -123,7 +123,7 @@ describe('View Component', () => {
     const mockPage = createMockPage('table_view');
 
     const { container } = renderWithProviders(
-      <View def={mockPage as Parameters<typeof View>[0]['def']} />
+      <View instance={mockPage as Parameters<typeof View>[0]['instance']} />
     );
 
     expect(mockErr).toHaveBeenCalledWith('Not implemented yet.');
@@ -135,7 +135,7 @@ describe('View Component', () => {
     const mockPage = createMockPage('unknown_view');
 
     const { container } = renderWithProviders(
-      <View def={mockPage as Parameters<typeof View>[0]['def']} />
+      <View instance={mockPage as Parameters<typeof View>[0]['instance']} />
     );
 
     expect(container.firstChild).toBeNull();
@@ -154,7 +154,7 @@ describe('View Component', () => {
     });
 
     const { container } = renderWithProviders(
-      <View def={mockPage as Parameters<typeof View>[0]['def']} />
+      <View instance={mockPage as Parameters<typeof View>[0]['instance']} />
     );
 
     // Should return null when exception occurs
@@ -169,7 +169,7 @@ describe('View Component', () => {
     const mockPage = createMockPage('Default_Landing_Page_View');
 
     renderWithProviders(
-      <View def={mockPage as Parameters<typeof View>[0]['def']} />
+      <View instance={mockPage as Parameters<typeof View>[0]['instance']} />
     );
 
     expect(screen.getByTestId('page-landing')).toBeInTheDocument();
@@ -179,7 +179,7 @@ describe('View Component', () => {
     const mockPage = createMockPage('default_landing_page_view');
 
     renderWithProviders(
-      <View def={mockPage as Parameters<typeof View>[0]['def']} />
+      <View instance={mockPage as Parameters<typeof View>[0]['instance']} />
     );
 
     // Verify the page component renders (which means it received the def prop)

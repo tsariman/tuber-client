@@ -32,7 +32,7 @@ describe('src/mui/card/state.jsx.card.action.button.tsx', () => {
     const mockCard = createMockCardWithButton('Featured Article');
     
     const { getByTestId, getByText } = renderWithProviders(
-      <StateJsxCard def={mockCard} />
+      <StateJsxCard instance={mockCard} />
     );
     
     expect(getByTestId('action-card')).toBeInTheDocument();
@@ -43,7 +43,7 @@ describe('src/mui/card/state.jsx.card.action.button.tsx', () => {
     const mockCard = createMockCardWithButton();
     
     const { getByTestId } = renderWithProviders(
-      <StateJsxCard def={mockCard} />
+      <StateJsxCard instance={mockCard} />
     );
     
     expect(getByTestId('card-action-button')).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe('src/mui/card/state.jsx.card.action.button.tsx', () => {
     const mockCard = createMockCardWithButton();
     
     const { getByText } = renderWithProviders(
-      <StateJsxCard def={mockCard} />
+      <StateJsxCard instance={mockCard} />
     );
     
     expect(getByText('Card with action button')).toBeInTheDocument();
@@ -64,7 +64,7 @@ describe('src/mui/card/state.jsx.card.action.button.tsx', () => {
     const mockCard = createMockCardWithButton();
     
     const { getByText } = renderWithProviders(
-      <StateJsxCard def={mockCard} />
+      <StateJsxCard instance={mockCard} />
     );
     
     expect(getByText('Learn More')).toBeInTheDocument();
@@ -75,7 +75,7 @@ describe('src/mui/card/state.jsx.card.action.button.tsx', () => {
     const mockCard = createMockCardWithButton();
     
     const { getByTestId } = renderWithProviders(
-      <StateJsxCard def={mockCard} />
+      <StateJsxCard instance={mockCard} />
     );
     
     expect(getByTestId('action-card')).toBeInTheDocument();

@@ -32,7 +32,7 @@ describe('src/mui/dialog/form/dialog.phone.input.tsx', () => {
     const mockInput = createMockPhoneInput('Mobile Phone');
     
     const { getByTestId } = renderWithProviders(
-      <DialogPhoneInput def={mockInput} hive={hive} />
+      <DialogPhoneInput instance={mockInput} hive={hive} />
     );
     
     expect(getByTestId('dialog-phone-input')).toBeInTheDocument();
@@ -42,7 +42,7 @@ describe('src/mui/dialog/form/dialog.phone.input.tsx', () => {
     const mockInput = createMockPhoneInput('Contact Number');
     
     const { getByLabelText } = renderWithProviders(
-      <DialogPhoneInput def={mockInput} hive={hive} />
+      <DialogPhoneInput instance={mockInput} hive={hive} />
     );
     
     expect(getByLabelText('Contact Number')).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('src/mui/dialog/form/dialog.phone.input.tsx', () => {
     const mockInput = createMockPhoneInput('Phone', '+1234567890');
     
     const { container } = renderWithProviders(
-      <DialogPhoneInput def={mockInput} hive={hive} />
+      <DialogPhoneInput instance={mockInput} hive={hive} />
     );
     
     const input = container.querySelector('input');
@@ -63,7 +63,7 @@ describe('src/mui/dialog/form/dialog.phone.input.tsx', () => {
     const mockInput = createMockPhoneInput();
     
     const { container } = renderWithProviders(
-      <DialogPhoneInput def={mockInput} hive={hive} />
+      <DialogPhoneInput instance={mockInput} hive={hive} />
     );
     
     const input = container.querySelector('input');
@@ -77,7 +77,7 @@ describe('src/mui/dialog/form/dialog.phone.input.tsx', () => {
     } as unknown as StateFormItemInput;
     
     const { getByTestId } = renderWithProviders(
-      <DialogPhoneInput def={mockInput} hive={hive} />
+      <DialogPhoneInput instance={mockInput} hive={hive} />
     );
     
     expect(getByTestId('dialog-phone-input')).toBeDisabled();

@@ -35,7 +35,7 @@ describe('PageSuccess Component', () => {
     const mockPage = createMockPage();
 
     renderWithProviders(
-      <PageSuccess def={mockPage as Parameters<typeof PageSuccess>[0]['def']} />
+      <PageSuccess instance={mockPage as Parameters<typeof PageSuccess>[0]['instance']} />
     );
 
     expect(screen.getByTestId('icon-check_circle_outline')).toBeInTheDocument();
@@ -46,7 +46,7 @@ describe('PageSuccess Component', () => {
     const mockPage = createMockPage(testMessage);
 
     renderWithProviders(
-      <PageSuccess def={mockPage as Parameters<typeof PageSuccess>[0]['def']} />
+      <PageSuccess instance={mockPage as Parameters<typeof PageSuccess>[0]['instance']} />
     );
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(testMessage);
@@ -57,7 +57,7 @@ describe('PageSuccess Component', () => {
     const mockPage = createMockPage('Success!', testColor);
 
     renderWithProviders(
-      <PageSuccess def={mockPage as Parameters<typeof PageSuccess>[0]['def']} />
+      <PageSuccess instance={mockPage as Parameters<typeof PageSuccess>[0]['instance']} />
     );
 
     const messageDiv = screen.getByText('Success!').parentElement;
@@ -68,7 +68,7 @@ describe('PageSuccess Component', () => {
     const mockPage = createMockPage();
 
     renderWithProviders(
-      <PageSuccess def={mockPage as Parameters<typeof PageSuccess>[0]['def']} />
+      <PageSuccess instance={mockPage as Parameters<typeof PageSuccess>[0]['instance']} />
     );
 
     const messageDiv = screen.getByText('Success!').parentElement;
@@ -82,7 +82,7 @@ describe('PageSuccess Component', () => {
     const mockPage = createMockPage();
 
     renderWithProviders(
-      <PageSuccess def={mockPage as Parameters<typeof PageSuccess>[0]['def']} />
+      <PageSuccess instance={mockPage as Parameters<typeof PageSuccess>[0]['instance']} />
     );
 
     const icon = screen.getByTestId('icon-check_circle_outline');
@@ -96,7 +96,7 @@ describe('PageSuccess Component', () => {
     const mockPage = createMockPage();
 
     renderWithProviders(
-      <PageSuccess def={mockPage as Parameters<typeof PageSuccess>[0]['def']} />
+      <PageSuccess instance={mockPage as Parameters<typeof PageSuccess>[0]['instance']} />
     );
 
     expect(screen.getByTestId('icon-check_circle_outline')).toBeInTheDocument();
@@ -107,7 +107,7 @@ describe('PageSuccess Component', () => {
     const mockPage = createMockPage('');
 
     renderWithProviders(
-      <PageSuccess def={mockPage as Parameters<typeof PageSuccess>[0]['def']} />
+      <PageSuccess instance={mockPage as Parameters<typeof PageSuccess>[0]['instance']} />
     );
 
     const heading = screen.getByRole('heading', { level: 1 });

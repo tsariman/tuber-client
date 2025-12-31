@@ -45,7 +45,7 @@ describe('AppPage Component', () => {
     mockGetPage.mockReturnValue(mockPage);
 
     renderWithProviders(
-      <AppPage def={mockAllPages as Parameters<typeof AppPage>[0]['def']} info={mockApp as Parameters<typeof AppPage>[0]['info']} />
+      <AppPage instance={mockAllPages as Parameters<typeof AppPage>[0]['instance']} app={mockApp as Parameters<typeof AppPage>[0]['app']} />
     );
 
     expect(screen.getByTestId('generic-app')).toBeInTheDocument();
@@ -57,7 +57,7 @@ describe('AppPage Component', () => {
     mockGetPage.mockReturnValue(mockPage);
 
     renderWithProviders(
-      <AppPage def={mockAllPages as Parameters<typeof AppPage>[0]['def']} info={mockApp as Parameters<typeof AppPage>[0]['info']} />
+      <AppPage instance={mockAllPages as Parameters<typeof AppPage>[0]['instance']} app={mockApp as Parameters<typeof AppPage>[0]['app']} />
     );
 
     expect(screen.getByTestId('complex-app')).toBeInTheDocument();
@@ -69,7 +69,7 @@ describe('AppPage Component', () => {
     mockGetPage.mockReturnValue(mockPage);
 
     renderWithProviders(
-      <AppPage def={mockAllPages as Parameters<typeof AppPage>[0]['def']} info={mockApp as Parameters<typeof AppPage>[0]['info']} />
+      <AppPage instance={mockAllPages as Parameters<typeof AppPage>[0]['instance']} app={mockApp as Parameters<typeof AppPage>[0]['app']} />
     );
 
     expect(mockGetPage).toHaveBeenCalledWith(mockApp);
@@ -80,7 +80,7 @@ describe('AppPage Component', () => {
     mockGetPage.mockReturnValue(mockPage);
 
     const { container } = renderWithProviders(
-      <AppPage def={mockAllPages as Parameters<typeof AppPage>[0]['def']} info={mockApp as Parameters<typeof AppPage>[0]['info']} />
+      <AppPage instance={mockAllPages as Parameters<typeof AppPage>[0]['instance']} app={mockApp as Parameters<typeof AppPage>[0]['app']} />
     );
 
     // Fragment doesn't create extra DOM nodes

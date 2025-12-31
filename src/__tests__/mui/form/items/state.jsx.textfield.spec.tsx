@@ -31,7 +31,7 @@ describe('src/mui/form/items/state.jsx.textfield.tsx', () => {
       const mockField = createMockTextfield('Name');
       
       const { getByTestId } = renderWithProviders(
-        <StateJsxTextfield def={mockField} />
+        <StateJsxTextfield instance={mockField} />
       );
       
       expect(getByTestId('test-textfield')).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe('src/mui/form/items/state.jsx.textfield.tsx', () => {
       const mockField = createMockTextfield('Email Address');
       
       const { getByLabelText } = renderWithProviders(
-        <StateJsxTextfield def={mockField} />
+        <StateJsxTextfield instance={mockField} />
       );
       
       expect(getByLabelText('Email Address')).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe('src/mui/form/items/state.jsx.textfield.tsx', () => {
       const mockField = createMockTextfield('Required Field', true);
       
       const { getByTestId } = renderWithProviders(
-        <StateJsxTextfield def={mockField} />
+        <StateJsxTextfield instance={mockField} />
       );
       
       expect(getByTestId('test-textfield')).toBeRequired();
@@ -61,7 +61,7 @@ describe('src/mui/form/items/state.jsx.textfield.tsx', () => {
       const mockField = createMockTextfield();
       
       const { container } = renderWithProviders(
-        <StateJsxTextfield def={mockField} />
+        <StateJsxTextfield instance={mockField} />
       );
       
       const input = container.querySelector('input');
@@ -75,7 +75,7 @@ describe('src/mui/form/items/state.jsx.textfield.tsx', () => {
       } as unknown as StateFormItem<StateForm>;
       
       const { getByTestId } = renderWithProviders(
-        <StateJsxTextfield def={mockField} />
+        <StateJsxTextfield instance={mockField} />
       );
       
       expect(getByTestId('test-textfield')).toBeDisabled();

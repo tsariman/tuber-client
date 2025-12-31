@@ -26,7 +26,7 @@ describe('src/mui/form/items/index.tsx', () => {
     const mockForm = createMockForm(true);
     
     const { container } = renderWithProviders(
-      <FormItems def={mockForm} />
+      <FormItems instance={mockForm} />
     );
     
     // Should render some form elements
@@ -37,7 +37,7 @@ describe('src/mui/form/items/index.tsx', () => {
     const mockForm = createMockForm(false);
     
     const { container } = renderWithProviders(
-      <FormItems def={mockForm} />
+      <FormItems instance={mockForm} />
     );
     
     // Should still render container but with no form elements
@@ -48,7 +48,7 @@ describe('src/mui/form/items/index.tsx', () => {
     const mockForm = createMockForm(true);
     
     const { container } = renderWithProviders(
-      <FormItems def={mockForm} />
+      <FormItems instance={mockForm} />
     );
     
     // Should contain form elements
@@ -63,7 +63,7 @@ describe('src/mui/form/items/index.tsx', () => {
     } as unknown as StateForm;
     
     const { container } = renderWithProviders(
-      <FormItems def={mockForm} />
+      <FormItems instance={mockForm} />
     );
     
     expect(container.firstChild).toBeInTheDocument();

@@ -7,7 +7,7 @@ describe('PageLanding Component', () => {
 
   it('should render null', () => {
     const { container } = renderWithProviders(
-      <PageLanding def={mockPage as Parameters<typeof PageLanding>[0]['def']} />
+      <PageLanding instance={mockPage as Parameters<typeof PageLanding>[0]['instance']} />
     );
 
     expect(container.firstChild).toBeNull();
@@ -16,7 +16,7 @@ describe('PageLanding Component', () => {
   it('should accept def prop without errors', () => {
     expect(() => {
       renderWithProviders(
-        <PageLanding def={mockPage as Parameters<typeof PageLanding>[0]['def']} />
+        <PageLanding instance={mockPage as Parameters<typeof PageLanding>[0]['instance']} />
       );
     }).not.toThrow();
   });

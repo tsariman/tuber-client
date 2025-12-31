@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { configureStore } from '@reduxjs/toolkit';
 import dataReducer, { dataActions } from '../../slices/data.slice';
-import type { IJsonapiResource } from '@tuber/shared';
+import type { IJsonapiResource, IJsonapiResponseResource } from '@tuber/shared';
 
 // Create a fresh store for each test to ensure isolation
 const createTestStore = () => configureStore({
@@ -11,7 +11,7 @@ const createTestStore = () => configureStore({
 });
 
 // Test data helpers
-const createBookmark = (id: string, title: string, name?: string): IJsonapiResource => ({
+const createBookmark = (id: string, title: string, name?: string): IJsonapiResponseResource => ({
   id,
   type: 'bookmarks',
   attributes: {
@@ -22,7 +22,7 @@ const createBookmark = (id: string, title: string, name?: string): IJsonapiResou
   }
 });
 
-const createBookmarks = (count: number): IJsonapiResource[] => 
+const createBookmarks = (count: number): IJsonapiResponseResource[] => 
   Array.from({ length: count }, (_, i) => createBookmark(`${i + 1}`, `Bookmark ${i + 1}`));
 
 describe('dataSlice', () => {
@@ -37,7 +37,7 @@ describe('dataSlice', () => {
       const bookmark = createBookmark('1', 'First Bookmark');
       
       store.dispatch(dataActions.dataStack({ 
-        endpoint: 'bookmarks', 
+        collectionName: 'bookmarks', 
         data: bookmark 
       }));
       
@@ -58,7 +58,7 @@ describe('dataSlice', () => {
       
       // Add new item at beginning
       store.dispatch(dataActions.dataStack({ 
-        endpoint: 'bookmarks', 
+        collectionName: 'bookmarks', 
         data: newBookmark 
       }));
       

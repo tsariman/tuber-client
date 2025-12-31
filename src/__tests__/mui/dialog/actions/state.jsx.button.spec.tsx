@@ -25,7 +25,7 @@ describe('src/mui/dialog/actions/state.jsx.button.tsx', () => {
     const mockButton = createMockButton('Click Me');
     
     const { getByTestId, getByText } = renderWithProviders(
-      <StateJsxDialogActionButton def={mockButton} />
+      <StateJsxDialogActionButton instance={mockButton} />
     );
     
     expect(getByTestId('dialog-button')).toBeInTheDocument();
@@ -36,7 +36,7 @@ describe('src/mui/dialog/actions/state.jsx.button.tsx', () => {
     const mockButton = createMockButton('Button with Icon', true, 'left');
     
     const { getByText, container } = renderWithProviders(
-      <StateJsxDialogActionButton def={mockButton} />
+      <StateJsxDialogActionButton instance={mockButton} />
     );
     
     expect(getByText('Button with Icon')).toBeInTheDocument();
@@ -48,7 +48,7 @@ describe('src/mui/dialog/actions/state.jsx.button.tsx', () => {
     const mockButton = createMockButton('Right Icon', true, 'right');
     
     const { getByText, container } = renderWithProviders(
-      <StateJsxDialogActionButton def={mockButton} />
+      <StateJsxDialogActionButton instance={mockButton} />
     );
     
     expect(getByText('Right Icon')).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe('src/mui/dialog/actions/state.jsx.button.tsx', () => {
     const mockButton = createMockButton('', false);
     
     const { getByText } = renderWithProviders(
-      <StateJsxDialogActionButton def={mockButton} />
+      <StateJsxDialogActionButton instance={mockButton} />
     );
     
     expect(getByText('No Text!')).toBeInTheDocument();
@@ -73,7 +73,7 @@ describe('src/mui/dialog/actions/state.jsx.button.tsx', () => {
     } as unknown as StateFormItem<StateDialog>;
     
     const { container } = renderWithProviders(
-      <StateJsxDialogActionButton def={mockButtonIconOnly} />
+      <StateJsxDialogActionButton instance={mockButtonIconOnly} />
     );
     
     const icon = container.querySelector('.MuiIcon-root');

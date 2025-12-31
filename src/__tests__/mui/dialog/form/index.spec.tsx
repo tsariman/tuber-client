@@ -4,7 +4,7 @@ import RecursiveFormItems from '../../../../mui/dialog/form';
 import StateForm from '../../../../controllers/StateForm';
 import { State, StateAllForms, StateFormItem } from '../../../../controllers';
 import { get_state } from '../../../../state';
-import type { IStateFormItem } from '../../../../localized/interfaces';
+import type { IStateFormItem } from '../../../../interfaces/localized';
 
 // Mock the recusive form builder props
 const allForms = new StateAllForms({}, State.fromRootState(get_state()));

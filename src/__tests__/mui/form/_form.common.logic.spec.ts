@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import * as F from '../../../mui/form/_form.common.logic';
-import type { IStateDialog } from '../../../localized/interfaces';
+import type { IStateDialog } from '../../../interfaces/localized';
 
 describe('mui/form/_form.common.logic.ts', () => {
   it('get_bool_type', () => {

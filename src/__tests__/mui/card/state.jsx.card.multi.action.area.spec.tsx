@@ -32,7 +32,7 @@ describe('src/mui/card/state.jsx.card.multi.action.area.tsx', () => {
     const mockCard = createMockMultiActionCard('Interactive Card');
     
     const { getByTestId, getByText } = renderWithProviders(
-      <StateJsxCard def={mockCard} />
+      <StateJsxCard instance={mockCard} />
     );
     
     expect(getByTestId('multi-action-card')).toBeInTheDocument();
@@ -43,7 +43,7 @@ describe('src/mui/card/state.jsx.card.multi.action.area.tsx', () => {
     const mockCard = createMockMultiActionCard();
     
     const { getByTestId } = renderWithProviders(
-      <StateJsxCard def={mockCard} />
+      <StateJsxCard instance={mockCard} />
     );
     
     expect(getByTestId('primary-action-area')).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe('src/mui/card/state.jsx.card.multi.action.area.tsx', () => {
     const mockCard = createMockMultiActionCard();
     
     const { getByText } = renderWithProviders(
-      <StateJsxCard def={mockCard} />
+      <StateJsxCard instance={mockCard} />
     );
     
     expect(getByText('Primary Action')).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe('src/mui/card/state.jsx.card.multi.action.area.tsx', () => {
     const mockCard = createMockMultiActionCard();
     
     const { getByText } = renderWithProviders(
-      <StateJsxCard def={mockCard} />
+      <StateJsxCard instance={mockCard} />
     );
     
     expect(getByText('Main action area')).toBeInTheDocument();
@@ -76,7 +76,7 @@ describe('src/mui/card/state.jsx.card.multi.action.area.tsx', () => {
     const mockCard = createMockMultiActionCard();
     
     const { getByText } = renderWithProviders(
-      <StateJsxCard def={mockCard} />
+      <StateJsxCard instance={mockCard} />
     );
     
     expect(getByText('Card with multiple action areas')).toBeInTheDocument();

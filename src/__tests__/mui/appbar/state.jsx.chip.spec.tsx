@@ -16,14 +16,14 @@ const createMockChip = (id: string, label: string): StateFormItemCustomChip<unkn
 
 describe('src/mui/appbar/state.jsx.chip.tsx', () => {
   it('should render empty when no chips are provided', () => {
-    const { container } = renderWithProviders(<StateJsxChip def={[]} />);
+    const { container } = renderWithProviders(<StateJsxChip array={[]} />);
     expect(container.firstChild).toBeEmptyDOMElement();
   });
 
   it('should render single chip correctly', () => {
     const mockChips = [createMockChip('chip1', 'Test Chip')];
     
-    const { getByText } = renderWithProviders(<StateJsxChip def={mockChips} />);
+    const { getByText } = renderWithProviders(<StateJsxChip array={mockChips} />);
     expect(getByText('Test Chip')).toBeInTheDocument();
   });
 
@@ -34,7 +34,7 @@ describe('src/mui/appbar/state.jsx.chip.tsx', () => {
       createMockChip('chip3', 'Third Chip'),
     ];
     
-    const { getByText } = renderWithProviders(<StateJsxChip def={mockChips} />);
+    const { getByText } = renderWithProviders(<StateJsxChip array={mockChips} />);
     expect(getByText('First Chip')).toBeInTheDocument();
     expect(getByText('Second Chip')).toBeInTheDocument();
     expect(getByText('Third Chip')).toBeInTheDocument();
@@ -43,13 +43,13 @@ describe('src/mui/appbar/state.jsx.chip.tsx', () => {
   it('should render chips with correct MUI Chip elements', () => {
     const mockChips = [createMockChip('chip1', 'Test Chip')];
     
-    const { container } = renderWithProviders(<StateJsxChip def={mockChips} />);
+    const { container } = renderWithProviders(<StateJsxChip array={mockChips} />);
     const chipElement = container.querySelector('.MuiChip-root');
     expect(chipElement).toBeInTheDocument();
   });
 
   it('should handle empty chip array gracefully', () => {
-    const { container } = renderWithProviders(<StateJsxChip def={[]} />);
+    const { container } = renderWithProviders(<StateJsxChip array={[]} />);
     expect(container.querySelector('.MuiChip-root')).not.toBeInTheDocument();
   });
 });

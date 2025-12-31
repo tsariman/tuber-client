@@ -29,7 +29,7 @@ describe('src/mui/dialog/state.jsx.alert.dialog.tsx', () => {
     const mockDialog = createMockAlertDialog(true, 'Warning');
     
     const { getByTestId, getByText } = renderWithProviders(
-      <StateJsxAlertDialog def={mockDialog} />
+      <StateJsxAlertDialog instance={mockDialog} />
     );
     
     expect(getByTestId('alert-dialog')).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe('src/mui/dialog/state.jsx.alert.dialog.tsx', () => {
     const mockDialog = createMockAlertDialog(true);
     
     const { getByTestId } = renderWithProviders(
-      <StateJsxAlertDialog def={mockDialog} />
+      <StateJsxAlertDialog instance={mockDialog} />
     );
     
     expect(getByTestId('alert-ok-button')).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe('src/mui/dialog/state.jsx.alert.dialog.tsx', () => {
     const mockDialog = createMockAlertDialog(false);
     
     const { container } = renderWithProviders(
-      <StateJsxAlertDialog def={mockDialog} />
+      <StateJsxAlertDialog instance={mockDialog} />
     );
     
     // Dialog should still be in DOM but not visible
@@ -63,7 +63,7 @@ describe('src/mui/dialog/state.jsx.alert.dialog.tsx', () => {
     const mockDialog = createMockAlertDialog(true);
     
     const { getByText } = renderWithProviders(
-      <StateJsxAlertDialog def={mockDialog} />
+      <StateJsxAlertDialog instance={mockDialog} />
     );
     
     expect(getByText('Alert content text')).toBeInTheDocument();

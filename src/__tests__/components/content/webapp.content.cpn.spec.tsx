@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { renderWithProviders, screen } from '../../test-utils';
-import WebApps from '../../../components/content/webapp.content.cpn';
+import WebApps from '../../../components/webapp.cpn';
 import '@testing-library/jest-dom';
 
 // Mock the TubeResearcher component

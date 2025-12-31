@@ -30,7 +30,7 @@ describe('src/mui/dialog/form/dialog.textfield.tsx', () => {
     const hive = {} as Record<string, unknown>;
     
     const { getByTestId } = renderWithProviders(
-      <DialogTextField def={mockField} hive={hive} />
+      <DialogTextField instance={mockField} hive={hive} />
     );
     
     expect(getByTestId('dialog-textfield')).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe('src/mui/dialog/form/dialog.textfield.tsx', () => {
     const hive = {} as Record<string, unknown>;
     
     const { getByLabelText } = renderWithProviders(
-      <DialogTextField def={mockField} hive={hive} />
+      <DialogTextField instance={mockField} hive={hive} />
     );
     
     expect(getByLabelText('Full Name')).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('src/mui/dialog/form/dialog.textfield.tsx', () => {
     const hive = {} as Record<string, unknown>;
     
     const { getByTestId } = renderWithProviders(
-      <DialogTextField def={mockField} hive={hive} />
+      <DialogTextField instance={mockField} hive={hive} />
     );
     
     expect(getByTestId('dialog-textfield')).toBeRequired();
@@ -63,7 +63,7 @@ describe('src/mui/dialog/form/dialog.textfield.tsx', () => {
     const hive = {} as Record<string, unknown>;
     
     const { container } = renderWithProviders(
-      <DialogTextField def={mockField} hive={hive} />
+      <DialogTextField instance={mockField} hive={hive} />
     );
     
     const input = container.querySelector('input');
@@ -78,7 +78,7 @@ describe('src/mui/dialog/form/dialog.textfield.tsx', () => {
     const hive = {} as Record<string, unknown>;
     
     const { getByTestId } = renderWithProviders(
-      <DialogTextField def={mockField} hive={hive} />
+      <DialogTextField instance={mockField} hive={hive} />
     );
     
     expect(getByTestId('dialog-textfield')).toBeDisabled();

@@ -372,11 +372,8 @@ describe('StateFactory', () => {
 
     it('should inject the correct state data to each controller', () => {
       const customRootState = createMockRootState({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         app: { title: 'Custom App' } as any,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         dialog: { open: true } as any,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         background: { color: '#custom' } as any,
       });
       

@@ -43,7 +43,7 @@ describe('src/mui/form/items/state.jsx.select/default.tsx', () => {
     const mockSelect = createMockDefaultSelect('Status');
     
     const { getByTestId } = renderWithProviders(
-      <StateJsxSelectDefault def={mockSelect} />
+      <StateJsxSelectDefault instance={mockSelect} />
     );
     
     expect(getByTestId('default-select')).toBeInTheDocument();
@@ -53,7 +53,7 @@ describe('src/mui/form/items/state.jsx.select/default.tsx', () => {
     const mockSelect = createMockDefaultSelect();
     
     const { getByTestId } = renderWithProviders(
-      <StateJsxSelectDefault def={mockSelect} />
+      <StateJsxSelectDefault instance={mockSelect} />
     );
     
     expect(getByTestId('default-option')).toBeInTheDocument();
@@ -63,7 +63,7 @@ describe('src/mui/form/items/state.jsx.select/default.tsx', () => {
     const mockSelect = createMockDefaultSelect();
     
     const { getByTestId } = renderWithProviders(
-      <StateJsxSelectDefault def={mockSelect} />
+      <StateJsxSelectDefault instance={mockSelect} />
     );
     
     expect(getByTestId('choice-1')).toBeInTheDocument();
@@ -74,7 +74,7 @@ describe('src/mui/form/items/state.jsx.select/default.tsx', () => {
     const mockSelect = createMockDefaultSelect();
     
     const { container } = renderWithProviders(
-      <StateJsxSelectDefault def={mockSelect} />
+      <StateJsxSelectDefault instance={mockSelect} />
     );
     
     const select = container.querySelector('select, input[role="button"]');
@@ -85,7 +85,7 @@ describe('src/mui/form/items/state.jsx.select/default.tsx', () => {
     const mockSelect = createMockDefaultSelect();
     
     const { getByText } = renderWithProviders(
-      <StateJsxSelectDefault def={mockSelect} />
+      <StateJsxSelectDefault instance={mockSelect} />
     );
     
     expect(getByText('Please select an option')).toBeInTheDocument();

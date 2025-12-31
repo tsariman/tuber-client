@@ -57,7 +57,7 @@ describe('PageErrors Component', () => {
 
   it('should render search input', () => {
     renderWithProviders(
-      <PageErrors def={mockPage as Parameters<typeof PageErrors>[0]['def']} />
+      <PageErrors instance={mockPage as Parameters<typeof PageErrors>[0]['instance']} />
     );
 
     expect(screen.getByPlaceholderText('Filter...')).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe('PageErrors Component', () => {
 
   it('should render search icon', () => {
     renderWithProviders(
-      <PageErrors def={mockPage as Parameters<typeof PageErrors>[0]['def']} />
+      <PageErrors instance={mockPage as Parameters<typeof PageErrors>[0]['instance']} />
     );
 
     expect(screen.getByTestId('icon-search')).toBeInTheDocument();
@@ -73,7 +73,7 @@ describe('PageErrors Component', () => {
 
   it('should render error list items', () => {
     renderWithProviders(
-      <PageErrors def={mockPage as Parameters<typeof PageErrors>[0]['def']} />
+      <PageErrors instance={mockPage as Parameters<typeof PageErrors>[0]['instance']} />
     );
 
     expect(screen.getByText('error-1:ERR_001')).toBeInTheDocument();
@@ -86,7 +86,7 @@ describe('PageErrors Component', () => {
     const user = userEvent.setup();
     
     renderWithProviders(
-      <PageErrors def={mockPage as Parameters<typeof PageErrors>[0]['def']} />
+      <PageErrors instance={mockPage as Parameters<typeof PageErrors>[0]['instance']} />
     );
 
     const searchInput = screen.getByPlaceholderText('Filter...');
@@ -97,7 +97,7 @@ describe('PageErrors Component', () => {
 
   it('should not show clear button when filter is empty', () => {
     renderWithProviders(
-      <PageErrors def={mockPage as Parameters<typeof PageErrors>[0]['def']} />
+      <PageErrors instance={mockPage as Parameters<typeof PageErrors>[0]['instance']} />
     );
 
     expect(screen.queryByTestId('icon-close')).not.toBeInTheDocument();
@@ -107,7 +107,7 @@ describe('PageErrors Component', () => {
     const user = userEvent.setup();
     
     renderWithProviders(
-      <PageErrors def={mockPage as Parameters<typeof PageErrors>[0]['def']} />
+      <PageErrors instance={mockPage as Parameters<typeof PageErrors>[0]['instance']} />
     );
 
     const searchInput = screen.getByPlaceholderText('Filter...') as HTMLInputElement;
@@ -129,7 +129,7 @@ describe('PageErrors Component', () => {
     const user = userEvent.setup();
     
     renderWithProviders(
-      <PageErrors def={mockPage as Parameters<typeof PageErrors>[0]['def']} />
+      <PageErrors instance={mockPage as Parameters<typeof PageErrors>[0]['instance']} />
     );
 
     const searchInput = screen.getByPlaceholderText('Filter...') as HTMLInputElement;
@@ -140,7 +140,7 @@ describe('PageErrors Component', () => {
 
   it('should render errors in reverse order', () => {
     renderWithProviders(
-      <PageErrors def={mockPage as Parameters<typeof PageErrors>[0]['def']} />
+      <PageErrors instance={mockPage as Parameters<typeof PageErrors>[0]['instance']} />
     );
 
     const errorItems = screen.getAllByText(/error-\d:ERR_\d+/);
@@ -152,7 +152,7 @@ describe('PageErrors Component', () => {
     mockGetErrorsList.mockReturnValue([]);
     
     renderWithProviders(
-      <PageErrors def={mockPage as Parameters<typeof PageErrors>[0]['def']} />
+      <PageErrors instance={mockPage as Parameters<typeof PageErrors>[0]['instance']} />
     );
 
     expect(screen.getByPlaceholderText('Filter...')).toBeInTheDocument();
@@ -161,7 +161,7 @@ describe('PageErrors Component', () => {
 
   it('should have correct ARIA labels', () => {
     renderWithProviders(
-      <PageErrors def={mockPage as Parameters<typeof PageErrors>[0]['def']} />
+      <PageErrors instance={mockPage as Parameters<typeof PageErrors>[0]['instance']} />
     );
 
     expect(screen.getByLabelText('filter')).toBeInTheDocument();
@@ -176,7 +176,7 @@ describe('PageErrors Component', () => {
 
   it('should call get_errors_list on mount', () => {
     renderWithProviders(
-      <PageErrors def={mockPage as Parameters<typeof PageErrors>[0]['def']} />
+      <PageErrors instance={mockPage as Parameters<typeof PageErrors>[0]['instance']} />
     );
 
     expect(mockGetErrorsList).toHaveBeenCalled();

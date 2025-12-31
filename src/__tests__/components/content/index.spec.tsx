@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
@@ -135,7 +134,7 @@ describe('Content Component Performance & Memoization', () => {
     it('should memoize content constants correctly', () => {
       const page = new MockStatePage('$view', 'test-constants');
       
-      const { rerender } = renderWithProvider(<Content def={page as any} />);
+      const { rerender } = renderWithProvider(<Content instance={page as any} />);
       
       // Constants should be created once and reused
       expect(screen.getByTestId('view-component')).toBeInTheDocument();
@@ -143,7 +142,7 @@ describe('Content Component Performance & Memoization', () => {
       // Re-render with same props - constants should be memoized
       rerender(
         <Provider store={store}>
-          <Content def={page as any} />
+          <Content instance={page as any} />
         </Provider>
       );
       
@@ -154,13 +153,13 @@ describe('Content Component Performance & Memoization', () => {
       const page1 = new MockStatePage('$VIEW', 'test-1'); // Uppercase
       const page2 = new MockStatePage('$view', 'test-2'); // Lowercase
       
-      const { rerender } = renderWithProvider(<Content def={page1 as unknown as StatePage} />);
+      const { rerender } = renderWithProvider(<Content instance={page1 as unknown as StatePage} />);
       expect(screen.getByTestId('view-component')).toBeInTheDocument();
       
       // Change to different case - should recompute
       rerender(
         <Provider store={store}>
-          <Content def={page2 as unknown as StatePage} />
+          <Content instance={page2 as unknown as StatePage} />
         </Provider>
       );
       
@@ -172,7 +171,7 @@ describe('Content Component Performance & Memoization', () => {
       const page = new MockStatePage('$form', 'test-form');
       page.parent.parent.allForms.getForm.mockReturnValue(mockForm);
 
-      renderWithProvider(<Content def={page as any} />);
+      renderWithProvider(<Content instance={page as any} />);
 
       expect(page.parent.parent.allForms.getForm).toHaveBeenCalledWith('test-form');
       expect(mockForm.endpoint).toBe('/api/test');
@@ -182,7 +181,7 @@ describe('Content Component Performance & Memoization', () => {
     it('should memoize form load state computation', () => {
       const page = new MockStatePage('$form_load', 'test-form-load', '/api/test', true);
 
-      renderWithProvider(<Content def={page as any} />);
+      renderWithProvider(<Content instance={page as any} />);
 
       expect(mockDispatch).toHaveBeenCalledWith({
         type: 'POST_REQ_STATE'
@@ -192,13 +191,13 @@ describe('Content Component Performance & Memoization', () => {
     it('should memoize content table creation', () => {
       const page = new MockStatePage('$html', 'test-table');
       
-      const { rerender } = renderWithProvider(<Content def={page as any} />);
+      const { rerender } = renderWithProvider(<Content instance={page as any} />);
       expect(screen.getByTestId('html-component')).toBeInTheDocument();
       
       // Re-render with same type - should use memoized table
       rerender(
         <Provider store={store}>
-          <Content def={page as any} />
+          <Content instance={page as any} />
         </Provider>
       );
       
@@ -208,13 +207,13 @@ describe('Content Component Performance & Memoization', () => {
     it('should memoize final content JSX computation', () => {
       const page = new MockStatePage('$webapp', 'test-jsx');
       
-      const { rerender } = renderWithProvider(<Content def={page as any} />);
+      const { rerender } = renderWithProvider(<Content instance={page as any} />);
       expect(screen.getByTestId('webapp-component')).toBeInTheDocument();
       
       // Re-render with same props - should use memoized JSX
       rerender(
         <Provider store={store}>
-          <Content def={page as any} />
+          <Content instance={page as any} />
         </Provider>
       );
       
@@ -228,45 +227,45 @@ describe('Content Component Performance & Memoization', () => {
       const page = new MockStatePage('$form', 'test-form');
       page.parent.parent.allForms.getForm.mockReturnValue(mockForm);
 
-      renderWithProvider(<Content def={page as unknown as StatePage} />);      expect(screen.getByTestId('form-component')).toBeInTheDocument();
+      renderWithProvider(<Content instance={page as unknown as StatePage} />);      expect(screen.getByTestId('form-component')).toBeInTheDocument();
     });
 
     it('should memoize view content handler', () => {
       const page = new MockStatePage('$view', 'test-view');
-      renderWithProvider(<Content def={page as unknown as StatePage} />);
+      renderWithProvider(<Content instance={page as unknown as StatePage} />);
 
       expect(screen.getByTestId('view-component')).toBeInTheDocument();
     });
 
     it('should memoize webapp content handler with error handling', () => {
       const page = new MockStatePage('$webapp', 'test-webapp');
-      renderWithProvider(<Content def={page as unknown as StatePage} />);
+      renderWithProvider(<Content instance={page as unknown as StatePage} />);
 
       expect(screen.getByTestId('webapp-component')).toBeInTheDocument();
     });
 
     it('should memoize html content handler', () => {
       const page = new MockStatePage('$html', 'test-html');
-      renderWithProvider(<Content def={page as unknown as StatePage} />);
+      renderWithProvider(<Content instance={page as unknown as StatePage} />);
 
       expect(screen.getByTestId('html-component')).toBeInTheDocument();
     });
 
     it('should memoize form load handler', () => {
       const page = new MockStatePage('$form_load', 'test-form-load', '/api/test', true);
-      renderWithProvider(<Content def={page as unknown as StatePage} />);
+      renderWithProvider(<Content instance={page as unknown as StatePage} />);
 
       expect(mockDispatch).toHaveBeenCalled();
     });
 
     it('should memoize html load handler', () => {
       const page = new MockStatePage('$html_load', 'test-html-load');
-      renderWithProvider(<Content def={page as unknown as StatePage} />);
+      renderWithProvider(<Content instance={page as unknown as StatePage} />);
     });
 
     it('should memoize default handler', () => {
       const page = new MockStatePage('unknown_type', 'test-default');
-      renderWithProvider(<Content def={page as unknown as StatePage} />);
+      renderWithProvider(<Content instance={page as unknown as StatePage} />);
 
       expect(screen.getByTestId('default-content')).toBeInTheDocument();
     });
@@ -277,13 +276,13 @@ describe('Content Component Performance & Memoization', () => {
       const page1 = new MockStatePage('$view', 'test-1');
       const page2 = new MockStatePage('$html', 'test-2');
 
-      const { rerender } = renderWithProvider(<Content def={page1 as unknown as StatePage} />);
+      const { rerender } = renderWithProvider(<Content instance={page1 as unknown as StatePage} />);
       expect(screen.getByTestId('view-component')).toBeInTheDocument();
 
       // Change content type - should recompute
       rerender(
         <Provider store={store}>
-          <Content def={page2 as unknown as StatePage} />
+          <Content instance={page2 as unknown as StatePage} />
         </Provider>
       );
 
@@ -300,13 +299,13 @@ describe('Content Component Performance & Memoization', () => {
       page1.parent.parent.allForms.getForm.mockReturnValue(mockForm1);
       page2.parent.parent.allForms.getForm.mockReturnValue(mockForm2);
 
-      const { rerender } = renderWithProvider(<Content def={page1 as unknown as StatePage} />);
+      const { rerender } = renderWithProvider(<Content instance={page1 as unknown as StatePage} />);
       expect(page1.parent.parent.allForms.getForm).toHaveBeenCalledWith('form-1');
 
       // Change form name - should recompute
       rerender(
         <Provider store={store}>
-          <Content def={page2 as unknown as StatePage} />
+          <Content instance={page2 as unknown as StatePage} />
         </Provider>
       );
 
@@ -317,7 +316,7 @@ describe('Content Component Performance & Memoization', () => {
       const page1 = new MockStatePage('$form_load', 'test-form', '/api/test', true);
       const page2 = new MockStatePage('$form_load', 'test-form', '/api/test', false);
 
-      const { rerender } = renderWithProvider(<Content def={page1 as unknown as StatePage} />);
+      const { rerender } = renderWithProvider(<Content instance={page1 as unknown as StatePage} />);
       expect(mockDispatch).toHaveBeenCalled();
 
       vi.clearAllMocks();
@@ -325,7 +324,7 @@ describe('Content Component Performance & Memoization', () => {
       // Change fetching state - should recompute
       rerender(
         <Provider store={store}>
-          <Content def={page2 as unknown as StatePage} />
+          <Content instance={page2 as unknown as StatePage} />
         </Provider>
       );
 
@@ -342,7 +341,7 @@ describe('Content Component Performance & Memoization', () => {
         throw new Error('Test error');
       });
 
-      renderWithProvider(<Content def={page as unknown as StatePage} />);
+      renderWithProvider(<Content instance={page as unknown as StatePage} />);
 
       expect(screen.getByTestId('default-content')).toBeInTheDocument();
     });
@@ -361,7 +360,7 @@ describe('Content Component Performance & Memoization', () => {
       });
 
       try {
-        renderWithProvider(<Content def={page as unknown as StatePage} />);
+        renderWithProvider(<Content instance={page as unknown as StatePage} />);
         // Should handle error gracefully
       } catch {
         // Expected to handle error
@@ -378,7 +377,7 @@ describe('Content Component Performance & Memoization', () => {
       // We can't directly access the memoized constants, but we can test that
       // the component doesn't cause unnecessary re-renders
       const TestWrapper = ({ def }: { def: unknown }) => {
-        return <Content def={def as StatePage} />;
+        return <Content instance={def as StatePage} />;
       };
 
       const { rerender } = renderWithProvider(<TestWrapper def={page} />);
@@ -397,12 +396,12 @@ describe('Content Component Performance & Memoization', () => {
     it('should handle multiple rapid re-renders efficiently', () => {
       const page = new MockStatePage('$html', 'rapid-test') as unknown;
 
-      const { rerender } = renderWithProvider(<Content def={page as StatePage} />);
+      const { rerender } = renderWithProvider(<Content instance={page as StatePage} />);
 
       // Simulate rapid re-renders
       const rerenderComponent = () => (
         <Provider store={store}>
-          <Content def={page as StatePage} />
+          <Content instance={page as StatePage} />
         </Provider>
       );
 
@@ -418,13 +417,13 @@ describe('Content Component Performance & Memoization', () => {
     it('should properly integrate save_content_jsx with memoization', () => {
       const page = new MockStatePage('$view', 'integration-test') as unknown;
 
-      renderWithProvider(<Content def={page as StatePage} />);
+      renderWithProvider(<Content instance={page as StatePage} />);
     });
 
     it('should properly integrate with form state management', () => {
       const page = new MockStatePage('$form_load', 'state-integration') as unknown;
 
-      renderWithProvider(<Content def={page as StatePage} />);
+      renderWithProvider(<Content instance={page as StatePage} />);
     });
   });
 });

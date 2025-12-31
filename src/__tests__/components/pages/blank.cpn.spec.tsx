@@ -135,7 +135,7 @@ describe('PageBlank Component', () => {
 
   it('should render Fragment (empty component)', () => {
     const { container } = renderWithProviders(
-      <PageBlank def={mockPage as Parameters<typeof PageBlank>[0]['def']} />
+      <PageBlank instance={mockPage as Parameters<typeof PageBlank>[0]['instance']} />
     );
 
     // Fragment renders no DOM nodes
@@ -144,7 +144,7 @@ describe('PageBlank Component', () => {
 
   it('should dispatch post_req_state when conditions are met', () => {
     renderWithProviders(
-      <PageBlank def={mockPage as Parameters<typeof PageBlank>[0]['def']} />
+      <PageBlank instance={mockPage as Parameters<typeof PageBlank>[0]['instance']} />
     );
 
     expect(post_req_state).toHaveBeenCalledWith(
@@ -156,7 +156,7 @@ describe('PageBlank Component', () => {
 
   it('should increment load attempts counter', () => {
     renderWithProviders(
-      <PageBlank def={mockPage as Parameters<typeof PageBlank>[0]['def']} />
+      <PageBlank instance={mockPage as Parameters<typeof PageBlank>[0]['instance']} />
     );
 
     expect(vi.mocked(Config.write)).toHaveBeenCalledWith('test-route_load_attempts', 1);
@@ -177,7 +177,7 @@ describe('PageBlank Component', () => {
     } as unknown;
     mockState.app.route = null;
     renderWithProviders(
-      <PageBlank def={mockPageNoRoute as Parameters<typeof PageBlank>[0]['def']} />
+      <PageBlank instance={mockPageNoRoute as Parameters<typeof PageBlank>[0]['instance']} />
     );
 
     expect(post_req_state).not.toHaveBeenCalled();
@@ -199,7 +199,7 @@ describe('PageBlank Component', () => {
     mockState.app.route = 'test-route';
     mockState.app.fetchingStateAllowed = false;
     renderWithProviders(
-      <PageBlank def={mockPageNoFetching as Parameters<typeof PageBlank>[0]['def']} />
+      <PageBlank instance={mockPageNoFetching as Parameters<typeof PageBlank>[0]['instance']} />
     );
 
     expect(post_req_state).not.toHaveBeenCalled();
@@ -213,7 +213,7 @@ describe('PageBlank Component', () => {
     });
     mockState.app.route = 'test-route';
     renderWithProviders(
-      <PageBlank def={mockPage as Parameters<typeof PageBlank>[0]['def']} />
+      <PageBlank instance={mockPage as Parameters<typeof PageBlank>[0]['instance']} />
     );
 
     expect(post_req_state).not.toHaveBeenCalled();
@@ -228,7 +228,7 @@ describe('PageBlank Component', () => {
     });
     mockState.app.route = 'test-route';
     renderWithProviders(
-      <PageBlank def={mockPage as Parameters<typeof PageBlank>[0]['def']} />
+      <PageBlank instance={mockPage as Parameters<typeof PageBlank>[0]['instance']} />
     );
 
     expect(post_req_state).toHaveBeenCalledWith(
