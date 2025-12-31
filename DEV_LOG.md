@@ -1,6 +1,16 @@
 
 # Development Changes Log
 
+## `202512302108` Refactor tests and components to use 'instance' prop instead of 'def' in PageErrors and PageSuccess components
+- Updated data slice tests to use IJsonapiResponseResource
+- Enhanced test-utils with mock store
+- Added select function for resource document retrieval
+- Modified StateAllPages and StateApp for optional parameters
+- Improved StatePagesData to return undefined for missing keys
+- Set initial route state to current pathname
+- Added unit tests for odysee URL parsing
+- Cleaned up common logic for video platform handling and enhanced error handling
+
 ## `202512281653` Refactor content components and remove cacheable wrappers
 
 - Deleted cacheable components: HtmlContentCacheable, HtmlLoadContentCacheable, ViewContentCacheable, WebappContentCacheable.
