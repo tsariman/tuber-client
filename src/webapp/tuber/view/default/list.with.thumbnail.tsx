@@ -19,6 +19,7 @@ const BookmarkListWrapper = styled('div')(({ theme }) => ({
     width: 500,
   },
   width: '100%',
+  paddingLeft: theme.spacing(2),
 }))
 
 const StyledList = styled(List)(({ theme }) => ({
