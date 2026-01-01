@@ -1,5 +1,5 @@
 import { Button, CircularProgress, styled } from '@mui/material'
-import React, { useCallback, useMemo, useEffect, useState } from 'react'
+import React, { useCallback, useMemo, useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import JsonapiPaginationLinks from 'src/business.logic/JsonapiPaginationLinks'
 import { type StateData, StateDataPagesRange } from 'src/controllers'
@@ -130,6 +130,95 @@ const BookmarkLoader = React.memo<ILoadMoreProps>(({
 
   return null
 })
+
+interface IInfiniteScrollTriggerProps {
+  def?: StateData
+  scrollContainerRef: React.RefObject<HTMLDivElement | null>
+}
+
+/**
+ * Infinite scroll trigger component that automatically loads more bookmarks when scrolled into view
+ */
+export const InfiniteScrollTrigger = React.memo<IInfiniteScrollTriggerProps>(({ def, scrollContainerRef }) => {
+  const dispatch = useDispatch<AppDispatch>()
+  const appStatus = useSelector((state: RootState) => state.app.status)
+  const dataPagesRange = useSelector((state: RootState) => state.dataPagesRange)
+  const bookmarksLinks = useSelector((state: RootState) => state.topLevelLinks.bookmarks)
+  
+  const triggerRef = useRef<HTMLDivElement>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const hasTriggeredRef = useRef(false) // Prevent duplicate triggers
+
+  // Memoize expensive computations
+  const { links, targetPage, hasMorePages } = useMemo(() => {
+    const pageManager = new StateDataPagesRange(dataPagesRange)
+    pageManager.configure({ endpoint: 'bookmarks' })
+    
+    const links = new JsonapiPaginationLinks(bookmarksLinks)
+    
+    const targetPage = pageManager.lastPage + 1
+    const hasMorePages = targetPage <= links.lastPageNumber
+    
+    return { pageManager, links, targetPage, hasMorePages }
+  }, [dataPagesRange, bookmarksLinks])
+
+  // Reset trigger flag when target page changes (new data loaded)
+  useEffect(() => {
+    hasTriggeredRef.current = false
+  }, [targetPage])
+
+  // Intersection Observer effect with proper root element
+  useEffect(() => {
+    const element = triggerRef.current
+    const scrollContainer = scrollContainerRef.current
+    if (!element || !scrollContainer || !hasMorePages || isLoading || appStatus === APP_IS_FETCHING_BOOKMARKS) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries
+        if (entry.isIntersecting && !hasTriggeredRef.current) {
+          hasTriggeredRef.current = true
+          setIsLoading(true)
+          dispatch(appSetFetchMessage(APP_IS_FETCHING_BOOKMARKS))
+          dispatch(get_req_state('bookmarks', links.getLinkUrl({ pageNumber: targetPage })))
+        }
+      },
+      {
+        root: scrollContainer, // Use the actual scroll container as root
+        rootMargin: '200px', // Start loading 200px before the element comes into view
+        threshold: 0
+      }
+    )
+
+    observer.observe(element)
+
+    return () => {
+      observer.disconnect() // Full cleanup
+    }
+  }, [hasMorePages, isLoading, appStatus, dispatch, links, targetPage, scrollContainerRef])
+
+  // Reset loading state when not fetching
+  useEffect(() => {
+    if (appStatus !== APP_IS_FETCHING_BOOKMARKS) {
+      setIsLoading(false)
+    }
+  }, [appStatus])
+
+  // Don't render if no more pages or during initial load
+  if (!hasMorePages || (appStatus === APP_IS_FETCHING_BOOKMARKS && !def?.state?.bookmarks?.length)) {
+    return <div style={{ height: '20px', width: '100%' }} /> // Placeholder to maintain virtual list sizing
+  }
+
+  return (
+    <div ref={triggerRef} style={{ height: '40px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {isLoading && (
+        <LoadingProgress text="Loading more bookmarks..." />
+      )}
+    </div>
+  )
+})
+
+InfiniteScrollTrigger.displayName = 'InfiniteScrollTrigger'
 
 /**
  * Load more bookmarks from the server

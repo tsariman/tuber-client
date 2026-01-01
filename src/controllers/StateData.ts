@@ -120,7 +120,7 @@ export default class StateData extends AbstractState {
     return this
   }
 
-  /** Merges id, type, and the attributes members */
+  /** Merges id, type, and the attributes member */
   flatten(): this {
     if (!this._endpoint) {
       return this.die('StateData: Endpoint not set.', this)
