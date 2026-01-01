@@ -1,10 +1,10 @@
-import { describe, it, expect, vi, beforeAll } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, beforeAll } from 'vitest'
+import { render, screen } from '@testing-library/react'
 
 describe('PageNotFound Component (Isolated)', () => {
   beforeAll(() => {
     // Mock the component directly to avoid controller dependency issues
-    vi.doMock('../../../components/pages/notfound.cpn', () => ({
+    vi.doMock('../../../mui/page/notfound.cpn', () => ({
       default: () => {
         return (
           <>
@@ -15,28 +15,28 @@ describe('PageNotFound Component (Isolated)', () => {
               Page not found
             </h2>
           </>
-        );
+        )
       },
-    }));
-  });
+    }))
+  })
 
   it('should render 404 message', async () => {
-    const { default: PageNotFound } = await import('../../../mui/page/notfound.cpn');
+    const { default: PageNotFound } = await import('../../../mui/page/notfound.cpn')
     
-    render(<PageNotFound def={{} as Parameters<typeof PageNotFound>[0]['def']} />);
+    render(<PageNotFound instance={{} as Parameters<typeof PageNotFound>[0]['instance']} />)
     
-    expect(screen.getByText('404')).toBeInTheDocument();
-    expect(screen.getByText('Page not found')).toBeInTheDocument();
-  });
+    expect(screen.getByText('404')).toBeInTheDocument()
+    expect(screen.getByText('Page not found')).toBeInTheDocument()
+  })
 
   it('should have correct heading structure', async () => {
-    const { default: PageNotFound } = await import('../../../mui/page/notfound.cpn');
+    const { default: PageNotFound } = await import('../../../mui/page/notfound.cpn')
     
-    render(<PageNotFound def={{} as Parameters<typeof PageNotFound>[0]['def']} />);
+    render(<PageNotFound instance={{} as Parameters<typeof PageNotFound>[0]['instance']} />)
     
-    const headings = screen.getAllByRole('heading');
-    expect(headings).toHaveLength(2);
-    expect(headings[0]).toHaveTextContent('404');
-    expect(headings[1]).toHaveTextContent('Page not found');
-  });
-});
+    const headings = screen.getAllByRole('heading')
+    expect(headings).toHaveLength(2)
+    expect(headings[0]).toHaveTextContent('404')
+    expect(headings[1]).toHaveTextContent('Page not found')
+  })
+})

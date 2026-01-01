@@ -1,19 +1,19 @@
-import FormItems from '../mui/form/items'
-import Form from '../mui/form'
+import FormItems from '../../mui/form/items'
+import Form from '../../mui/form'
 import { useDispatch, useSelector } from 'react-redux'
-import type { AppDispatch, RootState } from '../state'
+import type { AppDispatch, RootState } from '../../state'
 import { useEffect, useMemo, type JSX } from 'react'
-import Config from '../config'
+import Config from '../../config'
 import {
   ALLOWED_ATTEMPTS,
   THEME_DEFAULT_MODE,
   THEME_MODE,
   type TThemeMode
 } from '@tuber/shared'
-import { post_req_state } from '../state/net.actions'
-import { StateApp, StateForm, StatePathnames } from '../controllers'
-import StateAllForms from '../controllers/StateAllForms'
-import { get_state_form_name } from '../business.logic/parsing'
+import { post_req_state } from '../../state/net.actions'
+import { StateApp, StateForm, StatePathnames } from '../../controllers'
+import StateAllForms from '../../controllers/StateAllForms'
+import { get_state_form_name } from '../../business.logic/parsing'
 
 interface IFormContent {
   instance: StateForm | null

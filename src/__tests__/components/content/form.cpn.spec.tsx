@@ -1,42 +1,42 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import '@testing-library/jest-dom'
-import { renderWithProviders, screen } from '../../test-utils';
-import FormContent from '../../../components/content/form.cpn';
+import { renderWithProviders, screen } from '../../test-utils'
+import FormContent from '../../../components/content/form.cpn'
 
 // Mock the dependencies
 vi.mock('../../../mui/form/items', () => ({
   default: () => <div data-testid="form-items">Form Items Component</div>,
-}));
+}))
 
 vi.mock('../../../mui/form', () => ({
   default: ({ children }: { children: React.ReactNode }) => (
     <form data-testid="form-wrapper">{children}</form>
   ),
-}));
+}))
 
-const mockConfigRead = vi.fn();
-const mockConfigWrite = vi.fn();
+const mockConfigRead = vi.fn()
+const mockConfigWrite = vi.fn()
 vi.mock('../../../config', () => ({
   default: {
     read: mockConfigRead,
     write: mockConfigWrite,
   },
-}));
+}))
 
 vi.mock('../../../state/net.actions', () => ({
   post_req_state: vi.fn(),
-}));
+}))
 
-const mockGetStateFormName = vi.fn();
+const mockGetStateFormName = vi.fn()
 vi.mock('../../../business.logic/parsing', () => ({
   get_state_form_name: mockGetStateFormName,
-}));
+}))
 
 vi.mock('../../../controllers/StateForm', () => ({
   default: class MockStateForm {
     constructor() {}
   },
-}));
+}))
 
 vi.mock('../../../controllers/StateAllForms', () => ({
   default: class MockStateAllForms {
@@ -44,26 +44,26 @@ vi.mock('../../../controllers/StateAllForms', () => ({
       pathnames: {
         FORMS: '/forms',
       },
-    };
+    }
   },
-}));
+}))
 
 describe('FormContent Component', () => {
-  const mockDispatch = vi.fn();
-  const mockUseSelector = vi.fn();
+  const mockDispatch = vi.fn()
+  const mockUseSelector = vi.fn()
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearAllMocks()
     
     // Mock useDispatch
     vi.doMock('react-redux', async () => {
-      const actual = await vi.importActual('react-redux');
+      const actual = await vi.importActual('react-redux')
       return {
         ...actual,
         useDispatch: () => mockDispatch,
         useSelector: mockUseSelector,
-      };
-    });
+      }
+    })
 
     // Default selector mock
     mockUseSelector.mockImplementation((selector) => {
@@ -72,55 +72,55 @@ describe('FormContent Component', () => {
           fetchingStateAllowed: true,
         },
         forms: {},
-      };
-      return selector(mockState);
-    });
+      }
+      return selector(mockState)
+    })
 
-    mockConfigRead.mockReturnValue('light');
-    mockGetStateFormName.mockReturnValue('test_form');
-  });
+    mockConfigRead.mockReturnValue('light')
+    mockGetStateFormName.mockReturnValue('test_form')
+  })
 
   it('should render Form with FormItems when type is page', () => {
-    const mockDef = {} as unknown;
+    const mockDef = {} as unknown
 
     renderWithProviders(
-      <FormContent def={mockDef as Parameters<typeof FormContent>[0]['def']} type="page" />
-    );
+      <FormContent instance={mockDef as Parameters<typeof FormContent>[0]['instance']} type="page" />
+    )
 
-    expect(screen.getByTestId('form-wrapper')).toBeInTheDocument();
-    expect(screen.getByTestId('form-items')).toBeInTheDocument();
-  });
+    expect(screen.getByTestId('form-wrapper')).toBeInTheDocument()
+    expect(screen.getByTestId('form-items')).toBeInTheDocument()
+  })
 
   it('should render only FormItems when type is dialog', () => {
-    const mockDef = {} as unknown;
+    const mockDef = {} as unknown
 
     renderWithProviders(
-      <FormContent def={mockDef as Parameters<typeof FormContent>[0]['def']} type="dialog" />
-    );
+      <FormContent instance={mockDef as Parameters<typeof FormContent>[0]['instance']} type="dialog" />
+    )
 
-    expect(screen.queryByTestId('form-wrapper')).not.toBeInTheDocument();
-    expect(screen.getByTestId('form-items')).toBeInTheDocument();
-  });
+    expect(screen.queryByTestId('form-wrapper')).not.toBeInTheDocument()
+    expect(screen.getByTestId('form-items')).toBeInTheDocument()
+  })
 
   it('should default to page type when type is not specified', () => {
-    const mockDef = {} as unknown;
+    const mockDef = {} as unknown
 
     renderWithProviders(
-      <FormContent def={mockDef as Parameters<typeof FormContent>[0]['def']} />
-    );
+      <FormContent instance={mockDef as Parameters<typeof FormContent>[0]['instance']} />
+    )
 
-    expect(screen.getByTestId('form-wrapper')).toBeInTheDocument();
-    expect(screen.getByTestId('form-items')).toBeInTheDocument();
-  });
+    expect(screen.getByTestId('form-wrapper')).toBeInTheDocument()
+    expect(screen.getByTestId('form-items')).toBeInTheDocument()
+  })
 
   it('should create new StateForm when def is null', () => {
     renderWithProviders(
-      <FormContent def={null} type="page" />
-    );
+      <FormContent instance={null} type="page" />
+    )
 
-    expect(screen.getByTestId('form-wrapper')).toBeInTheDocument();
-    expect(screen.getByTestId('form-items')).toBeInTheDocument();
-  });
+    expect(screen.getByTestId('form-wrapper')).toBeInTheDocument()
+    expect(screen.getByTestId('form-items')).toBeInTheDocument()
+  })
 
   it('should handle formName parameter', () => {
     mockUseSelector.mockImplementation((selector) => {
@@ -129,16 +129,16 @@ describe('FormContent Component', () => {
           fetchingStateAllowed: true,
         },
         forms: {},
-      };
-      return selector(mockState);
-    });
+      }
+      return selector(mockState)
+    })
 
     renderWithProviders(
-      <FormContent def={null} formName="testForm" type="page" />
-    );
+      <FormContent instance={null} formName="testForm" type="page" />
+    )
 
-    expect(mockGetStateFormName).toHaveBeenCalledWith('testForm');
-  });
+    expect(mockGetStateFormName).toHaveBeenCalledWith('testForm')
+  })
 
   it('should not dispatch when fetchingStateAllowed is false', () => {
     mockUseSelector.mockImplementation((selector) => {
@@ -147,32 +147,32 @@ describe('FormContent Component', () => {
           fetchingStateAllowed: false,
         },
         forms: {},
-      };
-      return selector(mockState);
-    });
+      }
+      return selector(mockState)
+    })
 
     renderWithProviders(
-      <FormContent def={null} formName="testForm" type="page" />
-    );
+      <FormContent instance={null} formName="testForm" type="page" />
+    )
 
-    expect(mockDispatch).not.toHaveBeenCalled();
-  });
+    expect(mockDispatch).not.toHaveBeenCalled()
+  })
 
   it('should not dispatch when def is provided', () => {
-    const mockDef = {} as unknown;
+    const mockDef = {} as unknown
 
     renderWithProviders(
-      <FormContent def={mockDef as Parameters<typeof FormContent>[0]['def']} formName="testForm" type="page" />
-    );
+      <FormContent instance={mockDef as Parameters<typeof FormContent>[0]['instance']} formName="testForm" type="page" />
+    )
 
-    expect(mockDispatch).not.toHaveBeenCalled();
-  });
+    expect(mockDispatch).not.toHaveBeenCalled()
+  })
 
   it('should not dispatch when formName is not provided', () => {
     renderWithProviders(
-      <FormContent def={null} type="page" />
-    );
+      <FormContent instance={null} type="page" />
+    )
 
-    expect(mockDispatch).not.toHaveBeenCalled();
-  });
-});
+    expect(mockDispatch).not.toHaveBeenCalled()
+  })
+})

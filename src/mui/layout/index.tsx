@@ -127,15 +127,17 @@ const Layout = memo(({ instance: page, children }: ILayout) => {
   try {
     if (processedLayout) {
       const Layout = layoutMap[processedLayout]
-      return (
-        <Layout instance={page}>
-          { children }
-        </Layout>
-      )
+      if (Layout) {
+        return (
+          <Layout instance={page}>
+            { children }
+          </Layout>
+        )
+      }
     }
   } catch (e) {
     error_id(2).remember_exception(e) // error 2
-    ler((e as Error).message)
+    ler(e instanceof Error ? e.message : String(e))
   }
   return (
     <Fragment>

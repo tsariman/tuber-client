@@ -49,7 +49,7 @@ describe('src/mui/form/items/state.jsx.input.tsx', () => {
       const mockInput = createMockInput('Username', 'text');
       
       const { getByTestId } = renderWithProviders(
-        <StateJsxInput def={form.items[0]} />
+        <StateJsxInput instance={form.items[0]} />
       );
       
       expect(getByTestId('input-field')).toBeInTheDocument();
@@ -59,7 +59,7 @@ describe('src/mui/form/items/state.jsx.input.tsx', () => {
       const mockInput = createMockInput('Email Address');
       
       const { getByLabelText } = renderWithProviders(
-        <StateJsxInput def={form.items[1]} />
+        <StateJsxInput instance={form.items[1]} />
       );
       
       expect(getByLabelText('Email Address')).toBeInTheDocument();
@@ -69,7 +69,7 @@ describe('src/mui/form/items/state.jsx.input.tsx', () => {
       const mockInput = createMockInput('Password', 'password');
       
       const { container } = renderWithProviders(
-        <StateJsxInput def={form.items[2]} />
+        <StateJsxInput instance={form.items[2]} />
       );
       
       const input = container.querySelector('input[type="password"]');
@@ -80,7 +80,7 @@ describe('src/mui/form/items/state.jsx.input.tsx', () => {
       const mockInput = createMockInput('Phone Number');
       
       const { getByPlaceholderText } = renderWithProviders(
-        <StateJsxInput def={form.items[3]} />
+        <StateJsxInput instance={form.items[3]} />
       );
       
       expect(getByPlaceholderText('Enter phone number')).toBeInTheDocument();
@@ -93,7 +93,7 @@ describe('src/mui/form/items/state.jsx.input.tsx', () => {
       } as unknown as Record<string, unknown>;
       
       const { getByTestId } = renderWithProviders(
-        <StateJsxInput def={form.items[4]} />
+        <StateJsxInput instance={form.items[4]} />
       );
       
       expect(getByTestId('input-field')).toBeDisabled();

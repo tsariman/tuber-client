@@ -1,6 +1,6 @@
 import type { JSX } from 'react';
-import StatePage from '../controllers/StatePage';
-import TubeResearcher from '../webapp/tuber/view/default';
+import StatePage from '../../controllers/StatePage';
+import TubeResearcher from '../../webapp/tuber/view/default';
 
 export interface IWebApps {
   [app: string]: JSX.Element;

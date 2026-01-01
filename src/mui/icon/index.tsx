@@ -1,8 +1,8 @@
 import { Badge, Icon as MuiIcon, SvgIcon } from '@mui/material'
-import {type StateFormItemCustom } from '../../controllers'
+import type { StateFormItemCustom } from '../../controllers'
 import StateAllIcons from '../../controllers/StateAllIcons'
 import type StateIcon from '../../controllers/StateIcon'
-import { Fragment, useMemo, type JSX } from 'react'
+import { Fragment, memo, useMemo, type JSX } from 'react'
 import { useSelector } from 'react-redux'
 import type { RootState } from '../../state'
 import StateJsxSvgIcon from './state.jsx.svg.icon'
@@ -91,7 +91,7 @@ export const StateJsxIcon = ({ name, config } : IStateJsxIconProps) => {
   )
 }
 
-const StateJsxBadgedIcon = (({ instance: has }: IJsonIconProps) => {
+const StateJsxBadgedIcon = memo(({ instance: has }: IJsonIconProps) => {
   const badgeProps = useMemo(() => ({
     color: 'error' as const,
     ...has.badge,
@@ -113,5 +113,7 @@ const StateJsxBadgedIcon = (({ instance: has }: IJsonIconProps) => {
     </Fragment>
   )
 })
+
+StateJsxBadgedIcon.displayName = 'StateJsxBadgedIcon'
 
 export default StateJsxBadgedIcon

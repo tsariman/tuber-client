@@ -1,6 +1,17 @@
 
 # Development Changes Log
 
+## `202512311903` Refactor Spinner Component Tests and Enhance Coverage
+
+- Restructured tests for the Spinner component to improve readability and organization.
+- Added new test cases for visibility control based on various states (showSpinner, spinnerDisabled, status).
+- Introduced tests for spinner properties, layout, and accessibility.
+- Removed outdated tests for state.jsx.icons and state.jsx.imported.svg.icons.
+- Implemented a new FormContent component to handle form rendering logic.
+- Updated imports in content components to reflect new structure.
+- Enhanced error handling and logging in layout and dialog components.
+- Added memoization for performance optimization in icon components.
+
 ## `202512302108` Refactor tests and components to use 'instance' prop instead of 'def' in PageErrors and PageSuccess components
 - Updated data slice tests to use IJsonapiResponseResource
 - Enhanced test-utils with mock store

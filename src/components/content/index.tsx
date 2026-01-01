@@ -14,11 +14,11 @@ import StateAllForms from '../../controllers/StateAllForms'
 import StatePathnames from '../../controllers/StatePathnames'
 import StateApp from '../../controllers/StateApp'
 import { post_req_state } from '../../state/net.actions'
-import FormContent from '../form.cpn'
-import ViewContent from '../view.cpn'
-import WebappContent from '../webapp.cpn'
+import FormContent from './form.cpn'
+import ViewContent from './view.cpn'
+import WebappContent from './webapp.cpn'
 import HtmlContent from '../../mui/content/html.cpn'
-import PageNotFound from 'src/mui/page/notfound.cpn'
+import PageNotFound from '../../mui/page/notfound.cpn'
 
 interface IContent { instance: StatePage }
 

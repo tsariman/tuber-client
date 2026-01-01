@@ -25,4 +25,6 @@ const StateJsxDialogAction = memo(({
   )
 })
 
+StateJsxDialogAction.displayName = 'StateJsxDialogAction'
+
 export default StateJsxDialogAction

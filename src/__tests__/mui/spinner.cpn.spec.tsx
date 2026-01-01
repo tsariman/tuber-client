@@ -4,108 +4,353 @@ import Spinner from '../../mui/spinner.cpn';
 import { APP_IS_FETCHING } from '@tuber/shared';
 
 describe('Spinner Component', () => {
-  it('should render spinner when showSpinner is true and status is fetching', () => {
-    const mockStore = {
-      app: {
-        showSpinner: true,
-        status: APP_IS_FETCHING,
-        spinnerDisabled: false,
-      },
-    };
+  describe('Visibility Control', () => {
+    it('renders spinner when showSpinner is true and status is fetching', () => {
+      const { container } = renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: true,
+            status: APP_IS_FETCHING,
+            spinnerDisabled: false,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
 
-    renderWithProviders(<Spinner />, {
-      preloadedState: mockStore,
+      const spinner = screen.getByRole('progressbar');
+      expect(spinner).toBeInTheDocument();
+      expect(spinner).toBeVisible();
     });
 
-    const spinner = screen.getByRole('progressbar');
-    expect(spinner).toBeInTheDocument();
-    expect(spinner).toBeVisible();
+    it('hides spinner when showSpinner is false', () => {
+      const { container } = renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: false,
+            status: APP_IS_FETCHING,
+            spinnerDisabled: false,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
+
+      // Spinner is rendered but hidden with display: none
+      const background = container.querySelector('div[style*="display: none"]');
+      expect(background).toBeInTheDocument();
+    });
+
+    it('hides spinner when spinnerDisabled is true', () => {
+      const { container } = renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: true,
+            status: APP_IS_FETCHING,
+            spinnerDisabled: true,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
+
+      const background = container.querySelector('div[style*="display: none"]');
+      expect(background).toBeInTheDocument();
+    });
+
+    it('hides spinner when status is not fetching', () => {
+      const { container } = renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: true,
+            status: 'idle',
+            spinnerDisabled: false,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
+
+      const background = container.querySelector('div[style*="display: none"]');
+      expect(background).toBeInTheDocument();
+    });
+
+    it('renders spinner when status is undefined', () => {
+      const { container } = renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: true,
+            status: undefined,
+            spinnerDisabled: false,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
+
+      const spinner = screen.getByRole('progressbar');
+      expect(spinner).toBeInTheDocument();
+      expect(spinner).toBeVisible();
+    });
   });
 
-  it('should not render spinner when showSpinner is false', () => {
-    const mockStore = {
-      app: {
-        showSpinner: false,
-        status: APP_IS_FETCHING,
-        spinnerDisabled: false,
-      },
-    };
+  describe('Spinner Properties', () => {
+    it('renders CircularProgress with correct properties', () => {
+      renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: true,
+            status: APP_IS_FETCHING,
+            spinnerDisabled: false,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
 
-    renderWithProviders(<Spinner />, {
-      preloadedState: mockStore,
+      const spinner = screen.getByRole('progressbar');
+      expect(spinner).toHaveClass('MuiCircularProgress-root');
+      expect(spinner).toHaveClass('MuiCircularProgress-colorSecondary');
     });
 
-    const spinner = screen.getByRole('progressbar');
-    expect(spinner).not.toBeVisible();
+    it('has correct styling and z-index', () => {
+      const { container } = renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: true,
+            status: APP_IS_FETCHING,
+            spinnerDisabled: false,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
+
+      const background = container.firstChild as HTMLElement;
+      expect(background).toBeInTheDocument();
+      // Background should be visible when open
+      expect(background.style.display).toBe('block');
+    });
   });
 
-  it('should not render spinner when spinnerDisabled is true', () => {
-    const mockStore = {
-      app: {
-        showSpinner: true,
-        status: APP_IS_FETCHING,
-        spinnerDisabled: true,
-      },
-    };
+  describe('State Combinations', () => {
+    it('hides when all conditions are false', () => {
+      const { container } = renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: false,
+            status: 'idle',
+            spinnerDisabled: true,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
 
-    renderWithProviders(<Spinner />, {
-      preloadedState: mockStore,
+      const background = container.querySelector('div[style*="display: none"]');
+      expect(background).toBeInTheDocument();
     });
 
-    const spinner = screen.getByRole('progressbar');
-    expect(spinner).not.toBeVisible();
+    it('shows when showSpinner is true, spinnerDisabled is false, and status is fetching', () => {
+      renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: true,
+            status: APP_IS_FETCHING,
+            spinnerDisabled: false,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
+
+      const spinner = screen.getByRole('progressbar');
+      expect(spinner).toBeVisible();
+    });
+
+    it('handles status success (hides spinner)', () => {
+      const { container } = renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: true,
+            status: 'success',
+            spinnerDisabled: false,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
+
+      const background = container.querySelector('div[style*="display: none"]');
+      expect(background).toBeInTheDocument();
+    });
+
+    it('handles status error (hides spinner)', () => {
+      const { container } = renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: true,
+            status: 'error',
+            spinnerDisabled: false,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
+
+      const background = container.querySelector('div[style*="display: none"]');
+      expect(background).toBeInTheDocument();
+    });
   });
 
-  it('should not render spinner when status is not fetching', () => {
-    const mockStore = {
-      app: {
-        showSpinner: true,
-        status: 'idle',
-        spinnerDisabled: false,
-      },
-    };
+  describe('Layout and Structure', () => {
+    it('renders with Grid layout container', () => {
+      const { container } = renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: true,
+            status: APP_IS_FETCHING,
+            spinnerDisabled: false,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
 
-    renderWithProviders(<Spinner />, {
-      preloadedState: mockStore,
+      const grid = container.querySelector('.MuiGrid-root');
+      expect(grid).toBeInTheDocument();
     });
 
-    const spinner = screen.getByRole('progressbar');
-    expect(spinner).not.toBeVisible();
+    it('renders background overlay', () => {
+      const { container } = renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: true,
+            status: APP_IS_FETCHING,
+            spinnerDisabled: false,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
+
+      const background = container.firstChild as HTMLElement;
+      expect(background).toBeInTheDocument();
+    });
   });
 
-  it('should render spinner when status is undefined', () => {
-    const mockStore = {
-      app: {
-        showSpinner: true,
-        status: undefined,
-        spinnerDisabled: false,
-      },
-    };
+  describe('Edge Cases', () => {
+    it('handles missing app state gracefully', () => {
+      const { container } = renderWithProviders(<Spinner />, {
+        preloadedState: {}
+      });
 
-    renderWithProviders(<Spinner />, {
-      preloadedState: mockStore,
+      // Should render without crashing
+      expect(container).toBeInTheDocument();
     });
 
-    const spinner = screen.getByRole('progressbar');
-    expect(spinner).toBeVisible();
+    it('handles partial app state', () => {
+      const { container } = renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
+
+      // Should render without crashing
+      expect(container).toBeInTheDocument();
+    });
+
+    it('responds to state changes', () => {
+      // First render with spinner hidden
+      const { container: container1 } = renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: false,
+            status: 'idle',
+            spinnerDisabled: false,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
+
+      // Initially hidden
+      const background = container1.querySelector('div[style*="display: none"]');
+      expect(background).toBeInTheDocument();
+
+      // Second render with spinner visible
+      const { container: container2 } = renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: true,
+            status: APP_IS_FETCHING,
+            spinnerDisabled: false,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
+
+      // Now visible
+      const backgroundVisible = container2.firstChild as HTMLElement;
+      expect(backgroundVisible.style.display).toBe('block');
+    });
   });
 
-  it('should have correct styling properties', () => {
-    const mockStore = {
-      app: {
-        showSpinner: true,
-        status: APP_IS_FETCHING,
-        spinnerDisabled: false,
-      },
-    };
+  describe('Accessibility', () => {
+    it('has progressbar role for screen readers', () => {
+      renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: true,
+            status: APP_IS_FETCHING,
+            spinnerDisabled: false,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
 
-    renderWithProviders(<Spinner />, {
-      preloadedState: mockStore,
+      const spinner = screen.getByRole('progressbar');
+      expect(spinner).toBeInTheDocument();
     });
 
-    const spinner = screen.getByRole('progressbar');
-    expect(spinner).toHaveAttribute('aria-valuenow', '0');
-    // Note: MUI CircularProgress with color='secondary' and specific size/thickness
-    // would need more specific testing based on your theme configuration
+    it('renders indeterminate progress indicator', () => {
+      renderWithProviders(<Spinner />, {
+        preloadedState: {
+          app: {
+            showSpinner: true,
+            status: APP_IS_FETCHING,
+            spinnerDisabled: false,
+            fetchingStateAllowed: true,
+            route: '/',
+            title: 'Test'
+          }
+        }
+      });
+
+      const spinner = screen.getByRole('progressbar');
+      expect(spinner).toHaveClass('MuiCircularProgress-indeterminate');
+    });
   });
 });

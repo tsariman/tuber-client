@@ -1,8 +1,8 @@
-import PageNotFound from '../mui/page/notfound.cpn'
-import StatePage from '../controllers/StatePage'
-import PageErrors from '../mui/page/errors.cpn'
-import PageLanding from './page/landing.cpn'
-import { error_id, err, log } from '../business.logic'
+import PageNotFound from '../../mui/page/notfound.cpn'
+import StatePage from '../../controllers/StatePage'
+import PageErrors from '../../mui/page/errors.cpn'
+import PageLanding from '../page/landing.cpn'
+import { error_id, err, log } from '../../business.logic'
 import { Fragment, type JSX } from 'react'
 import {
   DEFAULT_BLANK_PAGE_VIEW,
@@ -11,7 +11,7 @@ import {
   DEFAULT_NOTFOUND_PAGE_VIEW,
   DEFAULT_SUCCESS_PAGE_VIEW
 } from '@tuber/shared'
-import PageBlank from './page/blank.cpn'
+import PageBlank from '../page/blank.cpn'
 import FeedbackPage from 'src/mui/page/feedback.cpn'
 
 interface IViewContent {
