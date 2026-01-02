@@ -339,11 +339,29 @@ export function has_changes(
     const k = keys[i]
     const newVal = updated[k]
     const oldVal = old[k]
+
+    // Handle null explicitly (typeof null === 'object')
+    if (newVal === null || oldVal === null) {
+      if (newVal !== oldVal) return true
+      continue
+    }
+
+    // Handle NaN (NaN !== NaN is true)
+    if (typeof newVal === 'number' && typeof oldVal === 'number') {
+      if (Number.isNaN(newVal) && Number.isNaN(oldVal)) continue
+      if (newVal !== oldVal) return true
+      continue
+    }
+
     if (Array.isArray(newVal) || typeof newVal === 'object') {
       try {
-        if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) return true
+        // Sort keys for consistent comparison
+        const sortedStringify = (v: unknown) =>
+          JSON.stringify(v, Object.keys(v as object).sort())
+        if (sortedStringify(newVal) !== sortedStringify(oldVal)) return true
       } catch {
-        if (newVal !== oldVal) return true
+        // Circular refs or other issues - assume changed
+        return true
       }
     } else {
       if (newVal !== oldVal) return true
