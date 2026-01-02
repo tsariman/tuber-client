@@ -204,15 +204,18 @@ export const InfiniteScrollTrigger = React.memo<IInfiniteScrollTriggerProps>(({ 
     }
   }, [appStatus])
 
-  // Don't render if no more pages or during initial load
-  if (!hasMorePages || (appStatus === APP_IS_FETCHING_BOOKMARKS && !def?.state?.bookmarks?.length)) {
+  // Show loading progress during initial fetch (empty list)
+  const isInitialLoad = appStatus === APP_IS_FETCHING_BOOKMARKS && !def?.state?.bookmarks?.length
+
+  // Don't render if no more pages (and not initial load)
+  if (!hasMorePages && !isInitialLoad) {
     return <div style={{ height: '20px', width: '100%' }} /> // Placeholder to maintain virtual list sizing
   }
 
   return (
     <div ref={triggerRef} style={{ height: '40px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      {isLoading && (
-        <LoadingProgress text="Loading more bookmarks..." />
+      {(isLoading || isInitialLoad) && (
+        <LoadingProgress text={isInitialLoad ? "Loading bookmarks..." : "Loading more bookmarks..."} />
       )}
     </div>
   )

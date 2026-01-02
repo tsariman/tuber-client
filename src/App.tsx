@@ -5,7 +5,7 @@ import { post_req_state } from './state/net.actions'
 import Config from './config'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
-import AppPage from './components/app.cpn'
+import AppGeneric from './mui/app.generic.cpn'
 import {
   ALLOWED_ATTEMPTS,
   BOOTSTRAP_ATTEMPTS,
@@ -13,16 +13,13 @@ import {
   THEME_MODE
 } from '@tuber/shared'
 import { get_bootstrap_key, get_cookie } from './business.logic/parsing'
-import StateAllPages from './controllers/StateAllPages'
 import StateApp from './controllers/StateApp'
+import Spinner from './mui/spinner.cpn'
 
 export default function App() {
   const dispatch = useDispatch<AppDispatch>()
   const appState = useSelector((state: RootState) => state.app)
   const app = new StateApp(appState)
-  const allPages = new StateAllPages(
-    useSelector((state: RootState) => state.pages)
-  )
   const themeState = useSelector((state: RootState) => state.theme)
 
   // Bootstrap the app from server
@@ -59,7 +56,8 @@ export default function App() {
   return (
     <ThemeProvider theme={createTheme(themeState)}>
       <CssBaseline />
-      <AppPage instance={allPages} app={app} />
+      <AppGeneric instance={app} />
+      <Spinner />
     </ThemeProvider>
   )
 }
