@@ -71,7 +71,12 @@ export default function App() {
         <Spinner />
       </ThemeProvider>
     )
+  } else {
+    return (
+      <ThemeProvider theme={createTheme(themeState)}>
+        <CssBaseline />
+        <Spinner />
+      </ThemeProvider>
+    )
   }
-
-  return null
 }
