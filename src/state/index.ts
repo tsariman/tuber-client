@@ -42,6 +42,7 @@ import {
   NET_STATE_PATCH,
   NET_STATE_PATCH_DELETE,
   STATE_RESET,
+  type IJsonapiStateResponse,
   type TEventHandler,
   type TObj
 } from '@tuber/shared'
@@ -49,8 +50,7 @@ import type { IState, TNetState } from '../interfaces/localized'
 import Config from '../config'
 import initialState from './initial.state'
 import { clear_last_content_jsx } from '../business.logic/cache'
-import { err } from '../business.logic/logging'
-import { set_val } from '../business.logic/parsing'
+import { get_origin_ending_cleaned, set_val } from '../business.logic/parsing'
 
 const appReducer = combineReducers({
   app: infoReducer,
@@ -148,13 +148,15 @@ const net_patch_state_reducer = <T=unknown>($oldState: unknown, $fragment: unkno
       }
     }
   } catch (e) {
-    dispatch(errorsActions.errorsAdd({ // error 27
-      id: '27', 
-      code: 'CAUGHT_EXCEPTION',
-      title: (e as Error).message,
-      detail: (e as Error).stack,
-    }));
-    err((e as Error).stack ?? '')
+    if (import.meta.env.DEV) {
+      dispatch(errorsActions.errorsAdd({ // error 27
+        id: '27', 
+        code: 'CAUGHT_EXCEPTION',
+        title: (e as Error).message,
+        detail: (e as Error).stack,
+      }));
+      console.error(e)
+    }
   }
   return state as T
 }
@@ -328,6 +330,33 @@ export function default_handler ({ store, actions, route }: IRedux): TEventHandl
     e.preventDefault()
     if (route) {
       store.dispatch(actions.appBrowserSwitchPage(route))
+    }
+  }
+}
+
+/**
+ * Bootstrap the app by fetching state from server
+ * @param endpoint endpoint to fetch state from
+ * @param token authorization token
+ */
+export const bootstrap_app = (endpoint: string, token: string) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    try {
+      const { app } = getState()
+      const origin = get_origin_ending_cleaned(app.origin)
+      const url = `${origin}/${endpoint}`
+      const headers = { ...(token ? {'Authorization':`Bearer ${token}`} : {}) }
+      const response = await fetch(url, {
+        method: 'post',
+        headers,
+        credentials: 'include',
+      })
+      if (response.ok) {
+        const { state } = await response.json() as IJsonapiStateResponse
+        dispatch({ type: NET_STATE_PATCH, payload: state })
+      }
+    } catch (e) {
+      if (import.meta.env.DEV) { console.error(e) }
     }
   }
 }

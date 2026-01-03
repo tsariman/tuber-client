@@ -1,11 +1,15 @@
-import { useEffect } from 'react'
+import { lazy, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { type AppDispatch, type RootState, initialize } from './state'
-import { post_req_state } from './state/net.actions'
+import {
+  type AppDispatch,
+  type RootState,
+  bootstrap_app,
+  initialize
+} from './state'
 import Config from './config'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
-import AppGeneric from './mui/app.generic.cpn'
+const AppGeneric = lazy(() => import('./mui/app.generic.cpn'))
 import {
   ALLOWED_ATTEMPTS,
   BOOTSTRAP_ATTEMPTS,
@@ -15,9 +19,12 @@ import {
 import { get_bootstrap_key, get_cookie } from './business.logic/parsing'
 import StateApp from './controllers/StateApp'
 import Spinner from './mui/spinner.cpn'
+import { StateNet } from './controllers'
 
 export default function App() {
   const dispatch = useDispatch<AppDispatch>()
+  const netState = useSelector((state: RootState) => state.net)
+  const token = useMemo(() => new StateNet(netState).token, [netState])
   const appState = useSelector((state: RootState) => state.app)
   const app = new StateApp(appState)
   const themeState = useSelector((state: RootState) => state.theme)
@@ -30,7 +37,10 @@ export default function App() {
       if (!key) { return }
       const bootstrapAttempts = Config.read<number>(BOOTSTRAP_ATTEMPTS, 0)
       if (bootstrapAttempts < ALLOWED_ATTEMPTS) {
-        dispatch(post_req_state(`state/${key}`, {}))
+        dispatch({ type: 'app/appRequestStart' })
+        dispatch({ type: 'app/appShowSpinner' })
+        dispatch(bootstrap_app(`state/${key}`, token))
+        dispatch({ type: 'app/appHideSpinner' })
         Config.write(BOOTSTRAP_ATTEMPTS, bootstrapAttempts + 1)
       }
     }
@@ -42,7 +52,7 @@ export default function App() {
 
     Config.write(THEME_MODE, get_cookie('mode') || THEME_DEFAULT_MODE)
     initialize()
-  }, [dispatch, app.fetchingStateAllowed, app.isBootstrapped])
+  }, [dispatch, app.fetchingStateAllowed, app.isBootstrapped, token])
 
   // Update browser URL when user switches pages
   useEffect(() => {
@@ -53,11 +63,15 @@ export default function App() {
     }
   }, [app.route])
 
-  return (
-    <ThemeProvider theme={createTheme(themeState)}>
-      <CssBaseline />
-      <AppGeneric instance={app} />
-      <Spinner />
-    </ThemeProvider>
-  )
+  if (app.isBootstrapped || !app.fetchingStateAllowed) {
+    return (
+      <ThemeProvider theme={createTheme(themeState)}>
+        <CssBaseline />
+        <AppGeneric instance={app} />
+        <Spinner />
+      </ThemeProvider>
+    )
+  }
+
+  return null
 }

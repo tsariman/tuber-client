@@ -6,7 +6,7 @@
  * while ensuring users receive feedback for longer-running tasks.
  */
 
-import { dispatch, get_state } from '.';
+import { dispatch, get_state } from '.'
 
 /**
  * Temporarily holds the handle ID of a `setTimeout` function which has been
@@ -15,7 +15,7 @@ import { dispatch, get_state } from '.';
  * The variable's purpose is to prevent functions from running after they have
  * been scheduled to do so via `setTimeout`.
  */
-let handle: ReturnType<typeof setTimeout> | null;
+let handle: ReturnType<typeof setTimeout> | null
 
 /**
  * Schedules a spinner to appear after a specified delay.
@@ -28,8 +28,8 @@ let handle: ReturnType<typeof setTimeout> | null;
  */
 export function schedule_spinner(time = 200): void {
   if (!handle) {
-    const callback = () => dispatch({ type: 'app/appShowSpinner' });
-    handle = setTimeout(callback, time);
+    const callback = () => dispatch({ type: 'app/appShowSpinner' })
+    handle = setTimeout(callback, time)
   }
 }
 
@@ -47,8 +47,8 @@ export function schedule_spinner(time = 200): void {
  */
 export function cancel_spinner(): void {
   if (handle) {
-    clearTimeout(handle);
-    handle = null;
+    clearTimeout(handle)
+    handle = null
   }
 }
 
@@ -61,7 +61,7 @@ export function cancel_spinner(): void {
 export function auto_hide_spinner(): void {
   setTimeout(() => {
     if (get_state().app.showSpinner) {
-      dispatch({ type: 'app/appHideSpinner' });
+      dispatch({ type: 'app/appHideSpinner' })
     }
-  }, 10000);
+  }, 10000)
 }
