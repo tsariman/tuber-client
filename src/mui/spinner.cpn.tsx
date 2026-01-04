@@ -2,6 +2,7 @@ import { CircularProgress, styled } from '@mui/material'
 import { LayoutCenteredNoScroll } from './layout/layouts'
 import type { RootState } from '../state'
 import { useSelector } from 'react-redux'
+import { APP_IS_FETCHING } from '@tuber/shared'
 
 const Background = styled('div')(() => ({
   width: '100%',
@@ -20,10 +21,14 @@ const Spinner = () => {
   const showSpinner = useSelector(
     (rootState: RootState) => rootState.app.showSpinner
   )
+  const status = useSelector((rootState: RootState) => rootState.app.status)
   const spinnerDisabled = useSelector(
     (rootState: RootState) => rootState.app.spinnerDisabled
   )
-  const open = (showSpinner === true && !spinnerDisabled)
+
+  const open = showSpinner
+    && !spinnerDisabled
+    && (status === APP_IS_FETCHING || undefined === status)
 
   return (
     <Background style={{display: open ? 'block' : 'none'}}>

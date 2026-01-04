@@ -19,6 +19,7 @@ import {
 import { get_bootstrap_key, get_cookie } from './business.logic/parsing'
 import StateApp from './controllers/StateApp'
 import Spinner from './mui/spinner.cpn'
+import SpinnerBootstrap from './mui/spinner.cpn.bootstrap'
 import { StateNet } from './controllers'
 
 export default function App() {
@@ -37,10 +38,7 @@ export default function App() {
       if (!key) { return }
       const bootstrapAttempts = Config.read<number>(BOOTSTRAP_ATTEMPTS, 0)
       if (bootstrapAttempts < ALLOWED_ATTEMPTS) {
-        dispatch({ type: 'app/appRequestStart' })
-        dispatch({ type: 'app/appShowSpinner' })
         dispatch(bootstrap_app(`state/${key}`, token))
-        dispatch({ type: 'app/appHideSpinner' })
         Config.write(BOOTSTRAP_ATTEMPTS, bootstrapAttempts + 1)
       }
     }
@@ -75,7 +73,7 @@ export default function App() {
     return (
       <ThemeProvider theme={createTheme(themeState)}>
         <CssBaseline />
-        <Spinner />
+        <SpinnerBootstrap instance={app} />
       </ThemeProvider>
     )
   }

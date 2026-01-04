@@ -77,10 +77,10 @@ export function parse_cookies() {
  * @param name The name of the cookie to retrieve
  * @returns The cookie value as the specified type, or empty string if not found
  */
-export function get_cookie<T=string>(name: string): T {
+export function get_cookie<T=string>(name: string): T | undefined {
   const cookies = parse_cookies()
-  const cookie = cookies[name] ?? ''
-  return cookie as unknown as T
+  const cookie = cookies[name]
+  return cookie as T | undefined
 }
 
 /**

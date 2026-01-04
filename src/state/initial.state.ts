@@ -1,6 +1,7 @@
-import { get_head_meta_content } from '../business.logic/parsing'
+import { get_head_meta_content, get_cookie } from '../business.logic/parsing'
 import { orange } from '@mui/material/colors'
 import type { IState } from '../interfaces/localized'
+import type { TThemeMode } from '@tuber/shared'
 
 /**
  * Get global variable value.
@@ -27,10 +28,18 @@ const _get_global_var = <T=unknown>(varName: string): T => {
 const GLOBAL_PREFIX = get_head_meta_content('web-ui')
 
 /**
- * Default background color
- * History: `#72A0C1`, `#af74b0`
+ * Default dark background color
+ * History: `#374654`, `#72A0C1`, `#af74b0`
  */
-export const DEFAULT_BACKGROUND_COLOR = '#374654'
+export const DEFAULT_BACKGROUND_DARK = '#141a1f'
+/** Default light background color */
+export const DEFAULT_BACKGROUND_LIGHT = '#f4f6f8'
+
+/** Get default background color based on theme mode */
+const _default_background_color = () => {
+  const theme = get_cookie<TThemeMode>('mode')
+  return theme === 'light' ? DEFAULT_BACKGROUND_LIGHT : DEFAULT_BACKGROUND_DARK
+}
 
 /** Bootstrap key */
 const key = (
@@ -504,11 +513,21 @@ export default {
       'secondary': {
         'main': orange[800]
       },
-      'background': { 'default': DEFAULT_BACKGROUND_COLOR }
+      'background': {
+        'default': _default_background_color()
+      }
     },
   }, ..._get_global_var(`${GLOBAL_PREFIX}Theme`) },
-  'themeLight': {},
-  'themeDark': {},
+  'themeLight': {
+    'palette': {
+      'background': { 'default': DEFAULT_BACKGROUND_LIGHT }
+    },
+  },
+  'themeDark': {
+    'palette': {
+      'background': { 'default': DEFAULT_BACKGROUND_DARK }
+    },
+  },
 
   'net': {},
 

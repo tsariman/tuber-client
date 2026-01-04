@@ -342,6 +342,7 @@ export function default_handler ({ store, actions, route }: IRedux): TEventHandl
 export const bootstrap_app = (endpoint: string, token: string) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
+      dispatch({ type: 'app/appRequestStart' })
       const { app } = getState()
       const origin = get_origin_ending_cleaned(app.origin)
       const url = `${origin}/${endpoint}`
@@ -353,9 +354,13 @@ export const bootstrap_app = (endpoint: string, token: string) => {
       })
       if (response.ok) {
         const { state } = await response.json() as IJsonapiStateResponse
+        dispatch({ type: 'app/appRequestEnd' })
         dispatch({ type: NET_STATE_PATCH, payload: state })
+      } else {
+        dispatch({ type: 'app/appRequestFailed' })
       }
     } catch (e) {
+      dispatch({ type: 'app/appRequestFailed' })
       if (import.meta.env.DEV) { console.error(e) }
     }
   }

@@ -3,7 +3,7 @@ import get_config from './business.logic/Configuration'
 
 const initConfObj = {
   /** App default theme mode. */
-  DEFAULT_THEME_MODE: 'light' as TThemeMode,
+  DEFAULT_THEME_MODE: 'dark' as TThemeMode,
   /** Indicates whether the app is in debug mode or not. */
   DEBUG: false,
   /** Indicates whether the app is in development mode or not. */
