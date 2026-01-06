@@ -7,7 +7,8 @@ import {
 import {
   get_origin_ending_fixed,
   get_query_starting_fixed,
-  get_endpoint
+  get_endpoint,
+  get_origin_ending_cleaned
 } from '../business.logic/parsing'
 import { error_id } from '../business.logic/errors'
 import net_default_200_driver from './net.default.200.driver.c'
@@ -483,15 +484,16 @@ export const delete_req_state = (
     schedule_spinner()
     try {
       const rootState = getState()
-      const origin = get_origin_ending_fixed(rootState.app.origin)
+      const origin = get_origin_ending_cleaned(rootState.app.origin)
       const query  = get_query_starting_fixed(args)
-      const uri = `${origin}${endpoint}${query}`
+      const uri = `${origin}/${endpoint}${query}`
       const headersState = new StateNet(rootState.net).headers
       const headers = { ...DEFAULT_HEADERS, ...headersState, ...customHeaders }
       const response = await fetch(uri, {
         method: 'delete',
         headers,
-        credentials: 'include'
+        credentials: 'include',
+        body: JSON.stringify({})
       })
       const json = await response.json()
       json.meta ??= {}

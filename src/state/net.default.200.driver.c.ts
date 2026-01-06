@@ -16,7 +16,6 @@ import Config from '../config'
 import execute_directives from './net.directives.c'
 import { net_patch_state } from './actions'
 import type {
-  IJsonapiAbstractResponse,
   IJsonapiResponse,
   IJsonapiResponseResource,
 } from '@tuber/shared'
@@ -32,17 +31,16 @@ export default function net_default_200_driver (
   dispatch: Dispatch,
   getState: ()=> RootState,
   endpoint: string,
-  response: IJsonapiAbstractResponse
+  response: IJsonapiResponse
 ): void {
-  const doc = response as IJsonapiResponse
-  if (doc.meta || doc.data || doc.links || doc.state) {
+  if (response.meta || response.data || response.links || response.state) {
     dispatch(appRequestSuccess())
   } else {
     dispatch(appRequestFailed())
   }
   let insertPosition: 'beginning' | 'end' | '' = 'end'
   const maxLoadedPages = parseInt(safely_get_as(
-    doc.meta,
+    response.meta,
     'max_loaded_pages',
     '4'
   ))
@@ -52,8 +50,8 @@ export default function net_default_200_driver (
   let pageSize = 25
 
   // Top level links
-  if (is_object(doc.links) && typeof doc.links !== 'undefined') {
-    const links = new JsonapiPaginationLinks(doc.links)
+  if (is_object(response.links) && typeof response.links !== 'undefined') {
+    const links = new JsonapiPaginationLinks(response.links)
     pageSize = links.pageSize
     dataManager.configure({
       endpoint,
@@ -66,29 +64,29 @@ export default function net_default_200_driver (
       insertPosition = ''
     }
     if (insertPosition) {
-      dispatch(topLevelLinksStore({ endpoint, links: doc.links }))
+      dispatch(topLevelLinksStore({ endpoint, links: response.links }))
     }
     currentPageNumber = links.selfPageNumber
   }
 
   // meta member
-  if (doc.meta && insertPosition) {
-    dispatch(metaAdd({ endpoint, meta: doc.meta }))
-    execute_directives(dispatch, doc.meta)
+  if (response.meta && insertPosition) {
+    dispatch(metaAdd({ endpoint, meta: response.meta }))
+    execute_directives(dispatch, response.meta)
   }
 
   // data member
-  if (doc.data && Array.isArray(doc.data)) {
+  if (response.data && Array.isArray(response.data)) {
     if (insertPosition === 'end') {
       dispatch(dataLimitQueueCol({
-        collection: doc.data as IJsonapiResponseResource[],
+        collection: response.data as IJsonapiResponseResource[],
         endpoint,
         pageSize,
         limit: dataManager.getMaxLoadedPages()
       }))
     } else if (insertPosition === 'beginning') {
       dispatch(dataLimitStackCol({
-        collection: doc.data as IJsonapiResponseResource[],
+        collection: response.data as IJsonapiResponseResource[],
         endpoint,
         pageSize,
         limit: dataManager.getMaxLoadedPages()
@@ -103,29 +101,29 @@ export default function net_default_200_driver (
         pageNumbers: newRange
       }))
     }
-  } else if (doc.errors) {
-    remember_jsonapi_errors(doc.errors)
+  } else if (response.errors) {
+    remember_jsonapi_errors(response.errors)
   }
 
   // included member
-  if (Array.isArray(doc.included)) {
-    const collectionName = doc.included[0]?.type || 'unknown'
+  if (Array.isArray(response.included)) {
+    const collectionName = response.included[0]?.type || 'unknown'
     dispatch(dataAccumulateByAppending({
       identifier: collectionName,
-      collection: doc.included
+      collection: response.included
     }))
   }
 
   // Handles redux state loaded from the server (remote).
-  if (is_object(doc.state)) {
-    dispatch(net_patch_state(doc.state))
+  if (is_object(response.state)) {
+    dispatch(net_patch_state(response.state))
 
      // If the response is a state bootstrap
-    if (doc.state?.app?.isBootstrapped) {
-      bootstrap(doc)
+    if (response.state?.app?.isBootstrapped) {
+      bootstrap(response)
     }
     // Boolean value `false` will force app to bootstrap again.
-    else if (doc.state?.app?.isBootstrapped === false) {
+    else if (response.state?.app?.isBootstrapped === false) {
       Config.write(BOOTSTRAP_ATTEMPTS, 0)
     }
   }

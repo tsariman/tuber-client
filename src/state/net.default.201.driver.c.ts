@@ -11,47 +11,45 @@ import { net_patch_state } from './actions'
 import { pre, log, ler } from '../business.logic/logging'
 import { clean_endpoint_ending } from '../business.logic/parsing'
 import type {
-  IJsonapiAbstractResponse,
+  IJsonapiResponse,
   IJsonapiResponseResource,
-  IJsonapiDataResponse
 } from '@tuber/shared'
 
 export default function net_default_201_driver (
   dispatch: Dispatch,
-  getState: ()=> RootState,
+  getState: () => RootState,
   endpoint: string,
-  response: IJsonapiAbstractResponse
+  response: IJsonapiResponse
 ): void {
   void getState
-  const doc = response as IJsonapiDataResponse
-  if (doc.meta || doc.data || doc.links || doc.state) {
+  if (response.meta || response.data || response.links || response.state) {
     dispatch(appRequestSuccess())
   } else {
     dispatch(appRequestFailed())
   }
   pre('net_default_201_driver:')
-  log('Received response:', doc)
-  if (doc.data) {
-    if (Array.isArray(doc.data) && doc.data.length === 1) {
+  log('Received response:', response)
+  if (response.data) {
+    if (Array.isArray(response.data) && response.data.length === 1) {
       dispatch(dataStackCol({
         endpoint: clean_endpoint_ending(endpoint),
-        collection: doc.data
+        collection: response.data as IJsonapiResponseResource[]
       }))
-    } else if (Array.isArray(doc.data) && doc.data.length > 1) {
+    } else if (Array.isArray(response.data) && response.data.length > 1) {
       ler('more than one resource received on a 201 response.')
-    } else if (is_object(doc.data)) {
+    } else if (is_object(response.data)) {
       dispatch(dataStack({
         collectionName: clean_endpoint_ending(endpoint),
-        data: doc.data as IJsonapiResponseResource
+        data: response.data as IJsonapiResponseResource
       }))
     }
   }
-  if (doc.meta) {
-    const { meta } = doc
+  if (is_object(response.meta)) {
+    const { meta } = response
     dispatch(metaAdd({ endpoint, meta }))
   }
-  if (is_object(doc.state)) {
-    dispatch(net_patch_state(doc.state))
+  if (is_object(response.state)) {
+    dispatch(net_patch_state(response.state))
   }
   pre()
 }

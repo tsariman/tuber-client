@@ -10,18 +10,18 @@ import { ler } from '../business.logic/logging'
 
 export default function net_default_400_driver (
   dispatch: Dispatch,
-  getState: ()=> RootState,
+  getState: () => RootState,
   endpoint: string,
   response: IJsonapiResponse
 ): void {
-  void getState
+  void getState()
   dispatch(appRequestFailed())
 
   if (is_object(response.state)) {
     dispatch(net_patch_state(response.state))
   }
 
-  if (response.meta) {
+  if (is_object(response.meta)) {
     execute_directives(dispatch, response.meta)
   }
 
