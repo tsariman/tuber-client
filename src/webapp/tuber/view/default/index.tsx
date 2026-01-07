@@ -2,16 +2,16 @@ import '../tuber.css'
 import { Fragment, useLayoutEffect, useMemo } from 'react'
 import { StatePage, StatePagesData } from 'src/controllers'
 import type { IBookmark } from '../../tuber.interfaces'
-import TuberBookmarkList from './list'
+import BookmarkList from './list'
 import TuberPlayer from './player'
 import tuber_register_callbacks from '../../callbacks/tuber.callbacks'
 import { styled, useTheme } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Toolbar from '@mui/material/Toolbar'
 import ResearchToolbarFixed from '../tuber.toolbar.video.search'
-import TuberBookmarkSearchWithThumbnails from './list.no.player'
+import ThumbnailedBookmarkListNoPlayer from './list.no.player'
 import { useMediaQuery } from '@mui/material'
-import TuberThumbnailedBookmarkList from './list.with.thumbnail'
+import ThumbnailedBookmarkList from './list.with.thumbnail'
 import type { AppDispatch, RootState } from 'src/state'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -71,9 +71,9 @@ export default function ViewDefault({ def: page }: { def: StatePage}) {
         {playerOpen ? (
           <Grid container direction='row'>
             {showThumbnail ? (
-              <TuberThumbnailedBookmarkList />
+              <ThumbnailedBookmarkList />
             ) : (
-              <TuberBookmarkList />
+              <BookmarkList />
             )}
             <TuberPlayerWrapper>
               <TuberPlayer bookmark={bookmarkToPlay} toolbarDef={page.appbar} />
@@ -81,7 +81,7 @@ export default function ViewDefault({ def: page }: { def: StatePage}) {
           </Grid>
         ) : (
           <Fragment>
-            <TuberBookmarkSearchWithThumbnails />
+            <ThumbnailedBookmarkListNoPlayer />
             <ResearchToolbarFixed def={page.appbar} />
           </Fragment>
         )}

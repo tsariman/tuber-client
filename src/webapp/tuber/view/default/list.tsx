@@ -1,6 +1,6 @@
 import List from '@mui/material/List'
 import { styled } from '@mui/material/styles'
-import React, { useCallback, useMemo, useState, useRef } from 'react'
+import React, { useCallback, useMemo, useState, useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { type RootState } from 'src/state'
 import { useVirtualizer } from '@tanstack/react-virtual'
@@ -11,7 +11,9 @@ import {
 } from './list.bookmark.loader'
 import type { IBookmark } from '../../tuber.interfaces'
 import StateData from 'src/controllers/StateData'
+import { StateDataPagesRange } from 'src/controllers'
 import Bookmark from './bookmark'
+import { EP_BOOKMARKS } from '@tuber/shared'
 
 const BookmarkListWrapper = styled('div')(({ theme }) => ({
   height: 'calc(100vh - 128px)',
@@ -35,16 +37,51 @@ const VirtualItem = styled('div')(() => ({
   transform: 'translateY(var(--transform-y))',
 }))
 
-export default function TuberBookmarkList() {
+export default function BookmarkList() {
   const parentRef = useRef<HTMLDivElement>(null)
   
   // Memoize state selectors
   const dataState = useSelector((state: RootState) => state.data)
+  const dataPagesRange = useSelector((state: RootState) => state.dataPagesRange)
   const data = useMemo(() => new StateData(dataState), [dataState])
+  
+  // Track page range for scroll position adjustment
+  const pageRangeInfo = useMemo(() => {
+    const pageManager = new StateDataPagesRange(dataPagesRange)
+    pageManager.configure({ endpoint: EP_BOOKMARKS })
+    return {
+      firstPage: pageManager.firstPage,
+      lastPage: pageManager.lastPage,
+      totalPages: pageManager.getLoadedPageTotal() || 1
+    }
+  }, [dataPagesRange])
+  
+  const prevFirstPageRef = useRef(pageRangeInfo.firstPage)
+  
+  // Adjust scroll position when earliest page is removed
+  useEffect(() => {
+    const scrollContainer = parentRef.current
+    if (!scrollContainer) return
+    
+    const prevFirstPage = prevFirstPageRef.current
+    const currentFirstPage = pageRangeInfo.firstPage
+    
+    // Detect if a page was removed from the beginning (firstPage increased)
+    if (currentFirstPage > prevFirstPage && prevFirstPage > 0) {
+      const totalHeight = scrollContainer.scrollHeight
+      const pageHeight = totalHeight / pageRangeInfo.totalPages
+      
+      // Position at the beginning of the newly loaded page (last page)
+      const newScrollTop = totalHeight - pageHeight
+      scrollContainer.scrollTop = newScrollTop
+    }
+    
+    prevFirstPageRef.current = currentFirstPage
+  }, [pageRangeInfo.firstPage, pageRangeInfo.totalPages])
   
   // Memoize bookmark collection
   const bookmarks = useMemo(() => {
-    return data.configure({ endpoint: 'bookmarks' })
+    return data.configure({ endpoint: EP_BOOKMARKS })
       .include('id')
       .flatten()
       .get<IBookmark>()
@@ -67,7 +104,7 @@ export default function TuberBookmarkList() {
   }, [])
 
   const handleExpandDetailIconOnClick = useCallback((
-    annotation: IBookmark,
+    bookmark: IBookmark,
     i: number
   ) => (e: React.MouseEvent) => {
     e.preventDefault()
@@ -89,8 +126,8 @@ export default function TuberBookmarkList() {
     }
     
     const text = isExpanded 
-      ? (annotation.note ?? '(No note)')
-      : shorten_text(annotation.note)
+      ? (bookmark.note ?? '(No note)')
+      : shorten_text(bookmark.note)
     detail.appendChild(document.createTextNode(text))
   }, [expandedNotes, handleToggleExpand])
 

@@ -5,8 +5,8 @@ import State from './State'
 import { get_state } from '../state'
 
 const EMPTY_PAGES_RANGE: ILoadedPagesRange = {
-  first: '1',
-  last: '1',
+  first: '0',
+  last: '0',
 }
 
 /** Wrapper class for `initialState.dataPagesRange` */
@@ -56,10 +56,13 @@ export default class StateDataPagesRange extends AbstractState {
     return this._maxLoadedPages
   }
 
-  /** Get the page to be dropped as a number */
+  /** Get the page number to be dropped, or 'all' as -1, or false if none */
   getPageToBeDropped(): number | false {
+    if (this._pageToBeDropped === 'all') {
+      return -1
+    }
     if (this._pageToBeDropped) {
-      return parseInt(this._pageToBeDropped) - 1
+      return parseInt(this._pageToBeDropped)
     }
     return false
   }
@@ -108,10 +111,10 @@ export default class StateDataPagesRange extends AbstractState {
     const firstPage = parseInt(first)
     const lastPage = parseInt(last)
 
-    // If no page range was found
-    if (lastPage + firstPage === 0) {
+    // If no page range was found (empty state)
+    if (firstPage === 0 && lastPage === 0) {
       this._newPageRange = {
-        first: '1',
+        first: page.toString(),
         last: page.toString(),
       }
       return this
@@ -137,7 +140,7 @@ export default class StateDataPagesRange extends AbstractState {
     // If the page number is sequential, then check if the limit is reached.
     // If the limit is reached, then drop the earliest or latest page.
     const maxLoadedPages = this.getMaxLoadedPages()
-    if (lastPage - firstPage >= maxLoadedPages) {
+    if (lastPage - firstPage + 1 >= maxLoadedPages) {
       if (page === lastPage + 1) {
         this._newPageRange = {
           first: (firstPage + 1).toString(),
@@ -182,11 +185,15 @@ export default class StateDataPagesRange extends AbstractState {
     )
   }
 
-  /** Check if page is within range */
+  /** Check if page is within range (returns false for empty range) */
   isPageInRange(page: number): boolean {
     const { first, last } = this._getPageRange()
     const firstPage = parseInt(first)
     const lastPage = parseInt(last)
-    return firstPage !== lastPage && page >= firstPage && page <= lastPage
+    // Empty range (0,0) means no pages loaded yet
+    if (firstPage === 0 && lastPage === 0) {
+      return false
+    }
+    return page >= firstPage && page <= lastPage
   }
 }

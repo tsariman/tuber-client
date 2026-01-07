@@ -425,7 +425,7 @@ export const axios_post_req_state = (
 /**
  * Makes a `GET` request to an endpoint to retrieve a collection
  *
- * @param endpoint Usually an entity name. Otherwise, it's a valid URI endpoint.
+ * @param endpoint Usually a collection name. Otherwise, it's a valid URI endpoint.
  *                 e.g., `users`
  * @param args URL query strings e.g., '?id=123'
  *             It must be a valid query string; therefore, the interrogation
@@ -469,7 +469,7 @@ export const get_req_state = (
 /**
  * Makes a DELETE request to update the Redux store.
  *
- * @param endpoint Usually an entity name. Otherwise, it's a valid URI endpoint.
+ * @param endpoint Usually a collection name. Otherwise, it's a valid URI endpoint.
  * @param args URL query strings.
  * @param customHeaders Additional headers to include in the request.
  * @returns A Redux thunk action.
@@ -511,11 +511,11 @@ export const delete_req_state = (
 /**
  * Makes a `PUT` request to server and handle the response yourself.
  *
- * @param endpoint 
+ * @param endpoint Usually a collection name. Otherwise, it's a valid URI endpoint.
  * @param body 
  * @param success 
  * @param failure 
- * @returns 
+ * @returns A Redux thunk action.
  */
 export const put_req = (endpoint: string,
   body: unknown,

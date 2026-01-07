@@ -148,9 +148,11 @@ export const InfiniteScrollTrigger = React.memo<IInfiniteScrollTriggerProps>(({ 
   const triggerRef = useRef<HTMLDivElement>(null)
   const [isLoading, setIsLoading] = useState(false)
   const hasTriggeredRef = useRef(false) // Prevent duplicate triggers
+  const lastScrollTopRef = useRef(0) // Track scroll position for direction detection
+  const cooldownRef = useRef(false) // Prevent triggers during page removal
 
   // Memoize expensive computations
-  const { links, targetPage, hasMorePages } = useMemo(() => {
+  const { links, targetPage, hasMorePages, firstPage } = useMemo(() => {
     const pageManager = new StateDataPagesRange(dataPagesRange)
     pageManager.configure({ endpoint: 'bookmarks' })
     
@@ -159,13 +161,19 @@ export const InfiniteScrollTrigger = React.memo<IInfiniteScrollTriggerProps>(({ 
     const targetPage = pageManager.lastPage + 1
     const hasMorePages = targetPage <= links.lastPageNumber
     
-    return { pageManager, links, targetPage, hasMorePages }
+    return { pageManager, links, targetPage, hasMorePages, firstPage: pageManager.firstPage }
   }, [dataPagesRange, bookmarksLinks])
 
   // Reset trigger flag when target page changes (new data loaded)
+  // Add cooldown to prevent immediate re-trigger after page removal
   useEffect(() => {
     hasTriggeredRef.current = false
-  }, [targetPage])
+    cooldownRef.current = true
+    const timer = setTimeout(() => {
+      cooldownRef.current = false
+    }, 500) // 500ms cooldown after page range changes
+    return () => clearTimeout(timer)
+  }, [targetPage, firstPage])
 
   // Intersection Observer effect with proper root element
   useEffect(() => {
@@ -176,12 +184,20 @@ export const InfiniteScrollTrigger = React.memo<IInfiniteScrollTriggerProps>(({ 
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries
-        if (entry.isIntersecting && !hasTriggeredRef.current) {
-          hasTriggeredRef.current = true
-          setIsLoading(true)
-          dispatch(appSetFetchMessage(APP_IS_FETCHING_BOOKMARKS))
-          dispatch(get_req_state('bookmarks', links.getLinkUrl({ pageNumber: targetPage })))
-        }
+        if (!entry.isIntersecting || hasTriggeredRef.current || cooldownRef.current) return
+        
+        // Only trigger on downward scroll (user scrolling towards end)
+        const currentScrollTop = scrollContainer.scrollTop
+        const isScrollingDown = currentScrollTop > lastScrollTopRef.current
+        lastScrollTopRef.current = currentScrollTop
+        
+        // Skip if not scrolling down (content was removed causing position shift)
+        if (!isScrollingDown && currentScrollTop > 0) return
+        
+        hasTriggeredRef.current = true
+        setIsLoading(true)
+        dispatch(appSetFetchMessage(APP_IS_FETCHING_BOOKMARKS))
+        dispatch(get_req_state('bookmarks', links.getLinkUrl({ pageNumber: targetPage })))
       },
       {
         root: scrollContainer, // Use the actual scroll container as root

@@ -58,11 +58,14 @@ export default function net_default_200_driver (
       pageSize,
       maxLoadedPages
     })
-    if (links.selfPageNumber < dataManager.firstPage) {
-      insertPosition = 'beginning'
-    } else if (dataManager.isPageInRange(links.selfPageNumber)) {
+    if (dataManager.isPageInRange(links.selfPageNumber)) {
+      // Page already loaded, skip insertion
       insertPosition = ''
+    } else if (dataManager.firstPage > 0 && links.selfPageNumber < dataManager.firstPage) {
+      // Page is before current range - prepend
+      insertPosition = 'beginning'
     }
+    // else: page is after current range OR first load - append (default 'end')
     if (insertPosition) {
       dispatch(topLevelLinksStore({ endpoint, links: response.links }))
     }
@@ -70,7 +73,7 @@ export default function net_default_200_driver (
   }
 
   // meta member
-  if (response.meta && insertPosition) {
+  if (is_object(response.meta) && insertPosition) {
     dispatch(metaAdd({ endpoint, meta: response.meta }))
     execute_directives(dispatch, response.meta)
   }

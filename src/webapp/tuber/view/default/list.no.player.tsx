@@ -1,9 +1,10 @@
 import { styled } from '@mui/material/styles'
 import List from '@mui/material/List'
-import React, { useCallback, useMemo, useState, useRef } from 'react'
+import React, { useCallback, useMemo, useState, useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import StateData from 'src/controllers/StateData'
+import { StateDataPagesRange } from 'src/controllers'
 import { type RootState } from 'src/state'
 import { shorten_text } from '../../_tuber.common.logic'
 import type { IBookmark } from '../../tuber.interfaces'
@@ -36,12 +37,47 @@ const VirtualItem = styled('div')(() => ({
   transform: 'translateY(var(--transform-y))',
 }))
 
-export default function TuberBookmarkSearchWithThumbnails() {
+export default function ThumbnailedBookmarkListNoPlayer() {
   const parentRef = useRef<HTMLDivElement>(null)
   
   // Memoize state selectors
   const dataState = useSelector((state: RootState) => state.data)
+  const dataPagesRange = useSelector((state: RootState) => state.dataPagesRange)
   const data = useMemo(() => new StateData(dataState), [dataState])
+  
+  // Track page range for scroll position adjustment
+  const pageRangeInfo = useMemo(() => {
+    const pageManager = new StateDataPagesRange(dataPagesRange)
+    pageManager.configure({ endpoint: EP_BOOKMARKS })
+    return {
+      firstPage: pageManager.firstPage,
+      lastPage: pageManager.lastPage,
+      totalPages: pageManager.getLoadedPageTotal() || 1
+    }
+  }, [dataPagesRange])
+  
+  const prevFirstPageRef = useRef(pageRangeInfo.firstPage)
+  
+  // Adjust scroll position when earliest page is removed
+  useEffect(() => {
+    const scrollContainer = parentRef.current
+    if (!scrollContainer) return
+    
+    const prevFirstPage = prevFirstPageRef.current
+    const currentFirstPage = pageRangeInfo.firstPage
+    
+    // Detect if a page was removed from the beginning (firstPage increased)
+    if (currentFirstPage > prevFirstPage && prevFirstPage > 0) {
+      const totalHeight = scrollContainer.scrollHeight
+      const pageHeight = totalHeight / pageRangeInfo.totalPages
+      
+      // Position at the beginning of the newly loaded page (last page)
+      const newScrollTop = totalHeight - pageHeight
+      scrollContainer.scrollTop = newScrollTop
+    }
+    
+    prevFirstPageRef.current = currentFirstPage
+  }, [pageRangeInfo.firstPage, pageRangeInfo.totalPages])
   
   // Memoize bookmark collection
   const bookmarks = useMemo(() => {

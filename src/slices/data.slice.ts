@@ -102,22 +102,24 @@ export const dataSlice = createSlice({
     },
     dataLimitQueueCol: (state, action: PayloadAction<ICollectionLimitedStore>) => {
       const { endpoint, collection, pageSize, limit } = action.payload
-      let arr = state[endpoint] || []
-      const totalPage = Math.ceil(arr.length / pageSize)
-      if (totalPage > limit) {
+      let arr = (state[endpoint] || []).concat(collection)
+      const totalPages = Math.ceil(arr.length / pageSize)
+      if (totalPages > limit) {
+        // Drop oldest page (from beginning) when appending exceeds limit
         arr = arr.slice(pageSize)
       }
-      state[endpoint] = arr.concat(collection)
+      state[endpoint] = arr
     },
     dataLimitStackCol: (state, action: PayloadAction<ICollectionLimitedStore>) => {
       const { endpoint, collection, pageSize, limit } = action.payload
-      let arr = state[endpoint] ?? []
-      const totalPage = Math.ceil(arr.length / pageSize)
-      if (totalPage > limit) {
+      let arr = collection.concat(state[endpoint] ?? [])
+      const totalPages = Math.ceil(arr.length / pageSize)
+      if (totalPages > limit) {
+        // Drop oldest page (from end) when prepending exceeds limit
         const maxItems = limit * pageSize
-        arr = arr.slice(-maxItems) // Keep the last maxItems elements
+        arr = arr.slice(0, maxItems) // Keep the first maxItems elements
       }
-      state[endpoint] = collection.concat(arr)
+      state[endpoint] = arr
     },
     /** Deletes a collection. */
     dataRemoveCol: (state, action: PayloadAction<string>) => {
