@@ -1,6 +1,8 @@
 
 # Development Changes Log
 
+## `202601072213` [Refactor] Replace dangerouslySetInnerHTML with html-react-parser for safer HTML rendering
+
 ## `202601061919` [Refactor] Update bookmark list components and improve scroll handling
 
 ## `202601031359` Enhance App component with lazy loading and improved state management

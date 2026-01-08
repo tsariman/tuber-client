@@ -22,6 +22,7 @@ import {
 } from '../../business.logic'
 import InputBase from '@mui/material/InputBase'
 import { StateJsxIcon } from '../icon'
+import parse from 'html-react-parser'
 
 type TSetLastSelected = <T>($class: T) => void
 type TClasses = 'errorCardHover' | 'errorCardClicked'
@@ -156,12 +157,11 @@ const Highlight = ({
     `color:${theme.palette.warning.contrastText}`
   ].join(';')
   const regularExp = new RegExp(regex, 'g')
-  return <span dangerouslySetInnerHTML={{
-    __html: value.replace(
-      regularExp,
-      match => `<span style="${style}">${match}</span>`
-    )
-  }} />
+  const html = value.replace(
+    regularExp,
+    match => `<span style="${style}">${match}</span>`
+  )
+  return <span>{parse(html)}</span>
 }
 
 /** Highlight all matches found as substring into json. */
@@ -266,11 +266,9 @@ function ErrorBody({ hive }: { hive: IHive }): JSX.Element | null {
   hive.setState = setJson
   return json ? (
     <ErrorJsonGrid item>
-      <ErrorJsonWrapper
-        dangerouslySetInnerHTML={{
-          __html: json
-        }}
-      />
+      <ErrorJsonWrapper>
+        {parse(json)}
+      </ErrorJsonWrapper>
     </ErrorJsonGrid>
   ) : ( null )
 }

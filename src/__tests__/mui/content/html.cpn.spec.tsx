@@ -101,7 +101,7 @@ describe('HtmlContent Component', () => {
     document.body.removeChild(emptyElement);
   });
 
-  it('should use dangerouslySetInnerHTML correctly', () => {
+  it('should render HTML content correctly', () => {
     const { container } = renderWithProviders(
       <HtmlContent instance={mockPage as Parameters<typeof HtmlContent>[0]['instance']} />
     );

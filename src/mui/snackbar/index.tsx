@@ -1,46 +1,48 @@
-import React from 'react';
-import { Snackbar } from '@mui/material';
-import { type AppDispatch, type RootState } from '../../state';
-import MuiAlert, { type AlertProps } from '@mui/material/Alert';
-import { useDispatch, useSelector } from 'react-redux';
-import { snackbarClose } from '../../slices/snackbar.slice';
+import * as React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import Snackbar, { type SnackbarCloseReason } from '@mui/material/Snackbar'
+import Alert from '@mui/material/Alert'
+import type { AppDispatch, RootState } from '../../state'
+import StateSnackbar from '../../controllers/StateSnackbar'
+import { useMemo } from 'react'
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref,
-) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+const StateJsxSnackbar = () => {
+  const snackbarState = useSelector((state: RootState) => state.snackbar)
+  const snackbar = useMemo(() => new StateSnackbar(snackbarState), [snackbarState])
+  const dispatch = useDispatch<AppDispatch>()
 
-/**
- * @see https://material-ui.com/components/snackbars/
- */
-export default function StateJsxSnackbar () {
-  const {
-    open, anchorOrigin, autoHideDuration, variant, content, message
-  } = useSelector((state: RootState) => state.snackbar);
-  const dispatch = useDispatch<AppDispatch>();
-
-  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    void event;
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: SnackbarCloseReason,
+  ) => {
+    void event
     if (reason === 'clickaway') {
-      return;
+      return
     }
-    dispatch(snackbarClose());
+    dispatch({ type: 'snackbar/snackbarClose' })
   }
 
-  const SnackbarContent = () => content || <>{message}</>;
-
   return (
-    <Snackbar
-      anchorOrigin={anchorOrigin}
-      open={open ?? false}
-      autoHideDuration={autoHideDuration}
-      onClose={handleClose}
-    >
-      <Alert severity={variant}>
-        <SnackbarContent />
-      </Alert>
-    </Snackbar>
-  );
+    <div>
+      <Snackbar
+        open={snackbarState.open}
+        anchorOrigin={snackbar.anchorOrigin}
+        autoHideDuration={snackbar.autoHideDuration}
+        {...snackbar.props}
+        onClose={handleClose}
+      >
+        <Alert
+          severity={snackbar.variant}
+          variant="filled"
+          sx={{ width: '100%' }}
+          {...snackbar.alertProps}
+          onClose={handleClose}
+        >
+          { snackbar.content ?? snackbar.message }
+        </Alert>
+      </Snackbar>
+    </div>
+  )
 }
+
+export default StateJsxSnackbar

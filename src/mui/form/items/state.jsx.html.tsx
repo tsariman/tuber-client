@@ -43,7 +43,7 @@ export const LinkStyled = styled(Link)(({ theme }) => ({
  * ```
  */
 export function StateJsxHtml({ instance: html }: { instance: StateFormItem<StateForm, string> }) {
-  let htmlText =  html.has.text || html.has.content
+  let htmlText = html.has.text || html.has.content
   const pagesDataState = useSelector((state: RootState) => state.pagesData)
 
   if (html.has.key || html.has.route) {
@@ -51,7 +51,8 @@ export function StateJsxHtml({ instance: html }: { instance: StateFormItem<State
     htmlText = parseHandlebars(html.has.content || html.has.text, pageData)
   }
 
-  return <Box {...html.props} dangerouslySetInnerHTML={{ __html: htmlText }} />
+  const content = typeof htmlText === 'string' ? parse(htmlText) : null
+  return <Box {...html.props}>{content}</Box>
 }
 
 /** State html tag */

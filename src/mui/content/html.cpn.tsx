@@ -1,5 +1,6 @@
 import { styled } from '@mui/material'
 import StatePage from '../../controllers/StatePage'
+import parse from 'html-react-parser'
 
 const Wrapper = styled('div')(() => ({
   width: '100%'
@@ -32,12 +33,13 @@ const HtmlContent = ({ instance: page }: IHtmlContent) => {
   if (domElement) {
     return (
       <Wrapper
-        dangerouslySetInnerHTML={{__html: domElement.innerHTML}}
         sx={{
           fontFamily: page.typography.fontFamily,
           color: page.typography.color
         }}
-      />
+      >
+        {parse(domElement.innerHTML)}
+      </Wrapper>
     );
   }
 

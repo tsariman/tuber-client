@@ -1,6 +1,7 @@
 import FormHelperText from '@mui/material/FormHelperText'
 import FormLabel from '@mui/material/FormLabel'
 import { Fragment, useMemo, useCallback, type JSX } from 'react'
+import parse from 'html-react-parser'
 import type { IStateFormItemSelectOption } from '@tuber/shared'
 import {
   BOX,
@@ -160,8 +161,9 @@ export default function RecursiveFormItems (props: IRecursiveFormBuilder) {
       <div
         key={`html${depth}-${key}`}
         {...item.props}
-        dangerouslySetInnerHTML={{__html: item.has.content}}
-      />
+      >
+        {typeof item.has.content === 'string' ? parse(item.has.content) : null}
+      </div>
     ),
     [INDETERMINATE]: groupItem,
     [STATE_SELECT]: (def: StateFormItem, key: string|number) => (
