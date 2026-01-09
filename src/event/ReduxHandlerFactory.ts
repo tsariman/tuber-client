@@ -1,5 +1,5 @@
 import { post_fetch, post_req_state } from '../state/net.actions'
-import { actions, type IRedux, type TReduxHandler } from '../state'
+import type { IRedux, TReduxHandler } from '../state'
 import {
   JsonapiRequest,
   get_val,
@@ -93,7 +93,7 @@ export default class ReduxHandlerFactory {
     if (this._isAlreadyLoaded(r, statename, key)) {
       return undefined
     }
-    const { store: { dispatch, getState } } = r
+    const { store: { dispatch, getState }, actions: A } = r
     const rootState = getState()
     const pathname = rootState.pathnames[statename]
     const url = `${rootState.app.origin}${pathname}`
@@ -105,15 +105,17 @@ export default class ReduxHandlerFactory {
     if (errors) {
       ler(`_loadSingleStateFragment(): ${errors[0].title}`)
       remember_jsonapi_errors(errors)
-      return
+      return undefined
     }
     const stateFragment = get_val<TNetState>(response, 'state')
-    if (!stateFragment) { return undefined }
+    if (!stateFragment) {
+      return undefined
+    }
     dispatch(net_patch_state(stateFragment))
     // Register state fragment as already loaded.
-    dispatch(actions.dynamicRegistryAdd({
+    dispatch(A.dynamicRegistryAdd({
       prop: `${statename}.${key}`,
-      value: Date.now
+      value: Date.now()
     }))
     return stateFragment
   }
@@ -143,12 +145,12 @@ export default class ReduxHandlerFactory {
       }
       const state = get_val<TNetState>(response, 'state')
       if (state) {
-        const { store } = r
+        const { store, actions: A } = r
         store.dispatch(net_patch_state(state))
         // Register state fragment as already loaded.
-        store.dispatch(actions.dynamicRegistryAdd({
+        store.dispatch(A.dynamicRegistryAdd({
           prop: `${statename}.${key}`,
-          value: Date.now
+          value: Date.now()
         }))
       }
       return state
@@ -207,22 +209,29 @@ export default class ReduxHandlerFactory {
         return
       }
       const formData = policy.getFilteredData()
-      const { dispatch } = redux.store
+      const { store: { dispatch }, actions: A } = redux
       const requestBody = new JsonapiRequest(this._directive.endpoint, formData).build()
       dispatch(post_req_state(this._directive.endpoint, requestBody))
-      dispatch(actions.formsDataClear(this._directive.formName))
+      dispatch(A.formsDataClear(this._directive.formName))
       const directiveRules = this._directive.rules ?? []
       directiveRules.forEach(rule => {
         switch (rule) {
           case 'close_dialog':
             if (this._directive.type === '$form_dialog') {
-              dispatch(actions.dialogClose())
+              dispatch(A.dialogClose())
             }
             break
           case 'disable_on_submit':
             button.disabled = true
             break
         }
+      })
+      const directiveActions = this._directive.actions ?? []
+      directiveActions.forEach(action => {
+        dispatch({
+          type: action.type,
+          payload: action.payload
+        })
       })
     }
   }
@@ -254,11 +263,34 @@ export default class ReduxHandlerFactory {
       this._initializePrivateFields(redux)
       if (this._directive.endpoint) {
         const { store: { dispatch } } = redux
+        const directiveActions = this._directive.actions ?? []
+        directiveActions.forEach(action => {
+          dispatch({
+            type: action.type,
+            payload: action.payload
+          })
+        })
         dispatch(post_req_state(this._directive.endpoint, {}, this._headers))
       }
     }
   }
 
+  /** Executes Redux actions specified in the directive */
+  private _runReduxActions = (redux: IRedux) => {
+    return async () => {
+      this._initializePrivateFields(redux)
+      const { store: { dispatch } } = redux
+      const directiveActions = this._directive.actions ?? []
+      directiveActions.forEach(action => {
+        dispatch({
+          type: action.type,
+          payload: action.payload
+        })
+      })
+    }
+  }
+
+  /** Returns the appropriate callback based on the directive type */
   getDirectiveCallback(): TReduxHandler | null {
     switch (this._directive.type) {
       case '$form':
@@ -268,6 +300,8 @@ export default class ReduxHandlerFactory {
         return this._makePostRequest
       case '$filter':
         return this._filterResourcesList
+      case '$redux_actions':
+        return this._runReduxActions
       case '$none':
         return this._makeGetRequest
       default:
