@@ -2,14 +2,14 @@ import type { ChipProps } from '@mui/material'
 import { get_base_route } from '../../business.logic/parsing'
 import type { IRedux, TReduxHandler } from '../../state'
 import StateFormItemCustom from '../StateFormItemCustom'
-import type { TStateFormITemCustomColor } from '@tuber/shared'
+import type { TStateFormItemCustomColor } from '@tuber/shared'
 
 export default class StateFormItemCustomChip<P=unknown>
   extends StateFormItemCustom<P>
 {
   private _handleOnClick?: TReduxHandler
   private _handleOnDelete?: TReduxHandler
-  get color(): TStateFormITemCustomColor { return this.hasState.color ?? 'default' }
+  get color(): TStateFormItemCustomColor { return this.hasState.color ?? 'default' }
   get variant(): ChipProps['variant'] { return this.hasState.variant ?? 'outlined' }
   get props(): Record<string, unknown> {
     return {

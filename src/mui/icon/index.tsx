@@ -53,7 +53,8 @@ const map: Record<string, (props: IxProps) => JSX.Element> = {
 }
 
 /**
- * e.g.
+ * Unified Icon Provider if these providers are installed. They may not be  
+ * @example
  * ```ts
  * const item = {
  *    has: {

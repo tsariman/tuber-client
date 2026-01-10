@@ -1,7 +1,7 @@
 import { default_handler, type TReduxHandler } from '../state'
 import AbstractState from './AbstractState'
 import type {
-  TStateFormITemCustomColor,
+  TStateFormItemCustomColor,
   TObj
 } from '@tuber/shared'
 import StateFormItemCustom from './StateFormItemCustom'
@@ -57,7 +57,7 @@ export default class StateLink<P = unknown>
     return this._handleOnClick || this.setHandleOnClick()
   }
   get href(): string { return this._linkState.href ?? '' }
-  get color(): TStateFormITemCustomColor { return this._linkHasState.color || 'default' }
+  get color(): TStateFormItemCustomColor { return this._linkHasState.color || 'default' }
   /** Set form field `onClick` attribute */
   set onClick(cb: TReduxHandler) {
     this._handleOnClick = cb

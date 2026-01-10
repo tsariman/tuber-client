@@ -20,7 +20,7 @@ import { type AppDispatch, type RootState, redux } from '../../state'
 import StateJsxLogo from './state.jsx.logo'
 import AppbarButton from '../link'
 import InputAdornment from '@mui/material/InputAdornment'
-import { StateJsxIcon, StateJsxUnifiedIconProvider } from '../icon'
+import { StateJsxIcon } from '../icon'
 import Menu from '@mui/material/Menu'
 import StateJsxChip from './state.jsx.chip'
 import { appbarQueriesSet } from '../../slices/appbarQueries.slice'
@@ -44,11 +44,9 @@ const Search = styled('div')(({ theme }) => ({
   },
 }))
 
-const UrlIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
+const SearchMode = styled(Box)(({ theme }) => ({
+  paddingLeft: theme.spacing(2),
   height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -174,9 +172,9 @@ const StateJsxAppbarMidSearch = ({ instance: page, app }: IMidSearch) => {
           )}
           <Search {...appbar.searchContainerProps}>
             {appbarChips.length < 1 ? (
-              <UrlIconWrapper>
-                <StateJsxUnifiedIconProvider instance={appbar.searchFieldIcon} />
-              </UrlIconWrapper>
+              <SearchMode>
+                <AppbarButton instance={appbar.startAdornmentButton} />
+              </SearchMode>
             ) : ( null )}
             <StyledInputBase
               {...appbar.inputBaseProps}

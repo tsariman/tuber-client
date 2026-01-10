@@ -10,6 +10,7 @@ import StatePageAppbar from './StatePageAppbar'
 /** Wrapper template class for a page appbar state */
 export default class StatePageAppbarMidSearch extends StatePageAppbar {
   
+  protected startAdornmentButtonDef?: StateLink<this>
   protected searchFieldIconButtonDef?: StateLink<this>
   protected inputChipsDefs?: StateFormItemCustomChip[]
   protected _chip?: StateAppbarInputChip
@@ -49,6 +50,17 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
     }
   }
 
+  get searchContainerProps(): Required<IStateAppbar>['searchContainerProps'] {
+    return {
+      ...super.searchContainerProps,
+      'sx': {
+        ...super.searchContainerProps?.sx,
+        'display': 'flex'
+      }
+    }
+  }
+
+  /** @deprecated */
   get searchFieldIcon(): StateFormItemCustom<this> {
     return new StateFormItemCustom({
       'icon': 'search_outline',
@@ -57,6 +69,22 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
       },
       ...this.appbarState.searchFieldIcon
     }, this)
+  }
+
+  get startAdornmentButton(): StateLink<this> {
+    return this.startAdornmentButtonDef || (this.startAdornmentButtonDef = new StateLink({
+      'type': 'icon',
+      'has': {
+        'icon': 'public_outline',
+      },
+      ...this.appbarState.startAdornmentButton,
+      'props': {
+        'aria-label': 'public',
+        'onMouseDown': this.handleMouseDown,
+        'edge': 'start',
+        ...this.appbarState.startAdornmentButtonProps
+      }
+    }, this))
   }
 
   get searchFieldIconButton(): StateLink<this> {
@@ -88,7 +116,7 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
       'sx': {
         ...this.appbarState.inputBaseProps?.sx,
         ...(this.inputHasNoChips ? {
-          'paddingLeft': (theme) => `calc(1em + ${theme.spacing(4)})`
+          // 'paddingLeft': (theme) => `calc(1em + ${theme.spacing(4)})`
         } : {
           'paddingLeft': .5,
         }),

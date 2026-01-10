@@ -1,4 +1,4 @@
-import { type TThemeMode, type IConfiguration } from '@tuber/shared'
+import type { TThemeMode, IConfiguration } from '@tuber/shared'
 import get_config from './business.logic/Configuration'
 
 const initConfObj = {

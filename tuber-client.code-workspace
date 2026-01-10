@@ -7,5 +7,8 @@
 			"path": "../tuber-shared"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"editor.insertSpaces": true,
+		"editor.tabSize": 2
+	}
 }

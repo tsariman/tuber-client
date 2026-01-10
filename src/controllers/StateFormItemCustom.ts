@@ -13,7 +13,7 @@ import type {
 import type {
   IHandlerDirective,
   TEventName,
-  TStateFormITemCustomColor,
+  TStateFormItemCustomColor,
   TObj
 } from '@tuber/shared'
 import type { IStateFormItemCustom } from '../interfaces/localized'
@@ -21,7 +21,7 @@ import React from 'react'
 import ReduxHandlerFactory from '../event/ReduxHandlerFactory'
 
 /** Wrapper class */
-export default class StateFormItemCustom<P, T = unknown>
+export default class StateFormItemCustom<P = unknown, T = unknown>
   extends AbstractState
   implements IStateFormItemCustom<T>
 {
@@ -48,7 +48,7 @@ export default class StateFormItemCustom<P, T = unknown>
   get callback(): TReduxHandler | undefined { return this.hasCallback }
   get classes(): unknown { return this.hasClasses }
   get content(): string { return this.hasState.content ?? '' }
-  get color(): TStateFormITemCustomColor { return this.hasState.color ?? 'default' }
+  get color(): TStateFormItemCustomColor { return this.hasState.color ?? 'default' }
   get defaultValue(): string { return this.hasState.defaultValue ?? '' }
   get faIcon(): string { return this.hasState.faIcon ?? '' }
   get icon(): string { return this.hasState.icon ?? '' }
@@ -94,7 +94,12 @@ export default class StateFormItemCustom<P, T = unknown>
   }
 
   get route(): string { return this.hasState.route ?? '' }
-  get text(): string { return this.hasState.text ?? '' }
+  get text(): string {
+    return this.hasState.text
+      ?? this.hasState.label
+      ?? this.hasState.title
+      ?? ''
+  }
   get helperText(): string { return this.hasState.helperText ?? '' }
   get title(): string { return this.hasState.title ?? '' }
   /**
