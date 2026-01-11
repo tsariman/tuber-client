@@ -18,7 +18,7 @@ import type {
 } from '@tuber/shared'
 import type { IStateFormItemCustom } from '../interfaces/localized'
 import React from 'react'
-import ReduxHandlerFactory from '../event/ReduxHandlerFactory'
+import ReduxHandlerFactory from '../business.logic/ReduxHandlerFactory'
 import { get_handler_registry } from '../business.logic/HandlerRegistry'
 
 /** Wrapper class */

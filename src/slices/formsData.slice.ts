@@ -1,22 +1,16 @@
-import { createSlice } from '@reduxjs/toolkit';
-import initialState from '../state/initial.state';
-import type { TObj } from '@tuber/shared';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import initialState from '../state/initial.state'
+import type { TObj } from '@tuber/shared'
 
 export interface IFormsDataArgs {
-  formName: string;
-  name: string;
-  value: unknown;
+  formName: string
+  name: string
+  value: unknown
 }
 
 interface IFormsDataReducerArgs {
-  type: string;
-  payload: IFormsDataArgs;
-}
-
-interface IFormsDataClear {
-  type: string;
-  /** Form name */
-  payload: string;
+  type: string
+  payload: IFormsDataArgs
 }
 
 export const formsDataSlice = createSlice({
@@ -24,18 +18,18 @@ export const formsDataSlice = createSlice({
   initialState: initialState.formsData,
   reducers: {
     formsDataUpdate: (state, { payload }: IFormsDataReducerArgs) => {
-      const { formName, name, value } = payload;
+      const { formName, name, value } = payload
       state[formName] = state[formName] || {};
-      (state[formName] as TObj)[name] = value;
+      (state[formName] as TObj)[name] = value
     },
     /** pass the form name to clear the form data. */
-    formsDataClear: (state, { payload }: IFormsDataClear) => {
-      delete state[payload];
+    formsDataClear: (state, { payload }: PayloadAction<string>) => {
+      delete state[payload]
     },
   }
-});
+})
 
-export const formsDataActions = formsDataSlice.actions;
-export const { formsDataClear, formsDataUpdate } = formsDataSlice.actions;
+export const formsDataActions = formsDataSlice.actions
+export const { formsDataClear, formsDataUpdate } = formsDataSlice.actions
 
-export default formsDataSlice.reducer;
+export default formsDataSlice.reducer

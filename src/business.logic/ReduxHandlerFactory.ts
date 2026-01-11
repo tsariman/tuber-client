@@ -8,7 +8,7 @@ import {
   FormValidationPolicy,
   ler,
   pre
-} from '../business.logic'
+} from '.'
 import {
   type TStateKeys,
   type TStatePathnames,
