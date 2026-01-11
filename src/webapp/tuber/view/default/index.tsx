@@ -4,7 +4,6 @@ import { StatePage, StatePagesData } from 'src/controllers'
 import type { IBookmark } from '../../tuber.interfaces'
 import BookmarkList from './list'
 import TuberPlayer from './player'
-import tuber_register_callbacks from '../../callbacks/tuber.callbacks'
 import { styled, useTheme } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Toolbar from '@mui/material/Toolbar'
@@ -21,8 +20,17 @@ import {
   SHOW_THUMBNAIL,
 } from '../../tuber.config'
 import { pagesDataAdd } from 'src/slices/pagesData.slice'
+import { get_handler_registry } from 'src/business.logic/HandlerRegistry'
+import prodCallbacks from '../../callbacks/prod.callbacks'
+import Config from 'src/config'
+import devCallbacks from '../../callbacks/dev.callbacks'
 
-tuber_register_callbacks()
+const handlerRegistry = get_handler_registry()
+const namespace = 'tuberCallbacks'
+handlerRegistry.registerMultipleHandlers(namespace, prodCallbacks)
+if (Config.DEV) {
+  handlerRegistry.registerMultipleHandlers(namespace, devCallbacks)
+}
 
 const TuberPlayerWrapper = styled('div')(({ theme }) => ({
   flexGrow: 1,

@@ -1,6 +1,8 @@
 
 # Development Changes Log
 
+## `202601111319` [Refactor] Update HandlerRegistry to remove namespace parameter and improve handler registration
+
 ## `202601102148` [Refactor] Move HandlerRegistry and restore WebApps registration
 
 ## `202601101749` [Refactor] Update type imports and fix naming inconsistencies; enhance appbar functionality and add menu component

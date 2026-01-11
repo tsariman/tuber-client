@@ -1,5 +1,7 @@
 import type { JSX } from 'react'
 
+// TODO: Implement a proper WebApp registry system
+
 const WebApps: Record<string, JSX.Element|null> = {}
 
 export function registerWebApp(name: string, webApp: JSX.Element) {

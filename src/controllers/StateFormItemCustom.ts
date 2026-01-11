@@ -1,5 +1,5 @@
 import type { IRedux, TReduxHandler } from '../state'
-import { ler, get_val } from '../business.logic'
+import { ler } from '../business.logic'
 import AbstractState from './AbstractState'
 import type {
   FormControlLabelProps,
@@ -19,6 +19,7 @@ import type {
 import type { IStateFormItemCustom } from '../interfaces/localized'
 import React from 'react'
 import ReduxHandlerFactory from '../event/ReduxHandlerFactory'
+import { get_handler_registry } from '../business.logic/HandlerRegistry'
 
 /** Wrapper class */
 export default class StateFormItemCustom<P = unknown, T = unknown>
@@ -224,16 +225,14 @@ export default class StateFormItemCustom<P = unknown, T = unknown>
   getHandler = (
     event: TEventName = 'onclick'
   ): TReduxHandler | undefined => {
-    const handlerName = this.hasState[`${event}Handler`]
-    if (!handlerName) {
-      return
+    const path = this.hasState[`${event}Handler`]
+    if (!path || path.trim() === '') { return }
+    const handlerRegistry = get_handler_registry()
+    const handler = handlerRegistry.getHandlerByPath(path)
+    if (typeof handler === 'function') {
+      return handler
     }
-    const handler = get_val<TReduxHandler>(window, handlerName)
-    if (typeof handler !== 'function') {
-      ler(`getHandler(): '${handlerName}' not a function`)
-      return
-    }
-    return handler
+    ler(`getHandler(): '${path}' not a function`)
   } // END of method
 
   /** Generate callback */
