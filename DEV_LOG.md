@@ -1,6 +1,8 @@
 
 # Development Changes Log
 
+## `202601102148` [Refactor] Move HandlerRegistry and restore WebApps registration
+
 ## `202601101749` [Refactor] Update type imports and fix naming inconsistencies; enhance appbar functionality and add menu component
 
 ## `202601082247` [Refactor] Enhance ReduxHandlerFactory to support dynamic actions and improve state handling
