@@ -141,10 +141,10 @@ const net_patch_state_reducer = <T=unknown>($oldState: unknown, $fragment: unkno
         && '_id' in newStateVal
         && typeof newStateVal._id === 'string'
       ) {
-        ON_NET_LOAD_CALLBACK_LIST[newStateVal._id]
+        ON_NET_LOAD_HANDLER_LIST[newStateVal._id]
           ?.forEach(callback => callback(redux))
         // Delete the list of callbacks after they have been run.
-        delete ON_NET_LOAD_CALLBACK_LIST[newStateVal._id]
+        delete ON_NET_LOAD_HANDLER_LIST[newStateVal._id]
       }
     }
   } catch (e) {
@@ -435,20 +435,20 @@ export const schedule_callback_run = (
   }, time)
 }
 
-interface IOnNetLoadCallbackList {
+interface IOnNetLoadHandlerList {
   [_id: string]: ((redux: IRedux) => void)[]
 }
 
 /** Map list of function */
-const ON_NET_LOAD_CALLBACK_LIST: IOnNetLoadCallbackList = {}
+const ON_NET_LOAD_HANDLER_LIST: IOnNetLoadHandlerList = {}
 
 /** Run a list of function when a state with a certain id is loaded. */
 export function on_net_load_run(
   _id: string,
   callback: (redux: IRedux) => void
 ) {
-  ON_NET_LOAD_CALLBACK_LIST[_id] = ON_NET_LOAD_CALLBACK_LIST[_id] ?? []
-  ON_NET_LOAD_CALLBACK_LIST[_id].push(callback)
+  ON_NET_LOAD_HANDLER_LIST[_id] = ON_NET_LOAD_HANDLER_LIST[_id] ?? []
+  ON_NET_LOAD_HANDLER_LIST[_id].push(callback)
 }
 /** Reads the state tree managed by the store. */
 export const get_state = (): RootState => store.getState()
