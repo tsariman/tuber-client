@@ -45,7 +45,7 @@ const Search = styled('div')(({ theme }) => ({
 }))
 
 const SearchMode = styled(Box)(({ theme }) => ({
-  paddingLeft: theme.spacing(2),
+  paddingLeft: theme.spacing(1.5),
   height: '100%',
   display: 'flex',
   alignItems: 'center',

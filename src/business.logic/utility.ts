@@ -30,11 +30,11 @@ export const is_struct = <T=object>(obj: TU): obj is T => {
 }
 /** Checks if the argument is a `string` that is non-empty. Returns `true` if it is */
 export const is_non_empty_string = (arg: TU): arg is string => {
-  return typeof arg === 'string' && arg.length > 0
+  return typeof arg === 'string' && arg.trim().length > 0
 }
 /** Checks if the argument is a `number`. Returns `true` if it is */
 export const is_number = (arg: TU): arg is number => {
-  return typeof arg === 'number'
+  return typeof arg === 'number' && !isNaN(arg)
 }
 /** Checks if the argument is `undefined`. Returns `true` if it is */
 export const is_undefined = (arg: TU): arg is undefined => {
@@ -42,6 +42,23 @@ export const is_undefined = (arg: TU): arg is undefined => {
 }
 /** Assigns a type to argument if its unknown */
 export const as = <T>(arg: unknown): T => arg as T
+
+/**
+ * Checks if the value is a valid input value (non-empty string, finite number, or boolean)
+ * @param val - The value to validate
+ * @returns `true` if the value is a non-empty string, a finite number, or a boolean; otherwise `false`
+ * @example
+ * valid_input_val("hello") // true
+ * valid_input_val(42) // true
+ * valid_input_val(0) // true
+ * valid_input_val(true) // true
+ * valid_input_val("") // false
+ * valid_input_val(NaN) // false
+ * valid_input_val(null) // false
+ */
+export const valid_input_val = (val: TU): boolean => {
+  return is_non_empty_string(val) || is_number(val) || typeof val === 'boolean'
+}
 
 interface IReadme {
   has: {

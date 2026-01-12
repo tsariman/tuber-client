@@ -189,11 +189,11 @@ export default class ReduxHandlerFactory {
     await Promise.all(promises)
   }
 
-  /** Submits form data using the directive configuration */
-  private _submitFormData = (redux: IRedux) => {
+  /** Submit the form data via a POST request to create a new resource */
+  private _postFormData = (redux: IRedux) => {
     return async (e: unknown) => {
       if (!this._directive.formName || !this._directive.endpoint) {
-        ler('_submitFormData(): Missing required formName or endpoint from directive')
+        ler('_postFormData(): Missing required formName or endpoint from directive')
         return
       }
       this._initializePrivateFields(redux)
@@ -235,6 +235,12 @@ export default class ReduxHandlerFactory {
       })
     }
   }
+
+  // private _patchFormData = (redux: IRedux) => {
+  //   return async () => {
+  //     // TODO: Implement form data PATCH submission.
+  //   }
+  // }
 
   private _filterResourcesList = (redux: IRedux) => {
     return async () => {
@@ -295,7 +301,7 @@ export default class ReduxHandlerFactory {
     switch (this._directive.type) {
       case '$form':
       case '$form_dialog':
-        return this._submitFormData
+        return this._postFormData
       case '$form_none':
         return this._makePostRequest
       case '$filter':

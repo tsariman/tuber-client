@@ -91,13 +91,16 @@ describe('utility.ts', () => {
     });
 
     describe('is_number', () => {
-      it('should return true for numbers', () => {
+      it('should return true for finite numbers', () => {
         expect(is_number(0)).toBe(true);
         expect(is_number(123)).toBe(true);
         expect(is_number(-456)).toBe(true);
         expect(is_number(3.14)).toBe(true);
-        expect(is_number(NaN)).toBe(true);
         expect(is_number(Infinity)).toBe(true);
+      });
+
+      it('should return false for NaN', () => {
+        expect(is_number(NaN)).toBe(false);
       });
 
       it('should return false for non-numbers', () => {

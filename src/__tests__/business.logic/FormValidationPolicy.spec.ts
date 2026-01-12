@@ -53,30 +53,39 @@ describe('FormValidationPolicy', () => {
     // Mock form error profiles with validation rules
     mockFormErrorProfiles = {
       username: {
+        is: { required: true },
         required: true,
         requiredMessage: 'Username is required',
         maxLength: 20,
         maxLengthMessage: 'Username must be 20 characters or less',
         validationRegex: '^[a-zA-Z0-9_]+$',
-        validationMessage: 'Username can only contain letters, numbers, and underscores'
+        validationMessage: 'Username can only contain letters, numbers, and underscores',
+        invalidationRegex: '^(admin|root|test)$',
+        invalidationMessage: 'Username cannot be admin, root, or test'
       },
       email: {
+        is: { required: true },
         required: true,
         requiredMessage: 'Email is required',
         validationRegex: '^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$',
         validationMessage: 'Please enter a valid email address'
       },
       password: {
+        is: { required: true },
         required: true,
         requiredMessage: 'Password is required',
         maxLength: 50,
         maxLengthMessage: 'Password must be 50 characters or less'
       },
       confirmPassword: {
+        is: { required: true },
         required: true,
-        requiredMessage: 'Password confirmation is required'
+        requiredMessage: 'Password confirmation is required',
+        mustMatch: 'password',
+        mustMatchMessage: 'Passwords must match'
       },
       bio: {
+        is: { required: false },
         required: false,
         maxLength: 500,
         maxLengthMessage: 'Bio must be 500 characters or less'
@@ -126,7 +135,9 @@ describe('FormValidationPolicy', () => {
       // Return a new mock instance for each constructor call
       return {
         configure: vi.fn(),
-        get: vi.fn().mockReturnValue(mockFormErrorProfiles),
+        get: vi.fn().mockReturnValue({
+          profile: mockFormErrorProfiles
+        }),
         hasError: vi.fn().mockReturnValue(false),
         getError: vi.fn().mockReturnValue(false),
         getMessage: vi.fn().mockReturnValue(''),
@@ -352,7 +363,7 @@ describe('FormValidationPolicy', () => {
       });
     });
 
-    it('should return null when no form data exists', () => {
+    it('should detect required field errors when no form data exists', () => {
       // For no form data case, the formsData object should not have the form at all
       mockStore.getState.mockReturnValue({
         formsDataErrors: mockFormsDataErrorsState,
@@ -364,7 +375,31 @@ describe('FormValidationPolicy', () => {
       const newPolicy = new FormValidationPolicy<TestFormData>(mockRedux, FORM_NAME);
       const validationErrors = newPolicy.applyValidationSchemes();
 
-      expect(validationErrors).toBeNull();
+      expect(validationErrors).toHaveLength(4);
+      expect(validationErrors).toEqual(
+        expect.arrayContaining([
+          {
+            name: 'username',
+            error: true,
+            message: 'Username is required'
+          },
+          {
+            name: 'email',
+            error: true,
+            message: 'Email is required'
+          },
+          {
+            name: 'password',
+            error: true,
+            message: 'Password is required'
+          },
+          {
+            name: 'confirmPassword',
+            error: true,
+            message: 'Password confirmation is required'
+          }
+        ])
+      );
     });
 
     it('should return null when no validation errors found', () => {
@@ -475,7 +510,7 @@ describe('FormValidationPolicy', () => {
       (StateFormsDataErrors as unknown as Mock).mockImplementationOnce(function(this: unknown) {
         return {
           configure: vi.fn(),
-          get: vi.fn().mockReturnValue(mockFormErrorProfilesWithInvalidation),
+          get: vi.fn().mockReturnValue({ profile: mockFormErrorProfilesWithInvalidation }),
           hasError: vi.fn().mockReturnValue(false),
           getError: vi.fn().mockReturnValue(false),
           getMessage: vi.fn().mockReturnValue(''),
@@ -536,7 +571,7 @@ describe('FormValidationPolicy', () => {
       const newPolicy = new FormValidationPolicy<TestFormData>(mockRedux, FORM_NAME);
       const validationErrors = newPolicy.applyValidationSchemes();
 
-      expect(validationErrors).toHaveLength(3);
+      expect(validationErrors).toHaveLength(4);
       expect(validationErrors).toEqual(
         expect.arrayContaining([
           {
@@ -553,6 +588,11 @@ describe('FormValidationPolicy', () => {
             name: 'password',
             error: true,
             message: 'Password is required'
+          },
+          {
+            name: 'confirmPassword',
+            error: true,
+            message: 'Passwords must match'
           }
         ])
       );
