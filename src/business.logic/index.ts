@@ -86,7 +86,7 @@ export {
   is_object,
   is_record,
   is_struct,
-  is_non_empty_string,
+  non_empty_string,
   is_number,
   get_val,
   safely_get_as,

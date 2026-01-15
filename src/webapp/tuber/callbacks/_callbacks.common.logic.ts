@@ -101,6 +101,7 @@ export function get_form_data<T=unknown>(
     return null
   }
   const formData = policy.getFilteredData()
+  if (!formData) { return null }
   return { formData, formName }
 }
 

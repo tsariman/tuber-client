@@ -48,4 +48,6 @@ export interface IStatePageAppbarConfig {
   chips?: TStateAllChips
   route?: string
   template?: string
+  searchModeIcon?: string
+  searchModePlaceholder?: string
 }

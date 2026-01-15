@@ -26,6 +26,7 @@ import form_submit_edit_twitch_bookmark from './prod.bookmarks.204.twitch'
 import toggle_theme_mode from './prod.toggle.theme.mode'
 import { DIALOG_LOGIN_ID } from '../tuber.config'
 import { get_dialog_state } from 'src/state/net.actions'
+import appbar_toggle_search_scope from './prod.toggle.search.scope'
 
 /** Default callback for closing dialogs */
 function close_default (redux: IRedux) {
@@ -53,10 +54,11 @@ export function dialog_sign_in(redux: IRedux) {
 
 const prodCallbacks: { readonly [key: string]: TReduxHandler } = {
   defaultClose: close_default,
+  'toggleSearchScope': appbar_toggle_search_scope,
   '$1_C_1': dialog_new_bookmark_from_url,
   '$3_C_1': dialog_new_video_url,
   '$32_C_1': dialog_sign_in,
-  '$63_C_1': appbar_search_bookmarks, // appbarSearchBookmarks
+  '$63_C_1': appbar_search_bookmarks,
   '$1_C_2': dialog_new_bookmark_from_url_on_enter_key,
   '$6_C_1': form_submit_new_youtube_bookmark,
   '$7_C_1': form_submit_edit_youtube_bookmark,
@@ -78,7 +80,7 @@ const prodCallbacks: { readonly [key: string]: TReduxHandler } = {
   '$41_C_1': form_submit_sign_in,
   '$44_C_1': toggle_theme_mode,
   '$66_C_1': sign_out,
-  '$71_C_1': appbar_filter_bookmarks, // appbarFilterBookmarks
+  '$71_C_1': appbar_filter_bookmarks
   // TODO Add more callbacks here
 }
 

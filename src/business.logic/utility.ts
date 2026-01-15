@@ -29,7 +29,7 @@ export const is_struct = <T=object>(obj: TU): obj is T => {
   return obj !== null && typeof obj === 'object'
 }
 /** Checks if the argument is a `string` that is non-empty. Returns `true` if it is */
-export const is_non_empty_string = (arg: TU): arg is string => {
+export const non_empty_string = (arg: TU): arg is string => {
   return typeof arg === 'string' && arg.trim().length > 0
 }
 /** Checks if the argument is a `number`. Returns `true` if it is */
@@ -57,7 +57,7 @@ export const as = <T>(arg: unknown): T => arg as T
  * valid_input_val(null) // false
  */
 export const valid_input_val = (val: TU): boolean => {
-  return is_non_empty_string(val) || is_number(val) || typeof val === 'boolean'
+  return non_empty_string(val) || is_number(val) || typeof val === 'boolean'
 }
 
 interface IReadme {

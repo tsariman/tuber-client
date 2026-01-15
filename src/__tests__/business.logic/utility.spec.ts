@@ -3,7 +3,7 @@ import {
   is_object,
   is_record,
   is_struct,
-  is_non_empty_string,
+  non_empty_string,
   is_number,
   get_val,
   safely_get_as,
@@ -70,23 +70,23 @@ describe('utility.ts', () => {
       });
     });
 
-    describe('is_non_empty_string', () => {
+    describe('non_empty_string', () => {
       it('should return true for non-empty strings', () => {
-        expect(is_non_empty_string('hello')).toBe(true);
-        expect(is_non_empty_string('123')).toBe(true);
+        expect(non_empty_string('hello')).toBe(true);
+        expect(non_empty_string('123')).toBe(true);
       });
 
       it('should return false for empty strings', () => {
-        expect(is_non_empty_string('')).toBe(false);
+        expect(non_empty_string('')).toBe(false);
       });
 
       it('should return false for non-strings', () => {
-        expect(is_non_empty_string(123)).toBe(false);
-        expect(is_non_empty_string(true)).toBe(false);
-        expect(is_non_empty_string({})).toBe(false);
-        expect(is_non_empty_string([])).toBe(false);
-        expect(is_non_empty_string(null)).toBe(false);
-        expect(is_non_empty_string(undefined)).toBe(false);
+        expect(non_empty_string(123)).toBe(false);
+        expect(non_empty_string(true)).toBe(false);
+        expect(non_empty_string({})).toBe(false);
+        expect(non_empty_string([])).toBe(false);
+        expect(non_empty_string(null)).toBe(false);
+        expect(non_empty_string(undefined)).toBe(false);
       });
     });
 

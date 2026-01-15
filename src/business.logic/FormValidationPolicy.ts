@@ -1,7 +1,7 @@
 import { type IRedux } from '../state'
 import type { TObj, IStateFormsDataErrors } from '@tuber/shared'
 import StateFormsDataErrors from '../controllers/StateFormsDataErrors'
-import { is_record, is_non_empty_string, valid_input_val, is_number } from './utility'
+import { is_record, non_empty_string, valid_input_val, is_number } from './utility'
 
 interface IValidation<T = TObj> {
   name: keyof T
@@ -153,7 +153,7 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
           error: true,
           message: field.requiredMessage
         })
-      } else if (is_non_empty_string(value)
+      } else if (non_empty_string(value)
         && is_number(field.maxLength)
         && value.length > field.maxLength
       ) {
@@ -162,8 +162,8 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
           error: true,
           message: field.maxLengthMessage
         })
-      } else if (is_non_empty_string(value)
-        && is_non_empty_string(field.invalidationRegex)
+      } else if (non_empty_string(value)
+        && non_empty_string(field.invalidationRegex)
         && this._regularExpTest(value, field.invalidationRegex)
       ) {
         vError.push({
@@ -171,8 +171,8 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
           error: true,
           message: field.invalidationMessage
         })
-      } else if (is_non_empty_string(value)
-        && is_non_empty_string(field.validationRegex)
+      } else if (non_empty_string(value)
+        && non_empty_string(field.validationRegex)
         && !this._regularExpTest(value, field.validationRegex)
       ) {
         vError.push({
@@ -180,8 +180,8 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
           error: true,
           message: field.validationMessage
         })
-      } else if (is_non_empty_string(field.mustMatch)
-        && is_non_empty_string(value)
+      } else if (non_empty_string(field.mustMatch)
+        && non_empty_string(value)
         && value !== formsData?.[field.mustMatch]
       ) {
         vError.push({

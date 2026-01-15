@@ -220,6 +220,30 @@ export function clean_endpoint_ending(endpoint?: string): string {
 }
 
 /**
+ * Ensures an endpoint starts with a forward slash.
+ * @param endpoint The endpoint string to process
+ * @returns The endpoint prefixed with '/' if it doesn't already start with one
+ */
+export const get_endpoint_starting_fixed = (endpoint?: string): string => {
+  if (endpoint) {
+    return endpoint.charAt(0) === '/' ? endpoint : '/' + endpoint
+  }
+  return ''
+}
+
+/**
+ * Ensures an endpoint does not start with a forward slash.
+ * @param endpoint The endpoint string to process
+ * @returns The endpoint without a leading '/' if it had one
+ */
+export const get_endpoint_starting_cleaned = (endpoint?: string): string => {
+  if (endpoint) {
+    return endpoint.charAt(0) === '/' ? endpoint.slice(1) : endpoint
+  }
+  return ''
+}
+
+/**
  * Ensures a query string starts with a question mark.
  *
  * @param query The query string to process

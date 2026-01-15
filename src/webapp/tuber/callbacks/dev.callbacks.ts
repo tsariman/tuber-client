@@ -262,6 +262,7 @@ function dev_form_submit_twitch_client_id(redux: IRedux) {
       return
     }
     const formData = policy.getFilteredData()
+    if (!formData) { return }
     pre()
     dispatch(post_req_state('dev/twitch/client-id', {
       client_id: formData.client_id,
@@ -295,6 +296,7 @@ function dev_form_submit_save_config_value(redux: IRedux) {
       return
     }
     const formData = policy.getFilteredData()
+    if (!formData) { return }
     pre()
     dispatch(post_req_state(
       `dev/${pageKey}`,

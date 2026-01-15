@@ -121,10 +121,12 @@ const ColorCodedScore = React.memo<IRatingProps>(({ bookmark }) => {
   )
 })
 
+const EMPTY_ARRAY: IJsonapiResponseResource<IBookmarkVote>[] = []
+
 const BookmarkActionsToolbar = React.memo(({ i, bookmark }: IBookmarkActionToolbarProps) => {
   const netState = useSelector((rootState: RootState) => rootState.net)
   const net = useMemo(() => new StateNet(netState), [netState])
-  const bookmarkVotesState = useSelector((rootState: RootState) => rootState.data['bookmark-votes'] || [])
+  const bookmarkVotesState = useSelector((rootState: RootState) => rootState.data['bookmark-votes'] || EMPTY_ARRAY)
   const voteIndex = useMemo(() => {
     return bookmarkVotesState.findIndex((
       vote: IJsonapiResponseResource<IBookmarkVote>

@@ -25,6 +25,8 @@ import Menu from '@mui/material/Menu'
 import StateJsxChip from './state.jsx.chip'
 import { appbarQueriesSet } from '../../slices/appbarQueries.slice'
 import { drawerOpen } from '../../slices/drawer.slice'
+import { get_val } from 'src/business.logic/utility'
+import { get_endpoint_starting_cleaned } from 'src/business.logic/parsing'
 
 interface IMidSearch {
   instance: StatePage
@@ -75,20 +77,32 @@ const StateJsxAppbarMidSearch = ({ instance: page, app }: IMidSearch) => {
     () => new StateAppbarDefault(defaultAppbarState, StateFactory.parent),
     [defaultAppbarState]
   )
-  const appbar = React.useMemo(
-    () => new StatePageAppbarMidSearch(page.appbarState, page),
-    [page]
-  )
   const chips = useSelector((rootState: RootState) => rootState.chips)
-  const { route } = app
-  appbar.configure({
-    $default,
-    allPages: page.parent,
-    app,
-    chips,
-    route,
-    template: page._key
-  })
+  const route = get_endpoint_starting_cleaned(app.route)
+  const searchModePlaceholder = useSelector(
+    (rootState: RootState) => get_val<string>(rootState.pagesData, `${route}.placeholder`)
+  )
+  const searchModeIcon = useSelector(
+    (rootState: RootState) => get_val<string>(rootState.pagesData, `${route}.icon`)
+  )
+  const appbar = React.useMemo(
+    () => {
+      const appbar = new StatePageAppbarMidSearch(page.appbarState, page)
+      appbar.configure({
+        $default,
+        allPages: page.parent,
+        app,
+        chips,
+        route,
+        searchModeIcon,
+        searchModePlaceholder,
+        template: page._key
+      })
+      return appbar
+    },
+    [page, app, chips, route, searchModeIcon, searchModePlaceholder, $default]
+  )
+
   const dispatch = useDispatch<AppDispatch>()
   const appbarQueriesState = useSelector(
     (rootState: RootState) => rootState.appbarQueries

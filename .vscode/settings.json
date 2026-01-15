@@ -1,25 +1,9 @@
 {
-  "search.exclude": {
-    "**/.yarn": true,
-    "**/.pnp.*": true
+  "debug.javascript.terminalOptions": {
+    "skipFiles": [
+      "<node_internals>/**",
+      "**/node_modules/**"
+    ]
   },
-  "eslint.nodePath": ".yarn/sdks",
-  "typescript.tsdk": ".yarn/sdks/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "[typescript]": {
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true
-  },
-  "[javascript]": {
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true
-  },
-  "[json]": {
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true
-  },
-  "[yaml]": {
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true
-  }
+  "debug.javascript.usePreview": true
 }

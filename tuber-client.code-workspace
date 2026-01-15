@@ -1,10 +1,16 @@
 {
 	"folders": [
 		{
+			"name": "tuber-client",
 			"path": "."
 		},
 		{
+			"name": "tuber-shared",
 			"path": "../tuber-shared"
+		},
+		{
+			"name": "tuber-server",
+			"path": "../tuber-server"
 		}
 	],
 	"settings": {

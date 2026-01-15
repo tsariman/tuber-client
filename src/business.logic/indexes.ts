@@ -1,6 +1,6 @@
 import { error_id } from './errors'
 import type { IJsonapiResponseResource } from '@tuber/shared'
-import { is_non_empty_string } from './utility'
+import { non_empty_string } from './utility'
 
 export type TIndexes<T> = Record<string,
   Record<string, IJsonapiResponseResource<T>>
@@ -140,7 +140,7 @@ export function index_by_attribute_member<T>(
   const object: Record<string, IJsonapiResponseResource<T>> = {}
   array.forEach(resource => {
     const key = resource.attributes?.[attribute]
-    if (is_non_empty_string(key)) { object[key] = resource}
+    if (non_empty_string(key)) { object[key] = resource}
   })
   indexesCache[attribute as string] = object
   return object

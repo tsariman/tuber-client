@@ -16,6 +16,8 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
   protected _chip?: StateAppbarInputChip
   protected _route?: string
   protected _template?: string
+  private _searchModeIcon?: string
+  private _searchModePlaceholder?: string
 
   configure = (opts: IStatePageAppbarConfig) => {
     const { chips, route, template, $default, app, allPages } = opts
@@ -28,6 +30,8 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
     }
     this._route = route
     this._template = template
+    this._searchModeIcon = opts.searchModeIcon
+    this._searchModePlaceholder = opts.searchModePlaceholder
   }
 
   /** Whether the app bar has any chips in the search field. */
@@ -74,15 +78,16 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
   get startAdornmentButton(): StateLink<this> {
     return this.startAdornmentButtonDef || (this.startAdornmentButtonDef = new StateLink({
       'type': 'icon',
-      'has': {
-        'icon': 'public_outline',
-      },
       ...this.appbarState.startAdornmentButton,
+      'has': {
+        ...this.appbarState.startAdornmentButton?.has,
+        'icon': this._searchModeIcon ?? 'public_outline',
+      },
       'props': {
         'aria-label': 'public',
         'onMouseDown': this.handleMouseDown,
+        ...this.appbarState.startAdornmentButtonProps,
         'edge': 'start',
-        ...this.appbarState.startAdornmentButtonProps
       }
     }, this))
   }
@@ -108,11 +113,11 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
   get inputBaseProps(): Required<IStateAppbar>['inputBaseProps'] {
     return {
       'autoComplete': 'off',
-      'placeholder': 'Search…',
       'inputProps': { 'aria-label': 'search' },
       'fullWidth': true,
       'id': 'search-field',
       ...this.appbarState.inputBaseProps,
+      'placeholder': this._searchModePlaceholder ?? 'Search…',
       'sx': {
         ...this.appbarState.inputBaseProps?.sx,
         ...(this.inputHasNoChips ? {
@@ -194,5 +199,6 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
         item => new StateFormItemCustomChip(item, this)
       ))
   }
+
 
 }

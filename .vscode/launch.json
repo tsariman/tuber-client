@@ -1,10 +1,30 @@
 {
+  "version": "0.2.0",
   "configurations": [
     {
-      "type": "msedge",
-      "name": "http://localhost:5173",
+      "name": "Client: Debug (Chrome + Vite)",
+      "type": "chrome",
       "request": "launch",
-      "url": "http://localhost:5173"
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "client: dev",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "/*": "${workspaceFolder}/*"
+      },
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
+      ],
+      "timeout": 30000
+    },
+    {
+      "name": "Client: Attach (Chrome 9222)",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true
     }
   ]
 }
