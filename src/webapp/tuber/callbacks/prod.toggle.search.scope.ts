@@ -1,18 +1,18 @@
 import { get_val, is_object, ler, non_empty_string } from 'src/business.logic'
 import type { IRedux } from 'src/state'
 
-type TSearchMode = 'public' | 'private' | 'both'
+type TSearchMode = 'public' | 'private' | 'all'
 
-const searchModes: TSearchMode[] = [ 'private', 'public', 'both' ]
+const searchModes: TSearchMode[] = [ 'private', 'public', 'all' ]
 const icon: Record<TSearchMode, string> = {
   public: 'public_outline',
-  private: 'user',
-  both: 'user_circle'
+  private: 'lock',
+  all: 'user_circle'
 }
 const placeholder: Record<TSearchMode, string> = {
   public: 'Search public bookmarks…',
   private: 'Search your bookmarks…',
-  both: 'Search all bookmarks…'
+  all: 'Search all bookmarks…'
 }
 
 /**

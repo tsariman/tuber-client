@@ -71,7 +71,11 @@ export default function appbar_search_bookmarks (redux: IRedux) {
 
     pre()
     const encodedSearchQuery = encodeURIComponent(queryObj.value)
-    const args = `filter[search]=${encodedSearchQuery}`
-    dispatch(get_req_state(endpoint, args))
+    const searchMode = get_val(rootState.pagesData, `${pageKey}.searchMode`)
+    const args = [ `filter[search]=${encodedSearchQuery}` ]
+    if (searchMode) {
+      args.push(`filter[mode]=${searchMode}`)
+    }
+    dispatch(get_req_state(endpoint, args.join('&')))
   }
 }
