@@ -1,6 +1,8 @@
 
 # Development Changes Log
 
+## `202601152122` [Refactor] Rename 'mode' to 'theme_mode' for consistency across the application
+
 ## `202601151629` [Refactor] Update search mode handling and improve argument construction for bookmark search
 
 ## `202601151048` [Refactor] Update utility functions and enhance search functionality in appbar

@@ -78,13 +78,13 @@ export default function form_submit_sign_in(redux: IRedux) {
       return
     }
     const formData = policy.getFilteredData()
-    const mode = Config.read<TThemeMode>(THEME_MODE, THEME_DEFAULT_MODE)
+    const themeMode = Config.read<TThemeMode>(THEME_MODE, THEME_DEFAULT_MODE)
     dispatch(post_req_state(
       endpoint,
       new JsonapiRequest('signin', {
         'credentials': formData,
         'route': rootState.app.route,
-        'mode': mode
+        'theme_mode': themeMode
       }).build()
     ))
     pre()

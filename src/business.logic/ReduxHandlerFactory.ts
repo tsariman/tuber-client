@@ -34,11 +34,11 @@ export default class ReduxHandlerFactory {
   private __pathnames?: TStatePathnames
   private __headers?: Record<string, string>
   private __origin?: string
-  private _mode: TThemeMode
+  private _themeMode: TThemeMode
 
   constructor (directive: IHandlerDirective) {
     this._directive = directive
-    this._mode = Config.read<TThemeMode>(THEME_MODE, THEME_DEFAULT_MODE)
+    this._themeMode = Config.read<TThemeMode>(THEME_MODE, THEME_DEFAULT_MODE)
     pre(this._errorPrefix)
   }
 
@@ -99,7 +99,7 @@ export default class ReduxHandlerFactory {
     const url = `${rootState.app.origin}${pathname}`
     const response = await post_fetch(url, {
       key,
-      'mode': this._mode
+      'theme_mode': this._themeMode
     }, this._headers)
     const errors = get_val<IJsonapiError[]>(response, 'errors')
     if (errors) {
@@ -135,7 +135,7 @@ export default class ReduxHandlerFactory {
       }
       const response = await post_fetch(url, {
         key,
-        'mode': this._mode
+        'theme_mode': this._themeMode
       }, this._headers)
       const errors = get_val<IJsonapiError[]>(response, 'errors')
       if (errors) {

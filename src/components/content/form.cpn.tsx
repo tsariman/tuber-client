@@ -30,7 +30,7 @@ export default function FormContent ({ instance, formName, type }: IFormContent)
   const appState = useSelector((state: RootState) => state.app)
   const formsState = useSelector((state: RootState) => state.forms)
   const pathnamesState = useSelector((state: RootState) => state.pathnames)
-  const mode = Config.read<TThemeMode>(THEME_MODE, THEME_DEFAULT_MODE)
+  const themeMode = Config.read<TThemeMode>(THEME_MODE, THEME_DEFAULT_MODE)
   const fetchingStateAllowed = useMemo(
     () => new StateApp(appState).fetchingStateAllowed,
     [appState]
@@ -50,10 +50,10 @@ export default function FormContent ({ instance, formName, type }: IFormContent)
     const key = get_state_form_name(formName)
     const formLoadAttempts = Config.read<number>(`${key}_load_attempts`, 0)
     if (formLoadAttempts < ALLOWED_ATTEMPTS) {
-      dispatch(post_req_state(FORMS, { key, mode }))
+      dispatch(post_req_state(FORMS, { key, theme_mode: themeMode }))
       Config.write(`${key}_load_attempts`, formLoadAttempts + 1)
     }
-  }, [instance, formName, allForms, dispatch, fetchingStateAllowed, mode, FORMS])
+  }, [instance, formName, allForms, dispatch, fetchingStateAllowed, themeMode, FORMS])
 
   const map: {[key in Required<IFormContent>['type']]: JSX.Element | null} = {
     page: (

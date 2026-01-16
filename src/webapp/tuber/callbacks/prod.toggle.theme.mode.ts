@@ -10,11 +10,11 @@ export default function toggle_theme_mode (redux: IRedux) {
   return async () => {
     const { store: { dispatch }, actions } = redux
     const rootState = redux.store.getState()
-    const cookieMode = get_cookie<TThemeMode>('mode')
-    const currentModeValue = cookieMode || THEME_DEFAULT_MODE
-    const oldMode = Config.read<TThemeMode>(
+    const cookieThemeMode = get_cookie<TThemeMode>('theme_mode')
+    const activeThemeMode = cookieThemeMode || THEME_DEFAULT_MODE
+    const previousThemeMode = Config.read<TThemeMode>(
       THEME_MODE,
-      currentModeValue
+      activeThemeMode
     )
     const {
       pagesLight,
@@ -27,7 +27,7 @@ export default function toggle_theme_mode (redux: IRedux) {
       themeDark
     } = rootState
     setTimeout(() => {
-      if (oldMode === 'dark') {
+      if (previousThemeMode === 'dark') {
         clear_last_content_jsx()
         dispatch(actions.dialogDismount())
         // dispatch(actions.appThemeModeUpdate('light'))
@@ -35,11 +35,11 @@ export default function toggle_theme_mode (redux: IRedux) {
         dispatch(actions.dialogsAddMultiple(dialogsLight))
         dispatch(actions.pagesAddMultiple(pagesLight))
         dispatch(actions.themeSet(themeLight))
-        document.cookie = 'mode=light'
+        document.cookie = 'theme_mode=light'
         Config.write(THEME_MODE, 'light')
         return
       }
-      if (oldMode === 'light') {
+      if (previousThemeMode === 'light') {
         clear_last_content_jsx()
         dispatch(actions.dialogDismount())
         // dispatch(actions.appThemeModeUpdate('dark'))
@@ -47,7 +47,7 @@ export default function toggle_theme_mode (redux: IRedux) {
         dispatch(actions.dialogsAddMultiple(dialogsDark))
         dispatch(actions.pagesAddMultiple(pagesDark))
         dispatch(actions.themeSet(themeDark))
-        document.cookie = 'mode=dark'
+        document.cookie = 'theme_mode=dark'
         Config.write(THEME_MODE, 'dark')
         return
       }

@@ -48,7 +48,7 @@ export default function App() {
       onPostReqHomePageState()
     }
 
-    Config.write(THEME_MODE, get_cookie('mode') || THEME_DEFAULT_MODE)
+    Config.write(THEME_MODE, get_cookie('theme_mode') || THEME_DEFAULT_MODE)
     initialize()
   }, [dispatch, app.fetchingStateAllowed, app.isBootstrapped, token])
 

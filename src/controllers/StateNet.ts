@@ -109,7 +109,7 @@ export default class StateNet extends AbstractState implements IStateNet {
     // Attempt to delete each cookie with all path/domain combinations
     for (let i = 0; i < cookies.length; i++) {
       const [ name ] = cookies[i].trim().split('=') || []
-      if (name === 'mode') {
+      if (name === 'theme_mode') {
         continue
       }
       

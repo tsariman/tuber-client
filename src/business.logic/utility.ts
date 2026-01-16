@@ -225,20 +225,20 @@ export function http_get(theUrl: string): void
 
 /**
  * Get the right theme state.
- * @param mode light or dark
+ * @param themeMode light or dark
  * @param main the main state
  * @param light the light state
  * @param dark the dark state
  * @returns the right state
  */
 export function get_themed_state<T = TU>(
-  mode: 'dark'|'light',
+  themeMode: 'dark'|'light',
   main: TU,
   light: TU,
   dark: TU
 ): T {
   if (light && dark) {
-    return mode === 'dark' ? dark as T : light as T
+    return themeMode === 'dark' ? dark as T : light as T
   }
   return main as T
 }

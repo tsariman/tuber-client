@@ -160,7 +160,7 @@ export async function get_dialog_state <T=unknown>(
     error_id(35).report_missing_dialog_key(registryKey) // error 35
     return null
   }
-  const mode = Config.read<TThemeMode>(THEME_MODE, THEME_DEFAULT_MODE)
+  const themeMode = Config.read<TThemeMode>(THEME_MODE, THEME_DEFAULT_MODE)
   const dialogActiveState = rootState.dialogs[dialogKey]
   const dialogLightState = rootState.dialogsLight[dialogKey]
   const dialogDarkState = rootState.dialogsDark[dialogKey]
@@ -174,7 +174,7 @@ export async function get_dialog_state <T=unknown>(
     }) // error 36
   }
   const dialogState = get_themed_state<IStateDialog<T>>(
-    mode,
+    themeMode,
     dialogActiveState,
     dialogLightState,
     dialogDarkState
@@ -186,7 +186,7 @@ export async function get_dialog_state <T=unknown>(
   const headersState = new StateNet(rootState.net).headers
   const response = await post_fetch(url, {
     'key': dialogKey,
-    'mode': mode
+    'theme_mode': themeMode
   }, headersState)
   const errors = get_val<IJsonapiError[]>(response, 'errors')
   if (errors) {
@@ -202,7 +202,7 @@ export async function get_dialog_state <T=unknown>(
   if (!light) error_id(40).report_missing_dialog_light_state(dialogKey) // error 40
   if (!dark) error_id(41).report_missing_dialog_dark_state(dialogKey) // error 41
   const themedDialogState = get_themed_state<IStateDialog<T>>(
-    mode,
+    themeMode,
     main,
     light,
     dark

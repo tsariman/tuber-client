@@ -149,7 +149,7 @@ describe('PageBlank Component', () => {
 
     expect(post_req_state).toHaveBeenCalledWith(
       '/pages',
-      { key: 'test-route', mode: 'light' },
+      { key: 'test-route', theme_mode: 'light' },
       { 'Content-Type': 'application/json' }
     );
   });
@@ -233,7 +233,7 @@ describe('PageBlank Component', () => {
 
     expect(post_req_state).toHaveBeenCalledWith(
       '/pages',
-      { key: 'test-route', mode: 'dark' },
+      { key: 'test-route', theme_mode: 'dark' },
       { 'Content-Type': 'application/json' }
     );
   });

@@ -37,7 +37,7 @@ export const DEFAULT_BACKGROUND_LIGHT = '#f4f6f8'
 
 /** Get default background color based on theme mode */
 const _default_background_color = () => {
-  const theme = get_cookie<TThemeMode>('mode')
+  const theme = get_cookie<TThemeMode>('theme_mode')
   return theme === 'light' ? DEFAULT_BACKGROUND_LIGHT : DEFAULT_BACKGROUND_DARK
 }
 
