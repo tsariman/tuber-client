@@ -1,6 +1,11 @@
 
 # Development Changes Log
 
+## `202602061917` [Refactor] Improve search mode toggle feature
+
+* Fix a bug with the toggling feature remain active after the user signs out.
+* When the user is not signed in, the search toggle button will display a dialog prompting the user to signing if pressed.
+
 ## `202601152122` [Refactor] Rename 'mode' to 'theme_mode' for consistency across the application
 
 ## `202601151629` [Refactor] Update search mode handling and improve argument construction for bookmark search
