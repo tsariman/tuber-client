@@ -55,4 +55,11 @@ export default class StateApp extends AbstractState implements IStateApp {
   get themeMode(): TThemeMode {
     return this._state.themeMode ?? Config.DEFAULT_THEME_MODE
   }
+  /** Returns the real route name */
+  get routeAsKey(): string {
+    if (this.route === '/') { return this.homepage }
+    return this.route.startsWith('/')
+      ? this.route.slice(1)
+      : this.route
+  }
 }

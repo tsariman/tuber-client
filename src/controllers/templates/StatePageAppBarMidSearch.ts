@@ -87,6 +87,7 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
         'aria-label': 'public',
         'onMouseDown': this.handleMouseDown,
         ...this.appbarState.startAdornmentButtonProps,
+        ...this.appbarState.startAdornmentButton?.props,
         'edge': 'start',
       }
     }, this))

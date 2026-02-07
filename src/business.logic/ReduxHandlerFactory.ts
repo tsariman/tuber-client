@@ -297,7 +297,7 @@ export default class ReduxHandlerFactory {
   }
 
   /** Returns the appropriate callback based on the directive type */
-  getDirectiveCallback(): TReduxHandler | null {
+  getEventHandler(): TReduxHandler | null {
     switch (this._directive.type) {
       case '$form':
       case '$form_dialog':
@@ -311,7 +311,7 @@ export default class ReduxHandlerFactory {
       case '$none':
         return this._makeGetRequest
       default:
-        ler(`getDefaultCallback(): Invalid directive type: ${this._directive.type}`)
+        ler(`getEventHandler(): Invalid directive type: ${this._directive.type}`)
         return null
     }
   }

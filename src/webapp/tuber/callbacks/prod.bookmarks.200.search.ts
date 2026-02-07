@@ -2,10 +2,7 @@ import { type IRedux } from 'src/state'
 import { mongo_object_id, get_val } from 'src/business.logic/utility'
 import { get_req_state } from 'src/state/net.actions'
 import { APP_IS_FETCHING_BOOKMARKS, PAGE_RESEARCH_APP_ID } from '../tuber.config'
-import {
-  get_endpoint_starting_cleaned,
-  get_parsed_content
-} from 'src/business.logic/parsing'
+import { get_parsed_content } from 'src/business.logic/parsing'
 import { pre, log } from 'src/business.logic/logging'
 import {
   StateAppbarQueries,
@@ -23,7 +20,7 @@ export default function appbar_search_bookmarks (redux: IRedux) {
   return async () => {
     const { store: { dispatch, getState }, actions: A } = redux
     const rootState = getState()
-    const route = get_endpoint_starting_cleaned(new StateApp(rootState.app).route)
+    const route = new StateApp(rootState.app).routeAsKey
     const queries = new StateAppbarQueries(rootState.appbarQueries)
     const queryObj = queries.get(route)
     pre('appbar_search_bookmarks():')

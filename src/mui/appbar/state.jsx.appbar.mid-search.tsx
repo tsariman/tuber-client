@@ -25,8 +25,7 @@ import Menu from '@mui/material/Menu'
 import StateJsxChip from './state.jsx.chip'
 import { appbarQueriesSet } from '../../slices/appbarQueries.slice'
 import { drawerOpen } from '../../slices/drawer.slice'
-import { get_val } from 'src/business.logic/utility'
-import { get_endpoint_starting_cleaned } from 'src/business.logic/parsing'
+import { get_val } from '../../business.logic/utility'
 
 interface IMidSearch {
   instance: StatePage
@@ -78,7 +77,7 @@ const StateJsxAppbarMidSearch = ({ instance: page, app }: IMidSearch) => {
     [defaultAppbarState]
   )
   const chips = useSelector((rootState: RootState) => rootState.chips)
-  const route = get_endpoint_starting_cleaned(app.route)
+  const route = app.routeAsKey
   const searchModePlaceholder = useSelector(
     (rootState: RootState) => get_val<string>(rootState.pagesData, `${route}.placeholder`)
   )

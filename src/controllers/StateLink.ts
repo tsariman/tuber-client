@@ -1,9 +1,6 @@
 import { default_handler, type TReduxHandler } from '../state'
 import AbstractState from './AbstractState'
-import type {
-  TStateFormItemCustomColor,
-  TObj
-} from '@tuber/shared'
+import type { TStateFormItemCustomColor, TO } from '@tuber/shared'
 import StateFormItemCustom from './StateFormItemCustom'
 import type { IStateFormItemCustom, IStateLink } from '../interfaces/localized'
 
@@ -32,7 +29,7 @@ export default class StateLink<P = unknown>
   configure(conf: unknown): void { void conf }
   get state(): IStateLink { return this._linkState }
   get parent(): P { return (this._parent ?? {}) as P }
-  get props(): TObj { return this._linkState.props ?? {} }
+  get props(): TO { return this._linkState.props ?? {} }
   get type(): Required<IStateLink>['type'] { return this._linkState.type || 'text' }
   get has(): StateFormItemCustom<this> {
     return this._linkHas

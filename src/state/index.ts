@@ -44,7 +44,7 @@ import {
   STATE_RESET,
   type IJsonapiStateResponse,
   type TEventHandler,
-  type TObj
+  type TO
 } from '@tuber/shared'
 import type { IState, TNetState } from '../interfaces/localized'
 import Config from '../config'
@@ -102,10 +102,10 @@ const appReducer = combineReducers({
  * [TODO] Write a unit test for this function
  */
 const net_patch_state_reducer = <T=unknown>($oldState: unknown, $fragment: unknown): T => {
-  const state = { ...($oldState as TObj) }
-  const fragment = $fragment as TObj
+  const state = { ...($oldState as TO) }
+  const fragment = $fragment as TO
   try {
-    for (const prop in fragment) {
+    for (const prop of Object.keys(fragment)) {
       const newStateVal = fragment[prop]
       switch (typeof newStateVal) {
       case 'undefined':
@@ -114,6 +114,11 @@ const net_patch_state_reducer = <T=unknown>($oldState: unknown, $fragment: unkno
       case 'object':
         if (newStateVal === null) continue
         if (!Array.isArray(newStateVal)) {
+          if ((newStateVal as TO).__delete) {
+            state[prop] = undefined
+            clear_last_content_jsx()
+            continue
+          }
           state[prop] = net_patch_state_reducer(state[prop], newStateVal)
         } else {
           state[prop] = [ ...newStateVal ] // arrays are never copied deeply

@@ -14,7 +14,7 @@ import type {
   IHandlerDirective,
   TEventName,
   TStateFormItemCustomColor,
-  TObj
+  TO
 } from '@tuber/shared'
 import type { IStateFormItemCustom } from '../interfaces/localized'
 import React from 'react'
@@ -95,6 +95,10 @@ export default class StateFormItemCustom<P = unknown, T = unknown>
   }
 
   get route(): string { return this.hasState.route ?? '' }
+  get endpoint(): string { return this.hasState.endpoint ?? '' }
+  get method(): IStateFormItemCustom<T>['method'] { return this.hasState.method }
+  get headers(): Record<string, string> | undefined { return this.hasState.headers }
+  get body(): Record<string, unknown> | undefined { return this.hasState.body }
   get text(): string {
     return this.hasState.text
       ?? this.hasState.label
@@ -148,7 +152,7 @@ export default class StateFormItemCustom<P = unknown, T = unknown>
   get endAdornment(): IStateFormItemCustom<T>['endAdornment'] {
     return this.hasState.endAdornment
   }
-  get props(): TObj { return this.hasState.props || {} }
+  get props(): TO { return this.hasState.props || {} }
   get formControlProps(): FormControlProps {
     return this.hasState.formControlProps ?? {}
   }
@@ -262,7 +266,7 @@ export default class StateFormItemCustom<P = unknown, T = unknown>
     }
     if (!handlerDirective) { return null }
     const factory = new ReduxHandlerFactory(handlerDirective)
-    const callback = factory.getDirectiveCallback()
+    const callback = factory.getEventHandler()
     return callback
   }
 
