@@ -34,6 +34,9 @@ export const appSlice = createSlice({
     appStatusUpdate: (state, action: PayloadAction<string>) => {
       state.status = action.payload
     },
+    appStatusClear: (state) => {
+      state.status = undefined
+    },
     appTaskCompleted: (state) => {
       state.status = APP_IS_READY
     },
@@ -90,6 +93,7 @@ export const {
   appTitleUpdate,
   appSwitchPage,
   appStatusUpdate,
+  appStatusClear,
   appBrowserSwitchPage,
   appSetFetchMessage,
   appThemeModeUpdate,

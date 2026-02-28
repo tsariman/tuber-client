@@ -93,6 +93,17 @@ export default function form_submit_sign_in(redux: IRedux) {
   }
 }
 
+/** @id 41_C_2 */
+export function form_submit_sign_in_enter_key(redux: IRedux) {
+  return async (event: KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      const handler = form_submit_sign_in(redux)
+      await handler()
+    }
+  }
+}
+
 /** @id 66_C_1 */
 export function sign_out(redux: IRedux) {
   return async () => {

@@ -53,7 +53,6 @@ export default class StateFormItem<P = StateForm, T = unknown>
   protected onfocusHandler?: unknown
   protected onkeydownHandler?: unknown
   protected onblurHandler?: unknown
-
   protected recursiveItems?: StateFormItem<P, T>[]
   protected itemInputProps?: StateFormItemInputProps<StateFormItem<P, T>>
 
@@ -115,48 +114,67 @@ export default class StateFormItem<P = StateForm, T = unknown>
   }
   get hasNoOnClickHandler() { return !!this.itemState.onClick }
   get hasNoOnChangeHandler() { return !!this.itemState.onChange }
+  /**
+   * A solution for allowing form items to have either a Redux handler or a regular
+   * callback function.
+   * Regular callbacks are likely defined in pure JavaScript when this project
+   * is a dependency.
+   * @param handler The original callback function.
+   * @returns A Redux handler if the original callback is a function, or null if it is not a function.
+   */
+  private _asReduxHandler = (handler: unknown): TReduxHandler | null => {
+    if (typeof handler === 'function') {
+      return (() => handler) as unknown as TReduxHandler
+    }
+    return null
+  }
   get focusReduxHandler(): TReduxHandler {
     return this.reduxFocus
       || (
-        this.reduxFocus = this.has.getDirectiveHandler('onfocus')
-          || this.has.getHandler('onfocus')
+        this.reduxFocus = this._asReduxHandler(this.onfocusHandler)
+          || this.has.reduxDirectiveHandler('onfocus')
+          || this.has.preDefinedHandler('onfocus')
           || this._getDummyReduxHandler('onfocus')
       )
   }
   get clickReduxHandler(): TReduxHandler {
     return this.reduxClick
       || (
-        this.reduxClick = this.has.getDirectiveHandler('onclick')
-          || this.has.getHandler('onclick')
+        this.reduxClick = this._asReduxHandler(this.onclickHandler)
+          || this.has.reduxDirectiveHandler('onclick')
+          || this.has.preDefinedHandler('onclick')
           || this.has.callback
-          || default_handler // this._getDummyReduxHandler('onclick')
+          || default_handler
       )
   }
   get changeReduxHandler(): TReduxHandler {
     return this.reduxChange
       || (
-        this.reduxChange = this.has.getDirectiveHandler('onchange')
-          || this.has.getHandler('onchange')
+        this.reduxChange = this._asReduxHandler(this.onchangeHandler)
+          || this.has.reduxDirectiveHandler('onchange')
+          || this.has.preDefinedHandler('onchange')
           || this._getDummyReduxHandler('onchange')
       )
   }
   get keydownReduxHandler(): TReduxHandler {
     return this.reduxKeydown
       || (
-        this.reduxKeydown = this.has.getDirectiveHandler('onkeydown')
-          || this.has.getHandler('onkeydown')
+        this.reduxKeydown = this._asReduxHandler(this.onkeydownHandler)
+          || this.has.reduxDirectiveHandler('onkeydown')
+          || this.has.preDefinedHandler('onkeydown')
           || this._getDummyReduxHandler('onkeydown')
       )
   }
   get blurReduxHandler(): TReduxHandler {
     return this.reduxBlur
       || (
-        this.reduxBlur = this.has.getDirectiveHandler('onblur')
-          || this.has.getHandler('onblur')
+        this.reduxBlur = this._asReduxHandler(this.onblurHandler)
+          || this.has.reduxDirectiveHandler('onblur')
+          || this.has.preDefinedHandler('onblur')
           || this._getDummyReduxHandler('onblur')
       )
   }
-  /** Callback to run on 'onClick' event. */
+  /** Callback to run on 'onFocus' event. */
   get onFocus(): unknown {
     return this.onfocusHandler ?? this.dummy_factory_handler
   }

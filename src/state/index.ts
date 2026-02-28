@@ -279,7 +279,7 @@ export const get_redux = (route = ''): IRedux => ({
   route
 })
 
-/** Get handler redux argument */
+/** Redux handler argument */
 export const redux: IRedux = {
   store,
   actions,
@@ -335,6 +335,7 @@ export function default_handler ({ store, actions, route }: IRedux): TEventHandl
     e.preventDefault()
     if (route) {
       store.dispatch(actions.appBrowserSwitchPage(route))
+      store.dispatch(actions.appStatusClear())
     }
   }
 }
@@ -355,7 +356,7 @@ export const bootstrap_app = (endpoint: string, token: string) => {
       const response = await fetch(url, {
         method: 'post',
         headers,
-        credentials: 'include',
+        credentials: 'include'
       })
       if (response.ok) {
         const { state } = await response.json() as IJsonapiStateResponse

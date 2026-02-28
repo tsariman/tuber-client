@@ -110,9 +110,10 @@ export interface IStateDialog<T=unknown>
 }
 
 export interface IStateFormItemGroup
-  extends Omit<ISStateFormItemGroup, 'items'>
+  extends Omit<ISStateFormItemGroup, 'items' | 'has'>
 {
   items?: IStateFormItem[]
+  has?: IStateFormItemCustom
 }
 
 export interface IStateAllDialogs { [prop: string]: IStateDialog }

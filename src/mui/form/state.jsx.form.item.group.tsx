@@ -12,7 +12,8 @@ import {
   memo,
   type JSX,
   type ReactElement,
-  type ReactNode
+  type ReactNode,
+  useMemo
 } from 'react'
 import {
   BOX,
@@ -25,8 +26,9 @@ import {
   NONE,
   STACK
 } from '@tuber/shared'
-import { ler, log } from 'src/business.logic/logging'
-import { error_id } from 'src/business.logic/errors'
+import { ler, log } from '../../business.logic/logging'
+import { error_id } from '../../business.logic/errors'
+import { redux } from '../../state'
 
 interface IGroup {
   instance: StateFormItemGroup
@@ -129,7 +131,63 @@ const map: {[constant: string]: (props: IGroup) => JSX.Element} = {
 }
 
 const StateJsxFormItemGroup = memo(({ instance: group, children }: IGroup) => {
+  const onKeyDownHandler = useMemo(() => {
+    if (group.eventPropagationEnabled) {
+      const originalHandler = group.has.possibleReduxHandler('onkeydown')?.(redux)
+      if (originalHandler) {
+        return (e: React.KeyboardEvent) => {
+          e.stopPropagation() // Prevent event bubbling to avoid interfering with onchange/onclick
+          originalHandler(e)
+        }
+      }
+    }
+    return undefined
+  }, [group.eventPropagationEnabled, group.has])
+  const onClickHandler = useMemo(() => {
+    if (group.eventPropagationEnabled) {
+      const originalHandler = group.has.possibleReduxHandler('onclick')?.(redux)
+      if (originalHandler) {
+        return (e: React.MouseEvent) => {
+          e.stopPropagation() // Prevent event bubbling to avoid interfering with child handlers
+          originalHandler(e)
+        }
+      }
+    }
+    return undefined
+  }, [group.eventPropagationEnabled, group.has])
+  const onBlurHandler = useMemo(() => {
+    if (group.eventPropagationEnabled) {
+      return group.has.possibleReduxHandler('onblur')?.(redux)
+    }
+    return undefined
+  }, [group.eventPropagationEnabled, group.has])
+  const onFocusHandler = useMemo(() => {
+    if (group.eventPropagationEnabled) {
+      return group.has.possibleReduxHandler('onfocus')?.(redux)
+    }
+    return undefined
+  }, [group.eventPropagationEnabled, group.has])
+  const onChangeHandler = useMemo(() => {
+    if (group.eventPropagationEnabled) {
+      const originalHandler = group.has.possibleReduxHandler('onchange')?.(redux)
+      if (originalHandler) {
+        return (e: React.ChangeEvent) => {
+          e.stopPropagation() // Prevent event bubbling to avoid interfering with child onchange handlers
+          originalHandler(e)
+        }
+      }
+    }
+    return undefined
+  }, [group.eventPropagationEnabled, group.has])
+
   try {
+    if (group.eventPropagationEnabled) {
+      group.onKeyDown = onKeyDownHandler
+      group.onClick = onClickHandler
+      group.onBlur = onBlurHandler
+      group.onFocus = onFocusHandler
+      group.onChange = onChangeHandler
+    }
     const groupType = group.type.toLowerCase()
     const Group = map[groupType] ?? map[NONE]
     return <Group instance={group}>{ children }</Group>

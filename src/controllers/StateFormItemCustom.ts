@@ -1,4 +1,4 @@
-import type { IRedux, TReduxHandler } from '../state'
+import { dummy_redux_handler, type IRedux, type TReduxHandler } from '../state'
 import { ler } from '../business.logic'
 import AbstractState from './AbstractState'
 import type {
@@ -214,33 +214,43 @@ export default class StateFormItemCustom<P = unknown, T = unknown>
   }
 
   /**
-   * Set a callback.  
-   * If the callback is defined globally, e.g., on the `window` object, it can
-   * be acquired using a dot-seperated path string representing its property
-   * location.
-   * ```ts
-   * // For example, if "myCallbackLocation" is the location, then:
-   * const myCallback = window.myCallbackLocation
-   * // Or, "handleSet.myOtherCallback", then:
-   * const myOtherCallback = window.handleSet.myOtherCallback
-   * ```
-   * @param {TEventName} event e.g., 'onclick', 'onfocus'... etc.
+   * Retrieves the Redux handler function for the specified event from the
+   * handler registry. The handler path is obtained from the form item's state
+   * using the key `${event}Handler`.
+   * If no path is found or the retrieved handler is not a function, returns
+   * null.
+   * @param {TEventName} event - The event name (e.g., 'onclick', 'onfocus').
+   *                             Defaults to 'onclick'.
+   * @returns {TReduxHandler | null} The handler function if found and
+   *                                 valid, otherwise null.
    */
-  getHandler = (
+  preDefinedHandler = (
     event: TEventName = 'onclick'
-  ): TReduxHandler | undefined => {
+  ): TReduxHandler | null => {
     const path = this.hasState[`${event}Handler`]
-    if (!path || path.trim() === '') { return }
+    if (!path || path.trim() === '') { return null }
     const handlerRegistry = get_handler_registry()
     const handler = handlerRegistry.getHandlerByPath(path)
     if (typeof handler === 'function') {
       return handler
     }
     ler(`getHandler(): '${path}' not a function`)
+    return null
   } // END of method
 
-  /** Generate callback */
-  getDirectiveHandler = (
+  /**
+   * Get the Redux handler from a directive object. The directive object can be
+   * defined in the state of the form item like so:
+   * ```ts
+   * {
+   *  onclickHandlerDirective: {
+   *   type: 'someHandlerType',
+   *  args: { ... }
+   * }
+   * ```
+   * @param event The event name for which to get the handler directive.
+   */
+  reduxDirectiveHandler = (
     event: TEventName = 'onclick'
   ): TReduxHandler | null => {
     let handlerDirective: IHandlerDirective | undefined
@@ -268,6 +278,28 @@ export default class StateFormItemCustom<P = unknown, T = unknown>
     const factory = new ReduxHandlerFactory(handlerDirective)
     const callback = factory.getEventHandler()
     return callback
+  }
+
+  /**
+   * Get the Redux handler for a specific event. It's a simple Redux handler
+   * provider that might come in handy for edge cases. E.g., Attempting to handle
+   * events on atypical or non-form items.
+   * Otherwise, for regular form items, use the Redux handler provider methods
+   * that are defined in the `StateFormItem` class.
+   *
+   * @param event The event name for which to get the handler.
+   * @returns The Redux handler for the specified event.
+   */
+  reduxHandler(event: TEventName): TReduxHandler {
+    return this.reduxDirectiveHandler(event)
+      || this.preDefinedHandler(event)
+      || dummy_redux_handler
+  }
+
+  possibleReduxHandler(event: TEventName): TReduxHandler | null {
+    return this.preDefinedHandler(event)
+      || this.reduxDirectiveHandler(event)
+      || null
   }
 
   /**

@@ -1,5 +1,8 @@
 import type { IRedux, TReduxHandler } from '../../../state'
-import form_submit_sign_in, { sign_out } from './prod.authentication'
+import form_submit_sign_in, {
+  form_submit_sign_in_enter_key,
+  sign_out
+} from './prod.authentication'
 import form_submit_new_youtube_bookmark from './prod.bookmarks.201.youtube'
 import form_submit_delete_bookmark from './prod.bookmarks.actions'
 import dialog_new_bookmark_from_url, {
@@ -78,6 +81,7 @@ const prodCallbacks: { readonly [key: string]: TReduxHandler } = {
   '$30_C_1': form_submit_new_unknown_bookmark,
   '$31_C_1': form_submit_edit_unknown_bookmark,
   '$41_C_1': form_submit_sign_in,
+  '$41_C_2': form_submit_sign_in_enter_key,
   '$44_C_1': toggle_theme_mode,
   '$66_C_1': sign_out,
   '$71_C_1': appbar_filter_bookmarks

@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material'
-import { redux, type AppDispatch, type IRedux, type RootState } from '../../../state'
+import { type AppDispatch, type RootState } from '../../../state'
 import { StateJsxAdornment } from './state.jsx.input.adornment'
 import {type StateFormItem, StateFormsData } from '../../../controllers'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,13 +10,11 @@ import {
   useEffect,
   useMemo,
   type FocusEventHandler,
-  type KeyboardEventHandler
 } from 'react'
 import type { ISliceFormsDataErrorsArgs } from '../../../slices/formsDataErrors.slice'
 
 interface IJsonTextfieldProps { instance: StateFormItem }
 type TOnFocus = FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>
-type TOnKeyDown = (redux: IRedux) => KeyboardEventHandler<HTMLDivElement>
 // type TOnChange = (textfield: StateFormItem) => React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
 type TOnBlur = (textfield: StateFormItem,
   e: IStateFormItemError
@@ -101,7 +99,6 @@ export default function StateJsxTextfield({ instance: textfield }: IJsonTextfiel
       value={value}
       onFocus={handleFocus}
       onChange={handleChange}
-      onKeyDown={(textfield.onKeyDown as TOnKeyDown)(redux)}
       onBlur={(textfield.onBlur as TOnBlur)(textfield, formsDataErrors[formName]?.[name])}
       InputProps={StateJsxTextfieldInputProps(textfield.inputProps)}
     />

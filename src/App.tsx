@@ -14,7 +14,8 @@ import {
   ALLOWED_ATTEMPTS,
   BOOTSTRAP_ATTEMPTS,
   THEME_DEFAULT_MODE,
-  THEME_MODE
+  THEME_MODE,
+  type TThemeMode
 } from '@tuber/shared'
 import { get_bootstrap_key, get_cookie } from './business.logic/parsing'
 import StateApp from './controllers/StateApp'
@@ -32,6 +33,8 @@ export default function App() {
 
   // Bootstrap the app from server
   useEffect(() => {
+    Config.write(THEME_MODE, get_cookie<TThemeMode>(THEME_MODE) ?? THEME_DEFAULT_MODE)
+
     /** Get state from server. */
     const onPostReqHomePageState = () => {
       const key = get_bootstrap_key()
@@ -48,7 +51,6 @@ export default function App() {
       onPostReqHomePageState()
     }
 
-    Config.write(THEME_MODE, get_cookie('theme_mode') || THEME_DEFAULT_MODE)
     initialize()
   }, [dispatch, app.fetchingStateAllowed, app.isBootstrapped, token])
 

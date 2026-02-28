@@ -42,8 +42,8 @@ export default class StateLink<P = unknown>
       return this._handleOnClick = this._linkState.onClick
     }
     if (this._linkHas) {
-      const handler = this._linkHas.getDirectiveHandler()
-        || this._linkHas.getHandler()
+      const handler = this._linkHas.reduxDirectiveHandler()
+        || this._linkHas.preDefinedHandler()
       if (handler) {
         return this._handleOnClick = handler
       }
