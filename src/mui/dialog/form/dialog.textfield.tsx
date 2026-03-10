@@ -10,6 +10,7 @@ interface IJsonTextfieldProps {
   hive: THive
 }
 
+/** Not in use @deprecated No longer needed and removal imminent */
 const DialogTextField = ({
   instance: textfield,
   hive

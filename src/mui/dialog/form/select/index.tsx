@@ -22,6 +22,7 @@ const map: { [type: string]: (props: ISelect) => JSX.Element } = {
   'native': DialogSelectNative
 }
 
+/** Not in use @deprecated No longer needed and removal imminent */
 function DialogSelect ({instance: select, hive}: IDialogSelect) {
   const formItemSelect = useMemo(
     () => new StateFormItemSelect(select.state, select.parent),

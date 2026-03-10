@@ -16,6 +16,7 @@ interface IDialogSwitch {
   hive: THive
 }
 
+/** Not in use @deprecated No longer needed and removal imminent */
 const DialogSwitch = (props: IDialogSwitch) => {
   const switchGroup = props.instance
   const hive   = props.hive

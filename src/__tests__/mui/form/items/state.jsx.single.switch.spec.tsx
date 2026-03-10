@@ -25,7 +25,7 @@ describe('StateJsxSingleSwitch', () => {
     parentName: string
   }> = {}) => {
     return {
-      name: overrides.name ?? 'published',
+      name: overrides.name ?? 'is_published',
       label: overrides.label ?? 'Published',
       disabled: overrides.disabled ?? false,
       props: overrides.props ?? {},

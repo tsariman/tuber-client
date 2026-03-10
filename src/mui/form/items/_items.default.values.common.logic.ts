@@ -11,7 +11,7 @@ import {
   STATIC_DATE_PICKER,
   MOBILE_DATE_PICKER,
   TIME_PICKER,
-  SINGLE_SWITCH,
+  SWITCH_SINGLE,
   PHONE_INPUT,
   STATE_SELECT_NATIVE,
   CHECKBOXES,
@@ -80,7 +80,7 @@ export function set_default_value(field: StateFormItem, formName: string): void 
     case TEXTAREA:
     case TEXT:
     case RADIO_BUTTONS:
-    case SINGLE_SWITCH:
+    case SWITCH_SINGLE:
     case SWITCH:
     case CHECKBOXES:
     case STATIC_DATE_PICKER:

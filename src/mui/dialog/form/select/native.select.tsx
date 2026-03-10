@@ -10,6 +10,7 @@ interface IDialogSelectNative {
   hive: THive
 }
 
+/** Not in use @deprecated No longer needed and removal imminent */
 const DialogSelectNative = (props: IDialogSelectNative) => {
   const { instance: select, hive } = props
   select.configure('native')

@@ -133,13 +133,11 @@ export function dialog_edit_bookmark (i: number) {
           name: 'note',
           value: bookmark.attributes.note
         }))
-        if (platform !== 'unknown') {
-          dispatch(A.formsDataUpdate({
-            formName,
-            name: 'is_published',
-            value: bookmark.attributes.is_published
-          }))
-        }
+        dispatch(A.formsDataUpdate({
+          formName,
+          name: 'is_published',
+          value: bookmark.attributes.is_published
+        }))
       } catch (e) {
         ler((e as Error).message)
          // error 1047

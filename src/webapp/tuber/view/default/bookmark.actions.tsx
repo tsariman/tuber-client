@@ -168,7 +168,6 @@ const BookmarkActionsToolbar = React.memo(({ i, bookmark }: IBookmarkActionToolb
                 ? <ActionButton type="downvoted" index={i} />
                 : <ActionButton type="downvote" index={i} />}
             </Fader>
-            {/* <ActionButton type="bookmark" /> */}
             {show(net, bookmark) && (
               <Fader sx={{opacity: visible ? 1 : 0}}>
                 <ActionButton type="edit" index={i} />
@@ -179,7 +178,6 @@ const BookmarkActionsToolbar = React.memo(({ i, bookmark }: IBookmarkActionToolb
                 <ActionButton type="delete" index={i} />
               </Fader>
             )}
-            {/* {<ActionButton type="more" />} */}
             {Config.DEV ? (
               <Fader sx={{opacity: visible ? 1 : 0}}>{i}</Fader>
             ) : null}

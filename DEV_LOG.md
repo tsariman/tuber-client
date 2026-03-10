@@ -1,6 +1,8 @@
 
 # Development Changes Log
 
+## `202603092110` [Update] Refactor switch components and improve state handling; update package version to alpha
+
 ## `202602281336` [Refactor] Enhance event handling and Redux integration across form components
 
 ## `202602061917` [Refactor] Improve search mode toggle feature

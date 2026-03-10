@@ -53,6 +53,7 @@ const LocalizationProvider = (props: IFakeProps) => {void props;return null}
 
 // ============================================================================
 
+/** Not in use @deprecated No longer needed and removal imminent */
 const DialogPicker = ({ instance: def, hive }: IJsonPickerProps) => {
   const [value, setValue] = useState<string>()
 

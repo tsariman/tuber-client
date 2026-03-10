@@ -92,6 +92,13 @@ type TSwitchBool = 'number'
  * 4) `one` or `zero`
  *
  * @param value 
+ * @deprecated This function is deprecated and should not be used in new code.
+ *             It is recommended to use a more robust solution for handling
+ *             boolean values in forms, such as using a dedicated form library
+ *             or implementing a custom solution that better fits the specific
+ *             requirements of the application. (Lol I know, but seriously,
+ *             this function is not a good solution for handling boolean values
+ *             in forms.)
  */
 export function get_bool_type (value: unknown): TSwitchBool {
   if (typeof value === 'string') {

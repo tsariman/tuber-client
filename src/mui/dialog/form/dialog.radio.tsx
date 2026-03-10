@@ -12,6 +12,7 @@ interface IDialogRadio {
   hive: THive
 }
 
+/** Not in use @deprecated No longer needed and removal imminent */
 const DialogRadio = (props: IDialogRadio) => {
   const radio = props.instance
   const hive  = props.hive

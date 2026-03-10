@@ -1,8 +1,6 @@
-import React from 'react'
 import AbstractState from './AbstractState'
-import type { IStateFormItemSwitchToggle } from '@tuber/shared'
+import type { IStateFormItemSwitchToggle, TFormControlLabelProps } from '@tuber/shared'
 import type StateFormItemSwitch from './templates/StateFormItemSwitch'
-import type { FormControlLabelProps } from '@mui/material'
 
 /** Wrapper class for switch toggle, specialized form item state */
 export default class StateFormItemSwitchToggle
@@ -28,9 +26,8 @@ export default class StateFormItemSwitchToggle
   get label(): string { return this._switchToggleState.label ?? '' }
   get name(): string { return this._switchToggleState.name ?? '' }
 
-  get formControlLabelProps(): FormControlLabelProps {
+  get formControlLabelProps(): TFormControlLabelProps {
     return this._switchToggleState.formControlLabelProps ?? {
-      'control': React.createElement('input', { type: 'checkbox' }),
       'label': this.label
     }
   }

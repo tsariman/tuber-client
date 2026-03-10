@@ -78,7 +78,7 @@ export default class StateFormItem<P = StateForm, T = unknown>
   get parent(): P { return this.parentDef }
   get props(): Record<string, unknown> {return this.itemState.props || {} }
   configure(conf: unknown) { void conf }
-  get type(): Required<IStateFormItem>['type'] { return this.itemState.type ?? '' }
+  get type(): Required<IStateFormItem>['type'] { return this.itemState.type ?? 'bad_form_item' }
   get id(): string { return this.itemState.id ?? '' }
   /** Get the current form field name. */
   get name(): string { return this.itemState.name ?? '' }

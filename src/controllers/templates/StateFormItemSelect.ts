@@ -1,9 +1,9 @@
 import type {
-  FormControlLabelProps,
   FormControlProps,
   FormHelperTextProps,
   InputLabelProps
 } from '@mui/material';
+import type { TFormControlLabelProps } from '@tuber/shared';
 import type { IStateFormItemSelectOption } from '@tuber/shared';
 import type StateForm from '../StateForm';
 import StateFormItem from '../StateFormItem';
@@ -17,7 +17,7 @@ export type TSelectStyle = 'default' | 'basic' | 'standard' | 'filled' | 'native
 export interface ISelectConfig {
   formControlProps?: FormControlProps;
   formHelperTextProps?: FormHelperTextProps;
-  formControlLabelProps?: FormControlLabelProps;
+  formControlLabelProps?: TFormControlLabelProps;
   inputLabelProps?: InputLabelProps;
   props?: Record<string, unknown>;
   id?: string;
@@ -53,11 +53,11 @@ export default class StateFormItemSelect
     };
   }
 
-  get formControlLabelProps(): FormControlLabelProps {
+  get formControlLabelProps(): TFormControlLabelProps {
     return {
       ...this._getConfig().formControlLabelProps,
       ...this.itemHasState.formControlLabelProps
-    } as FormControlLabelProps;
+    } as TFormControlLabelProps;
   }
   get inputLabelProps(): InputLabelProps {
     return {

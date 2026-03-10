@@ -2,7 +2,6 @@ import { dummy_redux_handler, type IRedux, type TReduxHandler } from '../state'
 import { ler } from '../business.logic'
 import AbstractState from './AbstractState'
 import type {
-  FormControlLabelProps,
   FormControlProps,
   FormGroupProps,
   FormHelperTextProps,
@@ -13,11 +12,11 @@ import type {
 import type {
   IHandlerDirective,
   TEventName,
+  TFormControlLabelProps,
   TStateFormItemCustomColor,
   TO
 } from '@tuber/shared'
 import type { IStateFormItemCustom } from '../interfaces/localized'
-import React from 'react'
 import ReduxHandlerFactory from '../business.logic/ReduxHandlerFactory'
 import { get_handler_registry } from '../business.logic/HandlerRegistry'
 
@@ -156,11 +155,8 @@ export default class StateFormItemCustom<P = unknown, T = unknown>
   get formControlProps(): FormControlProps {
     return this.hasState.formControlProps ?? {}
   }
-  get formControlLabelProps(): FormControlLabelProps | undefined {
-    return this.hasState.formControlLabelProps ?? {
-      label: '',
-      control: React.createElement('span'),
-    }
+  get formControlLabelProps(): TFormControlLabelProps | undefined {
+    return this.hasState.formControlLabelProps
   }
   get formLabelProps(): FormLabelProps {
     return this.hasState.formLabelProps ?? {}

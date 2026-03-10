@@ -36,6 +36,7 @@ interface IDialogPhoneInput {
   hive: THive
 }
 
+/** Not in use @deprecated No longer needed and removal imminent */
 const DialogPhoneInput = (props: IDialogPhoneInput) => {
   const hive  = props.hive
   const input = props.instance

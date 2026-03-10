@@ -1,8 +1,7 @@
 import AbstractState from './AbstractState'
 import type { IFormChoices, IStateFormItemCustom } from '../interfaces/localized'
 import type StateFormItemRadioCustom from './templates/StateFormItemRadioCustom'
-import { type FormControlLabelProps, Radio } from '@mui/material'
-import React from 'react'
+import type { TFormControlLabelProps } from '@tuber/shared'
 
 /** Wrapper class for a radio button, specialized form item state */
 export default class StateFormItemRadioButton
@@ -38,14 +37,10 @@ export default class StateFormItemRadioButton
   get disabled(): boolean {
     return this._radioButtonState.disabled === true
   }
-  get formControlLabelProps(): FormControlLabelProps {
-    return this._radioButtonHasState.formControlLabelProps ?? {
-      'control': React.createElement(Radio, {
-        color: this.color,
-        disabled: this.disabled,
-        ...this.props
-      }),
-      'label': this.label
+  get formControlLabelProps(): TFormControlLabelProps {
+    return {
+      'label': this.label,
+      ...this._radioButtonHasState.formControlLabelProps,
     }
   }
 }

@@ -18,6 +18,7 @@ interface IDialogCheckboxes {
   hive: THive
 }
 
+/** Not in use @deprecated No longer needed and removal imminent */
 const DialogCheckboxes = ({
   instance: checkboxes,
   hive

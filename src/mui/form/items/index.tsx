@@ -13,8 +13,10 @@ import StateFormItemRadio from '../../../controllers/templates/StateFormItemRadi
 import StateFormItemSwitch from '../../../controllers/templates/StateFormItemSwitch'
 import type StateFormItemSwitchToggle from '../../../controllers/StateFormItemSwitchToggle'
 import StateFormItemSelect from '../../../controllers/templates/StateFormItemSelect'
-import * as C from '@tuber/shared/dist/constants.client'
-import type { IStateFormItemSelectOption } from '@tuber/shared'
+import type {
+  IStateFormItemSelectOption,
+  TStateFormItemType
+} from '@tuber/shared'
 import JsonSelect from './state.jsx.select/default'
 import StateJsxFormItemGroup from '../state.jsx.form.item.group'
 import StateJsxTextfield from './state.jsx.textfield'
@@ -24,14 +26,15 @@ import StateJsxCheckboxes from './state.jsx.checkboxes'
 import StateJsxSwitch from './state.jsx.switch'
 import StateJsxSingleSwitch from './state.jsx.single.switch'
 import StateJsxPicker from './state.jsx.picker'
+import StateJsxSelectNative from './state.jsx.select/native'
+import StateJsxButton from './state.jsx.button'
+import StateJsxSwitchDummy from './state.jsx.switch.dummy'
 import { StateJsxUnifiedIconProvider } from '../../icon'
 import { FormHelperText, FormLabel, InputLabel } from '@mui/material'
 import { get_styled_div } from './_items.common.logic'
 import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '../../../state'
 import set_all_default_values from './_items.default.values.common.logic'
-import StateJsxSelectNative from './state.jsx.select/native'
-import StateJsxButton from './state.jsx.button'
 import { StateJsxHtml, StateJsxHtmlA, StateJsxHtmlTag } from './state.jsx.html'
 import { error_id } from '../../../business.logic/errors'
 import { ler } from '../../../business.logic'
@@ -46,8 +49,8 @@ interface IItemProps {
   depth: number
 }
 
-interface IItemMap {
-  [constant: string]: (props: IItemProps) => JSX.Element | null
+type TItemMap = {
+  [type in TStateFormItemType]: (props: IItemProps) => JSX.Element
 }
 
 const itemsWithDefaultValues: StateFormItem[] = []
@@ -157,6 +160,14 @@ const SingleSwitch = ({ instance: item }: IItemProps) => {
   return <StateJsxSingleSwitch instance={$witch} />
 }
 
+const SingleSwitchDummy = ({ instance: item }: IItemProps) => {
+  const $witch = new StateFormItemSwitch(
+    (item as StateFormItem<StateForm, StateFormItemSwitchToggle>).state,
+    item.parent
+  )
+  return <StateJsxSwitchDummy instance={$witch} />
+}
+
 /** Redux store updates are now handled internally */
 const DateTimePickerItem = ({ instance: item }: IItemProps) => {
   return <StateJsxPicker instance={item} />
@@ -191,43 +202,58 @@ const BadFormItem = ({ instance: item }: IItemProps) => (
   <div>BAD FORM ITEM {item.name}</div>
 )
 
-const formItemMap: IItemMap = {
-  [C.HTML]: Html,
-  [C.HTML_TAG]: HtmlTag,
-  [C.A]: Anchor,
-  [C.SUBMIT]: Submit,
-  [C.STATE_BUTTON]: StateButton,
-  [C.BREAK_LINE]: BreakLine,
-  [C.HORIZONTAL_LINE]: HorizontalLine,
-  [C.STATE_SELECT]: StateSelect,
-  [C.STATE_SELECT_NATIVE]: StateSelectNative,
-  [C.TEXT]: Input,
-  [C.NUMBER]: Input,
-  [C.PASSWORD]: Input,
-  [C.TEXTFIELD]: Input,
-  [C.TEXTAREA]: Input,
-  [C.PHONE_INPUT]: PhoneInput,
-  [C.RADIO_BUTTONS]: RadioButtons,
-  [C.CHECKBOXES]: Checkboxes,
-  [C.SWITCH]: Switches,
-  [C.SINGLE_SWITCH]: SingleSwitch,
-  [C.DESKTOP_DATE_TIME_PICKER]: DateTimePickerItem,
-  [C.MOBILE_DATE_TIME_PICKER]: DateTimePickerItem,
-  [C.TIME_PICKER]: DateTimePickerItem,
-  [C.DATE_TIME_PICKER]: DateTimePickerItem,
-  [C.BOX]: GroupItem,
-  [C.STACK]: GroupItem,
-  [C.LOCALIZED]: GroupItem,
-  [C.FORM_GROUP]: GroupItem,
-  [C.FORM_CONTROL]: GroupItem,
-  [C.FORM_CONTROL_LABEL]: GroupItem,
-  [C.INDETERMINATE]: GroupItem,
-  [C.FORM_LABEL]: Label,
-  [C.FORM_HELPER_TEXT]: HelperText,
-  [C.INPUT_LABEL]: FormInputLabel,
-  [C.ICON]: Icon,
-  [C.DIV]: Div,
-  [C.BAD_FORM_ITEM]: BadFormItem
+const formItemMap: TItemMap = {
+  'html': Html,
+  'html_tag': HtmlTag,
+  'a': Anchor,
+  'submit': Submit,
+  'state_button': StateButton,
+  'br': BreakLine,
+  'hr': HorizontalLine,
+  'state_select': StateSelect,
+  'state_select_native': StateSelectNative,
+  'text': Input,
+  'number': Input,
+  'password': Input,
+  'textfield': Input,
+  'textarea': Input,
+  'phone_input': PhoneInput,
+  'radio_buttons': RadioButtons,
+  'checkboxes': Checkboxes,
+  'switch': Switches,
+  'switch_dummy': SingleSwitchDummy,
+  'switch_single': SingleSwitch,
+  'desktop_date_time_picker': DateTimePickerItem,
+  'mobile_date_time_picker': DateTimePickerItem,
+  'time_picker': DateTimePickerItem,
+  'date_time_picker': DateTimePickerItem,
+  'bool_onoff': SingleSwitch,
+  'bool_truefalse': SingleSwitch,
+  'bool_yesno': SingleSwitch,
+  'desktop_date_picker': DateTimePickerItem,
+  'mobile_date_picker': DateTimePickerItem,
+  'box': GroupItem,
+  'stack': GroupItem,
+  'localized': GroupItem,
+  'form_group': GroupItem,
+  'form_control': GroupItem,
+  'form_control_label': GroupItem,
+  'indeterminate': GroupItem,
+  'form_label': Label,
+  'form_helper_text': HelperText,
+  'input_label': FormInputLabel,
+  'icon': Icon,
+  'div': Div,
+  'form': GroupItem,
+  'link': Anchor,
+  'highlight': Div,
+  'state_input': Input,
+  'bad_form_item': BadFormItem,
+  'none': BadFormItem,
+  'paragraph': HtmlTag,
+  'static_date_picker': DateTimePickerItem,
+  'text_node': HtmlTag,
+  'default': BadFormItem
 }
 
 const IterativeFormBuilder = ({ items, depth }: IIterativeFormBuilder) => {
@@ -240,7 +266,8 @@ const IterativeFormBuilder = ({ items, depth }: IIterativeFormBuilder) => {
       itemsWithDefaultValues.push(item)
     }
     try {
-      const Item = formItemMap[item.type.toLowerCase()]
+      const Item = formItemMap[item.type.toLowerCase() as TStateFormItemType]
+        || formItemMap['bad_form_item']
       if (Item) {
         ItemsToRender.push(
           <Item
@@ -266,7 +293,7 @@ const IterativeFormBuilder = ({ items, depth }: IIterativeFormBuilder) => {
   return ItemsToRender
 }
 
-const FormItems = memo(({ instance }: { instance: StateForm}) => {
+const FormItems = memo(({ instance }: { instance: StateForm }) => {
   const dispatch = useDispatch<AppDispatch>()
 
   // Memoize the default values effect to prevent unnecessary re-runs

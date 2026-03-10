@@ -65,6 +65,7 @@ interface IItemTable {
 
 export type THive = Record<string, unknown>
 
+/** Not in use @deprecated No longer needed and removal imminent */
 export default function RecursiveFormItems (props: IRecursiveFormBuilder) {
   const form = props.form
   const items = props.items

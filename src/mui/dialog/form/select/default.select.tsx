@@ -12,6 +12,7 @@ interface IDialogSelectDefault {
   hive: THive
 }
 
+/** Not in use @deprecated No longer needed and removal imminent */
 const DialogSelectDefault = (props: IDialogSelectDefault) => {
   const { instance: select, hive } = props
   const [value, setValue] = useState<string>((hive[select.name] ?? '') as string)

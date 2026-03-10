@@ -1,7 +1,6 @@
-import React from 'react'
 import type { IFormChoices } from '../interfaces/localized'
 import type StateFormItemCheckboxCustom from './templates/StateFormItemCheckboxCustom'
-import type { FormControlLabelProps } from '@mui/material'
+import type { TFormControlLabelProps } from '@tuber/shared'
 import AbstractState from './AbstractState'
 import StateFormItemCustom from './StateFormItemCustom'
 
@@ -38,9 +37,8 @@ export default class StateFormItemCheckboxBox
     )
   }
   get hasLabel(): boolean { return !!this._checkboxState.label }
-  get formControlLabelProps(): FormControlLabelProps {
+  get formControlLabelProps(): TFormControlLabelProps {
     return this.has.formControlLabelProps ?? {
-      'control': React.createElement('input', { type: 'checkbox' }),
       'label': this.label
     }
   }

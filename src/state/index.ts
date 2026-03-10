@@ -175,8 +175,8 @@ const rootReducer = ($state: unknown, $action?: unknown) => {
 
   if (action.type === NET_STATE_PATCH) {
     const newState = net_patch_state_reducer(state, action.payload) as IState
-    Config.write('DEBUG', action.payload.app?.inDebugMode ?? false)
-    Config.write('DEV', action.payload.app?.inDevelMode ?? false)
+    Config.write('DEBUG', action.payload.app?.inDebugMode ?? Config.DEBUG)
+    Config.write('DEV', action.payload.app?.inDevelMode ?? Config.DEV)
     set_val(window, 'webui.inDebugMode', Config.DEBUG)
     set_val(window, 'webui.inDevelMode', Config.DEV)
 
