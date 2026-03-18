@@ -11,6 +11,9 @@
 		{
 			"name": "tuber-server",
 			"path": "../tuber-server"
+		},
+		{
+			"path": "../tuber-devops"
 		}
 	],
 	"settings": {
