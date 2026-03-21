@@ -13,7 +13,7 @@ describe('StateNet', () => {
     expect(headers).toEqual({
       'X-Test': 'ok'
     });
-    expect(headers.Authorization).toBeUndefined();
+    expect(headers?.Authorization).toBeUndefined();
   });
 
   it('treats user identity fields as sufficient for logged-in state', () => {
