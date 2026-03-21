@@ -1,4 +1,4 @@
-import { lazy, useEffect, useMemo } from 'react'
+import { lazy, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   type AppDispatch,
@@ -21,12 +21,9 @@ import { get_bootstrap_key, get_cookie } from './business.logic/parsing'
 import StateApp from './controllers/StateApp'
 import Spinner from './mui/spinner.cpn'
 import SpinnerBootstrap from './mui/spinner.cpn.bootstrap'
-import { StateNet } from './controllers'
 
 export default function App() {
   const dispatch = useDispatch<AppDispatch>()
-  const netState = useSelector((state: RootState) => state.net)
-  const token = useMemo(() => new StateNet(netState).token, [netState])
   const appState = useSelector((state: RootState) => state.app)
   const app = new StateApp(appState)
   const themeState = useSelector((state: RootState) => state.theme)
@@ -41,7 +38,7 @@ export default function App() {
       if (!key) { return }
       const bootstrapAttempts = Config.read<number>(BOOTSTRAP_ATTEMPTS, 0)
       if (bootstrapAttempts < ALLOWED_ATTEMPTS) {
-        dispatch(bootstrap_app(`state/${key}`, token))
+        dispatch(bootstrap_app(`state/${key}`))
         Config.write(BOOTSTRAP_ATTEMPTS, bootstrapAttempts + 1)
       }
     }
@@ -52,7 +49,7 @@ export default function App() {
     }
 
     initialize()
-  }, [dispatch, app.fetchingStateAllowed, app.isBootstrapped, token])
+  }, [dispatch, app.fetchingStateAllowed, app.isBootstrapped])
 
   // Update browser URL when user switches pages
   useEffect(() => {

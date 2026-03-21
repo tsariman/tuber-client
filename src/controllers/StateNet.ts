@@ -15,7 +15,6 @@ export default class StateNet extends AbstractState implements IStateNet {
   private _parent?: State
   private _netCsrfToken?: string
   private _netHeaders?: Record<string, string>
-  private _token?: string
 
   constructor(state: IStateNet, parent?: State) {
     super()
@@ -46,22 +45,6 @@ export default class StateNet extends AbstractState implements IStateNet {
     }
     return token
   }
-  private _getTokenFromCookie(): string {
-    const cookies = document.cookie.split(';')
-    for (const cookie of cookies) {
-      const [name, value] = cookie.split('=')
-      if (name.trim() === 'token') {
-        return value.trim()
-      }
-    }
-    return this._state.token ?? ''
-  }
-  get token(): string {
-    return this._token 
-      ?? (this._token = this._state.token
-        ?? this._getTokenFromCookie()
-      )
-  }
   get csrfToken(): string {
     return this._netCsrfToken = this._netCsrfToken || (
       this._netCsrfToken = this.locateCsrfToken()
@@ -81,7 +64,6 @@ export default class StateNet extends AbstractState implements IStateNet {
   get headers(): IStateNet['headers'] {
     return this._netHeaders || (
       this._netHeaders = {
-        ...(this.token ? {'Authorization':`Bearer ${this.token}`} : {}),
         ...this.parseHeadersConeExp()
       }
     )
@@ -141,7 +123,6 @@ export default class StateNet extends AbstractState implements IStateNet {
   get userLoggedIn(): boolean {
     return !!this._state.name
       && !!this._state.role
-      && !!this.token
       && !!this._state._id
   }
 }

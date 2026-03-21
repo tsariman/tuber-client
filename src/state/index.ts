@@ -343,19 +343,16 @@ export function default_handler ({ store, actions, route }: IRedux): TEventHandl
 /**
  * Bootstrap the app by fetching state from server
  * @param endpoint endpoint to fetch state from
- * @param token authorization token
  */
-export const bootstrap_app = (endpoint: string, token: string) => {
+export const bootstrap_app = (endpoint: string) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
       dispatch({ type: 'app/appRequestStart' })
       const { app } = getState()
       const origin = get_origin_ending_cleaned(app.origin)
       const url = `${origin}/${endpoint}`
-      const headers = { ...(token ? {'Authorization':`Bearer ${token}`} : {}) }
       const response = await fetch(url, {
         method: 'post',
-        headers,
         credentials: 'include'
       })
       if (response.ok) {
