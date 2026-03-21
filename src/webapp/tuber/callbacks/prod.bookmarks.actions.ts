@@ -17,6 +17,18 @@ import type { IStateData } from '@tuber/shared'
 import { user_authorized } from './_callbacks.common.logic'
 import StateNet from 'src/controllers/StateNet'
 
+const store_bookmark_vote_resource = (
+  dispatch: IRedux['store']['dispatch'],
+  A: IRedux['actions'],
+  resource: IJsonapiResponseResource
+) => {
+  dispatch(A.includedUpdateById({
+    collectionName: resource.type,
+    id: resource.id,
+    resource
+  }))
+}
+
 /** Get bookmarks data from redux store. */
 function get_bookmark_resources (data: IStateData<IBookmark>) {
   return data.bookmarks as IJsonapiResponseResource<IBookmark>[]
@@ -318,11 +330,11 @@ export const bookmark_vote_up = (i: number) => (redux: IRedux) => async () => {
         val: downvotes
       }))
     }
-    dispatch(A.dataUpdateById({
-      collectionName: jsonapiResponse.data.type,
-      id: jsonapiResponse.data.id,
-      resource: jsonapiResponse.data as IJsonapiResponseResource
-    }))
+    store_bookmark_vote_resource(
+      dispatch,
+      A,
+      jsonapiResponse.data as IJsonapiResponseResource
+    )
   } catch (e) {
     ler((e as Error).message)
   }
@@ -386,11 +398,11 @@ export const bookmark_vote_down = (i: number) => (redux: IRedux) => async () => 
         val: downvotes
       }))
     }
-    dispatch(A.dataUpdateById({
-      collectionName: jsonapiResponse.data.type,
-      id: jsonapiResponse.data.id,
-      resource: jsonapiResponse.data as IJsonapiResponseResource
-    }))
+    store_bookmark_vote_resource(
+      dispatch,
+      A,
+      jsonapiResponse.data as IJsonapiResponseResource
+    )
   } catch (e) {
     ler((e as Error).message)
   }

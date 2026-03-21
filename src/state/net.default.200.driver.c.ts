@@ -1,9 +1,9 @@
 import type { Dispatch } from 'redux'
 import {
-  dataAccumulateByAppending,
   dataLimitQueueCol,
   dataLimitStackCol,
 } from '../slices/data.slice'
+import { includedAccumulateByAppending } from '../slices/included.slice'
 import { metaAdd } from '../slices/meta.slice'
 import { topLevelLinksStore } from '../slices/topLevelLinks.slice'
 import { appRequestSuccess, appRequestFailed } from '../slices/app.slice'
@@ -21,8 +21,6 @@ import type {
 } from '@tuber/shared'
 import { BOOTSTRAP_ATTEMPTS } from '@tuber/shared'
 import { dataUpdateRange } from '../slices/dataLoadedPages.slice'
-
-// TODO: The `included` state does not exist yet and needs to be created
 
 /**
  * Once the server response is received, this function can be used to process it.
@@ -110,11 +108,18 @@ export default function net_default_200_driver (
 
   // included member
   if (Array.isArray(response.included)) {
-    const collectionName = response.included[0]?.type || 'unknown'
-    dispatch(dataAccumulateByAppending({
-      identifier: collectionName,
-      collection: response.included
-    }))
+    const collectionsByType = response.included.reduce<Record<string, IJsonapiResponseResource[]>>((acc, resource) => {
+      const collectionName = resource.type || 'unknown'
+      acc[collectionName] ??= []
+      acc[collectionName].push(resource)
+      return acc
+    }, {})
+    for (const [identifier, collection] of Object.entries(collectionsByType)) {
+      dispatch(includedAccumulateByAppending({
+        identifier,
+        collection
+      }))
+    }
   }
 
   // Handles redux state loaded from the server (remote).

@@ -1,6 +1,8 @@
 
 # Development Changes Log
 
+## `202603211654` [Feature] Implemented included state management for bookmark votes and refactored related actions
+
 ## `202603092110` [Update] Refactor switch components and improve state handling; update package version to alpha
 
 ## `202602281336` [Refactor] Enhance event handling and Redux integration across form components

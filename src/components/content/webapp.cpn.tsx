@@ -1,13 +1,13 @@
-import type { JSX } from 'react';
-import StatePage from '../../controllers/StatePage';
-import TubeResearcher from '../../webapp/tuber/view/default';
+import { lazy, type JSX } from 'react'
+import StatePage from '../../controllers/StatePage'
+const TubeResearcher = lazy(() => import('../../webapp/tuber/view/default'))
 
 export interface IWebApps {
-  [app: string]: JSX.Element;
+  [app: string]: JSX.Element
 }
 
 interface IWebAppsProps {
-  def: StatePage;
+  def: StatePage
 }
 
 /**
@@ -15,7 +15,7 @@ interface IWebAppsProps {
  * ```ts
  * const page = {
  *   'content': '$webapp : <web-app-name>'
- * };
+ * }
  * ```
  */
 const WebappContent = ({ def: page }: IWebAppsProps) => {
@@ -24,9 +24,9 @@ const WebappContent = ({ def: page }: IWebAppsProps) => {
     tubeResearcher: <TubeResearcher def={page} />,
 
     // TODO Add more web apps here
-  };
+  }
 
-  return webAppsMap[page.contentName] || ( null );
+  return webAppsMap[page.contentName] || ( null )
 }
 
-export default WebappContent;
+export default WebappContent

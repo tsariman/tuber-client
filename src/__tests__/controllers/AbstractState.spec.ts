@@ -3,14 +3,26 @@ import './setup-mocks'; // Import centralized mocks
 import { mockConfig } from './setup-mocks';
 import AbstractState from '../../controllers/AbstractState';
 import { createMockConfig } from './test-utils';
+import { TO } from '@tuber/shared';
 
 // Create a concrete implementation for testing
 class TestableAbstractState extends AbstractState {
   private mockState: unknown;
+  private mockParent: unknown;
+  private mockProps: TO;
 
-  constructor(mockState: unknown = {}) {
+  constructor(mockState: unknown = {}, mockParent: unknown = null, mockProps: TO = {}) {
     super();
     this.mockState = mockState;
+    this.mockParent = mockParent;
+    this.mockProps = mockProps;
+  }
+
+  configure(conf: unknown): void {
+    // Simple implementation that stores config if needed
+    if (typeof conf === 'object' && conf !== null) {
+      Object.assign(this.mockProps, conf);
+    }
   }
 
   get state(): unknown {
@@ -18,13 +30,12 @@ class TestableAbstractState extends AbstractState {
   }
 
   get parent(): unknown {
-    return null;
+    return this.mockParent;
   }
 
-  get props(): unknown {
-    return {};
+  get props(): TO {
+    return this.mockProps;
   }
-
 }
 
 // Additional mock for this specific test
