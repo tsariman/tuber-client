@@ -85,7 +85,6 @@ export const dataSlice = createSlice({
       newArray.unshift(data)
       state[collectionName] = newArray
     },
-
     /** Stores a collection but replaces existing */
     dataStoreCol: (state, action: PayloadAction<ICollectionStore>) => {
       const { endpoint, collection } = action.payload
@@ -96,10 +95,12 @@ export const dataSlice = createSlice({
       const { endpoint, collection } = action.payload
       state[endpoint] = (state[endpoint] || []).concat(collection)
     },
+    /** Store a collection by prepending */
     dataStackCol: (state, action: PayloadAction<ICollectionStore>) => {
       const { endpoint, collection } = action.payload
       state[endpoint] = collection.concat(state[endpoint] || [])
     },
+    /** Store a collection by accumulation with limit by appending */
     dataLimitQueueCol: (state, action: PayloadAction<ICollectionLimitedStore>) => {
       const { endpoint, collection, pageSize, limit } = action.payload
       let arr = (state[endpoint] || []).concat(collection)
@@ -125,7 +126,7 @@ export const dataSlice = createSlice({
     dataRemoveCol: (state, action: PayloadAction<string>) => {
       state[action.payload] = []
     },
-    /** Save changes to a single resouce. */
+    /** Save changes to a single resource. */
     dataUpdateByIndex: (state, action: PayloadAction<IUpdateByIndex>) => {
       const { endpoint, index, resource } = action.payload
       state[endpoint] = state[endpoint] || []
@@ -148,6 +149,7 @@ export const dataSlice = createSlice({
         state[endpoint][index].attributes[prop] = val
       }
     },
+    /** Update a resource by its name attribute */
     dataUpdateByName: (state, action: PayloadAction<IUpdateByName>) => {
       const { collectionName, name, resource } = action.payload
       const collection = state[collectionName]
@@ -160,6 +162,7 @@ export const dataSlice = createSlice({
       }
       state[collectionName] = collection
     },
+    /** Update a resource by its ID attribute */
     dataUpdateById: (state, action: PayloadAction<IUpdateById>) => {
       const { collectionName, id, resource } = action.payload
       const collection = state[collectionName]

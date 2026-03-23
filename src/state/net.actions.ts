@@ -74,6 +74,8 @@ const delegate_data_handling = (
     401: () => net_default_401_driver(dispatch, getState, endpoint, json),
     404: () => net_default_404_driver(dispatch, getState, endpoint, json),
     409: () => net_default_409_driver(dispatch, getState, endpoint, json),
+    // TODO - 422 Unprocessable Entity
+    // TODO - 429 Too Many Requests, etc.
     500: () => net_default_500_driver(dispatch, getState, endpoint, json),
   }
   try {
@@ -606,27 +608,45 @@ export const post_req = (
  * @param failure Callback for a failed request with no proper server response.
  * @returns A Redux thunk action.
  */
-export const get_req = (
+export const get_req = <T = unknown>(
   pathname: string,
-  success?: (endpoint: string, state: unknown) => void,
+  success?: (endpoint: string, payload: T) => void,
   failure?: (error: unknown) => void
 ) => {
-  const endpoint = get_endpoint(pathname)
   return async (dispatch: Dispatch, getState: () => RootState) => {
     dispatch(appRequestStart())
     schedule_spinner()
+    let json: T
     try {
       const rootState = getState()
       const originEndingFixed = get_origin_ending_fixed(rootState.app.origin)
       const url = `${originEndingFixed}${pathname}`
       const headersState = new StateNet(rootState.net).headers
       const headers = { ...DEFAULT_HEADERS, ...headersState }
-      const response = await fetch(url, { method: 'get', headers })
-      const json = await response.json()
-      if (success) {
-        success(endpoint, json)
+      const response = await fetch(url, {
+        method: 'get',
+        credentials: 'include',
+        headers
+      })
+      json = await response.json()
+      if (response.ok) {
+        const endpoint = get_endpoint(pathname)
+        if (success) {
+          success(endpoint, json)
+          cancel_spinner()
+          dispatch(appHideSpinner())
+        } else {
+          delegate_data_handling(dispatch, getState, endpoint, json as IJsonapiBaseResponse)
+        }
+      } else if (failure) {
+        failure(json)
+        cancel_spinner()
+        dispatch(appHideSpinner())
+      } else if (response.status >= 400) {
+        const endpoint = get_endpoint(pathname)
+        delegate_data_handling(dispatch, getState, endpoint, json as IJsonapiBaseResponse)
       } else {
-        delegate_data_handling(dispatch, getState, endpoint, json)
+        delegate_error_handling(dispatch)
       }
     } catch (e) {
       error_id(34).remember_exception(e) // error 34

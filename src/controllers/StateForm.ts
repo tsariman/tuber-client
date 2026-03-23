@@ -73,6 +73,15 @@ export default class StateForm extends AbstractState implements IStateForm {
    */
   get name(): string { return this._formState._key ?? this._fname }
   get endpoint(): string { return this._ePoint ?? '' }
+  get hydrateFromServer(): boolean {
+    return this._formState.hydrateFromServer === true
+  }
+  get hydrationEndpoint(): string {
+    return this._formState.hydrationEndpoint ?? ''
+  }
+  get disableOnHydration(): boolean {
+    return this._formState.disableOnHydration === true
+  }
   get paperProps(): PaperProps { return this._formState.paperProps ?? {} }
   get errorCount(): number {
     return this._formsDataErrors?.getCount(this.name) ?? this.throw_if_not_configured(

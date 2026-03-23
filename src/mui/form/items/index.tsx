@@ -42,11 +42,13 @@ import { ler } from '../../../business.logic'
 export interface IIterativeFormBuilder {
   items: StateFormItem['items']
   depth: number
+  hydrationDisabled?: boolean
 }
 
 interface IItemProps {
   instance: StateFormItem
   depth: number
+  hydrationDisabled?: boolean
 }
 
 type TItemMap = {
@@ -99,7 +101,7 @@ const StateSelectNative = ({ instance: item }: IItemProps) => {
   return <StateJsxSelectNative instance={select} />
 }
 
-const GroupItem = ({instance: item, depth }: IItemProps) => {
+const GroupItem = ({instance: item, depth, hydrationDisabled }: IItemProps) => {
   const groupItem = new StateFormItemGroup(
     item.state as IStateFormItemGroup,
     item.parent
@@ -109,6 +111,7 @@ const GroupItem = ({instance: item, depth }: IItemProps) => {
       <IterativeFormBuilder
         items={groupItem.items}
         depth={depth + 1}
+        hydrationDisabled={hydrationDisabled}
       />
     </StateJsxFormItemGroup>
   )
@@ -189,11 +192,15 @@ const Icon = ({ instance: item }: IItemProps) => (
   <StateJsxUnifiedIconProvider instance={item.has} />
 )
 
-const Div = ({ instance: item, depth }: IItemProps) => {
+const Div = ({ instance: item, depth, hydrationDisabled }: IItemProps) => {
   const StyledDiv = get_styled_div()
   return (
     <StyledDiv {...item.props}>
-      <IterativeFormBuilder items={item.items} depth={depth + 1} />
+      <IterativeFormBuilder
+        items={item.items}
+        depth={depth + 1}
+        hydrationDisabled={hydrationDisabled}
+      />
     </StyledDiv>
   )
 }
@@ -256,17 +263,50 @@ const formItemMap: TItemMap = {
   'default': BadFormItem
 }
 
-const IterativeFormBuilder = ({ items, depth }: IIterativeFormBuilder) => {
+const interactiveType = new Set<TStateFormItemType>([
+  'submit',
+  'state_button',
+  'text',
+  'number',
+  'password',
+  'textfield',
+  'textarea',
+  'phone_input',
+  'radio_buttons',
+  'checkboxes',
+  'switch',
+  'switch_dummy',
+  'switch_single',
+  'bool_onoff',
+  'bool_truefalse',
+  'bool_yesno',
+  'desktop_date_time_picker',
+  'mobile_date_time_picker',
+  'time_picker',
+  'date_time_picker',
+  'desktop_date_picker',
+  'mobile_date_picker',
+  'state_select',
+  'state_select_native'
+])
+
+const IterativeFormBuilder = ({ items, depth, hydrationDisabled }: IIterativeFormBuilder) => {
   if (!items) { return null }
   const ItemsToRender: JSX.Element[] = []
   let i = 0
   while (i < items.length) {
     const item = items[i]
+    const type = item.type.toLowerCase() as TStateFormItemType
+    if (hydrationDisabled && interactiveType.has(type)) {
+      item.disabled = true
+    } else if (interactiveType.has(type)) {
+      item.disabled = !!item.state.disabled
+    }
     if (item.has.defaultValue) {
       itemsWithDefaultValues.push(item)
     }
     try {
-      const Item = formItemMap[item.type.toLowerCase() as TStateFormItemType]
+      const Item = formItemMap[type]
         || formItemMap['bad_form_item']
       if (Item) {
         ItemsToRender.push(
@@ -274,6 +314,7 @@ const IterativeFormBuilder = ({ items, depth }: IIterativeFormBuilder) => {
             instance={item}
             key={`${item.type}-${item.name}-${depth}-${i}`}
             depth={depth}
+            hydrationDisabled={hydrationDisabled}
           />
         )
         i++
@@ -293,7 +334,13 @@ const IterativeFormBuilder = ({ items, depth }: IIterativeFormBuilder) => {
   return ItemsToRender
 }
 
-const FormItems = memo(({ instance }: { instance: StateForm }) => {
+const FormItems = memo(({
+  instance,
+  hydrationDisabled,
+}: {
+  instance: StateForm
+  hydrationDisabled?: boolean
+}) => {
   const dispatch = useDispatch<AppDispatch>()
 
   // Memoize the default values effect to prevent unnecessary re-runs
@@ -303,7 +350,13 @@ const FormItems = memo(({ instance }: { instance: StateForm }) => {
     set_all_default_values(memoizedDefaultValues)
   }, [memoizedDefaultValues, dispatch])
 
-  return <IterativeFormBuilder items={instance.items} depth={0} />
+  return (
+    <IterativeFormBuilder
+      items={instance.items}
+      depth={0}
+      hydrationDisabled={hydrationDisabled}
+    />
+  )
 })
 
 export default FormItems

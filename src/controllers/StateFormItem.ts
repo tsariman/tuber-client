@@ -76,7 +76,12 @@ export default class StateFormItem<P = StateForm, T = unknown>
   get state(): IStateFormItem<T> { return this.itemState }
   /** Chain-access to parent object (form). */
   get parent(): P { return this.parentDef }
-  get props(): Record<string, unknown> {return this.itemState.props || {} }
+  get props(): Record<string, unknown> {
+    if (this.itemDisabled) {
+      return { ...(this.itemState.props || {}), disabled: true }
+    }
+    return this.itemState.props || {}
+  }
   configure(conf: unknown) { void conf }
   get type(): Required<IStateFormItem>['type'] { return this.itemState.type ?? 'bad_form_item' }
   get id(): string { return this.itemState.id ?? '' }

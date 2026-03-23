@@ -1,4 +1,5 @@
-import { post_fetch, post_req_state } from '../state/net.actions'
+import { post_fetch, post_req_state, patch_req_state, get_req_state } from '../state/net.actions'
+import { has_changes } from './utility'
 import type { IRedux, TReduxHandler } from '../state'
 import {
   JsonapiRequest,
@@ -15,6 +16,7 @@ import {
   type TThemeMode,
   type IHandlerDirective,
   type IJsonapiError,
+  type IJsonapiResponseResource,
   THEME_DEFAULT_MODE,
   THEME_MODE
 } from '@tuber/shared'
@@ -236,31 +238,111 @@ export default class ReduxHandlerFactory {
     }
   }
 
-  // private _patchFormData = (redux: IRedux) => {
-  //   return async () => {
-  //     // TODO: Implement form data PATCH submission.
-  //   }
-  // }
+  /** Submit the form data via a PATCH request to update an existing resource */
+  private _patchFormData = (redux: IRedux) => {
+    return async (e: unknown) => {
+      if (!this._directive.formName || !this._directive.endpoint || !this._directive.id) {
+        ler('_patchFormData(): Missing required formName, endpoint, or id from directive')
+        return
+      }
+      this._initializePrivateFields(redux)
+      const button = (e as React.MouseEvent<HTMLButtonElement>).currentTarget
+      await this._performLoadingTask(redux)
+
+      // Task 1 & 2: Acquire endpoint and resource id from the directive
+      const { formName, endpoint, id } = this._directive
+
+      // Task 3: Form validation
+      const policy = new FormValidationPolicy(redux, formName)
+      const validationErrors = policy.applyValidationSchemes()
+      if (validationErrors && validationErrors.length > 0) {
+        validationErrors.forEach(vError => {
+          const message = vError.message ?? ''
+          policy.emit(vError.name, message)
+        })
+        return
+      }
+      const formData = policy.getFilteredData()
+
+      // Find the existing resource and its index in the store by id
+      const { store: { dispatch, getState }, actions: A } = redux
+      const collection = getState().data[endpoint] as IJsonapiResponseResource[] | undefined
+      const index = collection?.findIndex(r => r.id === id) ?? -1
+      if (index === -1) {
+        ler(`_patchFormData(): Resource with id '${id}' not found in '${endpoint}'`)
+        return
+      }
+      const existingResource = collection![index]
+
+      // Task 4: Guard — skip submission if nothing changed
+      if (!has_changes(existingResource.attributes, formData)) {
+        return
+      }
+
+      // Task 5: Build edited resource and dispatch PATCH
+      const editedResource = {
+        ...existingResource,
+        attributes: {
+          ...existingResource.attributes,
+          ...formData
+        }
+      }
+      dispatch(A.dataUpdateByIndex({ endpoint, index, resource: editedResource }))
+      dispatch(patch_req_state(`${endpoint}/${editedResource.id}`, { data: editedResource }))
+      dispatch(A.formsDataClear(formName))
+
+      const directiveRules = this._directive.rules ?? []
+      directiveRules.forEach(rule => {
+        switch (rule) {
+          case 'close_dialog':
+            if (
+              this._directive.type === '$form_patch' ||
+              this._directive.type === '$form_dialog'
+            ) {
+              dispatch(A.dialogClose())
+            }
+            break
+          case 'disable_on_submit':
+            button.disabled = true
+            break
+        }
+      })
+
+      const directiveActions = this._directive.actions ?? []
+      directiveActions.forEach(action => {
+        dispatch({
+          type: action.type,
+          payload: action.payload
+        })
+      })
+    }
+  }
 
   private _filterResourcesList = (redux: IRedux) => {
     return async () => {
       this._initializePrivateFields(redux)
-
-      // [TODO] Implement filtering resources data.
-
-      throw new Error(
-        `${this._errorPrefix} _filterResourcesList() NOT implemented.`
-      )
+      if (!this._directive.endpoint) {
+        ler('_filterResourcesList(): Missing required endpoint from directive')
+        return
+      }
+      const { store: { dispatch } } = redux
+      const params = this._directive.params
+      const queryString = params ? new URLSearchParams(params).toString() : ''
+      dispatch(get_req_state(this._directive.endpoint, queryString))
     }
   }
 
   private _makeGetRequest = (redux: IRedux) => {
     return async () => {
       this._initializePrivateFields(redux)
-
-      // [TODO] Implement making a GET request.
-
-      throw new Error(`${this._errorPrefix} _makeGetRequest() NOT implemented.`)
+      if (!this._directive.endpoint) {
+        ler('_makeGetRequest(): Missing required endpoint from directive')
+        return
+      }
+      const { store: { dispatch } } = redux
+      const params = this._directive.params
+      const queryString = params ? new URLSearchParams(params).toString() : ''
+      dispatch(get_req_state(this._directive.endpoint, queryString))
     }
   }
 
@@ -302,6 +384,8 @@ export default class ReduxHandlerFactory {
       case '$form':
       case '$form_dialog':
         return this._postFormData
+      case '$form_patch':
+        return this._patchFormData
       case '$form_none':
         return this._makePostRequest
       case '$filter':

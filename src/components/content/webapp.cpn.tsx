@@ -1,6 +1,7 @@
-import { lazy, type JSX } from 'react'
+import { type JSX } from 'react'
 import StatePage from '../../controllers/StatePage'
-const TubeResearcher = lazy(() => import('../../webapp/tuber/view/default'))
+// const TubeResearcher = lazy(() => import('../../webapp/tuber/view/default'))
+import TubeResearcher from '../../webapp/tuber/view/default'
 
 export interface IWebApps {
   [app: string]: JSX.Element

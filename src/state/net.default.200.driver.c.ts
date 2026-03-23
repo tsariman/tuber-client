@@ -2,6 +2,7 @@ import type { Dispatch } from 'redux'
 import {
   dataLimitQueueCol,
   dataLimitStackCol,
+  dataStoreCol
 } from '../slices/data.slice'
 import { includedAccumulateByAppending } from '../slices/included.slice'
 import { metaAdd } from '../slices/meta.slice'
@@ -102,6 +103,12 @@ export default function net_default_200_driver (
         pageNumbers: newRange
       }))
     }
+  } else if (response.data && is_object(response.data)) {
+    // Handle single resource object if needed
+    dispatch(dataStoreCol({
+      collection: [response.data as IJsonapiResponseResource],
+      endpoint
+    }))
   } else if (response.errors) {
     remember_jsonapi_errors(response.errors)
   }
