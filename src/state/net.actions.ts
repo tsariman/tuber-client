@@ -543,12 +543,20 @@ export const put_req = (endpoint: string,
     )
     if (success) {
       success(json, endpoint)
+      cancel_spinner()
+      dispatch(appHideSpinner())
     } else {
       delegate_data_handling(dispatch, getState, endpoint, json)
     }
   } catch (e) {
     error_id(49).remember_exception(e) // error 49
-    if (failure) { failure(e) } else { delegate_error_handling(dispatch) }
+    if (failure) {
+      failure(e)
+      cancel_spinner()
+      dispatch(appHideSpinner())
+    } else {
+      delegate_error_handling(dispatch)
+    }
   }
 }
 
@@ -588,12 +596,20 @@ export const post_req = (
       )
       if (success) {
         success(json, endpoint)
+        cancel_spinner()
+        dispatch(appHideSpinner())
       } else {
         delegate_data_handling(dispatch, getState, endpoint, json)
       }
     } catch (e) {
       error_id(33).remember_exception(e) // error 33
-      if (failure) { failure(e) } else { delegate_error_handling(dispatch) }
+      if (failure) {
+        failure(e)
+        cancel_spinner()
+        dispatch(appHideSpinner())
+      } else {
+        delegate_error_handling(dispatch)
+      }
     }
   }
 }
