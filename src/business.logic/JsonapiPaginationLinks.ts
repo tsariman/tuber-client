@@ -12,11 +12,9 @@ export default class JsonapiPaginationLinks {
   private _nextPageNumber?: number;
   private _prevPageNumber?: number;
 
-  constructor (links: IJsonapiPaginationLinks) {
-    this._links = links;
-    if (!this._links) {
-      this._lastPageNumber = 1; // [bugfix]
-    }
+  constructor (links?: IJsonapiPaginationLinks) {
+    // Defensive fallback: links can be undefined at runtime before store hydration.
+    this._links = (links || { self: '' }) as IJsonapiPaginationLinks;
   }
 
   /**
@@ -134,7 +132,10 @@ export default class JsonapiPaginationLinks {
     pageSize,
     // TODO Add more query params to update
   }: {pageNumber?: number, pageSize?: number}) {
-    const qs = get_jsonapi_link_url(this._links.self);
+    const qs = get_jsonapi_link_url(this._links?.self);
+    if (!qs) {
+      return '';
+    }
     const params = new URLSearchParams(qs);
     if (pageNumber) {
       params.set('page[number]', pageNumber.toString());

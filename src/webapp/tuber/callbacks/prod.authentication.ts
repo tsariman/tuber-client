@@ -12,6 +12,7 @@ import { state_reset } from 'src/state/actions'
 import { ler, pre } from 'src/business.logic/logging'
 import type { IStateDialog } from '@tuber/shared'
 import { JsonapiRequest } from 'src/business.logic'
+import { reset_load_attempts_keys } from 'src/business.logic/load.attempts'
 
 interface ILogin {
   username?: string
@@ -110,11 +111,13 @@ export function sign_out(redux: IRedux) {
     const { store: { dispatch }} = redux
     dispatch(post_req('signout', {}, () => {
       Config.write(BOOTSTRAP_ATTEMPTS, 0)
+      reset_load_attempts_keys()
       dispatch(state_reset())
-      
+
       // TODO Something!
     }, e => {
       Config.write(BOOTSTRAP_ATTEMPTS, 0)
+      reset_load_attempts_keys()
       dispatch(state_reset())
       error_id(1101).remember_exception(e) // Error 1101
     }))

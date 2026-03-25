@@ -25,6 +25,7 @@ import Config from 'src/config';
 import { ler } from 'src/business.logic/logging';
 import StateData from 'src/controllers/StateData';
 import type { IJsonapiResponse } from '@tuber/shared';
+import { register_load_attempts_key } from 'src/business.logic/load.attempts';
 
 interface IFormsData {
   video_url?: string;
@@ -133,6 +134,7 @@ export function dev_fix_missing_thumbnails(i: number) {
         ler(`dev_fix_missing_thumbnails: ${config} exceeded.`);
         return;
       }
+      register_load_attempts_key(config);
       Config.write(config, attempts + 1);
       try {
         const origin = get_origin_ending_fixed(rootState.app.origin);

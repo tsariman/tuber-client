@@ -1,6 +1,5 @@
 import { styled } from '@mui/material/styles'
 import type StateApp from '../controllers/StateApp'
-import { APP_REQUEST_FAILED } from '@tuber/shared'
 
 const StyledWrapper = styled('div')(({ theme }) => ({
   width: '100%',
@@ -30,7 +29,7 @@ const SpinnerBootstrap = ({ instance: app }: IProps) => (
       viewBox="0 0 38 38"
       xmlns="http://www.w3.org/2000/svg"
       stroke="currentColor"
-      style={{ opacity: app.status === APP_REQUEST_FAILED ? 0 : 1 }}
+      style={{ opacity: app.spinnerBootstrapControl ? 1 : 0 }}
     >
       <g fill="none" fillRule="evenodd">
         <g transform="translate(1 1)" strokeWidth="2">

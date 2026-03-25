@@ -43,14 +43,6 @@ describe('src/state/net.actions.ts', () => {
 
   });
 
-  describe('axios_post_req_state', () => {
-
-    it('axios_post_req_state', () => {
-      expect(F.axios_post_req_state).toEqual({});
-    });
-
-  });
-
   describe('get_req_state', () => {
 
     it('get_req_state', () => {

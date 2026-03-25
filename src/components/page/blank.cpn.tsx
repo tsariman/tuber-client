@@ -13,6 +13,7 @@ import {
 import StateApp from '../../controllers/StateApp'
 import StateNet from '../../controllers/StateNet'
 import StatePathnames from '../../controllers/StatePathnames'
+import { register_load_attempts_key } from '../../business.logic/load.attempts'
 
 export default function PageBlank ({ instance: page }:{ instance: StatePage }) {
   const dispatch = useDispatch<AppDispatch>()
@@ -35,6 +36,7 @@ export default function PageBlank ({ instance: page }:{ instance: StatePage }) {
     const themeMode = Config.read<TThemeMode>(THEME_MODE, THEME_DEFAULT_MODE)
     const pageLoadAttempts = Config.read<number>(`${key}_load_attempts`, 0)
     if (pageLoadAttempts < ALLOWED_ATTEMPTS) {
+      register_load_attempts_key(`${key}_load_attempts`)
       dispatch(post_req_state(PAGES, { key, theme_mode: themeMode }, headers))
       Config.write(`${key}_load_attempts`, pageLoadAttempts + 1)
     }

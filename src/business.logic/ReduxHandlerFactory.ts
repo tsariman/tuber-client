@@ -1,4 +1,10 @@
-import { post_fetch, post_req_state, patch_req_state, get_req_state } from '../state/net.actions'
+import {
+  post_fetch,
+  post_req_state,
+  patch_req_state,
+  get_req_state,
+  delete_req_state
+} from '../state/net.actions'
 import { has_changes } from './utility'
 import type { IRedux, TReduxHandler } from '../state'
 import {
@@ -11,6 +17,7 @@ import {
   pre
 } from '.'
 import {
+  BOOTSTRAP_ATTEMPTS,
   type TStateKeys,
   type TStatePathnames,
   type TThemeMode,
@@ -25,6 +32,7 @@ import Config from '../config'
 import { net_patch_state } from '../state/actions'
 import type React from 'react'
 import type { TNetState } from '../interfaces/localized'
+import { reset_load_attempts_keys } from './load.attempts'
 
 /**
  * Provides a default callback for buttons, links, ...etc, in case they need one.
@@ -189,6 +197,20 @@ export default class ReduxHandlerFactory {
       }
     })
     await Promise.all(promises)
+  }
+
+  private _setConfigOnDeleteSuccess = (): void => {
+    const rules = (this._directive.rules ?? []) as string[]
+    if (!rules.includes('bootstrap')) {
+      return
+    }
+    try {
+      Config.write(BOOTSTRAP_ATTEMPTS, 0)
+      reset_load_attempts_keys()
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      ler(`_setConfigOnDeleteSuccess(): Failed to write ${BOOTSTRAP_ATTEMPTS}: ${message}`)
+    }
   }
 
   /** Submit the form data via a POST request to create a new resource */
@@ -363,6 +385,48 @@ export default class ReduxHandlerFactory {
     }
   }
 
+  private _makeDeleteRequest = (redux: IRedux) => {
+    return async (e: unknown) => {
+      this._initializePrivateFields(redux)
+      if (!this._directive.endpoint) {
+        ler('_makeDeleteRequest(): Missing required endpoint from directive')
+        return
+      }
+      const { store: { dispatch } } = redux
+      const button = (e as React.MouseEvent<HTMLButtonElement>)?.currentTarget
+      const directiveRules = this._directive.rules ?? []
+      const disableOnSubmit = directiveRules.includes('disable_on_submit')
+      directiveRules.forEach(rule => {
+        if (rule === 'disable_on_submit') {
+          if (button) {
+            button.disabled = true
+          }
+        }
+      })
+
+      const result = await dispatch(
+        delete_req_state(this._directive.endpoint, '', this._headers) as never
+      ) as { ok?: boolean } | undefined
+
+      if (!result?.ok) {
+        if (disableOnSubmit && button) {
+          button.disabled = false
+        }
+        return
+      }
+
+      this._setConfigOnDeleteSuccess()
+
+      const directiveActions = this._directive.actions ?? []
+      directiveActions.forEach(action => {
+        dispatch({
+          type: action.type,
+          payload: action.payload
+        })
+      })
+    }
+  }
+
   /** Executes Redux actions specified in the directive */
   private _runReduxActions = (redux: IRedux) => {
     return async () => {
@@ -388,6 +452,8 @@ export default class ReduxHandlerFactory {
         return this._patchFormData
       case '$form_none':
         return this._makePostRequest
+      case '$deletes':
+        return this._makeDeleteRequest
       case '$filter':
         return this._filterResourcesList
       case '$redux_actions':

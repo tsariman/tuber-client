@@ -1,6 +1,6 @@
 import { get_origin_ending_fixed } from '../business.logic/parsing'
 import AbstractState from './AbstractState'
-import type { IStateApp, TThemeMode } from '@tuber/shared'
+import { APP_REQUEST_FAILED, type IStateApp, type TThemeMode } from '@tuber/shared'
 import type State from './State'
 import Config from '../config'
 
@@ -61,5 +61,10 @@ export default class StateApp extends AbstractState implements IStateApp {
     return this.route.startsWith('/')
       ? this.route.slice(1)
       : this.route
+  }
+  /** Determines if the bootstrap spinner should keep spinning */
+  get spinnerBootstrapControl(): boolean {
+    return this._state.status !== APP_REQUEST_FAILED
+      && typeof this._state.status !== 'undefined'
   }
 }

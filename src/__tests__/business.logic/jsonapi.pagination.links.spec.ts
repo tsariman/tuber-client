@@ -21,6 +21,12 @@ describe('JsonapiPaginationLinks', () => {
         }
       });
     });
+
+    it('should safely handle missing links when getting a link url', () => {
+      const links = new JsonapiPaginationLinks(undefined);
+      expect(() => links.getLinkUrl({ pageNumber: 2 })).not.toThrow();
+      expect(links.getLinkUrl({ pageNumber: 2 })).toEqual('');
+    });
   });
 
   describe('selfPageNumber', () => {

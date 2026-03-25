@@ -1,9 +1,5 @@
 import type { Dispatch } from 'redux'
-import {
-  get_themed_state,
-  is_object,
-  get_val
-} from '../business.logic/utility'
+import { get_themed_state, get_val } from '../business.logic/utility'
 import {
   get_origin_ending_fixed,
   get_query_starting_fixed,
@@ -51,16 +47,16 @@ const DEFAULT_HEADERS: RequestInit['headers'] = {
  * browser's interpretation of the response.
  * __Note__: The errors handled here are different from those generated
  * server-side. These would typically be considered a valid response and would
- * be handled by another function (delegate_data_handling).
+ * be handled by another function ($delegate_data_handling).
  */
-const delegate_error_handling = (dispatch: Dispatch) => {
+const $delegate_error_handling = (dispatch: Dispatch) => {
   cancel_spinner()
   dispatch(appHideSpinner())
   dispatch(appRequestFailed())
 }
 
 /** Handles (arguably) successful responses. */
-const delegate_data_handling = (
+const $delegate_data_handling = (
   dispatch: Dispatch,
   getState: () => RootState,
   endpoint: string,
@@ -94,53 +90,11 @@ const delegate_data_handling = (
   dispatch(appHideSpinner())
 }
 
-/**
- * TODO Implement this function.
- * This function is for handling unexpected nesting.
- * It is a common problem when the server returns a response that is
- * not in the expected format.
- * For example, the server returns a response like this:
- * ```json
- * {
- *   "data": {
- *     "id": "123",
- *     "type": "users",
- *     "attributes": {
- *       "name": "John Doe"
- *     }
- *   }
- * }
- * ```
- * But the client expects a response like this:
- * ```json
- * {
- *   "id": "123",
- *   "type": "users",
- *   "attributes": {
- *     "name": "John Doe"
- *   }
- * }
- * ```
- * This function should be able to handle this problem.
- * It should be able to detect the unexpected nesting and fix it.
- * It should also be able to detect the expected nesting and leave it
- * alone.
- * This function should be able to handle the following cases:
- * 1. The server returns a response with the expected nesting.
- * 2. The server returns a response with the unexpected nesting.
- * 3. The server returns a response with the expected nesting and
- *   unexpected nesting.
- *
- * As more cases are discovered, they should be added to this list.
- */
-function _resolve_unexpected_nesting<T=unknown>(response: unknown): T {
-  if (is_object(response) && 'response' in response) {// Case of nested response
-    return response.response as T
-  }
-
-  // ... other cases
-
-  return response as T
+/** Helper to get JSON from a response, handling 204 No Content. */
+const $get_json = async <T = unknown>(
+  response: Response,
+): Promise<T> => {
+  return (response.status === 204 ? {} : await response.json()) as T
 }
 
 /**
@@ -300,17 +254,15 @@ export const post_req_state = (
         credentials: 'include',
         body: JSON.stringify(body)
       })
-      const json = _resolve_unexpected_nesting<IJsonapiBaseResponse>(
-        await response.json()
-      )
-      json.meta = json.meta ?? {}
+      const json = await $get_json<IJsonapiBaseResponse>(response)
+      json.meta ??= {}
       json.meta.status = response.status
       json.meta.statusText = response.statusText
       json.meta.ok = response.ok
-      delegate_data_handling(dispatch, getState, endpoint, json)
+      $delegate_data_handling(dispatch, getState, endpoint, json)
     } catch (e) {
       error_id(29).remember_exception(e) // error 29
-      delegate_error_handling(dispatch)
+      $delegate_error_handling(dispatch)
     }
   }
 }
@@ -343,15 +295,15 @@ export const patch_req_state = (
         credentials: 'include',
         body: JSON.stringify(body)
       })
-      const json = await response.json()
-      json.meta = json.meta || {}
+      const json = await $get_json<IJsonapiBaseResponse>(response)
+      json.meta ??= {}
       json.meta.status = response.status
       json.meta.statusText = response.statusText
       json.meta.ok = response.ok
-      delegate_data_handling(dispatch, getState, endpoint, json)
+      $delegate_data_handling(dispatch, getState, endpoint, json)
     } catch (e) {
       error_id(30).remember_exception(e) // error 30
-      delegate_error_handling(dispatch)
+      $delegate_error_handling(dispatch)
     }
   }
 }
@@ -384,44 +336,17 @@ export const put_req_state = (
         credentials: 'include',
         body: JSON.stringify(body)
       })
-      const json = await response.json() as IJsonapiBaseResponse
+      const json = await $get_json<IJsonapiBaseResponse>(response)
       json.meta ??= {}
       json.meta.status = response.status
       json.meta.statusText = response.statusText
       json.meta.ok = response.ok
-      delegate_data_handling(dispatch, getState, endpoint, json)
+      $delegate_data_handling(dispatch, getState, endpoint, json)
     } catch (e) {
       error_id(48).remember_exception(e) // error 48
-      delegate_error_handling(dispatch)
+      $delegate_error_handling(dispatch)
     }
   }
-}
-
-/**
- * Makes a POST request using Axios to update the Redux store.
- *
- * [TODO] Implement this function using Axios.
- * Install Axios first: `pnpm add axios`
- * Then, import it: `import axios from 'axios'`
- * Then, use it: `axios.post(url, body, headers)`
- *
- * @param endpoint Usually an entity name. Otherwise, it's a valid URI endpoint.
- * @param body The data you want to send to the server.
- * @param headers Additional headers to include in the request.
- * @returns A Redux thunk action.
- */
-export const axios_post_req_state = (
-  endpoint: string,
-  body?: unknown,
-  headers?: RequestInit['headers']
-) => {
-  void endpoint
-  void body
-  void headers
-  // [TODO] Implement this function using Axios.
-  // Install Axios first: `pnpm add axios`
-  // Then, import it: `import axios from 'axios'`
-  // Then, use it: `axios.post(url, body, headers)`
 }
 
 /**
@@ -455,15 +380,15 @@ export const get_req_state = (
         headers,
         credentials: 'include'
       })
-      const json = await response.json()
-      json.meta = json.meta ?? {}
+      const json = await response.json() as IJsonapiBaseResponse
+      json.meta ??= {}
       json.meta.status = response.status
       json.meta.statusText = response.statusText
       json.meta.ok = response.ok
-      delegate_data_handling(dispatch, getState, endpoint, json)
+      $delegate_data_handling(dispatch, getState, endpoint, json)
     } catch (e) {
       error_id(31).remember_exception(e) // error 31
-      delegate_error_handling(dispatch)
+      $delegate_error_handling(dispatch)
     }
   }
 }
@@ -497,15 +422,23 @@ export const delete_req_state = (
         credentials: 'include',
         body: JSON.stringify({})
       })
-      const json = await response.json()
+      const json = await $get_json<IJsonapiBaseResponse>(response)
       json.meta ??= {}
       json.meta.status = response.status
       json.meta.statusText = response.statusText
       json.meta.ok = response.ok
-      delegate_data_handling(dispatch, getState, endpoint, json)
+      $delegate_data_handling(dispatch, getState, endpoint, json)
+      return {
+        ok: response.ok,
+        status: response.status
+      }
     } catch (e) {
       error_id(32).remember_exception(e) // error 32
-      delegate_error_handling(dispatch)
+      $delegate_error_handling(dispatch)
+      return {
+        ok: false,
+        status: 0
+      }
     }
   }
 }
@@ -514,9 +447,10 @@ export const delete_req_state = (
  * Makes a `PUT` request to server and handle the response yourself.
  *
  * @param endpoint Usually a collection name. Otherwise, it's a valid URI endpoint.
- * @param body 
- * @param success 
- * @param failure 
+ * @param body Data (an object) to be sent to the server.
+ * @param success Callback to receive a legitimate server response if there is
+ *                one.
+ * @param failure Callback for a failed request with no proper server response.
  * @returns A Redux thunk action.
  */
 export const put_req = (endpoint: string,
@@ -538,15 +472,17 @@ export const put_req = (endpoint: string,
       body: JSON.stringify(body),
       credentials: 'include'
     })
-    const json = _resolve_unexpected_nesting<IJsonapiBaseResponse>(
-      await response.json()
-    )
+    const json = await $get_json<IJsonapiBaseResponse>(response)
+    json.meta ??= {}
+    json.meta.status = response.status
+    json.meta.statusText = response.statusText
+    json.meta.ok = response.ok
     if (success) {
       success(json, endpoint)
       cancel_spinner()
       dispatch(appHideSpinner())
     } else {
-      delegate_data_handling(dispatch, getState, endpoint, json)
+      $delegate_data_handling(dispatch, getState, endpoint, json)
     }
   } catch (e) {
     error_id(49).remember_exception(e) // error 49
@@ -555,7 +491,7 @@ export const put_req = (endpoint: string,
       cancel_spinner()
       dispatch(appHideSpinner())
     } else {
-      delegate_error_handling(dispatch)
+      $delegate_error_handling(dispatch)
     }
   }
 }
@@ -591,15 +527,33 @@ export const post_req = (
         body: JSON.stringify(body),
         credentials: 'include'
       })
-      const json = _resolve_unexpected_nesting<IJsonapiBaseResponse>(
-        await response.json()
-      )
-      if (success) {
-        success(json, endpoint)
-        cancel_spinner()
-        dispatch(appHideSpinner())
+      const json = await $get_json<IJsonapiBaseResponse>(response)
+      json.meta ??= {}
+      json.meta.status = response.status
+      json.meta.statusText = response.statusText
+      json.meta.ok = response.ok
+      if (response.ok) {
+        if (success) {
+          success(json, endpoint)
+          cancel_spinner()
+          dispatch(appHideSpinner())
+        }
+        else {
+          $delegate_data_handling(dispatch, getState, endpoint, json)
+        }
+        return
+      } else if (response.status >= 400) {
+        if (failure) {
+          failure(json)
+          cancel_spinner()
+          dispatch(appHideSpinner())
+        } else {
+          $delegate_data_handling(dispatch, getState, endpoint, json)
+        }
+        return
       } else {
-        delegate_data_handling(dispatch, getState, endpoint, json)
+        $delegate_error_handling(dispatch)
+        return
       }
     } catch (e) {
       error_id(33).remember_exception(e) // error 33
@@ -608,7 +562,7 @@ export const post_req = (
         cancel_spinner()
         dispatch(appHideSpinner())
       } else {
-        delegate_error_handling(dispatch)
+        $delegate_error_handling(dispatch)
       }
     }
   }
@@ -632,7 +586,6 @@ export const get_req = <T = unknown>(
   return async (dispatch: Dispatch, getState: () => RootState) => {
     dispatch(appRequestStart())
     schedule_spinner()
-    let json: T
     try {
       const rootState = getState()
       const originEndingFixed = get_origin_ending_fixed(rootState.app.origin)
@@ -644,15 +597,19 @@ export const get_req = <T = unknown>(
         credentials: 'include',
         headers
       })
-      json = await response.json()
+      const json = await $get_json<IJsonapiBaseResponse>(response)
+      json.meta ??= {}
+      json.meta.status = response.status
+      json.meta.statusText = response.statusText
+      json.meta.ok = response.ok
       if (response.ok) {
         const endpoint = get_endpoint(pathname)
         if (success) {
-          success(endpoint, json)
+          success(endpoint, json as T)
           cancel_spinner()
           dispatch(appHideSpinner())
         } else {
-          delegate_data_handling(dispatch, getState, endpoint, json as IJsonapiBaseResponse)
+          $delegate_data_handling(dispatch, getState, endpoint, json as IJsonapiBaseResponse)
         }
       } else if (failure) {
         failure(json)
@@ -660,13 +617,13 @@ export const get_req = <T = unknown>(
         dispatch(appHideSpinner())
       } else if (response.status >= 400) {
         const endpoint = get_endpoint(pathname)
-        delegate_data_handling(dispatch, getState, endpoint, json as IJsonapiBaseResponse)
+        $delegate_data_handling(dispatch, getState, endpoint, json as IJsonapiBaseResponse)
       } else {
-        delegate_error_handling(dispatch)
+        $delegate_error_handling(dispatch)
       }
     } catch (e) {
       error_id(34).remember_exception(e) // error 34
-      if (failure) { failure(e) } else { delegate_error_handling(dispatch) }
+      if (failure) { failure(e) } else { $delegate_error_handling(dispatch) }
     }
   }
 }

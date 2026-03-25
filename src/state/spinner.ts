@@ -15,7 +15,15 @@ import { dispatch, get_state } from '.'
  * The variable's purpose is to prevent functions from running after they have
  * been scheduled to do so via `setTimeout`.
  */
-let handle: ReturnType<typeof setTimeout> | null
+let showHandle: ReturnType<typeof setTimeout> | null
+let autoHideHandle: ReturnType<typeof setTimeout> | null
+
+function clear_auto_hide_timeout(): void {
+  if (autoHideHandle) {
+    clearTimeout(autoHideHandle)
+    autoHideHandle = null
+  }
+}
 
 /**
  * Schedules a spinner to appear after a specified delay.
@@ -26,10 +34,14 @@ let handle: ReturnType<typeof setTimeout> | null
  *
  * @param time The delay before the spinner appears in milliseconds (default: 200ms)
  */
-export function schedule_spinner(time = 200): void {
-  if (!handle) {
-    const callback = () => dispatch({ type: 'app/appShowSpinner' })
-    handle = setTimeout(callback, time)
+export function schedule_spinner(time = 200, timeout = 10000): void {
+  if (!showHandle) {
+    const callback = () => {
+      showHandle = null
+      dispatch({ type: 'app/appShowSpinner' })
+      auto_hide_spinner(timeout)
+    }
+    showHandle = setTimeout(callback, time)
   }
 }
 
@@ -46,10 +58,11 @@ export function schedule_spinner(time = 200): void {
  *       can be placed at the top of the page.
  */
 export function cancel_spinner(): void {
-  if (handle) {
-    clearTimeout(handle)
-    handle = null
+  if (showHandle) {
+    clearTimeout(showHandle)
+    showHandle = null
   }
+  clear_auto_hide_timeout()
 }
 
 /**
@@ -58,10 +71,12 @@ export function cancel_spinner(): void {
  * This is a safety mechanism to prevent the spinner from getting stuck
  * in case an operation fails to properly hide it.
  */
-export function auto_hide_spinner(): void {
-  setTimeout(() => {
+export function auto_hide_spinner(timeout = 10000): void {
+  clear_auto_hide_timeout()
+  autoHideHandle = setTimeout(() => {
+    autoHideHandle = null
     if (get_state().app.showSpinner) {
       dispatch({ type: 'app/appHideSpinner' })
     }
-  }, 10000)
+  }, timeout)
 }

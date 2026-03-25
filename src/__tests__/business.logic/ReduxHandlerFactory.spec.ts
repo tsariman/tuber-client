@@ -2,7 +2,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { IJsonapiResponseResource, THandlerDirectiveRule } from '@tuber/shared'
 import ReduxHandlerFactory from '../../business.logic/ReduxHandlerFactory'
 import { actions, type IRedux } from '../../state'
-import { get_req_state, patch_req_state, post_req_state } from '../../state/net.actions'
+import {
+  delete_req_state,
+  get_req_state,
+  patch_req_state,
+  post_req_state
+} from '../../state/net.actions'
 import { has_changes } from '../../business.logic/utility'
 
 let mockPolicyInstance: {
@@ -15,7 +20,8 @@ vi.mock('../../state/net.actions', () => ({
   post_fetch: vi.fn(),
   post_req_state: vi.fn(() => vi.fn()),
   patch_req_state: vi.fn(() => vi.fn()),
-  get_req_state: vi.fn(() => vi.fn())
+  get_req_state: vi.fn(() => vi.fn()),
+  delete_req_state: vi.fn(() => vi.fn())
 }))
 
 vi.mock('../../business.logic/utility', () => ({
@@ -307,6 +313,64 @@ describe('ReduxHandlerFactory', () => {
 
       expect(get_req_state).toHaveBeenCalledWith('bookmarks', 'id=42')
       expect(mockDispatch).toHaveBeenCalled()
+    })
+
+    it('runs delete directive actions only after successful delete', async () => {
+      const directive = {
+        type: '$deletes' as const,
+        endpoint: 'account',
+        rules: ['disable_on_submit'] as THandlerDirectiveRule[],
+        actions: [{ type: 'dialog/dialogClose' }]
+      }
+      const factory = new ReduxHandlerFactory(directive)
+      const handler = factory.getEventHandler()
+      const eventHandler = handler?.(mockRedux)
+      const mockEvent = {
+        currentTarget: { disabled: false }
+      } as unknown as Parameters<NonNullable<typeof eventHandler>>[0]
+
+      vi.mocked(delete_req_state).mockReturnValue(vi.fn(async () => ({ ok: true, status: 204 })))
+      mockDispatch.mockImplementation(async (arg: unknown) => {
+        if (typeof arg === 'function') {
+          return await (arg as (dispatch: unknown, getState: unknown) => unknown)(mockDispatch, mockGetState)
+        }
+        return arg
+      })
+
+      await eventHandler?.(mockEvent)
+
+      expect(delete_req_state).toHaveBeenCalledWith('account', '', {})
+      expect(mockEvent.currentTarget.disabled).toBe(true)
+      expect(mockDispatch).toHaveBeenCalledWith({ type: 'dialog/dialogClose', payload: undefined })
+    })
+
+    it('re-enables delete button and skips actions when delete fails', async () => {
+      const directive = {
+        type: '$deletes' as const,
+        endpoint: 'account',
+        rules: ['disable_on_submit'] as THandlerDirectiveRule[],
+        actions: [{ type: 'dialog/dialogClose' }]
+      }
+      const factory = new ReduxHandlerFactory(directive)
+      const handler = factory.getEventHandler()
+      const eventHandler = handler?.(mockRedux)
+      const mockEvent = {
+        currentTarget: { disabled: false }
+      } as unknown as Parameters<NonNullable<typeof eventHandler>>[0]
+
+      vi.mocked(delete_req_state).mockReturnValue(vi.fn(async () => ({ ok: false, status: 500 })))
+      mockDispatch.mockImplementation(async (arg: unknown) => {
+        if (typeof arg === 'function') {
+          return await (arg as (dispatch: unknown, getState: unknown) => unknown)(mockDispatch, mockGetState)
+        }
+        return arg
+      })
+
+      await eventHandler?.(mockEvent)
+
+      expect(delete_req_state).toHaveBeenCalledWith('account', '', {})
+      expect(mockEvent.currentTarget.disabled).toBe(false)
+      expect(mockDispatch).not.toHaveBeenCalledWith({ type: 'dialog/dialogClose', payload: undefined })
     })
   })
 })

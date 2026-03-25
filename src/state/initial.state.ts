@@ -141,7 +141,6 @@ export default {
    * Contains the appbar search field text of all pages. The key is the page name.
    */
   'appbarQueries': {},
-  'queryHistory': {},
 
   /** Application `font-family` and `color` */
   'typography': {

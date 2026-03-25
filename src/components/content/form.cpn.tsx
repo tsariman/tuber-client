@@ -17,7 +17,12 @@ import { get_req_state, post_req_state } from '../../state/net.actions'
 import { StateApp, StateForm, StatePathnames } from '../../controllers'
 import StateAllForms from '../../controllers/StateAllForms'
 import { get_state_form_name } from '../../business.logic/parsing'
+import { register_load_attempts_key } from '../../business.logic/load.attempts'
 import { actions } from '../../state'
+import {
+  FORMS_DATA_HYDRATED_FLAG,
+  FORMS_DATA_HYDRATION_KEY
+} from '../../slices/formsData.slice'
 
 interface IFormContent {
   instance: StateForm | null
@@ -57,6 +62,7 @@ export default function FormContent ({ instance, formName, type }: IFormContent)
     const key = get_state_form_name(formName)
     const formLoadAttempts = Config.read<number>(`${key}_load_attempts`, 0)
     if (formLoadAttempts < ALLOWED_ATTEMPTS) {
+      register_load_attempts_key(`${key}_load_attempts`)
       dispatch(post_req_state(FORMS, { key, theme_mode: themeMode }))
       Config.write(`${key}_load_attempts`, formLoadAttempts + 1)
     }
@@ -79,6 +85,7 @@ export default function FormContent ({ instance, formName, type }: IFormContent)
     const attemptsKey = `${form.name}_hydration_load_attempts`
     const attempts = Config.read<number>(attemptsKey, 0)
     if (attempts < ALLOWED_ATTEMPTS) {
+      register_load_attempts_key(attemptsKey)
       setHydrationInFlight(true)
       dispatch(get_req_state(hydrationEndpoint))
       Config.write(attemptsKey, attempts + 1)
@@ -138,14 +145,27 @@ export default function FormContent ({ instance, formName, type }: IFormContent)
       | undefined
     if (!Array.isArray(collection) || collection.length === 0) { return }
 
-    const attributes = collection[0]?.attributes as Record<string, unknown> | undefined
+    const firstResource = collection[0]
+    const attributes = firstResource?.attributes as Record<string, unknown> | undefined
     if (!attributes) { return }
+
+    const hydrationKey = [
+      hydrationEndpoint,
+      firstResource?.type ?? '',
+      firstResource?.id ?? ''
+    ].join(':')
 
     const currentFormData = formsDataState[form.name] as
       | Record<string, unknown>
       | undefined
     if (currentFormData && Object.keys(currentFormData).length > 0) {
-      return
+      const wasHydrated = currentFormData[FORMS_DATA_HYDRATED_FLAG] === true
+      if (!wasHydrated) { return }
+
+      const currentHydrationKey = currentFormData[FORMS_DATA_HYDRATION_KEY]
+      if (currentHydrationKey === hydrationKey) { return }
+
+      dispatch(actions.formsDataClear(form.name))
     }
 
     hydrationFieldNames.forEach(fieldName => {
@@ -157,6 +177,11 @@ export default function FormContent ({ instance, formName, type }: IFormContent)
         }))
       }
     })
+
+    dispatch(actions.formsDataMarkHydrated({
+      formName: form.name,
+      hydrationKey
+    }))
   }, [FORMS, dataState, dispatch, form, formsDataState, hydrationFieldNames])
 
   const map: {[key in Required<IFormContent>['type']]: JSX.Element | null} = {
