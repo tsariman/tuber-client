@@ -1,6 +1,16 @@
 
 # Development Changes Log
 
+## `202603250008` feat: enhance load attempts tracking and delete request handling
+
+- Updated package manager version in package.json.
+- Added delete request handling in ReduxHandlerFactory with associated tests.
+- Implemented load attempts tracking in loadAttempts.ts and integrated it into form and page components.
+- Added tests for load attempts functionality and delete account flow.
+- Improved error handling and spinner management in net.actions.
+- Enhanced JsonapiPaginationLinks to handle missing links gracefully.
+- Refactored spinner management to support auto-hide functionality.
+
 ## `202603231231` [Refactor] ReduxHandlerFactory and related components for improved form handling
 
 - Removed the ReduxHandlerFactory.spec.ts test file.
