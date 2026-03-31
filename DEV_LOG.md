@@ -1,6 +1,8 @@
 
 # Development Changes Log
 
+## `202603311451` Refactor form submission handling and mark sign-in enter key function as deprecated
+
 ## `202603250008` feat: enhance load attempts tracking and delete request handling
 
 - Updated package manager version in package.json.

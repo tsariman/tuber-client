@@ -94,7 +94,7 @@ export default function form_submit_sign_in(redux: IRedux) {
   }
 }
 
-/** @id 41_C_2 */
+/** @id 41_C_2 @deprecated */
 export function form_submit_sign_in_enter_key(redux: IRedux) {
   return async (event: KeyboardEvent) => {
     if (event.key === 'Enter') {

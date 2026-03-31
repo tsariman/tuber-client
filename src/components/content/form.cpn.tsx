@@ -194,10 +194,15 @@ export default function FormContent ({ instance, formName, type }: IFormContent)
       </Form>
     ),
     dialog: (
-      <FormItems
-        instance={form}
-        hydrationDisabled={form.disableOnHydration && hydrationInFlight}
-      />
+      <form
+        autoComplete='off'
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <FormItems
+          instance={form}
+          hydrationDisabled={form.disableOnHydration && hydrationInFlight}
+        />
+      </form>
     )
   }
 
