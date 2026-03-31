@@ -27,6 +27,7 @@ import toggle_theme_mode from './prod.toggle.theme.mode'
 import { DIALOG_LOGIN_ID } from '../tuber.config'
 import { get_dialog_state } from 'src/state/net.actions'
 import appbar_toggle_search_scope from './prod.toggle.search.scope'
+import open_patreon_upgrade from './prod.open.patreon'
 
 /** Default callback for closing dialogs */
 function close_default (redux: IRedux) {
@@ -81,7 +82,8 @@ const prodCallbacks: { readonly [key: string]: TReduxHandler } = {
   // '$41_C_2': form_submit_sign_in_enter_key,
   '$44_C_1': toggle_theme_mode,
   '$66_C_1': sign_out,
-  '$71_C_1': appbar_filter_bookmarks
+  '$71_C_1': appbar_filter_bookmarks,
+  'openPatreonUpgrade': open_patreon_upgrade
   // TODO Add more callbacks here
 }
 

@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import appReducer, { appActions } from '../../../slices/app.slice'
-import netReducer from '../../../slices/net.slice'
-import dataReducer, { dataActions } from '../../../slices/data.slice'
-import includedReducer, { includedActions } from '../../../slices/included.slice'
-import { bookmark_vote_down, bookmark_vote_up } from './prod.bookmarks.actions'
-import type { IRedux } from '../../../state'
+import appReducer, { appActions } from '../../../../slices/app.slice'
+import netReducer from '../../../../slices/net.slice'
+import dataReducer, { dataActions } from '../../../../slices/data.slice'
+import includedReducer, { includedActions } from '../../../../slices/included.slice'
+import { bookmark_vote_down, bookmark_vote_up } from '../../callbacks/prod.bookmarks.actions'
+import type { IRedux } from '../../../../state'
 import type { IJsonapiResponseResource } from '@tuber/shared'
 
 const rootReducer = combineReducers({

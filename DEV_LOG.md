@@ -1,6 +1,8 @@
 
 # Development Changes Log
 
+## `202603311945` Add Patreon upgrade callback and update config for URL
+
 ## `202603311451` Refactor form submission handling and mark sign-in enter key function as deprecated
 
 ## `202603250008` feat: enhance load attempts tracking and delete request handling

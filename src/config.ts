@@ -8,6 +8,8 @@ const initConfObj = {
   DEBUG: false,
   /** Indicates whether the app is in development mode or not. */
   DEV: false,
+  /** Patreon page opened when upgrade prompts are triggered. */
+  PATREON_URL: 'https://www.patreon.com/cw/TubeResearcher/membership',
   // TODO Add your config object values here e.g.
   // MY_CONFIG: 'my config value',
 }
