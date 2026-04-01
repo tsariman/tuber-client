@@ -6,7 +6,7 @@ import type {
 } from '@tuber/shared'
 import type State from './State'
 
-/** Wrapper class `initialState.appbarQueries` */
+/** Wrapper (controller) class for the `appbarQueries` state. */
 export default class StateAppbarQueries extends AbstractState {
   protected searchesState: TStateAppbarQueries
   protected parentDef?: State

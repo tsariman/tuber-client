@@ -1,7 +1,7 @@
 import AbstractState from './AbstractState'
 import type { IStateComponent } from '@tuber/shared'
 
-/** Wrapper class */
+/** Wrapper (controller) class for the `component` state. */
 export default class StateComponent<P = unknown>
   extends AbstractState
   implements IStateComponent

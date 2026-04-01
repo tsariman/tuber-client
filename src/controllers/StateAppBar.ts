@@ -12,7 +12,7 @@ import StateComponent from './StateComponent'
 import StateLink from './StateLink'
 import type { IStateAppbar } from '../interfaces/localized'
 
-/** Wrapper class for `initialState.appbar` */
+/** Wrapper (controller) class for the `appbar` state. */
 export default class StateAppbar<P = State>
   extends AbstractState implements IStateAppbar
 {

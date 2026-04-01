@@ -7,7 +7,7 @@ import StateFormItem from './StateFormItem'
 import type { IStateFormConfig } from '../interfaces/IControllerConfiguration'
 import type StateFormsDataErrors from './StateFormsDataErrors'
 
-/** Wrapper class for a form state located in the `initialState.forms` object */
+/** Wrapper (controller) class for a form state located in the `forms` state. */
 export default class StateForm extends AbstractState implements IStateForm {
   private _formState: IStateForm
   private _parent: StateAllForms

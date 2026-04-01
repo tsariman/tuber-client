@@ -2,7 +2,7 @@ import AbstractState from './AbstractState'
 import type { IStateAllDialogs } from '../interfaces/localized'
 import type State from './State'
 
-/** Wrapper class for `initialState.dialogs` */
+/** Wrapper (controller) class for the `dialogs` state. */
 export default class StateAllDialogs extends AbstractState {
   private _state: IStateAllDialogs
   private _parent?: State

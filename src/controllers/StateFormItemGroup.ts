@@ -5,7 +5,7 @@ import type StateForm from './StateForm'
 import StateFormItem from './StateFormItem'
 import StateFormItemCustom from './StateFormItemCustom'
 
-/** Wrapper class */
+/** Wrapper (controller) class for a form item group state. */
 export default class StateFormItemGroup
   extends AbstractState
   implements IStateFormItemGroup

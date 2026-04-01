@@ -20,7 +20,7 @@ import type { IStateFormItemCustom } from '../interfaces/localized'
 import ReduxHandlerFactory from '../business.logic/ReduxHandlerFactory'
 import { get_handler_registry } from '../business.logic/HandlerRegistry'
 
-/** Wrapper class */
+/** Wrapper (controller) class for a form item custom (`has`) state. */
 export default class StateFormItemCustom<P = unknown, T = unknown>
   extends AbstractState
   implements IStateFormItemCustom<T>

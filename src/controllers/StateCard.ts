@@ -2,7 +2,7 @@ import type { IStateCard } from '../interfaces/localized'
 import AbstractState from './AbstractState'
 import StateFormItem from './StateFormItem'
 
-/** Wrapper class */
+/** Wrapper (controller) class for the `card` state. */
 export default class StateCard<P=unknown> extends AbstractState implements IStateCard {
   protected cardState: IStateCard
   protected parentDef?: P

@@ -1,7 +1,7 @@
 import type { IStateFormItemError } from '@tuber/shared'
 import AbstractState from './AbstractState'
 
-/** Wrapper class */
+/** Wrapper (controller) class for a form item error state. */
 export default class StateFormItemError
   extends AbstractState
   implements IStateFormItemError

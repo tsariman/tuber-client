@@ -4,7 +4,7 @@ import type { TFormControlLabelProps } from '@tuber/shared'
 import AbstractState from './AbstractState'
 import StateFormItemCustom from './StateFormItemCustom'
 
-/** Wrapper class */
+/** Wrapper (controller) class for a checkbox box state. */
 export default class StateFormItemCheckboxBox
   extends AbstractState implements IFormChoices
 {

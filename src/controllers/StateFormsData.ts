@@ -1,22 +1,22 @@
-import type { TObj } from '@tuber/shared'
+import type { TO } from '@tuber/shared'
 import AbstractState from './AbstractState'
 import type State from './State'
 
-/** Wrapper class for `initialState.formsData` */
+/** Wrapper (controller) class for the `formsData` state. */
 export default class StateFormsData extends AbstractState {
-  private _state: TObj
+  private _state: TO
   private _parent?: State
 
-  constructor (state: TObj, parent?: State) {
+  constructor (state: TO, parent?: State) {
     super()
     this._state = state
     this._parent = parent
   }
 
   configure(conf: unknown): void { void conf }
-  get state(): TObj { return this._state }
+  get state(): TO { return this._state }
   get parent(): State | undefined { return this._parent }
-  get props(): TObj { return this.die<TObj>('Not implemented.', {}) }
+  get props(): TO { return this.die<TO>('Not implemented.', {}) }
 
   /**
    * Get form field value from redux store.
@@ -25,7 +25,7 @@ export default class StateFormsData extends AbstractState {
    * @param name Name of the field
    */
   getValue = <T>(formName: string, name: string, $default?: T): T => {
-    return ((this._state[formName] as TObj<T>)?.[name] ?? $default) as T
+    return ((this._state[formName] as TO<T>)?.[name] ?? $default) as T
   }
 
   /**
@@ -34,7 +34,7 @@ export default class StateFormsData extends AbstractState {
    * @param formName
    * @param name
    */
-  get = <T = TObj>(formName: string): T => {
+  get = <T = TO>(formName: string): T => {
     return (this._state[formName] ?? {}) as T
   }
 

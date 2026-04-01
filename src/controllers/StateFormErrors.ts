@@ -5,7 +5,7 @@ import StateFormItemError from './StateFormItemError'
 
 type TProfile = Record<string, StateFormItemError>
 
-/** Wrapper class */
+/** Wrapper (controller) class for the `formErrors` state. */
 export default class StateFormErrors extends AbstractState {
   private _state: IStateFormErrors
   private _parent: StateFormsDataErrors

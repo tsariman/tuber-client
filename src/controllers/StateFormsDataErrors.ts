@@ -5,7 +5,7 @@ import StateFormErrors from './StateFormErrors'
 
 const EXCEPTION_MESSAGE = 'StateFormsDataErrors: configure instance with \'formName\''
 
-/** Wrapper class for `initialState.formsDataErrors` */
+/** Wrapper (controller) class for the `formsDataErrors` state. */
 export default class StateFormsDataErrors<T=unknown> extends AbstractState {
   private _state: IStateFormsDataErrors
   private _parent?: State

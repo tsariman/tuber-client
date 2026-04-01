@@ -9,7 +9,7 @@ import type StateApp from './StateApp'
 import StatePage from './StatePage'
 import { log } from '../business.logic/logging'
 
-/** Wrapper class for `initialState.pages`. */
+/** Wrapper (controller) class for the `pages` state. */
 export default class StateAllPages extends AbstractState {
   private _state: IStateAllPages
   private _parent?: State
@@ -20,7 +20,7 @@ export default class StateAllPages extends AbstractState {
   }
 
   get state(): IStateAllPages { return this._state }
-  /** Chain-access root definition. */
+  /** Chain-access to parent definition. */
   get parent(): State | undefined { return this._parent }
   get props(): unknown { return this.die('Not implemented.', {}) }
   configure(conf: unknown): void { void conf }

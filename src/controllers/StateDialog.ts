@@ -4,7 +4,7 @@ import type StateDialogSelectionItem from './templates/StateDialogSelectionItem'
 import type { DialogContentTextProps } from '@mui/material'
 import type { IStateDialog, IStateFormItem } from '../interfaces/localized'
 
-/** Wrapper class for `initialState.dialog` */
+/** Wrapper (controller) class for the `dialog` state. */
 export default class StateDialog<T = unknown>
   extends AbstractState
   implements IStateDialog<T>

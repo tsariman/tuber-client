@@ -1,7 +1,7 @@
 import type { TEventHandler } from '@tuber/shared'
 import Config from '../config'
 
-/** Base class for all wrapper classes. */
+/** Base class for all wrapper (controller) classes. */
 export default abstract class AbstractState {
   /**
    * Get the raw state.

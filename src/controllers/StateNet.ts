@@ -9,7 +9,7 @@ import AbstractState from './AbstractState'
 import type { IStateNet } from '@tuber/shared'
 import type State from './State'
 
-/** Wrapper class for `initialState.net` */
+/** Wrapper (controller) class for the `net` state. */
 export default class StateNet extends AbstractState implements IStateNet {
   private _state: IStateNet
   private _parent?: State

@@ -3,7 +3,7 @@ import type { TStateAllChips, TStateChips } from '../interfaces/localized'
 import AbstractState from './AbstractState'
 import StateFormItemCustomChip from './templates/StateFormItemCustomChip'
 
-/** Wrapper class for `initialState.chips` */
+/** Wrapper (controller) class for the `chips` state. */
 export default class StateAppbarInputChip extends AbstractState {
   private _allChipState: TStateAllChips
   private _route?: string

@@ -7,7 +7,7 @@ import type {
   AnchorVertical
 } from '@tuber/shared'
 
-/** Wrapper class */
+/** Wrapper (controller) class for the `anchorOrigin` state. */
 export default class StateAnchorOrigin
   extends AbstractState
   implements IStateAnchorOrigin

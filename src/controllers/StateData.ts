@@ -9,7 +9,7 @@ import type State from './State'
 import type { IStateDataConfig } from '../interfaces/IControllerConfiguration'
 import { index_by_attribute_member, index_by_id } from '../business.logic/indexes'
 
-/** Wrapper class for `initialState.data` */
+/** Wrapper (controller) class for the `data` state. */
 export default class StateData extends AbstractState {
   private _state: IStateData
   private _parent?: State

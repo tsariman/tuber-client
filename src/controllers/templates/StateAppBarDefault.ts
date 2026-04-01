@@ -13,7 +13,7 @@ import StateAppbarBackground from './StateAppbarBackground'
 import StateAppbarTypography from './StateAppbarTypography'
 import { type HTMLAttributes } from 'react'
 
-/** Wrapper class for `initialState.appbar` */
+/** Wrapper (controller) class for `appbar` state. */
 export default class StateAppbarDefault
   extends StateAppbar<State>
   implements IStateAppbar

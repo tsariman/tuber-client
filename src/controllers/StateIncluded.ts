@@ -12,7 +12,7 @@ interface IOpts {
 }
 
 /**
- * Wrapper class for the `state` representing the JSON:API's top-level member
+ * Wrapper (controller) class for the `state` representing the JSON:API's top-level member
  * `included`
  */
 export default class StateIncluded<T=IJsonapiDataAttributes>

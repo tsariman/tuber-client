@@ -4,7 +4,7 @@ import { ler } from '../business.logic/logging'
 import { is_record } from '../business.logic/utility'
 import type { IStateTmpConfig } from '../interfaces/IControllerConfiguration'
 
-/** Wrapper class for `initialState.tmp` */
+/** Wrapper (controller) class for `tmp` state. */
 export default class StateTmp extends AbstractState {
   private _state: Record<string, unknown>
   private _parent?: State

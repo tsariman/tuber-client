@@ -3,7 +3,7 @@ import { error_id } from '../business.logic/errors'
 import type State from './State'
 import AbstractState from './AbstractState'
 
-/** Wrapper class for `initialState.staticRegistry` */
+/** Wrapper (controller) class for the `staticRegistry` state. */
 export default class StateRegistry extends AbstractState {
   private _state: Record<string, unknown>
   private _parent?: State
@@ -18,7 +18,7 @@ export default class StateRegistry extends AbstractState {
   }
   get parent(): State | undefined { return this._parent }
   get props(): Record<string, unknown> {
-    return this.die('Not implemented', {})
+    return this.die<Record<string, unknown>>('Not implemented', {})
   }
   get<T = unknown>(key: string, defaultValue?: T): T {
     try {

@@ -9,7 +9,7 @@ import type {
 import type State from './State'
 import StateAnchorOrigin from './StateAnchorOrigin'
 
-/** Wrapper class for `initialState.snackbar` */
+/** Wrapper (controller) class for the `snackbar` state. */
 export default class StateSnackbar
   extends AbstractState
   implements IStateSnackbar

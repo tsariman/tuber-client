@@ -2,7 +2,7 @@ import AbstractState from './AbstractState'
 import type { IStateIcon } from '@tuber/shared'
 import type StateAllIcons from './StateAllIcons'
 
-/** Wrapper class for an icon state found in `initialState.icons` */
+/** Wrapper (controller) class for an icon state found in the `icons` state. */
 export default class StateIcon extends AbstractState implements IStateIcon {
   private _iconState: IStateIcon
   private _parent?: StateAllIcons

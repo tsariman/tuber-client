@@ -2,7 +2,7 @@ import AbstractState from './AbstractState'
 import type { IStateFormItemSwitchToggle, TFormControlLabelProps } from '@tuber/shared'
 import type StateFormItemSwitch from './templates/StateFormItemSwitch'
 
-/** Wrapper class for switch toggle, specialized form item state */
+/** Wrapper (controller) class for a switch toggle, specialized form item state */
 export default class StateFormItemSwitchToggle
   extends AbstractState
   implements IStateFormItemSwitchToggle

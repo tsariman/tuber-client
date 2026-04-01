@@ -4,7 +4,7 @@ import StateForm from './StateForm'
 import type { TStateAllForms } from '../interfaces/localized'
 import { log } from '../business.logic/logging'
 
-/** Wrapper class for `initialState.forms` */
+/** Wrapper (controller) class for the `forms` state. */
 export default class StateAllForms extends Controller {
   private _state: TStateAllForms
   private _parent?: State

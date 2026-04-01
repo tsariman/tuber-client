@@ -31,7 +31,7 @@ export interface IFormItemHandle {
   inputError?: IStateFormItemError
 }
 
-/** Wrapper class for a form item state. */
+/** Wrapper (controller) class for a form item state. */
 export default class StateFormItem<P = StateForm, T = unknown>
   extends AbstractState
   implements IStateFormItem

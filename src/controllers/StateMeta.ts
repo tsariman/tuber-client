@@ -1,24 +1,24 @@
 import AbstractState from './AbstractState'
 import type State from './State'
 import Config from '../config'
-import type { TObj } from '@tuber/shared'
+import type { TO } from '@tuber/shared'
 import { error_id } from '../business.logic/errors'
 
-/** Wrapper class for `initialState.meta` */
+/** Wrapper (controller) class for the `meta` state. */
 export default class StateMeta extends AbstractState {
-  private _state: TObj
+  private _state: TO
   private _parent?: State
 
-  constructor (metaState: TObj, parent?: State) {
+  constructor (metaState: TO, parent?: State) {
     super()
     this._state = metaState
     this._parent = parent
   }
 
   configure(conf: unknown): void { void conf }
-  get state(): TObj { return this._state }
+  get state(): TO { return this._state }
   get parent (): State | undefined { return this._parent }
-  get props(): unknown { return this.die('Not implemented.', {}) }
+  get props(): TO { return this.die<TO>('Not implemented.', {}) }
 
   /**
    * Get the metadata retrieved form the server.
@@ -28,7 +28,7 @@ export default class StateMeta extends AbstractState {
    */
   get = <T=unknown>(endpoint: string, key: string, $default: T): T => {
     try {
-      const val = (this._state[endpoint] as TObj)?.[key]
+      const val = (this._state[endpoint] as TO)?.[key]
       return val as T
     } catch (e) {
       if (Config.DEBUG) {

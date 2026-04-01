@@ -9,7 +9,7 @@ const EMPTY_PAGES_RANGE: ILoadedPagesRange = {
   last: '0',
 }
 
-/** Wrapper class for `initialState.dataPagesRange` */
+/** Wrapper (controller) class for the `dataPagesRange` state. */
 export default class StateDataPagesRange extends AbstractState {
   private _pagesRangeState: IStateDataPagesRange
   private _parent?: State

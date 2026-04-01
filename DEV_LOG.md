@@ -1,6 +1,12 @@
 
 # Development Changes Log
 
+## `202604011643` Refactor state controller documentation
+
+- Updated class documentation for various state controllers to clarify their purpose as "controller" classes for specific states (e.g., dialogs, errors, forms, icons, etc.).
+- Changed comments from "Wrapper class for `initialState.<state>`" to "Wrapper (controller) class for the `<state>` state."
+- Ensured consistency in terminology across all state controller files.
+
 ## `202604011430` [Feature] Add scroll restoration for bookmark lists
 
 ## `202603311945` Add Patreon upgrade callback and update config for URL

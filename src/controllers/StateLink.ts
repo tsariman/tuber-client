@@ -4,7 +4,7 @@ import type { TStateFormItemCustomColor, TO } from '@tuber/shared'
 import StateFormItemCustom from './StateFormItemCustom'
 import type { IStateFormItemCustom, IStateLink } from '../interfaces/localized'
 
-/** Wrapper class for a link state, app bar item */
+/** Wrapper (controller) class for a link state, app bar item */
 export default class StateLink<P = unknown>
   extends AbstractState
   implements IStateLink

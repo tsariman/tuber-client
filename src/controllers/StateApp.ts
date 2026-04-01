@@ -4,7 +4,7 @@ import { APP_REQUEST_FAILED, type IStateApp, type TThemeMode } from '@tuber/shar
 import type State from './State'
 import Config from '../config'
 
-/** Wrapper class for `initialState.app` */
+/** Wrapper (controller) class for the `app` state. */
 export default class StateApp extends AbstractState implements IStateApp {
   private _state: IStateApp
   private _parent?: State
@@ -16,7 +16,7 @@ export default class StateApp extends AbstractState implements IStateApp {
     this._parent = parent
   }
   get state(): IStateApp { return this._state }
-  /** Chain-access to root definition. */
+  /** Chain-access to parent definition. */
   get parent(): State | undefined { return this._parent }
   get props(): unknown { return this.die('Not implemented yet.', {}) }
   configure(conf: unknown): void { void conf }

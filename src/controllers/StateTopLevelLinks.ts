@@ -2,7 +2,7 @@ import AbstractState from './AbstractState'
 import type { IStateTopLevelLinks } from '@tuber/shared'
 import type State from './State'
 
-/** Wrapper class for `initialState.topLevelLinks` */
+/** Wrapper (controller) class for `topLevelLinks` state. */
 export default class StateTopLevelLinks extends AbstractState {
   private _state: IStateTopLevelLinks
   private _parent?: State

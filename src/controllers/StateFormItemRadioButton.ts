@@ -3,7 +3,7 @@ import type { IFormChoices, IStateFormItemCustom } from '../interfaces/localized
 import type StateFormItemRadioCustom from './templates/StateFormItemRadioCustom'
 import type { TFormControlLabelProps } from '@tuber/shared'
 
-/** Wrapper class for a radio button, specialized form item state */
+/** Wrapper (controller) class for a radio button, specialized form item state */
 export default class StateFormItemRadioButton
   extends AbstractState
   implements IFormChoices

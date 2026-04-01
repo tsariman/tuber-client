@@ -7,7 +7,7 @@ import type {
 import StateFormItemCustom from './StateFormItemCustom'
 import type { AvatarProps } from '@mui/material'
 
-/** Wrapper class */
+/** Wrapper (controller) class for the `avatar` state. */
 export default class StateAvatar
   extends AbstractState
   implements IStateDialogAvatar

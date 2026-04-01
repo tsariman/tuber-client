@@ -6,7 +6,7 @@ import AbstractState from './AbstractState'
 
 import type StateFormItem from './StateFormItem'
 
-/** Wrapper class */
+/** Wrapper (controller) class for a form item input props state. */
 export default class StateFormItemInputProps<P=StateFormItem>
   extends AbstractState
   implements IStateFormItemInputProps
