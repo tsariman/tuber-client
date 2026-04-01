@@ -14,6 +14,7 @@ import {
 } from './list.bookmark.loader'
 import BookmarkNoPlayer from './bookmark.no.player'
 import { EP_BOOKMARKS } from '@tuber/shared'
+import { useBookmarkListScrollRestore } from './list.scroll.restore'
 
 const StyledList = styled(List)(({ theme }) => ({
   paddingLeft: theme.spacing(1),
@@ -145,6 +146,8 @@ export default function ThumbnailedBookmarkListNoPlayer() {
     }, [bookmarks.length]),
     overscan: 5,
   })
+
+  useBookmarkListScrollRestore(bookmarks, virtualizer, parentRef)
 
   return (
     <ScrollableContainer ref={parentRef}>

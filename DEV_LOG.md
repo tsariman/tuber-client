@@ -1,6 +1,8 @@
 
 # Development Changes Log
 
+## `202604011430` [Feature] Add scroll restoration for bookmark lists
+
 ## `202603311945` Add Patreon upgrade callback and update config for URL
 
 ## `202603311451` Refactor form submission handling and mark sign-in enter key function as deprecated

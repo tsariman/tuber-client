@@ -14,6 +14,7 @@ import StateData from 'src/controllers/StateData'
 import { StateDataPagesRange } from 'src/controllers'
 import Bookmark from './bookmark'
 import { EP_BOOKMARKS } from '@tuber/shared'
+import { useBookmarkListScrollRestore } from './list.scroll.restore'
 
 const BookmarkListWrapper = styled('div')(({ theme }) => ({
   height: 'calc(100vh - 128px)',
@@ -141,6 +142,8 @@ export default function BookmarkList() {
     }, [bookmarks.length]),
     overscan: 5,
   })
+
+  useBookmarkListScrollRestore(bookmarks, virtualizer, parentRef)
 
   return (
     <BookmarkListWrapper ref={parentRef}>

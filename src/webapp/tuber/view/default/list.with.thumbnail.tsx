@@ -13,6 +13,7 @@ import StateData from 'src/controllers/StateData'
 import { StateDataPagesRange } from 'src/controllers'
 import BookmarkWithThumbnail from './bookmark.with.thumbnail'
 import { EP_BOOKMARKS } from '@tuber/shared'
+import { useBookmarkListScrollRestore } from './list.scroll.restore'
 
 const BookmarkListWrapper = styled('div')(({ theme }) => ({
   height: 'calc(100vh - 128px)',
@@ -97,6 +98,8 @@ export default function ThumbnailedBookmarkList() {
     }, [bookmarks.length]),
     overscan: 5, // Render 5 extra items outside visible area for smooth scrolling
   })
+
+  useBookmarkListScrollRestore(bookmarks, virtualizer, parentRef)
 
   return (
     <BookmarkListWrapper ref={parentRef}>
