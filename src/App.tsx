@@ -1,4 +1,4 @@
-import { lazy, useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   type AppDispatch,
@@ -64,7 +64,9 @@ export default function App() {
     return (
       <ThemeProvider theme={createTheme(themeState)}>
         <CssBaseline />
-        <AppGeneric instance={app} />
+        <Suspense fallback={<SpinnerBootstrap instance={app} />}>
+          <AppGeneric instance={app} />
+        </Suspense>
         <Spinner />
       </ThemeProvider>
     )

@@ -350,7 +350,7 @@ export const put_req_state = (
 }
 
 /**
- * Makes a `GET` request to an endpoint to retrieve a collection
+ * Makes a `GET` request to update the Redux store.
  *
  * @param endpoint Usually a collection name. Otherwise, it's a valid URI endpoint.
  *                 e.g., `users`

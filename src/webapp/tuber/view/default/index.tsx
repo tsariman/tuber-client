@@ -1,4 +1,3 @@
-import '../tuber.css'
 import { Fragment, useLayoutEffect, useMemo } from 'react'
 import { StatePage, StatePagesData } from 'src/controllers'
 import type { IBookmark } from '../../tuber.interfaces'
@@ -20,17 +19,6 @@ import {
   SHOW_THUMBNAIL,
 } from '../../tuber.config'
 import { pagesDataAdd } from 'src/slices/pagesData.slice'
-import { get_handler_registry } from 'src/business.logic/HandlerRegistry'
-import prodCallbacks from '../../callbacks/prod.callbacks'
-import Config from 'src/config'
-import devCallbacks from '../../callbacks/dev.callbacks'
-
-const handlerRegistry = get_handler_registry()
-const namespace = 'tuberCallbacks'
-handlerRegistry.registerMultipleHandlers(namespace, prodCallbacks)
-if (Config.DEV) {
-  handlerRegistry.registerMultipleHandlers(namespace, devCallbacks)
-}
 
 const TuberPlayerWrapper = styled('div')(({ theme }) => ({
   flexGrow: 1,
@@ -42,7 +30,7 @@ const TuberPlayerWrapper = styled('div')(({ theme }) => ({
   right: 0,
 }))
 
-export default function ViewDefault({ def: page }: { def: StatePage}) {
+export default function ViewDefault({ instance: page }: { instance: StatePage}) {
   const dispatch = useDispatch<AppDispatch>()
   const pagesDataState = useSelector((state: RootState) => state.pagesData)
   const pagesData = useMemo(

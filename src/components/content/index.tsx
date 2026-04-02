@@ -53,7 +53,7 @@ const ViewContentCacheable = ({ instance: page }: { instance: StatePage }) => {
 const WebappContentCacheable = ({ instance: page }: { instance: StatePage }) => {
   let contentJsx: JSX.Element | null = null
   try {
-    contentJsx = <WebappContent def={page} />
+    contentJsx = <WebappContent instance={page} />
     if (contentJsx) {
       save_content_jsx(contentJsx)
     } else {
