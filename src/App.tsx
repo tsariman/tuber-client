@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   type AppDispatch,
   type RootState,
+  actions,
   bootstrap_app,
   initialize
 } from './state'
@@ -50,6 +51,28 @@ export default function App() {
 
     initialize()
   }, [dispatch, app.fetchingStateAllowed, app.isBootstrapped])
+
+  // Handle Patreon OAuth callback status from query params.
+  useEffect(() => {
+    const url = new URL(window.location.href)
+    const oauthStatus = url.searchParams.get('patreon_oauth')
+    if (!oauthStatus) { return }
+
+    if (oauthStatus === 'connected') {
+      dispatch(actions.snackbarWriteSuccess('Patreon account connected successfully.'))
+    } else if (oauthStatus === 'error:not_configured') {
+      dispatch(actions.snackbarWriteError('Patreon OAuth is not configured in this environment yet.'))
+    } else if (oauthStatus === 'error:patreon_already_linked') {
+      dispatch(actions.snackbarWriteError('That Patreon account is already linked to another user.'))
+    } else if (oauthStatus.startsWith('error:')) {
+      dispatch(actions.snackbarWriteError('Patreon connection failed. Please try again.'))
+    } else {
+      dispatch(actions.snackbarWriteInfo(`Patreon OAuth status: ${oauthStatus}`))
+    }
+
+    url.searchParams.delete('patreon_oauth')
+    window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`)
+  }, [dispatch])
 
   // Update browser URL when user switches pages
   useEffect(() => {
