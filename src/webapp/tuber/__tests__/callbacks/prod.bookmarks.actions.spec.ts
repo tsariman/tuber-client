@@ -30,6 +30,103 @@ describe('bookmark vote callbacks', () => {
     vi.restoreAllMocks()
   })
 
+  it('bookmark_vote_up updates counts optimistically before fetch resolves', async () => {
+    const store = configureStore({ reducer: rootReducer })
+    store.dispatch(appActions.appOriginUpdate('https://api.example.com'))
+    store.dispatch(dataActions.dataStoreCol({
+      endpoint: 'bookmarks',
+      collection: [createBookmark('b-1')]
+    }))
+
+    let resolveFetch: ((value: unknown) => void) | undefined
+    const fetchMock = vi.fn().mockImplementation(() => {
+      return new Promise((resolve) => {
+        resolveFetch = resolve
+      })
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const redux = {
+      store: {
+        getState: store.getState,
+        dispatch: store.dispatch
+      },
+      actions: {
+        dataSetAttrByIndex: dataActions.dataSetAttrByIndex,
+        includedUpdateById: includedActions.includedUpdateById
+      }
+    } as unknown as IRedux
+
+    const votePromise = bookmark_vote_up(0)(redux)()
+
+    expect(store.getState().data.bookmarks[0].attributes?.upvotes).toBe(1)
+    expect(store.getState().data.bookmarks[0].attributes?.downvotes).toBe(0)
+
+    resolveFetch?.({
+      json: async () => ({
+        data: {
+          type: 'bookmark-votes',
+          id: 'b-1',
+          attributes: {
+            rating: 1,
+            upvotes: 4,
+            downvotes: 1
+          }
+        }
+      })
+    })
+
+    await votePromise
+    expect(store.getState().data.bookmarks[0].attributes?.upvotes).toBe(4)
+    expect(store.getState().data.bookmarks[0].attributes?.downvotes).toBe(1)
+  })
+
+  it('bookmark_vote_up rolls back optimistic counts when request fails', async () => {
+    const store = configureStore({ reducer: rootReducer })
+    store.dispatch(appActions.appOriginUpdate('https://api.example.com'))
+    store.dispatch(dataActions.dataStoreCol({
+      endpoint: 'bookmarks',
+      collection: [{
+        id: 'b-1',
+        type: 'bookmarks',
+        attributes: {
+          title: 'Bookmark b-1',
+          upvotes: 2,
+          downvotes: 1
+        }
+      }]
+    }))
+
+    let rejectFetch: ((reason?: unknown) => void) | undefined
+    vi.stubGlobal('fetch', vi.fn().mockImplementation(() => {
+      return new Promise((_, reject) => {
+        rejectFetch = reject
+      })
+    }))
+
+    const redux = {
+      store: {
+        getState: store.getState,
+        dispatch: store.dispatch
+      },
+      actions: {
+        dataSetAttrByIndex: dataActions.dataSetAttrByIndex,
+        includedUpdateById: includedActions.includedUpdateById
+      }
+    } as unknown as IRedux
+
+    const votePromise = bookmark_vote_up(0)(redux)()
+
+    expect(store.getState().data.bookmarks[0].attributes?.upvotes).toBe(3)
+    expect(store.getState().data.bookmarks[0].attributes?.downvotes).toBe(1)
+
+    rejectFetch?.(new Error('network failure'))
+    await votePromise
+
+    expect(store.getState().data.bookmarks[0].attributes?.upvotes).toBe(2)
+    expect(store.getState().data.bookmarks[0].attributes?.downvotes).toBe(1)
+  })
+
   it('bookmark_vote_up stores vote resource under included state', async () => {
     const store = configureStore({ reducer: rootReducer })
     store.dispatch(appActions.appOriginUpdate('https://api.example.com'))

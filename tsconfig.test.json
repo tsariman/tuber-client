@@ -18,9 +18,8 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": false,
     "noUncheckedSideEffectImports": true,
-    "baseUrl": ".",
     "paths": {
-      "src/*": ["src/*"]
+      "src/*": ["./src/*"]
     }
   },
   "include": [

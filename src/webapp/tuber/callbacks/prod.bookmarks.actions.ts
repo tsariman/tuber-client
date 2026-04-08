@@ -29,6 +29,103 @@ const store_bookmark_vote_resource = (
   }))
 }
 
+const set_bookmark_vote_counts = (
+  dispatch: IRedux['store']['dispatch'],
+  A: IRedux['actions'],
+  index: number,
+  upvotes: number,
+  downvotes: number
+) => {
+  dispatch(A.dataSetAttrByIndex({
+    endpoint: 'bookmarks',
+    index,
+    prop: 'upvotes',
+    val: upvotes
+  }))
+  dispatch(A.dataSetAttrByIndex({
+    endpoint: 'bookmarks',
+    index,
+    prop: 'downvotes',
+    val: downvotes
+  }))
+}
+
+const submit_bookmark_vote = async (
+  i: number,
+  redux: IRedux,
+  rating: 1 | -1
+) => {
+  const { store: { getState, dispatch }, actions: A } = redux
+  const rootState = getState()
+
+  const resources = safely_get_as<IJsonapiResponseResource<IBookmark>[]>(
+    rootState,
+    'data.bookmarks',
+    []
+  )
+  if (resources.length === 0) {
+    ler("No 'bookmarks' found.")
+    return
+  }
+  const resource = resources[i]
+  if (!resource) {
+    ler(`resourceList['${i}'] does not exist.`)
+    return
+  }
+
+  const previousUpvotes = typeof resource.attributes?.upvotes === 'number'
+    ? resource.attributes.upvotes
+    : 0
+  const previousDownvotes = typeof resource.attributes?.downvotes === 'number'
+    ? resource.attributes.downvotes
+    : 0
+  const optimisticUpvotes = rating === 1 ? previousUpvotes + 1 : previousUpvotes
+  const optimisticDownvotes = rating === -1 ? previousDownvotes + 1 : previousDownvotes
+
+  set_bookmark_vote_counts(dispatch, A, i, optimisticUpvotes, optimisticDownvotes)
+
+  try {
+    const origin = get_origin_ending_cleaned(rootState.app.origin)
+    const headersState = new StateNet(rootState.net).headers
+    const url = `${origin}/bookmarks/${resource.id}/vote`
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        ...headersState
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        data: { type: 'votes', attributes: { rating } }
+      })
+    })
+    if (response.ok === false) {
+      throw new Error(`Vote request failed with status ${response.status}.`)
+    }
+
+    const jsonapiResponse = await response.json() as IJsonapiDataResponse<IBookmarkVoteResponse>
+    if (jsonapiResponse.data === null || Array.isArray(jsonapiResponse.data)) {
+      throw new Error('No vote data returned from server.')
+    }
+
+    const upvotes = jsonapiResponse.data.attributes?.upvotes
+    const downvotes = jsonapiResponse.data.attributes?.downvotes
+    if (typeof upvotes === 'number' && typeof downvotes === 'number') {
+      set_bookmark_vote_counts(dispatch, A, i, upvotes, downvotes)
+    }
+
+    store_bookmark_vote_resource(
+      dispatch,
+      A,
+      jsonapiResponse.data as IJsonapiResponseResource
+    )
+  } catch (e) {
+    set_bookmark_vote_counts(dispatch, A, i, previousUpvotes, previousDownvotes)
+    ler((e as Error).message)
+  }
+}
+
 /** Get bookmarks data from redux store. */
 function get_bookmark_resources (data: IStateData<IBookmark>) {
   return data.bookmarks as IJsonapiResponseResource<IBookmark>[]
@@ -273,137 +370,10 @@ export default function form_submit_delete_bookmark (redux: IRedux) {
 
 /** Handler for bookmark vote up action */
 export const bookmark_vote_up = (i: number) => (redux: IRedux) => async () => {
-  const { store: { getState, dispatch }, actions: A } = redux
-  const rootState = getState()
-
-  const resources = safely_get_as<IJsonapiResponseResource<IBookmark>[]>(
-    rootState,
-    'data.bookmarks',
-    []
-  )
-  if (resources.length === 0) {
-    ler("No 'bookmarks' found.")
-    return
-  }
-  const resource = resources[i]
-  if (!resource) {
-    ler(`resourceList['${i}'] does not exist.`)
-    return
-  }
-
-  try {
-    const origin = get_origin_ending_cleaned(rootState.app.origin)
-    const headersState = new StateNet(rootState.net).headers
-    const url = `${origin}/bookmarks/${resource.id}/vote`
-    const response = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        ...headersState
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        data: { type: 'votes', attributes: { rating: 1 } }
-      })
-    })
-    const jsonapiResponse = await response.json() as IJsonapiDataResponse<IBookmarkVoteResponse>
-    if (jsonapiResponse.data === null || Array.isArray(jsonapiResponse.data)) {
-      ler('No vote data returned from server.')
-      return
-    }
-    const upvotes = jsonapiResponse.data.attributes?.upvotes
-    const downvotes = jsonapiResponse.data.attributes?.downvotes
-    if (typeof upvotes === 'number') {
-      dispatch(A.dataSetAttrByIndex({
-        endpoint: 'bookmarks',
-        index: i,
-        prop: 'upvotes',
-        val: upvotes
-      }))
-    }
-    if (typeof downvotes === 'number') {
-      dispatch(A.dataSetAttrByIndex({
-        endpoint: 'bookmarks',
-        index: i,
-        prop: 'downvotes',
-        val: downvotes
-      }))
-    }
-    store_bookmark_vote_resource(
-      dispatch,
-      A,
-      jsonapiResponse.data as IJsonapiResponseResource
-    )
-  } catch (e) {
-    ler((e as Error).message)
-  }
+  await submit_bookmark_vote(i, redux, 1)
 }
 
 /** Handler for bookmark vote down action */
 export const bookmark_vote_down = (i: number) => (redux: IRedux) => async () => {
-  const { store: { getState, dispatch }, actions: A } = redux
-  const rootState = getState()
-  const resources = safely_get_as<IJsonapiResponseResource<IBookmark>[]>(
-    rootState,
-    'data.bookmarks',
-    []
-  )
-  if (resources.length === 0) {
-    ler("No 'bookmarks' found.")
-    return
-  }
-  const resource = resources[i]
-  if (!resource) {
-    ler(`resourceList['${i}'] does not exist.`)
-    return
-  }
-
-  try {
-    const origin = get_origin_ending_cleaned(rootState.app.origin)
-    const headersState = new StateNet(rootState.net).headers
-    const url = `${origin}/bookmarks/${resource.id}/vote`
-    const response = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        ...headersState
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        data: { type: 'votes', attributes: { rating: -1 } }
-      })
-    })
-    const jsonapiResponse = await response.json() as IJsonapiDataResponse<IBookmarkVoteResponse>
-    if (jsonapiResponse.data === null || Array.isArray(jsonapiResponse.data)) {
-      ler('No vote data returned from server.')
-      return
-    }
-    const upvotes = jsonapiResponse.data.attributes?.upvotes
-    const downvotes = jsonapiResponse.data.attributes?.downvotes
-    if (typeof upvotes === 'number') {
-      dispatch(A.dataSetAttrByIndex({
-        endpoint: 'bookmarks',
-        index: i,
-        prop: 'upvotes',
-        val: upvotes
-      }))
-    }
-    if (typeof downvotes === 'number') {
-      dispatch(A.dataSetAttrByIndex({
-        endpoint: 'bookmarks',
-        index: i,
-        prop: 'downvotes',
-        val: downvotes
-      }))
-    }
-    store_bookmark_vote_resource(
-      dispatch,
-      A,
-      jsonapiResponse.data as IJsonapiResponseResource
-    )
-  } catch (e) {
-    ler((e as Error).message)
-  }
+  await submit_bookmark_vote(i, redux, -1)
 }
