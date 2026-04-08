@@ -38,6 +38,8 @@ const Note = styled('div')(({ theme }) => ({
 
 const StackGrid = styled(Grid)(() => ({
   position: 'relative',
+  flex: 1,
+  minWidth: 0,
 }));
 
 const TitleWrapper = styled('div')(() => ({

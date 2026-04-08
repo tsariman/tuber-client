@@ -12,6 +12,7 @@ interface IThumbnailProps {
 
 const ThumbnailGrid = styled(Grid)(({ theme: { spacing, palette } }) => ({
   display: 'flex',
+  flexShrink: 0,
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: '#424242',
