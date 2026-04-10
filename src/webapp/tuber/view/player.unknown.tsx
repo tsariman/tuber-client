@@ -34,8 +34,10 @@ const VideoStyled = styled('video')(() => ({
 }))
 
 const PlaybackSwitch: React.FC<IUnknownPlayerProps> = ({ bookmark }) => {
-  const { embed_url } = bookmark
-  const isDirectVideo = embed_url && /\.(mp4|webm|ogv|ogg|mov|avi|mkv|m4v)$/i.test(embed_url)
+  const rawEmbedUrl = (bookmark.embed_url ?? bookmark.embedUrl ?? '').trim()
+  const extractedEmbedUrl = rawEmbedUrl.match(/\bsrc\s*=\s*(["'])([^"']+)\1/i)?.[2]?.trim()
+  const resolvedEmbedUrl = extractedEmbedUrl || rawEmbedUrl
+  const isDirectVideo = resolvedEmbedUrl && /\.(mp4|webm|ogv|ogg|mov|avi|mkv|m4v)(\?.*)?$/i.test(resolvedEmbedUrl)
   
   const getVideoType = (url: string): string => {
     const extension = url.split('.').pop()?.toLowerCase()
@@ -55,20 +57,25 @@ const PlaybackSwitch: React.FC<IUnknownPlayerProps> = ({ bookmark }) => {
   if (isDirectVideo) {
     return (
       <VideoContainerStyled>
-        <VideoStyled key={embed_url} controls autoPlay>
-          <source src={embed_url} type={getVideoType(embed_url)} />
+        <VideoStyled key={resolvedEmbedUrl} controls autoPlay>
+          <source src={resolvedEmbedUrl} type={getVideoType(resolvedEmbedUrl)} />
         </VideoStyled>
       </VideoContainerStyled>
     )
   }
+
+  if (!resolvedEmbedUrl) {
+    return <VideoContainerStyled />
+  }
+
   return (
     <IframeWrapperStyled>
       <IframeStyled
         title='Unknown Platform'
-        src={embed_url}
+        src={resolvedEmbedUrl}
         frameBorder='0'
         scrolling='no'
-        allow="autoplay; fullscreen; picture-in-picture"
+        allow='autoplay; fullscreen; picture-in-picture; encrypted-media; gamepad'
         allowFullScreen
       />
     </IframeWrapperStyled>
