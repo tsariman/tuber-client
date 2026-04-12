@@ -1,53 +1,55 @@
-import Grid from '@mui/material/Grid';
-import ListItem from '@mui/material/ListItem';
-import { styled } from '@mui/material/styles';
-import type { IBookmark } from '../../tuber.interfaces';
-import { gen_video_url, shorten_text } from '../../_tuber.common.logic';
-import React, { Fragment, useCallback, useMemo } from 'react';
-import { SHORTENED_NOTE_MAX_LENGTH } from '../../tuber.config';
-import BookmarkActionsToolbar from './bookmark.actions';
-import Thumbnail from './thumbnail';
-import { StateJsxIcon } from 'src/mui/icon';
-import PlatformIcon from './platform.icon';
+import Grid from '@mui/material/Grid'
+import ListItem from '@mui/material/ListItem'
+import { styled } from '@mui/material/styles'
+import type { IBookmark } from '../../tuber.interfaces'
+import { gen_video_url, shorten_text } from '../../_tuber.common.logic'
+import React, { Fragment, useCallback, useMemo } from 'react'
+import { SHORTENED_NOTE_MAX_LENGTH } from '../../tuber.config'
+import BookmarkActionsToolbar from './bookmark.actions'
+import Thumbnail from './thumbnail'
+import { StateJsxIcon } from 'src/mui/icon'
+import PlatformIcon from './platform.icon'
+import BookmarkNoteMarkdown from './bookmark.note.markdown'
 
 interface IBookmarkProps {
-  children: IBookmark;
-  handleExpandDetailIconOnClick: (annotation: IBookmark, i: number)
+  children: IBookmark
+  handleExpandDetailIconOnClick: (i: number)
     => (e: React.MouseEvent)
-    => void;
-  index: number;
+    => void
+  index: number
+  isExpanded: boolean
 }
 
 const StyledListItem = styled(ListItem)(({ theme: { spacing } }) => ({
   float: 'left',
   marginBottom: spacing(4),
-}));
+}))
 
 const NoteGrid = styled(Grid)(() => ({
   display: 'flex'
-}));
+}))
 
 const NoteWrapper = styled('div')(() => ({
   position: 'relative',
   flex: 1
-}));
+}))
 
 const Note = styled('div')(({ theme }) => ({
   marginLeft: theme.spacing(3),
-}));
+}))
 
 const StackGrid = styled(Grid)(() => ({
   position: 'relative',
   flex: 1,
   minWidth: 0,
-}));
+}))
 
 const TitleWrapper = styled('div')(() => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'flex-start'
-}));
+}))
 
 const Title = styled('a')(({ theme }) => ({
   textDecoration: 'none',
@@ -58,21 +60,21 @@ const Title = styled('a')(({ theme }) => ({
     textDecoration: 'underline',
     cursor: 'pointer'
   }
-}));
+}))
 
 const TitleText = styled('span')(() => ({
   fontSize: 20,
   fontWeight: 400,
   wordBreak: 'break-word'
-}));
+}))
 
 const PlatformIconWrapper = styled('div')(() => ({
   width: '1.5rem',
   height: '1.5rem',
   margin: '0.25rem 0.5rem 0 0'
-}));
+}))
 
-const ExpandNoteIconWrapper = styled('a')(({ theme }) => ({
+const ExpandNoteIconWrapper = styled('a')<{ expanded: boolean }>(({ theme, expanded }) => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
@@ -82,36 +84,41 @@ const ExpandNoteIconWrapper = styled('a')(({ theme }) => ({
   top: 0,
   textDecoration: 'none',
   color: theme.palette.grey[500],
-}));
+  '& svg': {
+    transition: 'all 0.4s ease',
+    transform: expanded ? 'rotateZ(90deg)' : 'rotateZ(0deg)',
+  },
+}))
 
-const ExpandNoteIcon = React.memo(() => <StateJsxIcon name='play_arrow_outline' />);
+const ExpandNoteIcon = React.memo(() => <StateJsxIcon name='play_arrow_outline' />)
 
 // Optimized BookmarkNoPlayer component with React.memo for performance
 const BookmarkNoPlayer = React.memo<IBookmarkProps>(({
   children: bookmark,
   index: i,
-  handleExpandDetailIconOnClick
+  handleExpandDetailIconOnClick,
+  isExpanded
 }) => {
 
   // Memoize shortened note text
-  const shortenedNote = useMemo(() => shorten_text(bookmark.note), [bookmark.note]);
+  const shortenedNote = useMemo(() => shorten_text(bookmark.note), [bookmark.note])
 
   // Memoize whether note should show expand button
   const shouldShowExpandButton = useMemo(() => 
     bookmark.note && bookmark.note.length > SHORTENED_NOTE_MAX_LENGTH, 
     [bookmark.note]
-  );
+  )
 
   // Memoized click handlers
   const handleBookmarkClick = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    const url = bookmark.url || gen_video_url(bookmark);
-    window.open(url, '_blank')?.focus();
-  }, [bookmark]);
+    e.preventDefault()
+    const url = bookmark.url || gen_video_url(bookmark)
+    window.open(url, '_blank')?.focus()
+  }, [bookmark])
   
   const handleExpandClick = useCallback((e: React.MouseEvent) => {
-    handleExpandDetailIconOnClick(bookmark, i)(e);
-  }, [handleExpandDetailIconOnClick, bookmark, i]);
+    handleExpandDetailIconOnClick(i)(e)
+  }, [handleExpandDetailIconOnClick, i])
 
   return (
     <StyledListItem key={`bookmark[${i}]`} disablePadding>
@@ -135,11 +142,18 @@ const BookmarkNoPlayer = React.memo<IBookmarkProps>(({
                   <ExpandNoteIconWrapper
                     href='#'
                     onClick={handleExpandClick}
+                    expanded={isExpanded}
                   >
                     <ExpandNoteIcon aria-label='expand row' />
                   </ExpandNoteIconWrapper>
                 )}
-                <Note>{shortenedNote}</Note>
+                <Note>
+                  {isExpanded ? (
+                    <BookmarkNoteMarkdown note={bookmark.note} />
+                  ) : (
+                    shortenedNote
+                  )}
+                </Note>
               </NoteWrapper>
             </NoteGrid>
             <BookmarkActionsToolbar i={i} bookmark={bookmark} />
@@ -149,10 +163,10 @@ const BookmarkNoPlayer = React.memo<IBookmarkProps>(({
         )}
       </StackGrid>
     </StyledListItem>
-  );
-});
+  )
+})
 
 // Set display name for debugging
-BookmarkNoPlayer.displayName = 'BookmarkNoPlayer';
+BookmarkNoPlayer.displayName = 'BookmarkNoPlayer'
 
-export default BookmarkNoPlayer;
+export default BookmarkNoPlayer

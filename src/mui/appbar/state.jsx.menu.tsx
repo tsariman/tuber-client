@@ -3,7 +3,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Divider from '@mui/material/Divider'
 import { StateJsxIcon } from '../icon'
 import { redux } from '../../state'
-import type StatePageAppbarMidSearch from '../../controllers/templates/StatePageAppbarMidSearch'
+import type StatePageAppbarMidSearch from '../../controllers/templates/StatePageAppBarMidSearch'
 
 interface IMenuProps {
   instance: StatePageAppbarMidSearch

@@ -57,6 +57,13 @@ const Rating = styled(Grid)(() => ({ paddingTop: 4 }))
 
 const SpanStyled = styled('span')(() => ({}))
 
+const COMPACT_SCORE_FORMATTER = new Intl.NumberFormat('en', {
+  notation: 'compact',
+  maximumFractionDigits: 1
+})
+
+const formatCompactScore = (value: number): string => COMPACT_SCORE_FORMATTER.format(value)
+
 // Action types for the toolbar
 type TActionType = 'edit'
 | 'delete'
@@ -114,7 +121,7 @@ const ColorCodedScore = React.memo<IRatingProps>(({ bookmark }) => {
       <RatingWrapper>
         <SpanStyled sx={{ color: 'grey.700' }}>Rank:&nbsp;</SpanStyled>
         <SpanStyled sx={{ color: ratioColor }}>
-          {score !== 0 ? score : '--'}
+          {score !== 0 ? formatCompactScore(score) : '--'}
         </SpanStyled>
       </RatingWrapper>
     </Rating>

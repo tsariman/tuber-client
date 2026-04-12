@@ -1,6 +1,14 @@
 
 # Development Changes Log
 
+## `202604121935` fix: update import paths and refactor bookmark components for improved note handling
+
+- Corrected import path for StatePageAppbarMidSearch to StatePageAppBarMidSearch in tests and controllers.
+- Refactored bookmark components to utilize a new BookmarkNoteMarkdown component for rendering notes with markdown support.
+- Enhanced bookmark actions to handle expanded states and display notes conditionally based on expansion.
+- Removed unnecessary inline DOM manipulations and replaced them with React state management for better performance and readability.
+- Updated styling for various components to maintain consistency and improve layout.
+
 ## `202604121524` [Feature] Add feedback dialog and integrate into toolbar actions
 - Revised the setting of default values for rendered form. The values are now
   set in bulk per form instead of per field.

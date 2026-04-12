@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { StateAllPages } from '../../../controllers'
 import StatePage from '../../../controllers/StatePage'
-import StatePageAppbarMidSearch from '../../../controllers/templates/StatePageAppbarMidSearch'
+import StatePageAppbarMidSearch from '../../../controllers/templates/StatePageAppBarMidSearch'
 import type { IStateAppbar } from '../../../interfaces/localized'
 
 describe('StatePageAppbarMidSearch', () => {

@@ -4,7 +4,6 @@ import React, { useCallback, useMemo, useState, useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { type RootState } from 'src/state'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { shorten_text } from '../../_tuber.common.logic'
 import {
   LoadEarlierBookmarksFromServer,
   InfiniteScrollTrigger
@@ -104,33 +103,10 @@ export default function BookmarkList() {
     })
   }, [])
 
-  const handleExpandDetailIconOnClick = useCallback((
-    bookmark: IBookmark,
-    i: number
-  ) => (e: React.MouseEvent) => {
+  const handleExpandDetailIconOnClick = useCallback((i: number) => (e: React.MouseEvent) => {
     e.preventDefault()
-    const element = e.currentTarget as HTMLAnchorElement
-    const icon = element.children.item(0) as HTMLOrSVGImageElement
-    
-    // Toggle expanded state
     handleToggleExpand(i)
-    const isExpanded = !expandedNotes.has(i)
-    
-    // Animate icon
-    icon.style.transition = 'all 0.4s ease'
-    icon.style.transform = isExpanded ? 'rotateZ(90deg)' : 'rotateZ(0deg)'
-    
-    // Update text content
-    const detail = element.parentElement?.children.item(1) as HTMLDivElement
-    while (detail.firstChild) {
-      detail.removeChild(detail.firstChild)
-    }
-    
-    const text = isExpanded 
-      ? (bookmark.note ?? '(No note)')
-      : shorten_text(bookmark.note)
-    detail.appendChild(document.createTextNode(text))
-  }, [expandedNotes, handleToggleExpand])
+  }, [handleToggleExpand])
 
   // Set up virtual scrolling with dynamic measurement
   const virtualizer = useVirtualizer({
@@ -171,6 +147,7 @@ export default function BookmarkList() {
               <Bookmark
                 handleExpandDetailIconOnClick={handleExpandDetailIconOnClick}
                 index={virtualItem.index}
+                isExpanded={expandedNotes.has(virtualItem.index)}
               >
                 {bookmark}
               </Bookmark>
