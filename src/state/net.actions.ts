@@ -122,6 +122,10 @@ export async function get_dialog_state <T=unknown>(
   const dialogDarkState = rootState.dialogsDark[dialogKey]
   if (!dialogLightState || !dialogDarkState) {
     ler(`get_dialog_state: ${dialogKey} missing light and/or dark themes.`)
+
+    // TODO This is a false alarm - the missing light/dark state may be
+    //       expected in some cases and should not always trigger an error.
+    //       Consider revising this logic to only report a real missing state. 
     error_id(36).remember_error({
       code: 'MISSING_STATE',
       title: `${dialogKey} Not Found`,

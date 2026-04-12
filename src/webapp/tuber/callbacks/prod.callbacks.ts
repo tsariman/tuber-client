@@ -1,4 +1,6 @@
 import type { IRedux, TReduxHandler } from '../../../state'
+import JsonapiRequest from '../../../business.logic/JsonapiRequest'
+import { post_req_state } from '../../../state/net.actions'
 import form_submit_sign_in, { sign_out } from './prod.authentication'
 import form_submit_new_youtube_bookmark from './prod.bookmarks.201.youtube'
 import form_submit_delete_bookmark from './prod.bookmarks.actions'
@@ -24,13 +26,27 @@ import form_submit_edit_unknown_bookmark from './prod.bookmarks.204.unknown'
 import form_submit_new_twitch_bookmark from './prod.bookmarks.201.twitch'
 import form_submit_edit_twitch_bookmark from './prod.bookmarks.204.twitch'
 import toggle_theme_mode from './prod.toggle.theme.mode'
-import { DIALOG_LOGIN_ID } from '../tuber.config'
+import {
+  DIALOG_LOGIN_ID,
+  DIALOG_FEEDBACK_ID,
+  FORM_FEEDBACK_ID
+} from '../tuber.config'
 import { get_dialog_state } from 'src/state/net.actions'
 import appbar_toggle_search_scope from './prod.toggle.search.scope'
 import open_patreon_upgrade from './prod.open.patreon'
+import {
+  get_dialog_form_endpoint,
+  get_form_data
+} from './_callbacks.common.logic'
+
+interface IFeedbackFormData {
+  category?: string
+  details?: string
+  serialized_state?: string
+}
 
 /** Default callback for closing dialogs */
-function close_default (redux: IRedux) {
+function $close_default (redux: IRedux) {
   return () => redux.store.dispatch({ type: 'dialog/dialogClose' })
 }
 
@@ -53,8 +69,52 @@ export function dialog_sign_in(redux: IRedux) {
   }
 }
 
+/** @id 87_C_2 */
+function $dialog_open_feedback(redux: IRedux) {
+  return async () => {
+    const dispatch = redux.store.dispatch
+    const rootState = redux.store.getState()
+    if (rootState.dialog._id === DIALOG_FEEDBACK_ID) {
+      dispatch({ type: 'dialog/dialogOpen' })
+      return
+    }
+    const dialogState = await get_dialog_state(redux, DIALOG_FEEDBACK_ID)
+    if (!dialogState) { return }
+    if (rootState.dialog._key !== dialogState._key) { // if the dialog was NOT mounted
+      dispatch({ type: 'dialog/dialogMount', payload: dialogState })
+    } else {
+      dispatch({ type: 'dialog/dialogOpen' })
+    }
+  }
+}
+
+/** @id 87_C_1 */
+function $form_submit_feedback(redux: IRedux) {
+  return async (event: Event) => {
+    event.preventDefault()
+    const { store: { getState, dispatch }, actions: A } = redux
+    const rootState = getState()
+    const endpoint = get_dialog_form_endpoint(rootState, DIALOG_FEEDBACK_ID)
+    if (!endpoint) { return }
+
+    const data = get_form_data<IFeedbackFormData>(redux, FORM_FEEDBACK_ID)
+    if (!data) { return }
+
+    const { formData, formName } = data
+    const requestBody = new JsonapiRequest(endpoint, {
+      category: formData.category,
+      details: formData.details,
+      serialized_state: JSON.stringify(rootState)
+    }).build()
+
+    dispatch(post_req_state(endpoint, requestBody))
+    dispatch(A.formsDataClear(formName))
+    dispatch(A.dialogClose())
+  }
+}
+
 const prodCallbacks: { readonly [key: string]: TReduxHandler } = {
-  defaultClose: close_default,
+  defaultClose: $close_default,
   'toggleSearchScope': appbar_toggle_search_scope,
   '$1_C_1': dialog_new_bookmark_from_url,
   '$3_C_1': dialog_new_video_url,
@@ -83,7 +143,9 @@ const prodCallbacks: { readonly [key: string]: TReduxHandler } = {
   '$44_C_1': toggle_theme_mode,
   '$66_C_1': sign_out,
   '$71_C_1': appbar_filter_bookmarks,
-  'openPatreonUpgrade': open_patreon_upgrade
+  'openPatreonUpgrade': open_patreon_upgrade,
+  '$87_C_1': $form_submit_feedback,
+  '$87_C_2': $dialog_open_feedback,
   // TODO Add more callbacks here
 }
 

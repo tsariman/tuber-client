@@ -6,7 +6,7 @@ import {
 import type { IResearchToolbarProps } from '../tuber.interfaces'
 import { useSelector } from 'react-redux'
 import type { RootState } from 'src/state'
-import { AddBookmark, IntegratedPlayerToggle } from './tuber.toolbar.actions'
+import { AddBookmark, Feedback, IntegratedPlayerToggle } from './tuber.toolbar.actions'
 
 const Toolbar = styled('div')(({ theme }) => ({
   width: 'fit-content', // theme.spacing(50),
@@ -42,6 +42,7 @@ const ResearchToolbarFixed = React.memo<IResearchToolbarProps>((props) => {
           <>
             <AddBookmark def={appbar} />
             <IntegratedPlayerToggle def={appbar} />
+            <Feedback def={appbar} />
           </>
         ) : null}
       </ToggleWrapper>

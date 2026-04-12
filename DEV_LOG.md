@@ -1,6 +1,10 @@
 
 # Development Changes Log
 
+## `202604121524` [Feature] Add feedback dialog and integrate into toolbar actions
+- Revised the setting of default values for rendered form. The values are now
+  set in bulk per form instead of per field.
+
 ## `202604011643` Refactor state controller documentation
 
 - Updated class documentation for various state controllers to clarify their purpose as "controller" classes for specific states (e.g., dialogs, errors, forms, icons, etc.).

@@ -16,11 +16,13 @@ import {
   STATE_SELECT_NATIVE,
   CHECKBOXES,
   DESKTOP_DATE_TIME_PICKER,
-  type TObj
+  type TO
 } from '@tuber/shared'
 import {
+  formsDataBatchUpdate,
   formsDataUpdate,
-  type IFormsDataArgs
+  type IFormsDataArgs,
+  type IFormsDataBatchArgs
 } from '../../../slices/formsData.slice'
 import type StateFormItem from '../../../controllers/StateFormItem'
 import { error_id } from '../../../business.logic/errors'
@@ -32,6 +34,38 @@ import { error_id } from '../../../business.logic/errors'
  */
 function save_form_data(payload: IFormsDataArgs): void {
   dispatch(formsDataUpdate(payload))
+}
+
+function save_form_data_batch(payload: IFormsDataBatchArgs): void {
+  dispatch(formsDataBatchUpdate(payload))
+}
+
+function supports_default_value(fieldType: string): boolean {
+  switch (fieldType.toLowerCase()) {
+
+  // TODO Add more cases here to enable default values on additional types
+  //      of fields
+  case PHONE_INPUT:
+  case STATE_SELECT:
+  case STATE_SELECT_NATIVE:
+  case NUMBER:
+  case TEXTFIELD:
+  case TEXTAREA:
+  case TEXT:
+  case RADIO_BUTTONS:
+  case SWITCH_SINGLE:
+  case SWITCH:
+  case CHECKBOXES:
+  case STATIC_DATE_PICKER:
+  case DESKTOP_DATE_TIME_PICKER:
+  case MOBILE_DATE_PICKER:
+  case TIME_PICKER:
+  case DATE_TIME_PICKER:
+    return true
+
+  default:
+    return false
+  }
 }
 
 /**
@@ -48,7 +82,7 @@ function save_form_data(payload: IFormsDataArgs): void {
 function no_form_data_exist (formName: string, name?: string): boolean {
   try {
     if (name) {
-      const formData = get_state().formsData[formName] as TObj
+      const formData = get_state().formsData[formName] as TO
       return formData[name] == null // caches both undefined and null at the same time.
     }
   } catch (e) { error_id(24).remember_exception(e) /* error 24 */ }
@@ -68,29 +102,8 @@ export function set_default_value(field: StateFormItem, formName: string): void 
     && no_form_data_exist(formName, field.name)
   ) {
     const { type, name, has: { defaultValue : value } } = field
-    switch (type.toLowerCase()) {
-
-    // TODO Add more cases here to enable default values on additional types
-    //      of fields
-    case PHONE_INPUT:
-    case STATE_SELECT:
-    case STATE_SELECT_NATIVE:
-    case NUMBER:
-    case TEXTFIELD:
-    case TEXTAREA:
-    case TEXT:
-    case RADIO_BUTTONS:
-    case SWITCH_SINGLE:
-    case SWITCH:
-    case CHECKBOXES:
-    case STATIC_DATE_PICKER:
-    case DESKTOP_DATE_TIME_PICKER:
-    case MOBILE_DATE_PICKER:
-    case TIME_PICKER:
-    case DATE_TIME_PICKER:
+    if (supports_default_value(type)) {
       save_form_data({formName, name, value})
-      break
-
     }
   }
 }
@@ -119,6 +132,25 @@ export function store_default_values<T extends object>(obj: T, formName: string)
  * @param items array of form field definition
  */
 export default function set_all_default_values (items: StateFormItem[]) {
-  items.forEach(field => set_default_value(field, field.parent.name))
+  const valuesByForm: Record<string, Record<string, unknown>> = {}
+
+  items.forEach(field => {
+    const formName = field.parent.name
+    if (!field.has.defaultValue || !field.name || !supports_default_value(field.type)) {
+      return
+    }
+    if (!no_form_data_exist(formName, field.name)) {
+      return
+    }
+    valuesByForm[formName] = valuesByForm[formName] || {}
+    valuesByForm[formName][field.name] = field.has.defaultValue
+  })
+
+  Object.entries(valuesByForm).forEach(([formName, values]) => {
+    if (Object.keys(values).length > 0) {
+      save_form_data_batch({ formName, values })
+    }
+  })
+
   items.length = 0
 }

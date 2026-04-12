@@ -121,7 +121,7 @@ export const IntegratedPlayerToggle = React.memo<IIntegratedPlayerToggleProps>((
 
 IntegratedPlayerToggle.displayName = 'IntegratedPlayerToggle'
 
-const Feedback = React.memo<IToolbarIcon>(({ def: appbar }) => {
+export const Feedback = React.memo<IToolbarIcon>(({ def: appbar }) => {
 	const iconDef = useMemo(() => new StateLink({
 		'type': 'icon',
 		'props': {
@@ -135,10 +135,11 @@ const Feedback = React.memo<IToolbarIcon>(({ def: appbar }) => {
 					'fontSize': 34
 				}
 			},
-			'onclickHandler': `tuberCallbacks.$3_C_2`
+			'onclickHandler': `tuberCallbacks.$87_C_2`
 		}
 	}, appbar), [appbar])
 
+	// Stubbed to keep toolbar action lightweight until lazy-loaded feedback flow is added.
 	return <Link instance={iconDef} />
 })
 

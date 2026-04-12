@@ -8,6 +8,7 @@ import type { IResearchToolbarProps } from '../tuber.interfaces'
 import type { RootState } from 'src/state'
 import {
   AddBookmark,
+  Feedback,
   IntegratedPlayerToggle,
   ShowThumbnailsToggle
 } from './tuber.toolbar.actions'
@@ -46,6 +47,7 @@ const ResearchToolbar = React.memo<IResearchToolbarProps>(({ def: appbar }) => {
             <AddBookmark def={appbar} />
             <ShowThumbnailsToggle def={appbar} />
             <IntegratedPlayerToggle def={appbar} includeRoute />
+            <Feedback def={appbar} />
           </>
         ) : null}
       </ToggleWrapper>

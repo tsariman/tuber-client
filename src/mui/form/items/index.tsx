@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, type JSX } from 'react'
+import { memo, useEffect, type JSX } from 'react'
 import type {
   IFormChoices,
   IStateFormItemCheckboxBox,
@@ -32,8 +32,6 @@ import StateJsxSwitchDummy from './state.jsx.switch.dummy'
 import { StateJsxUnifiedIconProvider } from '../../icon'
 import { FormHelperText, FormLabel, InputLabel } from '@mui/material'
 import { get_styled_div } from './_items.common.logic'
-import { useDispatch } from 'react-redux'
-import type { AppDispatch } from '../../../state'
 import set_all_default_values from './_items.default.values.common.logic'
 import { StateJsxHtml, StateJsxHtmlA, StateJsxHtmlTag } from './state.jsx.html'
 import { error_id } from '../../../business.logic/errors'
@@ -42,20 +40,20 @@ import { ler } from '../../../business.logic'
 export interface IIterativeFormBuilder {
   items: StateFormItem['items']
   depth: number
+  itemsWithDefaultValues: StateFormItem[]
   hydrationDisabled?: boolean
 }
 
 interface IItemProps {
   instance: StateFormItem
   depth: number
+  itemsWithDefaultValues: StateFormItem[]
   hydrationDisabled?: boolean
 }
 
 type TItemMap = {
   [type in TStateFormItemType]: (props: IItemProps) => JSX.Element
 }
-
-const itemsWithDefaultValues: StateFormItem[] = []
 
 const Html = ({ instance: item }: IItemProps) => (
   <StateJsxHtml instance={item as StateFormItem<StateForm, string>} />
@@ -101,7 +99,8 @@ const StateSelectNative = ({ instance: item }: IItemProps) => {
   return <StateJsxSelectNative instance={select} />
 }
 
-const GroupItem = ({instance: item, depth, hydrationDisabled }: IItemProps) => {
+const GroupItem = (props: IItemProps) => {
+  const { instance: item, depth, itemsWithDefaultValues, hydrationDisabled } = props
   const groupItem = new StateFormItemGroup(
     item.state as IStateFormItemGroup,
     item.parent
@@ -111,6 +110,7 @@ const GroupItem = ({instance: item, depth, hydrationDisabled }: IItemProps) => {
       <IterativeFormBuilder
         items={groupItem.items}
         depth={depth + 1}
+        itemsWithDefaultValues={itemsWithDefaultValues}
         hydrationDisabled={hydrationDisabled}
       />
     </StateJsxFormItemGroup>
@@ -192,13 +192,15 @@ const Icon = ({ instance: item }: IItemProps) => (
   <StateJsxUnifiedIconProvider instance={item.has} />
 )
 
-const Div = ({ instance: item, depth, hydrationDisabled }: IItemProps) => {
+const Div = (props: IItemProps) => {
+  const { instance: item, depth, itemsWithDefaultValues, hydrationDisabled } = props
   const StyledDiv = get_styled_div()
   return (
     <StyledDiv {...item.props}>
       <IterativeFormBuilder
         items={item.items}
         depth={depth + 1}
+        itemsWithDefaultValues={itemsWithDefaultValues}
         hydrationDisabled={hydrationDisabled}
       />
     </StyledDiv>
@@ -290,7 +292,8 @@ const interactiveType = new Set<TStateFormItemType>([
   'state_select_native'
 ])
 
-const IterativeFormBuilder = ({ items, depth, hydrationDisabled }: IIterativeFormBuilder) => {
+const IterativeFormBuilder = (props: IIterativeFormBuilder) => {
+  const { items, depth, itemsWithDefaultValues, hydrationDisabled } = props
   if (!items) { return null }
   const ItemsToRender: JSX.Element[] = []
   let i = 0
@@ -314,6 +317,7 @@ const IterativeFormBuilder = ({ items, depth, hydrationDisabled }: IIterativeFor
             instance={item}
             key={`${item.type}-${item.name}-${depth}-${i}`}
             depth={depth}
+            itemsWithDefaultValues={itemsWithDefaultValues}
             hydrationDisabled={hydrationDisabled}
           />
         )
@@ -341,19 +345,17 @@ const FormItems = memo(({
   instance: StateForm
   hydrationDisabled?: boolean
 }) => {
-  const dispatch = useDispatch<AppDispatch>()
-
-  // Memoize the default values effect to prevent unnecessary re-runs
-  const memoizedDefaultValues = useMemo(() => itemsWithDefaultValues, [])
+  const itemsWithDefaultValues: StateFormItem[] = []
 
   useEffect(() => {
-    set_all_default_values(memoizedDefaultValues)
-  }, [memoizedDefaultValues, dispatch])
+    set_all_default_values(itemsWithDefaultValues)
+  })
 
   return (
     <IterativeFormBuilder
       items={instance.items}
       depth={0}
+      itemsWithDefaultValues={itemsWithDefaultValues}
       hydrationDisabled={hydrationDisabled}
     />
   )
