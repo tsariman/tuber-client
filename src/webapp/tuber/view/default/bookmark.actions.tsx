@@ -32,12 +32,11 @@ interface IActionButton {
 }
 
 const PaperStyled = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark'
-    ? '#141a1f'
-    : theme.palette.grey[200],
+  backgroundColor: 'transparent',
   ...theme.typography.body2,
   textAlign: 'center',
   color: theme.palette.grey[600],
+  boxShadow: 'none',
 }))
 
 const Fader = styled('div')(() => ({
@@ -46,9 +45,7 @@ const Fader = styled('div')(() => ({
 }))
 
 const RatingWrapper = styled('span')(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark'
-    ? theme.palette.grey[50]
-    : theme.palette.grey[300],
+  backgroundColor: 'transparent',
   padding: theme.spacing(.25),
   borderRadius: '10%'
 }))

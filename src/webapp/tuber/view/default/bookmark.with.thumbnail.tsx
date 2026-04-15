@@ -81,6 +81,17 @@ const BookmarkWithThumbnail = React.memo<IBookmarkProps>(({
   );
   reduxStore.configure({ endpoint: ENDPOINT });
   const playerOpen = reduxStore.get<boolean>(PLAYER_OPEN);
+  const bookmarkToPlay = reduxStore.get<IBookmark | undefined>(SET_TO_PLAY);
+  const isCurrentlyPlaying = useMemo(() => {
+    if (!playerOpen || !bookmarkToPlay) {
+      return false;
+    }
+
+    const currentBookmarkKey = bookmark.id || bookmark._id || bookmark.videoid || bookmark.slug || bookmark.url;
+    const playingBookmarkKey = bookmarkToPlay.id || bookmarkToPlay._id || bookmarkToPlay.videoid || bookmarkToPlay.slug || bookmarkToPlay.url;
+
+    return Boolean(currentBookmarkKey && currentBookmarkKey === playingBookmarkKey);
+  }, [bookmark, bookmarkToPlay, playerOpen]);
 
   // Memoize shortened text values
   const shortenedTitle = useMemo(() => shorten_text(bookmark.title, false, 27), [bookmark.title]);
@@ -116,7 +127,18 @@ const BookmarkWithThumbnail = React.memo<IBookmarkProps>(({
   }, [bookmark, dispatch, playerOpen]);
 
   return (
-    <StyledListItem key={`bookmark[${i}]`} disablePadding>
+    <StyledListItem
+      key={`bookmark[${i}]`}
+      disablePadding
+      sx={{
+        width: '100%',
+        px: 1,
+        py: 0.5,
+        borderRadius: 1,
+        backgroundColor: isCurrentlyPlaying ? 'action.selected' : 'transparent',
+        transition: 'background-color 0.2s ease-in-out'
+      }}
+    >
       {bookmark.thumbnail_url ? ( // If bookmark has a thumbnail, it can be clicked.
         <ClickThumbnail
           href={thumbnailHref}
@@ -127,7 +149,7 @@ const BookmarkWithThumbnail = React.memo<IBookmarkProps>(({
       ) : ( // Otherwise, it is not clickable.
         <Thumbnail i={i} bookmark={bookmark} />
       )}
-      <Stack sx={{ position: 'relative' }}>
+      <Stack sx={{ position: 'relative', width: '100%' }}>
         <Grid container direction='column'>
           <TitleWrapper>
             <PlatformIconWrapper>

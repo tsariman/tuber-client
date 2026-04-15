@@ -100,6 +100,17 @@ const Bookmark = React.memo<IBookmarkProps>(({ children: bookmark, index: i, han
   )
   reduxStore.configure({ endpoint: ENDPOINT })
   const playerOpen = reduxStore.get<boolean>(PLAYER_OPEN)
+  const bookmarkToPlay = reduxStore.get<IBookmark | undefined>(SET_TO_PLAY)
+  const isCurrentlyPlaying = useMemo(() => {
+    if (!playerOpen || !bookmarkToPlay) {
+      return false
+    }
+
+    const currentBookmarkKey = bookmark.id || bookmark._id || bookmark.videoid || bookmark.slug || bookmark.url
+    const playingBookmarkKey = bookmarkToPlay.id || bookmarkToPlay._id || bookmarkToPlay.videoid || bookmarkToPlay.slug || bookmarkToPlay.url
+
+    return Boolean(currentBookmarkKey && currentBookmarkKey === playingBookmarkKey)
+  }, [bookmark, bookmarkToPlay, playerOpen])
 
   // Memoize shortened note text
   const shortenedNote = useMemo(() => shorten_text(bookmark.note), [bookmark.note])
@@ -135,8 +146,18 @@ const Bookmark = React.memo<IBookmarkProps>(({ children: bookmark, index: i, han
   }, [handleExpandDetailIconOnClick, i])
 
   return (
-    <StyledListItem disablePadding>
-      <Stack sx={{ position: 'relative' }}>
+    <StyledListItem
+      disablePadding
+      sx={{
+        width: '100%',
+        px: 1,
+        py: 0.5,
+        borderRadius: 1,
+        backgroundColor: isCurrentlyPlaying ? 'action.selected' : 'transparent',
+        transition: 'background-color 0.2s ease-in-out'
+      }}
+    >
+      <Stack sx={{ position: 'relative', width: '100%' }}>
         <Grid container direction='column'>
           <TitleWrapper>
             <PlatformIconWrapper>
