@@ -19,6 +19,10 @@ export default class StateFormItemGroup
   private onBlurHandler?: TEventHandler
   private onFocusHandler?: TEventHandler
   private onChangeHandler?: TEventHandler
+  private readonly _handleKeyDown = (e: KeyboardEvent) => {
+    this.onKeyDownHandler?.(e)
+    this._onEnterKeyDownHandler(e)
+  }
 
   constructor (state: IStateFormItemGroup, parent: StateForm) {
     super()
@@ -30,9 +34,13 @@ export default class StateFormItemGroup
   get state(): IStateFormItemGroup { return this._state }
   get parent(): StateForm { return this.parentDef }
   get props(): Record<string, unknown> {
+    const onKeyDown = this.onKeyDownHandler || this.onClickHandler
+      ? this._handleKeyDown
+      : undefined
+
     return {
       ...this._state.props,
-      onKeyDown: this.onKeyDownHandler,
+      onKeyDown,
       onClick: this.onClickHandler,
       onBlur: this.onBlurHandler,
       onFocus: this.onFocusHandler,
@@ -60,6 +68,12 @@ export default class StateFormItemGroup
       ...this.props,
       ...$default
     } as T
+  }
+  /** Handler that triggers the click handler when the Enter key is pressed. */
+  private _onEnterKeyDownHandler(e: KeyboardEvent) {
+    if (e.key === 'Enter' && this.onClickHandler) {
+      this.onClickHandler(e)
+    }
   }
   set onKeyDown(handler: TEventHandler | undefined) { this.onKeyDownHandler = handler }
   set onClick(handler: TEventHandler | undefined) { this.onClickHandler = handler }
