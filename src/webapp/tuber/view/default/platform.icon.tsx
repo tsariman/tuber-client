@@ -1,26 +1,22 @@
-import { useMemo } from 'react';
-import { StateJsxIcon } from 'src/mui/icon';
-import type { TPlatform } from '../../tuber.interfaces';
-import type { TThemeMode } from '@tuber/shared';
+import { StateJsxIcon } from 'src/mui/icon'
+import type { TPlatform } from '../../tuber.interfaces'
 
 export interface IPlatformIconProps {
-  platform: TPlatform;
-  theme?: TThemeMode;
+  platform: TPlatform
+}
+
+const PLATFORM_ICON_NAME: Record<TPlatform, string> = {
+  '_blank':      'no_icon',
+  'youtube':     'youtube',
+  'vimeo':       'vimeo',
+  'dailymotion': 'dailymotion',
+  'rumble':      'rumble',
+  'odysee':      'odysee',
+  'facebook':    'facebook',
+  'twitch':      'twitch',
+  'unknown':     'unknown',
 }
 
 export default function PlatformIcon({ platform }: IPlatformIconProps) {
-  
-  const map = useMemo(() => ({
-    '_blank':  <StateJsxIcon name='no_icon' />,
-    'youtube': <StateJsxIcon name='youtube' />,
-    'vimeo': <StateJsxIcon name='vimeo' />,
-    'dailymotion': <StateJsxIcon name='dailymotion' />,
-    'rumble': <StateJsxIcon name='rumble' />,
-    'odysee': <StateJsxIcon name='odysee' />,
-    'facebook': <StateJsxIcon name='facebook' />,
-    'twitch': <StateJsxIcon name='twitch' />,
-    'unknown': <StateJsxIcon name='unknown' />
-  }), []);
-
-  return map[platform];
+  return <StateJsxIcon name={PLATFORM_ICON_NAME[platform]} />
 }
