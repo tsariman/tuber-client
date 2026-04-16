@@ -137,6 +137,13 @@ describe('src/mui/form/items/_items.default.values.common.logic.ts', () => {
       expect(result).toEqual(undefined);
     })
 
+    it('should resolve default values from query parameters', () => {
+      window.history.replaceState({}, '', '/reset-password?email=test%40example.com&token=abc123');
+
+      expect(F.resolve_default_value('$query.email')).toBe('test@example.com');
+      expect(F.resolve_default_value('$query.token')).toBe('abc123');
+    })
+
     it('should not save the default values to the store if the field has no name', () => {
       const fields = [
         new StateFormItem({

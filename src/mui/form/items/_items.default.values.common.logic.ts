@@ -40,6 +40,20 @@ function save_form_data_batch(payload: IFormsDataBatchArgs): void {
   dispatch(formsDataBatchUpdate(payload))
 }
 
+export function resolve_default_value(defaultValue: unknown): unknown {
+  if (typeof defaultValue !== 'string') {
+    return defaultValue
+  }
+
+  const match = defaultValue.match(/^(?:\$query\.|query:)(.+)$/)
+  if (!match || typeof window === 'undefined') {
+    return defaultValue
+  }
+
+  const paramName = match[1]
+  return new URLSearchParams(window.location.search).get(paramName) ?? ''
+}
+
 function supports_default_value(fieldType: string): boolean {
   switch (fieldType.toLowerCase()) {
 
@@ -101,7 +115,8 @@ export function set_default_value(field: StateFormItem, formName: string): void 
     && field.name
     && no_form_data_exist(formName, field.name)
   ) {
-    const { type, name, has: { defaultValue : value } } = field
+    const { type, name, has: { defaultValue } } = field
+    const value = resolve_default_value(defaultValue)
     if (supports_default_value(type)) {
       save_form_data({formName, name, value})
     }
@@ -143,7 +158,7 @@ export default function set_all_default_values (items: StateFormItem[]) {
       return
     }
     valuesByForm[formName] = valuesByForm[formName] || {}
-    valuesByForm[formName][field.name] = field.has.defaultValue
+    valuesByForm[formName][field.name] = resolve_default_value(field.has.defaultValue)
   })
 
   Object.entries(valuesByForm).forEach(([formName, values]) => {
