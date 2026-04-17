@@ -80,7 +80,7 @@ export function parse_cookies() {
 export function get_cookie<T=string>(name: string): T | undefined {
   const cookies = parse_cookies()
   const cookie = cookies[name]
-  return cookie as T | undefined
+  return (cookie ?? '') as T | undefined
 }
 
 /**
@@ -179,6 +179,25 @@ export function get_base_route(templateRoute?: string): string {
   return templateRoute.replace(/^\/|\/$/g, '').split('/')[0]
 }
 
+const normalize_origin = (origin?: string): string => {
+  const value = (origin ?? '').trim()
+  const currentOrigin = window.location?.origin ?? ''
+  const currentProtocol = window.location?.protocol
+    ?? (currentOrigin ? new URL(currentOrigin).protocol : 'https:')
+
+  if (!value) { return '' }
+  if (/^https?:\/\//i.test(value)) {
+    return value.replace(/\/+$/, '')
+  }
+  if (value.startsWith('//')) {
+    return `${currentProtocol}${value}`.replace(/\/+$/, '')
+  }
+  if (value.startsWith('/')) {
+    return `${currentOrigin}${value}`.replace(/\/+$/, '')
+  }
+  return `${currentProtocol}//${value.replace(/^\/+|\/+$/g, '')}`
+}
+
 /**
  * Ensures the origin URL has a trailing forward slash.
  *
@@ -186,8 +205,10 @@ export function get_base_route(templateRoute?: string): string {
  * @returns The origin URL with a trailing slash, or window.location.origin with a trailing slash if no origin provided
  */
 export function get_origin_ending_fixed(origin?: string): string {
-  if (origin) {
-    return origin.slice(-1) === '/' ? origin : origin + '/'
+  if (origin === '') { return '/' }
+  const normalized = normalize_origin(origin)
+  if (normalized) {
+    return normalized.slice(-1) === '/' ? normalized : normalized + '/'
   }
   return window.location.origin + '/'
 }
@@ -200,8 +221,9 @@ export function get_origin_ending_fixed(origin?: string): string {
  *          without a trailing slash if no origin provided
  */
 export const get_origin_ending_cleaned = (origin?: string): string => {
-  if (origin) {
-    return origin.slice(-1) === '/' ? origin.slice(0, -1) : origin
+  const normalized = normalize_origin(origin)
+  if (normalized) {
+    return normalized.slice(-1) === '/' ? normalized.slice(0, -1) : normalized
   }
   return window.location.origin
 }

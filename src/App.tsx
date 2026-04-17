@@ -31,7 +31,9 @@ export default function App() {
 
   // Bootstrap the app from server
   useEffect(() => {
-    Config.write(THEME_MODE, get_cookie<TThemeMode>(THEME_MODE) ?? THEME_DEFAULT_MODE)
+    const persistedThemeMode = get_cookie<TThemeMode>(THEME_MODE) || THEME_DEFAULT_MODE
+    Config.write(THEME_MODE, persistedThemeMode)
+    document.cookie = `${THEME_MODE}=${persistedThemeMode}; path=/; max-age=31536000; SameSite=Lax`
 
     /** Get state from server. */
     const onPostReqHomePageState = () => {

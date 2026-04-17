@@ -8,16 +8,21 @@ import {
   get_head_meta_content,
   get_base_route,
   get_origin_ending_fixed,
+  get_origin_ending_cleaned,
   clean_endpoint_ending,
   get_query_starting_fixed,
   get_state_form_name
 } from '../../business.logic/parsing';
 
-// Mock the tuber/shared constants
-vi.mock('@tuber/shared', () => ({
-  APP_CONTENT_VIEW: 'app',
-  DEFAULT_LANDING_PAGE_VIEW: 'landing'
-}));
+// Mock the tuber/shared constants while preserving runtime exports
+vi.mock('@tuber/shared', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@tuber/shared')>()
+  return {
+    ...actual,
+    APP_CONTENT_VIEW: 'app',
+    DEFAULT_LANDING_PAGE_VIEW: 'landing'
+  }
+});
 
 // Mock logging to prevent actual console output during tests
 vi.mock('../../business.logic/logging', () => ({
@@ -437,6 +442,11 @@ describe('parsing.ts', () => {
     it('should handle empty string origin', () => {
       const result = get_origin_ending_fixed('');
       expect(result).toBe('/');
+    });
+
+    it('should normalize bare host origins using the current protocol', () => {
+      expect(get_origin_ending_fixed('3.13.132.56')).toBe('https://3.13.132.56/');
+      expect(get_origin_ending_cleaned('3.13.132.56')).toBe('https://3.13.132.56');
     });
   });
 

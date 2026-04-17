@@ -18,7 +18,7 @@
     "@mui/material": "^7.3.4",
     "@reduxjs/toolkit": "^2.9.2",
     "@tanstack/react-virtual": "^3.13.14",
-    "@tuber/shared": "file:..\\tuber-shared",
+    "@tuber/shared": "file:../tuber-shared",
     "html-react-parser": "^5.2.7",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

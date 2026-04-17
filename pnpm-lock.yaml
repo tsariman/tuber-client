@@ -24,7 +24,7 @@ importers:
         specifier: ^3.13.14
         version: 3.13.14(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@tuber/shared':
-        specifier: file:..\tuber-shared
+        specifier: file:../tuber-shared
         version: file:../tuber-shared(@types/react@19.2.2)
       html-react-parser:
         specifier: ^5.2.7

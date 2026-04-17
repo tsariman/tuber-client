@@ -80,6 +80,7 @@ export default function form_submit_sign_in(redux: IRedux) {
     }
     const formData = policy.getFilteredData()
     const themeMode = Config.read<TThemeMode>(THEME_MODE, THEME_DEFAULT_MODE)
+      || THEME_DEFAULT_MODE
     dispatch(post_req_state(
       endpoint,
       new JsonapiRequest('signin', {
