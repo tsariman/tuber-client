@@ -255,24 +255,43 @@ export function odysee_get_slug(url: string): string {
 }
 
 export function odysee_get_url_data(url: string): TVideoData {
-  const match = url.match(/https:\/\/(?:www\.)?odysee\.com\/([@a-zA-Z0-9._:-]+)\/([a-zA-Z0-9._:-]+)(\?[^\s#]+)?/)
-  if (!match || match.length < 3) {
+  try {
+    const parsedUrl = new URL(url.trim())
+    const hostname = parsedUrl.hostname.toLowerCase().replace(/^www\./, '')
+
+    if (hostname !== 'odysee.com') {
+      ler(`odysee_get_url_data: Bad video URL: '${url}'`)
+      return {}
+    }
+
+    const segments = parsedUrl.pathname
+      .split('/')
+      .filter(Boolean)
+      .map(segment => decodeURIComponent(segment))
+
+    const [author, id] = segments
+
+    if (!author || !id) {
+      ler(`odysee_get_url_data: Bad video URL: '${url}'`)
+      return {}
+    }
+
+    const hashParams = new URLSearchParams(parsedUrl.hash.replace(/^#/, ''))
+    const startStr = parsedUrl.searchParams.get('t')
+      ?? hashParams.get('t')
+      ?? hashParams.get('start')
+      ?? parsedUrl.searchParams.get('start')
+
+    const start = startStr !== null
+      ? get_start_time_in_seconds(startStr)
+      : undefined
+
+    return { author, id, start }
+  }
+  catch {
     ler(`odysee_get_url_data: Bad video URL: '${url}'`)
     return {}
   }
-  const [ author, id, query ] = match.slice(1)
-  let start: number | undefined
-  if (query) {
-    const params = new URLSearchParams(query)
-    const startStr = params.get('t')
-    if (startStr !== null) {
-      const s = parseInt(startStr)
-      if (!Number.isNaN(s)) {
-        start = s
-      }
-    }
-  }
-  return { author, id, start }
 }
 
 /** @deprecated */

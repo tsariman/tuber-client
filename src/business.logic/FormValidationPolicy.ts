@@ -1,9 +1,9 @@
 import { type IRedux } from '../state'
-import type { TObj, IStateFormsDataErrors } from '@tuber/shared'
+import type { TO, IStateFormsDataErrors } from '@tuber/shared'
 import StateFormsDataErrors from '../controllers/StateFormsDataErrors'
 import { is_record, non_empty_string, valid_input_val, is_number } from './utility'
 
-interface IValidation<T = TObj> {
+interface IValidation<T = TO> {
   name: keyof T
   error: boolean
   message?: string
@@ -12,13 +12,13 @@ interface IValidation<T = TObj> {
 /**
  * Helper class for validating form data and displaying error messages.
  */
-export default class FormValidationPolicy<T=Record<string, unknown>> {
+export default class FormValidationPolicy<T=TO> {
   private _redux: IRedux
   private _formName: string
   /** Short for formsDataErrorsState */
   private _state: IStateFormsDataErrors
   private _e: StateFormsDataErrors<T>
-  private _formData?: TObj
+  private _formData?: TO
 
   constructor (redux: IRedux, formName: string) {
     this._redux = redux
@@ -101,7 +101,7 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
    * @returns Form data.
    * @example const formData = formValidationPolicy.getFormData()
    */
-  private _getFormData(): TObj | undefined {
+  private _getFormData(): TO | undefined {
     if (this._formData !== undefined) { return this._formData }
     const formData = this._redux.store.getState().formsData[this._formName]
     if (!is_record(formData)) {
@@ -109,7 +109,7 @@ export default class FormValidationPolicy<T=Record<string, unknown>> {
       return undefined
     }
     const names = Object.keys(formData)
-    const scopedFormData: TObj = {}
+    const scopedFormData: TO = {}
     Object.values(formData).forEach((value, i) => {
       scopedFormData[names[i]] = this._filterData(value)
     })

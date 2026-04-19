@@ -1,5 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { IJsonapiResponseResource, THandlerDirectiveRule } from '@tuber/shared'
+import {
+  APP_REQUEST_FAILED,
+  APP_REQUEST_SUCCESS,
+  type IJsonapiResponseResource,
+  type THandlerDirectiveRule
+} from '@tuber/shared'
 import ReduxHandlerFactory from '../../business.logic/ReduxHandlerFactory'
 import { actions, type IRedux } from '../../state'
 import {
@@ -181,6 +186,34 @@ describe('ReduxHandlerFactory', () => {
         currentTarget: { disabled: false }
       } as unknown as Parameters<NonNullable<typeof eventHandler>>[0]
 
+      let requestStatus = APP_REQUEST_SUCCESS
+      mockGetState.mockImplementation(() => ({
+        app: { origin: 'http://localhost:3000', status: requestStatus },
+        pathnames: { testState: '/api/test' },
+        net: {},
+        dynamicRegistry: {},
+        data: {
+          bookmarks: [
+            {
+              id: '42',
+              type: 'bookmarks',
+              attributes: {
+                field1: 'before'
+              }
+            }
+          ]
+        }
+      }))
+      mockDispatch.mockImplementation(async (arg: unknown) => {
+        if (typeof arg === 'function') {
+          return await (arg as (dispatch: unknown, getState: unknown) => unknown)(mockDispatch, mockGetState)
+        }
+        return arg
+      })
+      vi.mocked(post_req_state).mockReturnValue(vi.fn(async () => {
+        requestStatus = APP_REQUEST_SUCCESS
+      }))
+
       await eventHandler?.(mockEvent)
 
       expect(mockPolicyInstance.applyValidationSchemes).toHaveBeenCalled()
@@ -210,6 +243,56 @@ describe('ReduxHandlerFactory', () => {
       expect(actions.formsDataClear).not.toHaveBeenCalled()
     })
 
+    it('keeps form data and leaves the dialog open when submit fails', async () => {
+      const directive = {
+        type: '$form' as const,
+        formName: 'testForm',
+        endpoint: '/api/test',
+        rules: ['close_dialog', 'disable_on_submit'] as THandlerDirectiveRule[]
+      }
+      const factory = new ReduxHandlerFactory(directive)
+      const handler = factory.getEventHandler()
+      const eventHandler = handler?.(mockRedux)
+      const mockEvent = {
+        currentTarget: { disabled: false }
+      } as unknown as Parameters<NonNullable<typeof eventHandler>>[0]
+
+      let requestStatus = APP_REQUEST_FAILED
+      mockGetState.mockImplementation(() => ({
+        app: { origin: 'http://localhost:3000', status: requestStatus },
+        pathnames: { testState: '/api/test' },
+        net: {},
+        dynamicRegistry: {},
+        data: {
+          bookmarks: [
+            {
+              id: '42',
+              type: 'bookmarks',
+              attributes: {
+                field1: 'before'
+              }
+            }
+          ]
+        }
+      }))
+      mockDispatch.mockImplementation(async (arg: unknown) => {
+        if (typeof arg === 'function') {
+          return await (arg as (dispatch: unknown, getState: unknown) => unknown)(mockDispatch, mockGetState)
+        }
+        return arg
+      })
+      vi.mocked(post_req_state).mockReturnValue(vi.fn(async () => {
+        requestStatus = APP_REQUEST_FAILED
+      }))
+
+      await eventHandler?.(mockEvent)
+
+      expect(post_req_state).toHaveBeenCalledTimes(1)
+      expect(actions.formsDataClear).not.toHaveBeenCalled()
+      expect(actions.dialogClose).not.toHaveBeenCalled()
+      expect(mockEvent.currentTarget.disabled).toBe(false)
+    })
+
     it('submits patch form data and updates the resource by index', async () => {
       const directive = {
         type: '$form_patch' as const,
@@ -232,7 +315,35 @@ describe('ReduxHandlerFactory', () => {
         }
       }
 
+      let requestStatus = APP_REQUEST_SUCCESS
+      mockGetState.mockImplementation(() => ({
+        app: { origin: 'http://localhost:3000', status: requestStatus },
+        pathnames: { testState: '/api/test' },
+        net: {},
+        dynamicRegistry: {},
+        data: {
+          bookmarks: [
+            {
+              id: '42',
+              type: 'bookmarks',
+              attributes: {
+                field1: 'before'
+              }
+            }
+          ]
+        }
+      }))
+      mockDispatch.mockImplementation(async (arg: unknown) => {
+        if (typeof arg === 'function') {
+          return await (arg as (dispatch: unknown, getState: unknown) => unknown)(mockDispatch, mockGetState)
+        }
+        return arg
+      })
+
       vi.mocked(has_changes).mockReturnValue(true)
+      vi.mocked(patch_req_state).mockReturnValue(vi.fn(async () => {
+        requestStatus = APP_REQUEST_SUCCESS
+      }))
 
       await eventHandler?.(mockEvent)
 

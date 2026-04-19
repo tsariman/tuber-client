@@ -49,7 +49,8 @@ const NO_START_MSG = 'The video start time is missing.'
  * @returns The video data
  */
 export default function parse_platform_video_url(url: string): IVideoData {
-  const { valid, message } = _check_url(url)
+  const normalizedUrl = url.trim()
+  const { valid, message } = $check_url(normalizedUrl)
   if (!valid) {
     error_id(1052).remember_error({
       code: 'BAD_VALUE',
@@ -62,26 +63,27 @@ export default function parse_platform_video_url(url: string): IVideoData {
       urlCheck: { message, valid }
     }
   }
-  const urlObj = new URL(url)
-  switch (urlObj.hostname) {
+  const urlObj = new URL(normalizedUrl)
+  const hostname = urlObj.hostname.toLowerCase().replace(/^www\./, '')
+
+  switch (hostname) {
     case 'youtu.be':
     case 'youtube.com':
-    case 'www.youtube.com':
-      return _extract_data_from_youTube_url(url)
+      return $extract_data_from_youTube_url(normalizedUrl)
     case 'vimeo.com':
-      return _extract_data_from_vimeo_url(url)
+      return $extract_data_from_vimeo_url(normalizedUrl)
     case 'rumble.com':
-      return _extract_data_from_rumble_url(url)
+      return $extract_data_from_rumble_url(normalizedUrl)
     case 'odysee.com':
-      return _extract_data_from_odysee_url(url)
-    case 'www.facebook.com':
+      return $extract_data_from_odysee_url(normalizedUrl)
+    case 'facebook.com':
     case 'fb.watch':
-      return _extract_data_from_facebook_url()
-    case 'www.dailymotion.com':
+      return $extract_data_from_facebook_url()
+    case 'dailymotion.com':
     case 'dai.ly':
-      return _extract_data_from_dailymotion_url(url)
-    case 'www.twitch.tv':
-      return _extract_data_from_twitch_url(url)
+      return $extract_data_from_dailymotion_url(normalizedUrl)
+    case 'twitch.tv':
+      return $extract_data_from_twitch_url(normalizedUrl)
     default:
       return {
         ...DATA_SKELETON,
@@ -95,20 +97,32 @@ export default function parse_platform_video_url(url: string): IVideoData {
   }
 }
 
-function _check_url(url: string): IUrlStatus {
-  if (url.length < 1) {
+function $check_url(url: string): IUrlStatus {
+  const normalizedUrl = url.trim()
+
+  if (normalizedUrl.length < 1) {
     return {
       message: 'URL is empty',
       valid: false
     }
   }
-  const urlRegex = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/
-  const valid = urlRegex.test(url)
-  const message = valid ? 'OK' : 'Invalid URL'
-  return { message, valid }
+
+  try {
+    const parsedUrl = new URL(normalizedUrl)
+    const valid = Boolean(parsedUrl.hostname)
+      && (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:')
+    const message = valid ? 'OK' : 'Invalid URL'
+    return { message, valid }
+  }
+  catch {
+    return {
+      message: 'Invalid URL',
+      valid: false
+    }
+  }
 }
 
-function _extract_data_from_youTube_url(url: string): IVideoData {
+function $extract_data_from_youTube_url(url: string): IVideoData {
   const id = youtube_get_video_id(url)
   if (!id) {
     error_id(1053).remember_error({
@@ -151,7 +165,7 @@ function _extract_data_from_youTube_url(url: string): IVideoData {
 /**
  * Example URL: // https://rumble.com/v38vipp-what-is-ai-artificial-intelligence-what-is-artificial-intelligence-ai-in-5-.html
  */
-function _extract_data_from_rumble_url(url: string): IVideoData {
+function $extract_data_from_rumble_url(url: string): IVideoData {
   const slug  = get_rumble_slug(url)
   if (!slug) {
     error_id(1055).remember_error({
@@ -194,7 +208,7 @@ function _extract_data_from_rumble_url(url: string): IVideoData {
   return data
 }
 
-function _extract_data_from_vimeo_url(url: string): IVideoData {
+function $extract_data_from_vimeo_url(url: string): IVideoData {
   const id = vimeo_get_video_id(url)
   if (!id) {
     error_id(1057).remember_error({
@@ -237,7 +251,7 @@ function _extract_data_from_vimeo_url(url: string): IVideoData {
   return data
 }
 
-function _extract_data_from_dailymotion_url(url: string): IVideoData {
+function $extract_data_from_dailymotion_url(url: string): IVideoData {
   const id = daily_get_video_id(url)
   if (!id) {
     error_id(1059).remember_error({
@@ -281,9 +295,9 @@ function _extract_data_from_dailymotion_url(url: string): IVideoData {
 }
 
 /** Example URL: https://odysee.com/@GameolioDan:6/diablo-4-playthrough-part-30-entombed:1?t=368 */
-function _extract_data_from_odysee_url(url: string): IVideoData {
+function $extract_data_from_odysee_url(url: string): IVideoData {
   const { author, id , start } = odysee_get_url_data(url)
-  if (!start) {
+  if (start === undefined || Number.isNaN(start)) {
     error_id(1061).remember_error({
       code: 'MISSING_DATA',
       title: '[function] odysee_get_url_data() failed',
@@ -322,7 +336,7 @@ function _extract_data_from_odysee_url(url: string): IVideoData {
   return data
 }
 
-function _extract_data_from_twitch_url(url: string): IVideoData {
+function $extract_data_from_twitch_url(url: string): IVideoData {
   const id = twitch_get_video_id(url)
   if (!id) {
     error_id(1063).remember_error({
@@ -362,7 +376,7 @@ function _extract_data_from_twitch_url(url: string): IVideoData {
  * __Note:__ The embed URL is needed here.  
  * Example slug: `MetroUK%2Fvideos%2F7129126943765650`
  */
-function _extract_data_from_facebook_url(): IVideoData {
+function $extract_data_from_facebook_url(): IVideoData {
   const data: IVideoData = {
     ...DATA_SKELETON,
     platform: 'facebook',

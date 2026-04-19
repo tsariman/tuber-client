@@ -17,6 +17,7 @@ import {
   pre
 } from '.'
 import {
+  APP_REQUEST_SUCCESS,
   BOOTSTRAP_ATTEMPTS,
   type TStateKeys,
   type TStatePathnames,
@@ -213,6 +214,10 @@ export default class ReduxHandlerFactory {
     }
   }
 
+  private _didLastRequestSucceed(redux: IRedux): boolean {
+    return redux.store.getState().app.status === APP_REQUEST_SUCCESS
+  }
+
   /** Submit the form data via a POST request to create a new resource */
   private _postFormData = (redux: IRedux) => {
     return async (e: unknown) => {
@@ -221,7 +226,7 @@ export default class ReduxHandlerFactory {
         return
       }
       this._initializePrivateFields(redux)
-      const button = (e as React.MouseEvent<HTMLButtonElement>).currentTarget
+      const button = (e as React.MouseEvent<HTMLButtonElement>)?.currentTarget
       await this._performLoadingTask(redux)
       const policy = new FormValidationPolicy(redux, this._directive.formName)
       const validationErrors = policy.applyValidationSchemes()
@@ -235,18 +240,30 @@ export default class ReduxHandlerFactory {
       const formData = policy.getFilteredData()
       const { store: { dispatch }, actions: A } = redux
       const requestBody = new JsonapiRequest(this._directive.endpoint, formData).build()
-      dispatch(post_req_state(this._directive.endpoint, requestBody))
-      dispatch(A.formsDataClear(this._directive.formName))
       const directiveRules = this._directive.rules ?? []
+      const disableOnSubmit = directiveRules.includes('disable_on_submit')
+
+      if (disableOnSubmit && button) {
+        button.disabled = true
+      }
+
+      await dispatch(post_req_state(this._directive.endpoint, requestBody) as never)
+      const requestSucceeded = this._didLastRequestSucceed(redux)
+
+      if (!requestSucceeded) {
+        if (disableOnSubmit && button) {
+          button.disabled = false
+        }
+        return
+      }
+
+      dispatch(A.formsDataClear(this._directive.formName))
       directiveRules.forEach(rule => {
         switch (rule) {
           case 'close_dialog':
             if (this._directive.type === '$form_dialog') {
               dispatch(A.dialogClose())
             }
-            break
-          case 'disable_on_submit':
-            button.disabled = true
             break
         }
       })
@@ -288,6 +305,13 @@ export default class ReduxHandlerFactory {
 
       // Find the existing resource and its index in the store by id
       const { store: { dispatch, getState }, actions: A } = redux
+      const directiveRules = this._directive.rules ?? []
+      const disableOnSubmit = directiveRules.includes('disable_on_submit')
+
+      if (disableOnSubmit && button) {
+        button.disabled = true
+      }
+
       const collection = getState().data[endpoint] as IJsonapiResponseResource[] | undefined
       const index = collection?.findIndex(r => r.id === id) ?? -1
       if (index === -1) {
@@ -310,10 +334,17 @@ export default class ReduxHandlerFactory {
         }
       }
       dispatch(A.dataUpdateByIndex({ endpoint, index, resource: editedResource }))
-      dispatch(patch_req_state(`${endpoint}/${editedResource.id}`, { data: editedResource }))
-      dispatch(A.formsDataClear(formName))
+      await dispatch(patch_req_state(`${endpoint}/${editedResource.id}`, { data: editedResource }) as never)
 
-      const directiveRules = this._directive.rules ?? []
+      const requestSucceeded = this._didLastRequestSucceed(redux)
+      if (!requestSucceeded) {
+        if (disableOnSubmit && button) {
+          button.disabled = false
+        }
+        return
+      }
+
+      dispatch(A.formsDataClear(formName))
       directiveRules.forEach(rule => {
         switch (rule) {
           case 'close_dialog':
@@ -323,9 +354,6 @@ export default class ReduxHandlerFactory {
             ) {
               dispatch(A.dialogClose())
             }
-            break
-          case 'disable_on_submit':
-            button.disabled = true
             break
         }
       })
