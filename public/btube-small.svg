@@ -1,0 +1,24 @@
+<svg aria-labelledby="title desc" viewBox="0 0 200 200" height="200" width="200" xmlns="http://www.w3.org/2000/svg">
+  <title>B PLAY</title>
+  
+  <defs>
+    <linearGradient gradientUnits="objectBoundingBox" y2="85%" x2="80%" y1="20%" x1="25%" id="teal">
+      <stop stop-color="#14E6C8" offset="0%"></stop>
+      <stop stop-color="#00B89E" offset="100%"></stop>
+    </linearGradient>
+  </defs>
+
+  
+  <path fill="url(#teal)" d="M38 32 
+           L38 168 
+           L105 168 
+           L165 100 
+           L105 32 
+           Z"></path>
+
+  
+  <path fill="#0F0F0F" d="M68 55 
+           L140 100 
+           L68 145 
+           Z"></path>
+</svg>

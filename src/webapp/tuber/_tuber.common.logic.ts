@@ -137,8 +137,28 @@ export function format_seconds_to_readable_time (timeInSeconds: number): string 
  */
 export function get_start_time_in_seconds(startTime?: string): number {
   if (!startTime) { return 0 }
-  const temp = startTime.toLowerCase().match(/\d+h|\d+m|\d+s|\d+/g)
-  if (!temp) { return parseInt(startTime) }
+
+  let normalizedTime = startTime.trim()
+
+  try {
+    const parsedUrl = new URL(normalizedTime)
+    const hashValue = parsedUrl.hash.replace(/^#/, '')
+    const hashParams = new URLSearchParams(hashValue)
+
+    normalizedTime = parsedUrl.searchParams.get('t')
+      ?? parsedUrl.searchParams.get('start')
+      ?? hashParams.get('t')
+      ?? hashParams.get('start')
+      ?? hashValue.replace(/^t=/, '')
+  }
+  catch {
+    // The input is already a time fragment rather than a full URL.
+  }
+
+  if (!normalizedTime) { return 0 }
+
+  const temp = normalizedTime.toLowerCase().match(/\d+h|\d+m|\d+s|\d+/g)
+  if (!temp) { return parseInt(normalizedTime) || 0 }
   let timeInSeconds = 0
   temp.forEach(fragment => {
     if (fragment.slice(-1) === 'h') {
@@ -162,7 +182,7 @@ export function vimeo_get_start_time(url: string): number {
   const qsTime = url.split('#')[1]
   if (!qsTime) return 0
   const timeStr = qsTime.replace(/^t=/, '')
-  return parseInt(timeStr)
+  return get_start_time_in_seconds(timeStr)
 }
 
 /**
@@ -202,19 +222,19 @@ export function get_platform_icon_src(platform: TPlatform): string {
   return icons[platform] ?? icons._blank
 }
 
-export function rumble_get_video_id(url: string): string|undefined {
-  const domain = new URL(url)
-  if (domain.hostname !== 'rumble.com') {
-    ler(`rumble_get_video_id: Bad video URL: '${url}'`)
-    return undefined
+export function rumble_get_slug(url: string): string {
+  const filteredUrl = url.trim().toLowerCase()
+  const match = filteredUrl.match(/https?:\/\/(w{3}\.)?rumble\.com\/([\d\w.-]+)\.html/)
+  if (!match) {
+    ler(`rumble_get_slug: Bad video URL: '${url}'`)
+    error_id(1051).remember_error({
+      code: 'BAD_VALUE',
+      title: 'rumble_get_slug: Bad video URL',
+      source: { parameter: url }
+    }) // error 1051
+    return ''
   }
-  const path = domain.pathname
-  const videoId = path.replace(/\//g, ' ').trim().split(' ').pop()
-  if (!videoId) {
-    ler(`rumble_get_video_id: Bad video URL: '${url}'`)
-    return undefined
-  }
-  return videoId
+  return match[2]
 }
 
 export function rumble_get_start_time(url: string): number {
@@ -339,8 +359,18 @@ export function facebook_get_video_author(slug: string): string {
 }
 
 export function twitch_get_video_id(url: string): string {
-  const match = url.match(/https:\/\/www.twitch.tv\/videos\/(\d+)\/?(\?[t=0-9hms]+)?/)
-  return match ? match[1] : ''
+  try {
+    const parsedUrl = new URL(url)
+    const hostname = parsedUrl.hostname.toLowerCase().replace(/^www\./, '')
+    if (hostname !== 'twitch.tv') {
+      return ''
+    }
+    const match = parsedUrl.pathname.match(/^\/videos\/(\d+)/)
+    return match?.[1] ?? ''
+  }
+  catch {
+    return ''
+  }
 }
 
 export function gen_video_url(bookmark: IBookmark): string {
@@ -434,20 +464,9 @@ export function gen_video_url(bookmark: IBookmark): string {
   }
 }
 
-/** Get slug from URL. */
+/** @deprecated Use rumble_get_slug instead. */
 export function get_rumble_slug(url: string) {
-  const filteredUrl = url.trim().toLowerCase()
-  const match = filteredUrl.match(/https?:\/\/(w{3}\.)?rumble\.com\/([\d\w.-]+)\.html/)
-  if (!match) {
-    ler(`get_slug: Bad video URL: '${url}'`)
-    error_id(1051).remember_error({
-      code: 'BAD_VALUE',
-      title: `get_slug: Bad video URL`,
-      source: { parameter: url }
-    }) // error 1051
-    return ''
-  }
-  return match[2]
+  return rumble_get_slug(url)
 }
 
 /** @param iframe embed html code */

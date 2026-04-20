@@ -33,4 +33,37 @@ describe('parse_platform_video_url', () => {
     expect(video.start).toBe(368)
     expect(video.urlCheck.valid).toBe(true)
   })
+
+  it('accepts mobile YouTube URLs with formatted start times', () => {
+    const video = parse_platform_video_url(
+      'https://m.youtube.com/watch?v=dQw4w9WgXcQ&t=1m30s'
+    )
+
+    expect(video.platform).toBe('youtube')
+    expect(video.id).toBe('dQw4w9WgXcQ')
+    expect(video.start).toBe(90)
+    expect(video.urlCheck.valid).toBe(true)
+  })
+
+  it('accepts player Vimeo URLs with formatted hash times', () => {
+    const video = parse_platform_video_url(
+      'https://player.vimeo.com/video/123456789#t=1m30s'
+    )
+
+    expect(video.platform).toBe('vimeo')
+    expect(video.id).toBe('123456789')
+    expect(video.start).toBe(90)
+    expect(video.urlCheck.valid).toBe(true)
+  })
+
+  it('accepts Twitch URLs without the www subdomain', () => {
+    const video = parse_platform_video_url(
+      'https://twitch.tv/videos/1958693814?t=00h00m38s'
+    )
+
+    expect(video.platform).toBe('twitch')
+    expect(video.id).toBe('1958693814')
+    expect(video.start).toBe(38)
+    expect(video.urlCheck.valid).toBe(true)
+  })
 })

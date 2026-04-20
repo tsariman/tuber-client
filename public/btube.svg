@@ -1,0 +1,24 @@
+<svg aria-labelledby="title desc" viewBox="0 0 512 512" height="512" width="512" xmlns="http://www.w3.org/2000/svg">
+  <title>B PLAY Logo</title>
+  
+  <defs>
+    <linearGradient gradientUnits="objectBoundingBox" y2="85%" x2="80%" y1="20%" x1="25%" id="teal">
+      <stop stop-color="#14E6C8" offset="0%"></stop>
+      <stop stop-color="#00B89E" offset="100%"></stop>
+    </linearGradient>
+  </defs>
+
+  
+  <path fill="url(#teal)" d="M92 72 
+           L92 440 
+           L275 440 
+           L425 256 
+           L275 72 
+           Z"></path>
+
+  
+  <path fill="#0F0F0F" d="M175 135 
+           L370 256 
+           L175 377 
+           Z"></path>
+</svg>

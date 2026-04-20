@@ -1,3 +1,23 @@
+/*
+ * This file is about extracting data from a platform video URL to properly 
+ * bookmark a certain timestamp within a video containing valuable information 
+ * to return to.
+ * For example, if a user wants to save a link to a YouTube video at a specific 
+ * timestamp where something important happens,
+ * this parser will extract the video ID and the start time from the URL so 
+ * that the application can create a bookmark
+ * that points directly to that moment in the video.
+ * This allows the user to return to the exact moment in the video where 
+ * something noteworthy occurs,
+ * rather than having to manually scrub through the video to find the relevant 
+ * timestamp.
+ *
+ * In other words, this parser helps the application create a precise reference 
+ * to a moment in a video
+ * so that users can quickly return to the point of interest without having to 
+ * manually search for it.
+ */
+
 import { error_id } from '../../business.logic/errors'
 import {
   DIALOG_DAILY_NEW_ID,
@@ -16,11 +36,12 @@ import {
   vimeo_get_video_id,
   rumble_get_start_time,
   daily_get_video_id,
-  get_rumble_slug,
+  rumble_get_slug,
   twitch_get_video_id,
   twitch_get_start_time,
   daily_get_start_time,
   odysee_get_url_data,
+  get_start_time_in_seconds,
 } from './_tuber.common.logic'
 import type { IUrlStatus, IVideoData } from './tuber.interfaces'
 
@@ -41,6 +62,14 @@ const DATA_SKELETON: IVideoData = {
 }
 
 const NO_START_MSG = 'The video start time is missing.'
+
+function $matches_domain(hostname: string, domain: string): boolean {
+  return hostname === domain || hostname.endsWith(`.${domain}`)
+}
+
+function $is_valid_start(start: number | undefined): start is number {
+  return typeof start === 'number' && Number.isFinite(start) && start >= 0
+}
 
 /**
  * Parse a video URL of supported platforms and return the video data.
@@ -66,34 +95,36 @@ export default function parse_platform_video_url(url: string): IVideoData {
   const urlObj = new URL(normalizedUrl)
   const hostname = urlObj.hostname.toLowerCase().replace(/^www\./, '')
 
-  switch (hostname) {
-    case 'youtu.be':
-    case 'youtube.com':
-      return $extract_data_from_youTube_url(normalizedUrl)
-    case 'vimeo.com':
-      return $extract_data_from_vimeo_url(normalizedUrl)
-    case 'rumble.com':
-      return $extract_data_from_rumble_url(normalizedUrl)
-    case 'odysee.com':
-      return $extract_data_from_odysee_url(normalizedUrl)
-    case 'facebook.com':
-    case 'fb.watch':
-      return $extract_data_from_facebook_url()
-    case 'dailymotion.com':
-    case 'dai.ly':
-      return $extract_data_from_dailymotion_url(normalizedUrl)
-    case 'twitch.tv':
-      return $extract_data_from_twitch_url(normalizedUrl)
-    default:
-      return {
-        ...DATA_SKELETON,
-        platform: 'unknown',
-        urlCheck: {
-          message: DATA_SKELETON.urlCheck.message,
-          valid: true // TODO Set this to false to disallow unknown platforms
-        },
-        dialogId: DIALOG_UNKNOWN_NEW_ID
-      }
+  if (hostname === 'youtu.be' || $matches_domain(hostname, 'youtube.com')) {
+    return $extract_data_from_youTube_url(normalizedUrl)
+  }
+  if ($matches_domain(hostname, 'vimeo.com')) {
+    return $extract_data_from_vimeo_url(normalizedUrl)
+  }
+  if ($matches_domain(hostname, 'rumble.com')) {
+    return $extract_data_from_rumble_url(normalizedUrl)
+  }
+  if ($matches_domain(hostname, 'odysee.com')) {
+    return $extract_data_from_odysee_url(normalizedUrl)
+  }
+  if ($matches_domain(hostname, 'facebook.com') || hostname === 'fb.watch') {
+    return $extract_data_from_facebook_url()
+  }
+  if ($matches_domain(hostname, 'dailymotion.com') || hostname === 'dai.ly') {
+    return $extract_data_from_dailymotion_url(normalizedUrl)
+  }
+  if ($matches_domain(hostname, 'twitch.tv')) {
+    return $extract_data_from_twitch_url(normalizedUrl)
+  }
+
+  return {
+    ...DATA_SKELETON,
+    platform: 'unknown',
+    urlCheck: {
+      message: DATA_SKELETON.urlCheck.message,
+      valid: false
+    },
+    dialogId: DIALOG_UNKNOWN_NEW_ID
   }
 }
 
@@ -134,7 +165,11 @@ function $extract_data_from_youTube_url(url: string): IVideoData {
     }) // 1053
     return DATA_SKELETON
   }
-  const startStr = youtube_get_start_time(url)
+  const parsedUrl = new URL(url)
+  const startStr = parsedUrl.searchParams.get('t')
+    ?? parsedUrl.searchParams.get('start')
+    ?? youtube_get_start_time(url)
+
   if (!startStr) {
     error_id(1054).remember_error({
       code: 'MISSING_DATA',
@@ -143,9 +178,26 @@ function $extract_data_from_youTube_url(url: string): IVideoData {
         + ` the video start time from the video URL.`,
       source: { pointer: url }
     }) // error 1054
-    return DATA_SKELETON
+    return {
+      ...DATA_SKELETON,
+      urlCheck: {
+        message: NO_START_MSG,
+        valid: false
+      }
+    }
   }
-  const start = parseInt(startStr)
+
+  const start = get_start_time_in_seconds(startStr)
+  if (!$is_valid_start(start)) {
+    return {
+      ...DATA_SKELETON,
+      urlCheck: {
+        message: NO_START_MSG,
+        valid: false
+      }
+    }
+  }
+
   const data: IVideoData = {
     ...DATA_SKELETON,
     platform: 'youtube',
@@ -166,7 +218,7 @@ function $extract_data_from_youTube_url(url: string): IVideoData {
  * Example URL: // https://rumble.com/v38vipp-what-is-ai-artificial-intelligence-what-is-artificial-intelligence-ai-in-5-.html
  */
 function $extract_data_from_rumble_url(url: string): IVideoData {
-  const slug  = get_rumble_slug(url)
+  const slug = rumble_get_slug(url)
   if (!slug) {
     error_id(1055).remember_error({
       code: 'MISSING_DATA',
@@ -178,7 +230,7 @@ function $extract_data_from_rumble_url(url: string): IVideoData {
     return DATA_SKELETON
   }
   const start = rumble_get_start_time(url)
-  if (!start) {
+  if (!$is_valid_start(start)) {
     error_id(1056).remember_error({
       code: 'MISSING_DATA',
       title: 'rumble_get_start_time failed',
@@ -221,7 +273,7 @@ function $extract_data_from_vimeo_url(url: string): IVideoData {
     return DATA_SKELETON
   }
   const start = vimeo_get_start_time(url)
-  if (!start) {
+  if (!$is_valid_start(start)) {
     error_id(1058).remember_error({
       code: 'MISSING_DATA',
       title: 'vimeo_get_start_time failed',
@@ -348,7 +400,7 @@ function $extract_data_from_twitch_url(url: string): IVideoData {
     return DATA_SKELETON
   }
   const start = twitch_get_start_time(url)
-  if (!start) {
+  if (!$is_valid_start(start)) {
     error_id(1064).remember_error({
       code: 'MISSING_DATA',
       title: 'twitch_get_start_time failed',
