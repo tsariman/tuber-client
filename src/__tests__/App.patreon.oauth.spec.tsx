@@ -77,7 +77,7 @@ describe('App query-param redirects', () => {
   })
 
   it('shows the email verification success message from query params', async () => {
-    window.history.replaceState(null, '', '/?email_verification=success&message=Email%20successfully%20verified&return_route=%2Faccount')
+    window.history.replaceState(null, '', '/?email_verification=success&message=Email%20successfully%20verified&return_route=%2Fsign-in')
 
     const rootReducer = combineReducers({
       app: appReducer,
@@ -116,7 +116,7 @@ describe('App query-param redirects', () => {
     )
 
     await waitFor(() => {
-      expect(store.getState().app.route).toBe('/account')
+      expect(store.getState().app.route).toBe('/sign-in')
       expect(store.getState().snackbar.message).toBe('Email successfully verified')
     })
   })
@@ -166,12 +166,12 @@ describe('App query-param redirects', () => {
         kind: 'email_verification',
         status: 'success',
         message: 'Email successfully verified',
-        returnRoute: '/account',
+        returnRoute: '/sign-in',
       }),
     }))
 
     await waitFor(() => {
-      expect(store.getState().app.route).toBe('/account')
+      expect(store.getState().app.route).toBe('/sign-in')
       expect(store.getState().snackbar.message).toBe('Email successfully verified')
     })
   })

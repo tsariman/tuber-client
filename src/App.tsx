@@ -14,6 +14,7 @@ const AppGeneric = lazy(() => import('./mui/app.generic.cpn'))
 import {
   ALLOWED_ATTEMPTS,
   BOOTSTRAP_ATTEMPTS,
+  EP_AUTH,
   THEME_DEFAULT_MODE,
   THEME_MODE,
   type TThemeMode
@@ -125,7 +126,7 @@ export default function App() {
         kind: 'email_verification',
         status: emailVerificationStatus,
         message,
-        returnRoute: returnRoute ?? '/account',
+        returnRoute: returnRoute ?? `/${EP_AUTH.CLIENT_IN}`,
       }
     }
 

@@ -32,9 +32,9 @@ function clear_auto_hide_timeout(): void {
  * if a specific operation takes too long. This prevents flickering during quick
  * operations while providing user feedback for longer tasks.
  *
- * @param time The delay before the spinner appears in milliseconds (default: 200ms)
+ * @param time The delay before the spinner appears in milliseconds (default: 300ms)
  */
-export function schedule_spinner(time = 200, timeout = 10000): void {
+export function schedule_spinner(time = 300, timeout = 10000): void {
   if (!showHandle) {
     const callback = () => {
       showHandle = null

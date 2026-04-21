@@ -82,6 +82,7 @@ export const FORM_TEST_THUMBNAIL_ID = '45'
 // Pages
 
 export const PAGE_RESEARCH_APP_ID = '40'
+export const PAGE_SIGN_IN_ID = '42'
 export const PAGE_TEST_THUMBNAIL_ID = '46'
 export const PAGE_SAVE_CONFIG_VALUE_ID = '61'
 

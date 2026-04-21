@@ -10,6 +10,7 @@ import {
   get_origin_ending_fixed,
   get_origin_ending_cleaned,
   clean_endpoint_ending,
+  get_normalized_endpoint,
   get_query_starting_fixed,
   get_state_form_name
 } from '../../business.logic/parsing';
@@ -468,6 +469,34 @@ describe('parsing.ts', () => {
 
     it('should handle single slash', () => {
       expect(clean_endpoint_ending('/')).toBe('');
+    });
+  });
+
+  describe('get_normalized_endpoint', () => {
+    it('should remove leading and trailing slashes', () => {
+      expect(get_normalized_endpoint('/api/users/')).toBe('api/users');
+      expect(get_normalized_endpoint('api/users/')).toBe('api/users');
+      expect(get_normalized_endpoint('/api/users')).toBe('api/users');
+    });
+
+    it('should remove repeated surrounding slashes', () => {
+      expect(get_normalized_endpoint('//api/users//')).toBe('api/users');
+      expect(get_normalized_endpoint('///api/users')).toBe('api/users');
+    });
+
+    it('should trim surrounding whitespace before normalizing', () => {
+      expect(get_normalized_endpoint('  /api/users/  ')).toBe('api/users');
+    });
+
+    it('should return empty string for empty, undefined, or slash-only values', () => {
+      expect(get_normalized_endpoint('')).toBe('');
+      expect(get_normalized_endpoint(undefined)).toBe('');
+      expect(get_normalized_endpoint('/')).toBe('');
+      expect(get_normalized_endpoint('  ///  ')).toBe('');
+    });
+
+    it('should preserve internal path separators', () => {
+      expect(get_normalized_endpoint('/api//users/list/')).toBe('api//users/list');
     });
   });
 

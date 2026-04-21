@@ -242,15 +242,15 @@ export function clean_endpoint_ending(endpoint?: string): string {
 }
 
 /**
- * Ensures an endpoint starts with a forward slash.
+ * Ensures the endpoint does not start with a forward slash.
+ *
  * @param endpoint The endpoint string to process
- * @returns The endpoint prefixed with '/' if it doesn't already start with one
+ * @returns The trimmed endpoint without leading or trailing '/'
  */
-export const get_endpoint_starting_fixed = (endpoint?: string): string => {
-  if (endpoint) {
-    return endpoint.charAt(0) === '/' ? endpoint : '/' + endpoint
-  }
-  return ''
+export const get_normalized_endpoint = (endpoint?: string): string => {
+  const value = (endpoint ?? '').trim()
+  if (!value) { return '' }
+  return value.replace(/^\/+|\/+$/g, '')
 }
 
 /**
