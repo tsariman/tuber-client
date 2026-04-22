@@ -1,6 +1,13 @@
 import { styled } from '@mui/material'
-import StatePage from '../../controllers/StatePage'
+import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import parse from 'html-react-parser'
+import StatePage from '../../controllers/StatePage'
+import { get_fetch } from '../../state/net.actions'
+import { get_origin_ending_fixed } from '../../business.logic/parsing'
+import type { RootState } from '../../state'
+
+const EP_CONTENTS = 'contents'
 
 const Wrapper = styled('div')(() => ({
   width: '100%'
@@ -10,16 +17,21 @@ interface IHtmlContent {
   instance: StatePage
 }
 
+interface IContentResponse {
+  data?: {
+    attributes?: {
+      html?: string
+    }
+  }
+}
+
 /**
- * Displays the HTML content of an element. ID must be used to identify
- * the element.  
- * The idea: the "index.html" file could contain extra content in
- * elements with CSS set to `display: none`, outside of the root div tag. As in,
- * the content is invisible. This component can then be used to make the
- * content visible when needed. e.g.
+ * Fetches and displays HTML content from `GET /contents/:name`.
+ * The page state content field format: `'$html : <content-name>'`
+ * e.g.
  * ```ts
  * const page = {
- *   'content': '$html : <id-of-element>',
+ *   'content': '$html : privacy-policy',
  *   'typography': {
  *     'fontFamily': '<insert-your-font-family>',
  *     'color': '<insert-font-color>'
@@ -28,22 +40,28 @@ interface IHtmlContent {
  * ```
  */
 const HtmlContent = ({ instance: page }: IHtmlContent) => {
-  const domElement = document.getElementById(page.contentName)
+  const origin = useSelector((state: RootState) => get_origin_ending_fixed(state.app.origin))
+  const [html, setHtml] = useState<string | null>(null)
 
-  if (domElement) {
-    return (
-      <Wrapper
-        sx={{
-          fontFamily: page.typography.fontFamily,
-          color: page.typography.color
-        }}
-      >
-        {parse(domElement.innerHTML)}
-      </Wrapper>
-    );
-  }
+  useEffect(() => {
+    const url = `${origin}${EP_CONTENTS}/${page.contentName}`
+    get_fetch<IContentResponse>(url)
+      .then(res => setHtml(res.data?.attributes?.html ?? null))
+      .catch(() => setHtml(null))
+  }, [origin, page.contentName])
 
-  return ( null )
+  if (!html) return null
+
+  return (
+    <Wrapper
+      sx={{
+        fontFamily: page.typography.fontFamily,
+        color: page.typography.color
+      }}
+    >
+      {parse(html)}
+    </Wrapper>
+  )
 }
 
 export default HtmlContent
