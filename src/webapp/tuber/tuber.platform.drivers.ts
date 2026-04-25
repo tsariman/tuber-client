@@ -121,8 +121,8 @@ export default function parse_platform_video_url(url: string): IVideoData {
     ...DATA_SKELETON,
     platform: 'unknown',
     urlCheck: {
-      message: DATA_SKELETON.urlCheck.message,
-      valid: false
+      message: 'OK',
+      valid: true
     },
     dialogId: DIALOG_UNKNOWN_NEW_ID
   }
