@@ -11,7 +11,11 @@ import {
   SHORTENED_NOTE_MAX_LENGTH
 } from '../../tuber.config'
 import type { IBookmark } from '../../tuber.interfaces'
-import { gen_video_url, shorten_text } from '../../_tuber.common.logic'
+import {
+  can_play_bookmark_in_player,
+  gen_video_url,
+  shorten_text
+} from '../../_tuber.common.logic'
 import BookmarkActionsToolbar from './bookmark.actions'
 import { StateJsxIcon } from 'src/mui/icon'
 import PlatformIcon from './platform.icon'
@@ -124,7 +128,7 @@ const Bookmark = React.memo<IBookmarkProps>(({ children: bookmark, index: i, han
   // Memoized click handlers
   const handleBookmarkClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
-    if (playerOpen) {
+    if (playerOpen && can_play_bookmark_in_player(bookmark)) {
       dispatch(pagesDataAdd({
         route: ENDPOINT,
         key: SET_TO_PLAY,

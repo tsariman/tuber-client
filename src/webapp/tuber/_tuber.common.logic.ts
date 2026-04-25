@@ -464,6 +464,41 @@ export function gen_video_url(bookmark: IBookmark): string {
   }
 }
 
+export function get_bookmark_embed_src(bookmark: IBookmark): string {
+  const rawEmbed = [
+    bookmark.embed_url,
+    bookmark.embedUrl,
+    bookmark.html_tag,
+    bookmark.htmlTag
+  ].find(value => typeof value === 'string' && value.trim())
+
+  return get_iframe_url_src(rawEmbed)?.trim() ?? ''
+}
+
+export function can_play_bookmark_in_player(bookmark: IBookmark): boolean {
+  const videoid = bookmark.videoid?.trim()
+  const slug = bookmark.slug?.trim()
+  const author = bookmark.author?.trim()
+
+  switch (bookmark.platform) {
+  case 'youtube':
+  case 'vimeo':
+  case 'dailymotion':
+  case 'twitch':
+    return Boolean(videoid)
+  case 'rumble':
+  case 'odysee':
+    return Boolean(videoid || slug)
+  case 'facebook':
+    return Boolean(author && videoid)
+  case 'unknown':
+    return Boolean(get_bookmark_embed_src(bookmark))
+  case '_blank':
+  default:
+    return false
+  }
+}
+
 /** @deprecated Use rumble_get_slug instead. */
 export function get_rumble_slug(url: string) {
   return rumble_get_slug(url)
@@ -471,18 +506,46 @@ export function get_rumble_slug(url: string) {
 
 /** @param iframe embed html code */
 export function get_iframe_url_src(iframe?: string) {
-  if (!iframe) {
+  const raw = iframe?.trim()
+  if (!raw) {
     return ''
   }
-  const match = iframe.match(/.*src="(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*))".*/)
-  if (match) {
-    const url = match[1]
-    return url
+
+  const asUrl = (() => {
+    try {
+      const parsed = new URL(raw)
+      if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+        return raw
+      }
+    }
+    catch {
+      // Continue to iframe src extraction.
+    }
+    return ''
+  })()
+
+  if (asUrl) {
+    return asUrl
   }
-  const isUrl = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/.test(iframe)
-  if (isUrl) {
-    return iframe
+
+  const quotedSrcMatch = raw.match(/\bsrc\s*=\s*(["'])(.*?)\1/i)
+  const unquotedSrcMatch = raw.match(/\bsrc\s*=\s*([^\s>]+)/i)
+  const candidate = (quotedSrcMatch?.[2] ?? unquotedSrcMatch?.[1] ?? '').trim()
+
+  if (!candidate) {
+    return ''
   }
+
+  try {
+    const parsed = new URL(candidate)
+    if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+      return candidate
+    }
+  }
+  catch {
+    return ''
+  }
+
   return ''
 }
 

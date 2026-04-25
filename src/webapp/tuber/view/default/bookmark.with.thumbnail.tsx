@@ -6,7 +6,11 @@ import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import React, { Fragment, useCallback, useMemo } from 'react';
 import type { IBookmark } from '../../tuber.interfaces';
-import { gen_video_url, shorten_text } from '../../_tuber.common.logic';
+import {
+  can_play_bookmark_in_player,
+  gen_video_url,
+  shorten_text
+} from '../../_tuber.common.logic';
 import BookmarkActionsToolbar from './bookmark.actions';
 import Thumbnail from './thumbnail';
 import PlatformIcon from './platform.icon';
@@ -109,7 +113,7 @@ const BookmarkWithThumbnail = React.memo<IBookmarkProps>(({
   // Memoized click handlers - now stable across renders
   const handleBookmarkClick = useCallback((e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    if (playerOpen) {
+    if (playerOpen && can_play_bookmark_in_player(bookmark)) {
       dispatch(pagesDataAdd({
         route: ENDPOINT,
         key: SET_TO_PLAY,

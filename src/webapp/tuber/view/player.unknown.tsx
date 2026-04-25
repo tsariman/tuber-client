@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles'
 import React from 'react'
+import { get_bookmark_embed_src } from '../_tuber.common.logic'
 import type { IBookmark } from '../tuber.interfaces'
 
 interface IUnknownPlayerProps {
@@ -34,9 +35,7 @@ const VideoStyled = styled('video')(() => ({
 }))
 
 const PlaybackSwitch: React.FC<IUnknownPlayerProps> = ({ bookmark }) => {
-  const rawEmbedUrl = (bookmark.embed_url ?? bookmark.embedUrl ?? '').trim()
-  const extractedEmbedUrl = rawEmbedUrl.match(/\bsrc\s*=\s*(["'])([^"']+)\1/i)?.[2]?.trim()
-  const resolvedEmbedUrl = extractedEmbedUrl || rawEmbedUrl
+  const resolvedEmbedUrl = get_bookmark_embed_src(bookmark)
   const isDirectVideo = resolvedEmbedUrl && /\.(mp4|webm|ogv|ogg|mov|avi|mkv|m4v)(\?.*)?$/i.test(resolvedEmbedUrl)
   
   const getVideoType = (url: string): string => {
