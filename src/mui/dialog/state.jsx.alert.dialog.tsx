@@ -9,10 +9,14 @@ import type { AppDispatch, RootState } from '../../state'
 import type StateDialogAlert from '../../controllers/templates/StateDialogAlert'
 import StateJsxDialogAction from './actions/state.jsx'
 import parse from 'html-react-parser'
+import IconButton from '@mui/material/IconButton'
+import { StateJsxIcon } from '../icon/index.js'
 
 interface IAlertDialogProps {
   instance: StateDialogAlert
 }
+
+const CloseIcon = memo(() => <StateJsxIcon name='close' />)
 
 const StateJsxAlertDialog = memo((props: IAlertDialogProps) => {
   const { instance: dialog } = props
@@ -28,6 +32,18 @@ const StateJsxAlertDialog = memo((props: IAlertDialogProps) => {
     >
       <DialogTitle {...dialog.titleProps}>
         { dialog.title }
+        <IconButton
+          aria-label="close"
+          onClick={handleClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
       </DialogTitle>
       <DialogContent {...dialog.contentProps}>
         {dialog.contentText ? (
@@ -35,7 +51,6 @@ const StateJsxAlertDialog = memo((props: IAlertDialogProps) => {
             { dialog.contentText }
           </DialogContentText>
         ) : ( null )}
-        {/* <div dangerouslySetInnerHTML={{ __html: dialog.content }} /> */}
         { parse(dialog.content as string) }
       </DialogContent>
       <DialogActions {...dialog.actionsProps}>
