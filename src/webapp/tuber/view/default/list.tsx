@@ -37,6 +37,16 @@ const VirtualItem = styled('div')(() => ({
   transform: 'translateY(var(--transform-y))',
 }))
 
+const getBookmarkKey = (bookmark: IBookmark | undefined, index: number): string => {
+  if (bookmark?.id !== undefined && bookmark?.id !== null) {
+    return `bookmark-${String(bookmark.id)}`
+  }
+  if (bookmark?.url) {
+    return `bookmark-url-${bookmark.url}`
+  }
+  return `bookmark-index-${index}`
+}
+
 export default function BookmarkList() {
   const parentRef = useRef<HTMLDivElement>(null)
   
@@ -112,6 +122,12 @@ export default function BookmarkList() {
   const virtualizer = useVirtualizer({
     count: bookmarks.length + 1, // +1 for infinite scroll trigger
     getScrollElement: () => parentRef.current,
+    getItemKey: useCallback((index: number) => {
+      if (index === bookmarks.length) {
+        return 'infinite-scroll-trigger'
+      }
+      return getBookmarkKey(bookmarks[index], index)
+    }, [bookmarks]),
     estimateSize: useCallback((index: number) => {
       if (index === bookmarks.length) return 40 // Infinite scroll trigger
       return 80 // Estimated height for bookmark items without thumbnails
@@ -129,7 +145,7 @@ export default function BookmarkList() {
           if (virtualItem.index === bookmarks.length) {
             return (
               <VirtualItem
-                key="infinite-scroll-trigger"
+                key={virtualItem.key}
                 style={{ '--transform-y': `${virtualItem.start}px` } as React.CSSProperties}
               >
                 <InfiniteScrollTrigger def={data} scrollContainerRef={parentRef} />
@@ -137,9 +153,12 @@ export default function BookmarkList() {
             )
           }
           const bookmark = bookmarks[virtualItem.index]
+          if (!bookmark) {
+            return null
+          }
           return (
             <VirtualItem
-              key={`bookmark-${virtualItem.index}-${bookmark.id || bookmark.url}`}
+              key={virtualItem.key}
               data-index={virtualItem.index}
               ref={virtualizer.measureElement}
               style={{ '--transform-y': `${virtualItem.start}px` } as React.CSSProperties}

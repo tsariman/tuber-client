@@ -37,6 +37,16 @@ const VirtualItem = styled('div')(() => ({
   transform: 'translateY(var(--transform-y))',
 }))
 
+const getBookmarkKey = (bookmark: IBookmark | undefined, index: number): string => {
+  if (bookmark?.id !== undefined && bookmark?.id !== null) {
+    return `bookmark-${String(bookmark.id)}`
+  }
+  if (bookmark?.url) {
+    return `bookmark-url-${bookmark.url}`
+  }
+  return `bookmark-index-${index}`
+}
+
 export default function ThumbnailedBookmarkList() {
   const parentRef = useRef<HTMLDivElement>(null)
 
@@ -91,6 +101,12 @@ export default function ThumbnailedBookmarkList() {
   const virtualizer = useVirtualizer({
     count: bookmarks.length + 1, // +1 for infinite scroll trigger
     getScrollElement: () => parentRef.current,
+    getItemKey: useCallback((index: number) => {
+      if (index === bookmarks.length) {
+        return 'infinite-scroll-trigger'
+      }
+      return getBookmarkKey(bookmarks[index], index)
+    }, [bookmarks]),
     estimateSize: useCallback((index: number) => {
       // Last item is the infinite scroll trigger
       if (index === bookmarks.length) return 40
@@ -110,7 +126,7 @@ export default function ThumbnailedBookmarkList() {
           if (virtualItem.index === bookmarks.length) {
             return (
               <VirtualItem
-                key="infinite-scroll-trigger"
+                key={virtualItem.key}
                 style={{
                   '--transform-y': `${virtualItem.start}px`,
                 } as React.CSSProperties}
@@ -123,9 +139,12 @@ export default function ThumbnailedBookmarkList() {
             )
           }
           const bookmark = bookmarks[virtualItem.index]
+          if (!bookmark) {
+            return null
+          }
           return (
             <VirtualItem
-              key={bookmark.id || bookmark.url || `bookmark-${virtualItem.index}`}
+              key={virtualItem.key}
               data-index={virtualItem.index}
               ref={virtualizer.measureElement}
               style={{
