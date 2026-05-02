@@ -24,7 +24,7 @@ const IframeStyled = styled('iframe')(() => ({
  * Example URL: https://www.twitch.tv/videos/1958693814?t=00h00m38s
  * Example Embed: https://player.twitch.tv/?video=1958693814&time=0h0m38s&parent=www.example.com
  */
-const TwitchPlayer: React.FC<ITwitchPlayerProps> = ({ bookmark }) => {
+const TwitchPlayer = React.memo<ITwitchPlayerProps>(({ bookmark }) => {
   const { videoid, start_seconds } = bookmark;
   const parent = new URL(window.location.origin).hostname;
   const start = start_seconds ?? 0;
@@ -42,6 +42,8 @@ const TwitchPlayer: React.FC<ITwitchPlayerProps> = ({ bookmark }) => {
       </StyledIframeDiv>
     </>
   );
-};
+});
+
+TwitchPlayer.displayName = 'TwitchPlayer';
 
 export default TwitchPlayer;

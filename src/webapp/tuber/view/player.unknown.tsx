@@ -34,7 +34,7 @@ const VideoStyled = styled('video')(() => ({
   objectFit: 'contain',
 }))
 
-const PlaybackSwitch: React.FC<IUnknownPlayerProps> = ({ bookmark }) => {
+const PlaybackSwitch = ({ bookmark }: IUnknownPlayerProps) => {
   const resolvedEmbedUrl = get_bookmark_embed_src(bookmark)
   const isDirectVideo = resolvedEmbedUrl && /\.(mp4|webm|ogv|ogg|mov|avi|mkv|m4v)(\?.*)?$/i.test(resolvedEmbedUrl)
   
@@ -81,8 +81,10 @@ const PlaybackSwitch: React.FC<IUnknownPlayerProps> = ({ bookmark }) => {
   )
 }
 
-const UnknownPlayer: React.FC<IUnknownPlayerProps> = ({ bookmark }) => (
+const UnknownPlayer = React.memo<IUnknownPlayerProps>(({ bookmark }) => (
   <PlaybackSwitch bookmark={bookmark} />
-)
+))
+
+UnknownPlayer.displayName = 'UnknownPlayer'
 
 export default UnknownPlayer

@@ -1,5 +1,5 @@
 // Tuber app types and interfaces gathered in one spot
-import type { JSX } from 'react'
+import type { JSX, ReactNode } from 'react'
 import type StatePageAppbar from '../../controllers/templates/StatePageAppbar'
 import type { TWithRequired } from '@tuber/shared'
 
@@ -92,7 +92,11 @@ export interface ITuberBookmarksProps {
   setPlayerOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
+/** @deprecated */
 export type TTuberPlatformMap = {[brand in TPlatform]: JSX.Element | null }
+export type TPlayerMap = {
+  [brand in TPlatform]: (props: { bookmark: IBookmark }) => ReactNode
+}
 
 export interface IResearchToolbarProps {
   // /** This callback shows and hides the list of bookmarks. */

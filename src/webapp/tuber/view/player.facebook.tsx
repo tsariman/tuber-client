@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import React from 'react';
 import type { IBookmark } from '../tuber.interfaces';
 
 interface IFacebookPlayerProps {
@@ -20,7 +21,7 @@ const IframeStyled = styled('iframe')(() => ({
   overflow: 'hidden',
 }));
 
-const FacebookPlayer: React.FC<IFacebookPlayerProps> = ({ bookmark }) => {
+const FacebookPlayer = React.memo<IFacebookPlayerProps>(({ bookmark }) => {
   const { author, videoid, start_seconds } = bookmark;
   const start = start_seconds ?? 0;
   // Example slug: MetroUK%2Fvideos%2F7129126943765650
@@ -42,6 +43,8 @@ const FacebookPlayer: React.FC<IFacebookPlayerProps> = ({ bookmark }) => {
       />
     </StyledIframeWrapper>
   );
-};
+});
+
+FacebookPlayer.displayName = 'FacebookPlayer';
 
 export default FacebookPlayer;

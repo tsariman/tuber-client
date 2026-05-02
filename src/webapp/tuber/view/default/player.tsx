@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles'
 import React, { Fragment, useMemo } from 'react'
-import type { IBookmark, TTPlayer, TTuberPlatformMap } from '../../tuber.interfaces'
+import type { IBookmark, TPlayerMap, TTPlayer } from '../../tuber.interfaces'
 import RumblePlayer from '../player.rumble'
 import ResearchToolbar from '../tuber.toolbar.video'
 import YouTubePlayerApi from '../player.youtube.api'
@@ -61,6 +61,25 @@ const PlayerPlaceholderLabel = styled('div')(() => ({
   textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
 }))
 
+const playerMap: TPlayerMap = {
+  unknown: UnknownPlayer,
+  twitch: TwitchPlayer,
+  youtube: YouTubePlayerApi,
+  vimeo: VimeoPlayer,
+  dailymotion: DailyPlayer,
+  rumble: RumblePlayer,
+  odysee: OdyseePlayer,
+  facebook: FacebookPlayer,
+  _blank: () => (
+    <PlayerPlaceholder id='playerPlaceholder'>
+      <PlayerPlaceholderIcon aria-hidden='true' />
+      <PlayerPlaceholderLabel>
+        Click a bookmark to play
+      </PlayerPlaceholderLabel>
+    </PlayerPlaceholder>
+  )
+}
+
 // Memoized VideoPlayer component for better performance
 const VideoPlayer = React.memo<{ bookmark?: IBookmark }>(({ bookmark: receivedBookmark }) => {
   // Memoize the bookmark with default fallback
@@ -71,33 +90,8 @@ const VideoPlayer = React.memo<{ bookmark?: IBookmark }>(({ bookmark: receivedBo
     title: 'No video bookmark selected!'
   } as IBookmark, [receivedBookmark])
 
-  // Memoize the players map to prevent recreation on every render
-  const players: TTuberPlatformMap = useMemo(() => ({
-    _blank: (
-      <PlayerPlaceholder id='playerPlaceholder'>
-        <PlayerPlaceholderIcon aria-hidden='true' />
-        <PlayerPlaceholderLabel>
-          Search for bookmarks and select one to play
-        </PlayerPlaceholderLabel>
-      </PlayerPlaceholder>
-    ),
-    unknown: <UnknownPlayer bookmark={bookmark} />,
-    twitch: <TwitchPlayer bookmark={bookmark} />,
-    youtube: <YouTubePlayerApi bookmark={bookmark} />,
-    vimeo: <VimeoPlayer bookmark={bookmark} />,
-    dailymotion: <DailyPlayer bookmark={bookmark} />,
-    rumble: <RumblePlayer bookmark={bookmark} />,
-    odysee: <OdyseePlayer bookmark={bookmark} />,
-    facebook: <FacebookPlayer bookmark={bookmark} />
-  }), [bookmark])
-
-  // Memoize the selected player component
-  const selectedPlayer = useMemo(
-    () => players[bookmark.platform],
-    [players, bookmark.platform]
-  )
-
-  return selectedPlayer
+  const PlayerComponent = playerMap[bookmark.platform] || playerMap._blank
+  return <PlayerComponent bookmark={bookmark} />
 })
 
 // Set display name for debugging

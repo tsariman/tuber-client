@@ -22,7 +22,7 @@ const IframeStyled = styled('iframe')(() => ({
 }));
 
 /** Example URL: https://vimeo.com/66507747 */
-const VimeoPlayer: React.FC<IVimeoPlayerProps> = ({ bookmark }) => {
+const VimeoPlayer = React.memo<IVimeoPlayerProps>(({ bookmark }) => {
   const { videoid, start_seconds } = bookmark;
   const start = start_seconds ?? 0;
   const src = `https://player.vimeo.com/video/${videoid}?autoplay=1#t=${start}s`;
@@ -40,6 +40,8 @@ const VimeoPlayer: React.FC<IVimeoPlayerProps> = ({ bookmark }) => {
       <script src="https://player.vimeo.com/api/player.js"></script>
     </>
   );
-};
+});
+
+VimeoPlayer.displayName = 'VimeoPlayer';
 
 export default VimeoPlayer;
