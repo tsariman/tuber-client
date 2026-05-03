@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles'
-import React from 'react'
+import { memo } from 'react'
 import { get_bookmark_embed_src } from '../_tuber.common.logic'
 import type { IBookmark } from '../tuber.interfaces'
 
@@ -81,7 +81,7 @@ const PlaybackSwitch = ({ bookmark }: IUnknownPlayerProps) => {
   )
 }
 
-const UnknownPlayer = React.memo<IUnknownPlayerProps>(({ bookmark }) => (
+const UnknownPlayer = memo<IUnknownPlayerProps>(({ bookmark }) => (
   <PlaybackSwitch bookmark={bookmark} />
 ))
 

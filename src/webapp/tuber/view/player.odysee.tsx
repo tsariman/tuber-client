@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles'
-import React, { useMemo } from 'react'
+import { useMemo, memo } from 'react'
 import type { IBookmark } from '../tuber.interfaces'
 
 interface IOdyseePlayerProps {
@@ -24,7 +24,7 @@ const IframeStyled = styled('iframe')(() => ({
 /**
  * [TODO] You have to let user enter the start time in seconds.
  */
-const OdyseePlayer = React.memo<IOdyseePlayerProps>(({ bookmark }) => {
+const OdyseePlayer = memo<IOdyseePlayerProps>(({ bookmark }) => {
   const { slug, start_seconds } = bookmark
   
   // Memoize start time calculation

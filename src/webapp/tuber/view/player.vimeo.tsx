@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import React from 'react';
+import { memo } from 'react';
 import type { IBookmark } from '../tuber.interfaces';
 
 interface IVimeoPlayerProps {
@@ -22,7 +22,7 @@ const IframeStyled = styled('iframe')(() => ({
 }));
 
 /** Example URL: https://vimeo.com/66507747 */
-const VimeoPlayer = React.memo<IVimeoPlayerProps>(({ bookmark }) => {
+const VimeoPlayer = memo<IVimeoPlayerProps>(({ bookmark }) => {
   const { videoid, start_seconds } = bookmark;
   const start = start_seconds ?? 0;
   const src = `https://player.vimeo.com/video/${videoid}?autoplay=1#t=${start}s`;

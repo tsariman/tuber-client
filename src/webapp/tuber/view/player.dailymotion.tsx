@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles'
-import React, { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import type { IBookmark } from '../tuber.interfaces'
 
 interface IDailyPlayerProps {
@@ -24,7 +24,7 @@ const IframeStyled = styled('iframe')(() => ({
 /**
  * [TODO] You have to let user enter the start time in seconds.
  */
-const DailyPlayer = React.memo<IDailyPlayerProps>(({ bookmark }) => {
+const DailyPlayer = memo<IDailyPlayerProps>(({ bookmark }) => {
   const { videoid, start_seconds } = bookmark
   
   // Memoize start time calculation

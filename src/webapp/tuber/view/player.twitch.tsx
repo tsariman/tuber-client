@@ -1,16 +1,16 @@
-import { styled } from '@mui/material/styles';
-import React from 'react';
-import type { IBookmark } from '../tuber.interfaces';
+import { styled } from '@mui/material/styles'
+import { memo } from 'react'
+import type { IBookmark } from '../tuber.interfaces'
 
 interface ITwitchPlayerProps {
-  bookmark: IBookmark;
+  bookmark: IBookmark
 }
 
 const StyledIframeDiv = styled('div')(() => ({
   position: 'relative',
   width: '100%',
   height: '100%',
-}));
+}))
 
 const IframeStyled = styled('iframe')(() => ({
   position: 'absolute',
@@ -18,17 +18,17 @@ const IframeStyled = styled('iframe')(() => ({
   left: 0,
   width: '100%',
   height: '100%',
-}));
+}))
 
 /**
  * Example URL: https://www.twitch.tv/videos/1958693814?t=00h00m38s
  * Example Embed: https://player.twitch.tv/?video=1958693814&time=0h0m38s&parent=www.example.com
  */
-const TwitchPlayer = React.memo<ITwitchPlayerProps>(({ bookmark }) => {
-  const { videoid, start_seconds } = bookmark;
-  const parent = new URL(window.location.origin).hostname;
-  const start = start_seconds ?? 0;
-  const src = `https://player.twitch.tv/?video=${videoid}&time=${start}s&parent=${parent}`;
+const TwitchPlayer = memo<ITwitchPlayerProps>(({ bookmark }) => {
+  const { videoid, start_seconds } = bookmark
+  const parent = new URL(window.location.origin).hostname
+  const start = start_seconds ?? 0
+  const src = `https://player.twitch.tv/?video=${videoid}&time=${start}s&parent=${parent}`
   return (
     <>
       <StyledIframeDiv>
@@ -41,9 +41,9 @@ const TwitchPlayer = React.memo<ITwitchPlayerProps>(({ bookmark }) => {
         ></IframeStyled>
       </StyledIframeDiv>
     </>
-  );
-});
+  )
+})
 
-TwitchPlayer.displayName = 'TwitchPlayer';
+TwitchPlayer.displayName = 'TwitchPlayer'
 
-export default TwitchPlayer;
+export default TwitchPlayer

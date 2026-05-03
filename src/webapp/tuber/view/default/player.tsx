@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles'
-import React, { Fragment, useMemo } from 'react'
+import { Fragment, useMemo, memo } from 'react'
 import type { IBookmark, TPlayerMap, TTPlayer } from '../../tuber.interfaces'
 import RumblePlayer from '../player.rumble'
 import ResearchToolbar from '../tuber.toolbar.video'
@@ -81,7 +81,7 @@ const playerMap: TPlayerMap = {
 }
 
 // Memoized VideoPlayer component for better performance
-const VideoPlayer = React.memo<{ bookmark?: IBookmark }>(({ bookmark: receivedBookmark }) => {
+const VideoPlayer = memo<{ bookmark?: IBookmark }>(({ bookmark: receivedBookmark }) => {
   // Memoize the bookmark with default fallback
   const bookmark = useMemo(() => receivedBookmark ?? {
     platform: '_blank' as const,
@@ -98,8 +98,7 @@ const VideoPlayer = React.memo<{ bookmark?: IBookmark }>(({ bookmark: receivedBo
 VideoPlayer.displayName = 'VideoPlayer'
 
 // Optimized TuberPlayer component with React.memo
-const TuberPlayer = React.memo<TTPlayer>(({ bookmark, toolbarDef }) => {
-
+const TuberPlayer = memo<TTPlayer>(({ bookmark, toolbarDef }) => {
   return (
     <Fragment>
       <VideoCanvas>
