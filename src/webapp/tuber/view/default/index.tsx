@@ -7,9 +7,9 @@ import { styled, useTheme } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import Toolbar from '@mui/material/Toolbar'
 import ResearchToolbarFixed from '../tuber.toolbar.video.search'
-import ThumbnailedBookmarkListNoPlayer from './list.no.player'
+import BookmarkListThumbnailedNoPlayer from './list.no.player'
 import { useMediaQuery } from '@mui/material'
-import ThumbnailedBookmarkList from './list.with.thumbnail'
+import BookmarkListThumbnailed from './list.with.thumbnail'
 import type { AppDispatch, RootState } from 'src/state'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -67,7 +67,7 @@ export default function ViewDefault({ instance: page }: { instance: StatePage}) 
         {playerOpen ? (
           <Grid container direction='row'>
             {showThumbnail ? (
-              <ThumbnailedBookmarkList />
+              <BookmarkListThumbnailed />
             ) : (
               <BookmarkList />
             )}
@@ -77,7 +77,7 @@ export default function ViewDefault({ instance: page }: { instance: StatePage}) 
           </Grid>
         ) : (
           <Fragment>
-            <ThumbnailedBookmarkListNoPlayer />
+            <BookmarkListThumbnailedNoPlayer />
             <ResearchToolbarFixed def={page.appbar} />
           </Fragment>
         )}

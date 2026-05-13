@@ -47,7 +47,7 @@ const getBookmarkKey = (bookmark: IBookmark | undefined, index: number): string 
   return `bookmark-index-${index}`
 }
 
-export default function ThumbnailedBookmarkList() {
+export default function BookmarkListThumbnailed() {
   const parentRef = useRef<HTMLDivElement>(null)
 
   // Memoize state selectors
