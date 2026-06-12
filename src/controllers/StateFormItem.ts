@@ -62,7 +62,12 @@ export default class StateFormItem<P = StateForm, T = unknown>
     super()
     this.itemState = itemState
     this.parentDef = parent
-    this.itemDisabled = !!this.itemState.disabled
+
+    const propsDisabled = (itemState.props as Record<string, unknown> | undefined)?.disabled
+    this.itemDisabled = typeof itemState.disabled === 'boolean'
+      ? itemState.disabled
+      : propsDisabled === true
+
     this.itemHasState = itemState.has || {}
 
     this.onfocusHandler = this.itemState.onFocus
@@ -77,10 +82,13 @@ export default class StateFormItem<P = StateForm, T = unknown>
   /** Chain-access to parent object (form). */
   get parent(): P { return this.parentDef }
   get props(): Record<string, unknown> {
+    const stateProps = this.itemState.props as Record<string, unknown> | undefined
+    const { disabled: _ignoredDisabled, ...propsWithoutDisabled } = stateProps || {}
+
     if (this.itemDisabled) {
-      return { ...(this.itemState.props || {}), disabled: true }
+      return { ...propsWithoutDisabled, disabled: true }
     }
-    return this.itemState.props || {}
+    return propsWithoutDisabled
   }
   configure(conf: unknown) { void conf }
   get type(): Required<IStateFormItem>['type'] { return this.itemState.type ?? 'bad_form_item' }
@@ -294,7 +302,10 @@ export default class StateFormItem<P = StateForm, T = unknown>
   set onKeyDown(handler: unknown) { this.onkeydownHandler = handler }
   /** Set the 'onBlur' attribute of the form item. */
   set onBlur(handler: unknown) { this.onblurHandler = handler }
-  set disabled(b: boolean) { this.itemDisabled = b }
+  set disabled(b: boolean) {
+    this.itemDisabled = b
+    this.itemState.disabled = b
+  }
 
   /**
    * Prevents the app from throwing an exception because of the missing `name`

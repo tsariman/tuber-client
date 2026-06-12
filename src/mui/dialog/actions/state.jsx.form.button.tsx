@@ -71,13 +71,13 @@ const ButtonContent = ({ instance: button }: IJsonButtonContentProps) => {
 } // END ButtonContent
 
 const StateJsxDialogAction = memo(({ instance: button }: IJsonButtonProps) => {
-  const onClick = button.clickReduxHandler
+  const handleClick = button.clickReduxHandler
 
   return (
     <Button
       {...button.props}
-      onClick={onClick(get_redux(button.props.href as string))}
-      disabled={button.disableOnAll}
+      onClick={handleClick(get_redux(button.props.href as string))}
+      disabled={button.disabled || button.disableOnAll}
     >
       <ButtonContent instance={button} />
     </Button>

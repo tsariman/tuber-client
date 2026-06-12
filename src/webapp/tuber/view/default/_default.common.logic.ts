@@ -63,7 +63,10 @@ export function get_endpoint_search(param?: string): string {
 }
 
 /**
- * Use to check if the user is authorized if they are not the owner of the bookmark
+ * Checks if the user is authorized or if they are not the owner of the bookmark
+ * @param net - The state network
+ * @param bookmark - The bookmark object
+ * @returns boolean
  */
 const user_is_authorized = (net: StateNet, bookmark: IBookmark): boolean => {
   const roleClearance = CLEARANCE_LEVEL[(net.role ?? 'guest') as TRole]
@@ -79,10 +82,11 @@ const user_is_authorized = (net: StateNet, bookmark: IBookmark): boolean => {
 }
 
 /**
- * Use to show or hide bookmark actions based on user authorization
- * @param net 
- * @param bookmark 
- * @returns 
+ * Determine if the bookmark action should be shown to the user based on
+ * ownership or authorization
+ * @param net - The state network
+ * @param bookmark - The bookmark object
+ * @returns boolean
  */
 export const show = (net: StateNet, bookmark: IBookmark) => {
   return net._id === bookmark?.user_id
@@ -104,18 +108,8 @@ export const has_voted = (data: StateData, bookmarkId?: string): 'down' | 'none'
   })
   .getByResourceAttribute<IBookmarkVote>(bookmarkId)
 
-  if (resource) {
-    const { attributes: { rating } } = resource
-    switch (rating) {
-      case undefined:
-      case null:
-      default:
-        break
-      case 1:
-        return 'up'
-      case -1:
-        return 'down'
-    }
-  }
+  const rating = resource?.attributes?.rating
+  if (rating === 1) { return 'up' }
+  if (rating === -1) { return 'down' }
   return 'none'
 }

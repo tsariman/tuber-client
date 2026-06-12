@@ -372,7 +372,12 @@ export function twitch_get_video_id(url: string): string {
     return ''
   }
 }
-
+/**
+ * Generate a video URL from a bookmark object. The bookmark must have either a
+ * url or sufficient information (e.g. videoid, platform) to construct the URL.
+ * @param bookmark 
+ * @returns 
+ */
 export function gen_video_url(bookmark: IBookmark): string {
   const { start_seconds: start, videoid, platform, slug } = bookmark
   let url = bookmark.url ?? ''

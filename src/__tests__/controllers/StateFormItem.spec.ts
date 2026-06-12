@@ -69,6 +69,30 @@ describe('StateFormItem', () => {
       expect(disabledItem.disabled).toBe(true)
     })
 
+    it('should fallback to props.disabled when state.disabled is not set', () => {
+      const stateWithDisabledInProps = {
+        ...basicFormItemState,
+        disabled: undefined,
+        props: { placeholder: 'Enter text', disabled: true }
+      }
+      const disabledItem = new StateFormItem(stateWithDisabledInProps, mockForm)
+
+      expect(disabledItem.disabled).toBe(true)
+      expect(disabledItem.props.disabled).toBe(true)
+    })
+
+    it('should prioritize state.disabled over props.disabled when both are provided', () => {
+      const stateWithConflictingDisabled = {
+        ...basicFormItemState,
+        disabled: false,
+        props: { placeholder: 'Enter text', disabled: true }
+      }
+      const item = new StateFormItem(stateWithConflictingDisabled, mockForm)
+
+      expect(item.disabled).toBe(false)
+      expect(item.props).toEqual({ placeholder: 'Enter text' })
+    })
+
     it('should initialize event handlers from itemState', () => {
       const onClickHandler = vi.fn()
       const onChangeHandler = vi.fn()
@@ -101,7 +125,7 @@ describe('StateFormItem', () => {
       const minimalState: IStateFormItem = {}
       const minimalItem = new StateFormItem(minimalState, mockForm)
       
-      expect(minimalItem.type).toBe('')
+      expect(minimalItem.type).toBe('bad_form_item')
       expect(minimalItem.id).toBe('')
       expect(minimalItem.name).toBe('')
       expect(minimalItem.value).toBe('')
@@ -449,6 +473,26 @@ describe('StateFormItem', () => {
       expect(formItem.disabled).toBe(false)
     })
 
+    it('should sync disabled setter to underlying state', () => {
+      formItem.disabled = true
+      expect(formItem.state.disabled).toBe(true)
+
+      formItem.disabled = false
+      expect(formItem.state.disabled).toBe(false)
+    })
+
+    it('should keep props disabled value aligned with runtime disabled state', () => {
+      const item = new StateFormItem({
+        ...basicFormItemState,
+        disabled: undefined,
+        props: { placeholder: 'Enter text', disabled: true }
+      }, mockForm)
+
+      expect(item.props.disabled).toBe(true)
+      item.disabled = false
+      expect(item.props).toEqual({ placeholder: 'Enter text' })
+    })
+
     it('should allow setting event handlers', () => {
       const newOnClick = vi.fn()
       const newOnChange = vi.fn()
@@ -553,11 +597,11 @@ describe('StateFormItem', () => {
           defaultValue: 'default-option',
           classes: { root: 'complex-select-root' },
           callback: dummy_redux_handler,
-          items: [
-            { value: 'opt1', label: 'Option 1' },
-            { value: 'opt2', label: 'Option 2' }
-          ]
         },
+        items: [
+          { name: 'option1', value: 'opt1', label: 'Option 1' },
+          { name: 'option2', value: 'opt2', label: 'Option 2' }
+        ],
         inputProps: {
           placeholder: 'Select an option',
           start: { text: 'Start' },

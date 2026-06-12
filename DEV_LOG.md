@@ -1,6 +1,15 @@
 
 # Development Changes Log
 
+## `202606121924` feat: Enhance StateFormItem and related components
+
+- Added tests for StateFormItem to ensure proper handling of disabled states.
+- Updated StateFormItem to prioritize state.disabled over props.disabled.
+- Improved StateFormItemSelect to align props with state.
+- Refactored StateJsxDialogAction to handle button disabled states correctly.
+- Enhanced bookmark components to use styled ListItemText for better styling.
+- Cleaned up CSS by removing unused font imports.
+
 ## `202604201304` [Feature] Update favicon and add SVG assets for branding
 - [Improvement] Enhance video URL parsing to support additional platforms and formats
 - [Refactor] Improve start time extraction logic for video URLs

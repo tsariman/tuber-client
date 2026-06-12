@@ -37,6 +37,7 @@ const PaperStyled = styled(Paper)(({ theme }) => ({
   textAlign: 'center',
   color: theme.palette.grey[600],
   boxShadow: 'none',
+  border: 'none',
 }))
 
 const Fader = styled('div')(() => ({

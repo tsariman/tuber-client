@@ -19,6 +19,7 @@ import {
   LAYOUT_XS
 } from '@tuber/shared'
 import Container from '@mui/material/Container'
+import Toolbar from '@mui/material/Toolbar'
 import { error_id } from 'src/business.logic/errors'
 import { ler } from 'src/business.logic/logging'
 
@@ -48,8 +49,9 @@ const LayoutCenteredCustomized = ({ children }: ILayoutProps) => (
   </LayoutCentered>
 )
 
-const LayoutDefault = ({ children }: ILayoutProps) => (
+const LayoutDefault = ({ instance: page, children }: ILayoutProps) => (
   <Container>
+    { page.hasAppbar ? <Toolbar /> : null }
     { children }
   </Container>
 )

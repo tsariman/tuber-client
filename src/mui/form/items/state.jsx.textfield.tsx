@@ -15,7 +15,6 @@ import type { ISliceFormsDataErrorsArgs } from '../../../slices/formsDataErrors.
 
 interface IJsonTextfieldProps { instance: StateFormItem }
 type TOnFocus = FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>
-// type TOnChange = (textfield: StateFormItem) => React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>
 type TOnBlur = (textfield: StateFormItem,
   e: IStateFormItemError
 ) => FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>

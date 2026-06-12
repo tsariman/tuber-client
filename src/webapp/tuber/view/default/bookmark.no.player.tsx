@@ -1,5 +1,6 @@
 import Grid from '@mui/material/Grid'
 import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
 import { styled } from '@mui/material/styles'
 import type { IBookmark } from '../../tuber.interfaces'
 import { gen_video_url, shorten_text } from '../../_tuber.common.logic'
@@ -51,9 +52,8 @@ const TitleWrapper = styled('div')(() => ({
   justifyContent: 'flex-start'
 }))
 
-const Title = styled('a')(({ theme }) => ({
+const ClickableTitle = styled('a')(({ theme }) => ({
   textDecoration: 'none',
-  fontSize: '1.13rem',
   color: theme.palette.primary.main,
   transition: 'all 0.2s ease-in-out',
   '&:hover': {
@@ -62,10 +62,17 @@ const Title = styled('a')(({ theme }) => ({
   }
 }))
 
-const TitleText = styled('span')(() => ({
-  fontSize: 20,
-  fontWeight: 400,
-  wordBreak: 'break-word'
+const Title = styled(ListItemText)(({ theme }) => ({
+  margin: 0,
+  '& .MuiListItemText-primary': {
+    fontFamily: theme.typography.fontFamily,
+    fontSize: '1rem',
+    lineHeight: 1.2,
+    letterSpacing: '-0.01em',
+    color: theme.palette.primary.main,
+    wordBreak: 'break-word',
+    fontWeight: 'bold',
+  }
 }))
 
 const PlatformIconWrapper = styled('div')(() => ({
@@ -129,9 +136,9 @@ const BookmarkNoPlayer = React.memo<IBookmarkProps>(({
             <PlatformIconWrapper>
               <PlatformIcon platform={bookmark.platform} />
             </PlatformIconWrapper>
-            <Title href='#' onClick={handleBookmarkClick}>
-              <TitleText>{bookmark.title}</TitleText>
-            </Title>
+            <ClickableTitle href='#' onClick={handleBookmarkClick}>
+              <Title primary={bookmark.title} />
+            </ClickableTitle>
           </TitleWrapper>
         </Grid>
         {bookmark.note ? (

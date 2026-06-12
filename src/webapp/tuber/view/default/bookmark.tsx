@@ -59,14 +59,25 @@ const TitleWrapper = styled('div')(() => ({
   position: 'relative',
 }))
 
-const Title = styled('a')(({ theme }) => ({
+const ClickableTitle = styled('a')(({ theme }) => ({
   textDecoration: 'none',
-  fontSize: '1.13rem',
   color: theme.palette.primary.main,
   transition: 'all 0.2s ease-in-out',
   '&:hover': {
     textDecoration: 'underline',
     cursor: 'pointer'
+  }
+}))
+
+const Title = styled(ListItemText)(({ theme }) => ({
+  margin: 0,
+  '& .MuiListItemText-primary': {
+    fontFamily: theme.typography.fontFamily,
+    fontSize: '1rem',
+    lineHeight: 1.2,
+    letterSpacing: '-0.01em',
+    color: theme.palette.primary.main,
+    fontWeight: 'bold',
   }
 }))
 
@@ -167,9 +178,9 @@ const Bookmark = React.memo<IBookmarkProps>(({ children: bookmark, index: i, han
             <PlatformIconWrapper>
               <PlatformIcon platform={bookmark.platform} />
             </PlatformIconWrapper>
-            <Title href='#' onClick={handleBookmarkClick}>
-              <ListItemText primary={bookmark.title} />
-            </Title>
+            <ClickableTitle href='#' onClick={handleBookmarkClick}>
+              <Title primary={bookmark.title} />
+            </ClickableTitle>
           </TitleWrapper>
         </Grid>
         {bookmark.note ? (
