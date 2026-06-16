@@ -11,7 +11,7 @@ import {
 } from 'src/business.logic/parsing'
 import Config from 'src/config'
 import { EP_AUTH, type IStateDialog, type TThemeMode } from '@tuber/shared'
-import { BOOTSTRAP_ATTEMPTS, THEME_DEFAULT_MODE, THEME_MODE } from '@tuber/shared'
+import { BOOTSTRAP_ATTEMPTS, THEME_MODE } from '@tuber/shared'
 import { state_reset } from 'src/state/actions'
 import { ler, pre } from 'src/business.logic/logging'
 import { JsonapiRequest } from 'src/business.logic'
@@ -104,8 +104,8 @@ export default function form_submit_sign_in(redux: IRedux) {
       return
     }
     const formData = policy.getFilteredData()
-    const themeMode = Config.read<TThemeMode>(THEME_MODE, THEME_DEFAULT_MODE)
-      || THEME_DEFAULT_MODE
+    const themeMode = Config.read<TThemeMode>(THEME_MODE, Config.DEFAULT_THEME_MODE)
+      || Config.DEFAULT_THEME_MODE
     dispatch(post_req_state(
       endpoint,
       new JsonapiRequest(EP_AUTH.IN, { // signin

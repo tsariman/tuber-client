@@ -5,7 +5,7 @@ import type {
   SxProps,
   TypographyProps
 } from '@mui/material'
-import type { TObj } from '@tuber/shared'
+import type { TO } from '@tuber/shared'
 import type { IStateAppbar } from '../../interfaces/localized'
 import type State from '../State'
 import StateAppbar from '../StateAppbar'
@@ -25,7 +25,7 @@ export default class StateAppbarDefault
   get toolbarProps(): Required<IStateAppbar>['toolbarProps'] {
     return this.appbarState.toolbarProps || {}
   }
-  get logoProps(): TObj { return this.appbarState.logoProps ?? {} }
+  get logoProps(): TO { return this.appbarState.logoProps ?? {} }
   get menuIconProps(): IconButtonProps {
     return {
       size: 'large',
@@ -118,7 +118,8 @@ export default class StateAppbarDefault
       component: 'div',
       sx: {
         display: { xs: 'none', sm: 'block' },
-        color: this.typography.color
+        color: this.typography.color,
+        fontFamily: "'Oswald', 'IBM Plex Sans', sans-serif"
       },
       ...this.appbarState.textLogoProps
     }

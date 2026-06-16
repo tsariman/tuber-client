@@ -15,7 +15,6 @@ import {
   ALLOWED_ATTEMPTS,
   BOOTSTRAP_ATTEMPTS,
   EP_AUTH,
-  THEME_DEFAULT_MODE,
   THEME_MODE,
   type TThemeMode
 } from '@tuber/shared'
@@ -82,7 +81,7 @@ export default function App() {
 
   // Bootstrap the app from server
   useEffect(() => {
-    const persistedThemeMode = get_cookie<TThemeMode>(THEME_MODE) || THEME_DEFAULT_MODE
+    const persistedThemeMode = get_cookie<TThemeMode>(THEME_MODE) || Config.DEFAULT_THEME_MODE
     Config.write(THEME_MODE, persistedThemeMode)
     document.cookie = `${THEME_MODE}=${persistedThemeMode}; path=/; max-age=31536000; SameSite=Lax`
 

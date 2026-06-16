@@ -9,7 +9,6 @@ import {
   APP_REQUEST_FAILED,
   APP_REQUEST_SUCCESS,
   type IJsonapiResponseResource,
-  THEME_DEFAULT_MODE,
   THEME_MODE,
   type TThemeMode
 } from '@tuber/shared'
@@ -41,7 +40,7 @@ export default function FormContent ({ instance, formName, type }: IFormContent)
   const formsDataState = useSelector((state: RootState) => state.formsData)
   const dataState = useSelector((state: RootState) => state.data)
   const pathnamesState = useSelector((state: RootState) => state.pathnames)
-  const themeMode = Config.read<TThemeMode>(THEME_MODE, THEME_DEFAULT_MODE)
+  const themeMode = Config.read<TThemeMode>(THEME_MODE, Config.DEFAULT_THEME_MODE)
   const fetchingStateAllowed = useMemo(
     () => new StateApp(appState).fetchingStateAllowed,
     [appState]

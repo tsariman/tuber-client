@@ -27,7 +27,6 @@ import Config from '../config'
 import { net_patch_state } from './actions'
 import { ler, pre } from '../business.logic/logging'
 import {
-  THEME_DEFAULT_MODE,
   THEME_MODE,
   type IJsonapiBaseResponse,
   type IJsonapiError,
@@ -116,7 +115,7 @@ export async function get_dialog_state <T=unknown>(
     error_id(35).report_missing_dialog_key(registryKey) // error 35
     return null
   }
-  const themeMode = Config.read<TThemeMode>(THEME_MODE, THEME_DEFAULT_MODE)
+  const themeMode = Config.read<TThemeMode>(THEME_MODE, Config.DEFAULT_THEME_MODE)
   const dialogActiveState = rootState.dialogs[dialogKey]
   const dialogLightState = rootState.dialogsLight[dialogKey]
   const dialogDarkState = rootState.dialogsDark[dialogKey]

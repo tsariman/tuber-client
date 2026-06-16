@@ -2,6 +2,7 @@ import { get_head_meta_content, get_cookie } from '../business.logic/parsing'
 import { orange } from '@mui/material/colors'
 import type { IState } from '../interfaces/localized'
 import type { TThemeMode } from '@tuber/shared'
+import Config from '../config'
 
 /**
  * Get global variable value.
@@ -38,7 +39,10 @@ export const DEFAULT_BACKGROUND_LIGHT = '#f4f6f8'
 /** Get default background color based on theme mode */
 const _default_background_color = () => {
   const theme = get_cookie<TThemeMode>('theme_mode')
-  const backgroundColor = theme === 'light' ? DEFAULT_BACKGROUND_LIGHT : DEFAULT_BACKGROUND_DARK
+  const resolvedTheme = theme || Config.DEFAULT_THEME_MODE
+  const backgroundColor = resolvedTheme === 'light'
+    ? DEFAULT_BACKGROUND_LIGHT
+    : DEFAULT_BACKGROUND_DARK
   return backgroundColor
 }
 

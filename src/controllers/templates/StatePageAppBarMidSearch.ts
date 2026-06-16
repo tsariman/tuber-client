@@ -13,9 +13,9 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
   protected startAdornmentButtonDef?: StateLink<this>
   protected searchFieldIconButtonDef?: StateLink<this>
   protected inputChipsDefs?: StateFormItemCustomChip[]
-  protected _chip?: StateAppbarInputChip
-  protected _route?: string
-  protected _template?: string
+  protected chip?: StateAppbarInputChip
+  protected route?: string
+  protected template?: string
   private _searchModeIcon?: string
   private _searchModePlaceholder?: string
 
@@ -25,11 +25,11 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
     this.appDef = app
     this.allPagesDef = allPages
     if (chips) {
-      this._chip = new StateAppbarInputChip(chips)
-      this._chip.configure({ route, template })
+      this.chip = new StateAppbarInputChip(chips)
+      this.chip.configure({ route, template })
     }
-    this._route = route
-    this._template = template
+    this.route = route
+    this.template = template
     this._searchModeIcon = opts.searchModeIcon
     this._searchModePlaceholder = opts.searchModePlaceholder
   }
@@ -121,9 +121,7 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
       'placeholder': this._searchModePlaceholder ?? 'Search…',
       'sx': {
         ...this.appbarState.inputBaseProps?.sx,
-        ...(this.inputHasNoChips ? {
-          // 'paddingLeft': (theme) => `calc(1em + ${theme.spacing(4)})`
-        } : {
+        ...(this.inputHasNoChips ? {} : {
           'paddingLeft': .5,
         }),
       },
@@ -178,13 +176,13 @@ export default class StatePageAppbarMidSearch extends StatePageAppbar {
    */
   get chips() {
     if (this.inputChipsDefs) { return this.inputChipsDefs }
-    if (!this._route || !this._template || !this._chip) {
+    if (!this.route || !this.template || !this.chip) {
       return this.ler(
         'call StatePageAppbarMidSearch.configure() first.',
         this.inputChips
       )
     }
-    this.inputChipsDefs = [ ...this._chip.alwaysGet() ]
+    this.inputChipsDefs = [ ...this.chip.alwaysGet() ]
     for (const ic of this.appbarState.inputBaseChips ?? []) {
       this.inputChipsDefs.push(
         new StateFormItemCustomChip<this>(ic, this)

@@ -473,9 +473,9 @@ describe('StateFormItem', () => {
       expect(formItem.disabled).toBe(false)
     })
 
-    it('should sync disabled setter to underlying state', () => {
+    it('should not mutate underlying state when setting runtime disabled', () => {
       formItem.disabled = true
-      expect(formItem.state.disabled).toBe(true)
+      expect(formItem.state.disabled).toBe(false)
 
       formItem.disabled = false
       expect(formItem.state.disabled).toBe(false)

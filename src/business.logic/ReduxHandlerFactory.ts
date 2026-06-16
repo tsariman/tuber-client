@@ -25,7 +25,6 @@ import {
   type IHandlerDirective,
   type IJsonapiError,
   type IJsonapiResponseResource,
-  THEME_DEFAULT_MODE,
   THEME_MODE
 } from '@tuber/shared'
 import StateNet from '../controllers/StateNet'
@@ -49,7 +48,7 @@ export default class ReduxHandlerFactory {
 
   constructor (directive: IHandlerDirective) {
     this._directive = directive
-    this._themeMode = Config.read<TThemeMode>(THEME_MODE, THEME_DEFAULT_MODE)
+    this._themeMode = Config.read<TThemeMode>(THEME_MODE, Config.DEFAULT_THEME_MODE)
     pre(this._errorPrefix)
   }
 

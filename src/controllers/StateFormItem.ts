@@ -304,7 +304,6 @@ export default class StateFormItem<P = StateForm, T = unknown>
   set onBlur(handler: unknown) { this.onblurHandler = handler }
   set disabled(b: boolean) {
     this.itemDisabled = b
-    this.itemState.disabled = b
   }
 
   /**

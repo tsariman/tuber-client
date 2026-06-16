@@ -1,9 +1,10 @@
 import type { TThemeMode, IConfiguration } from '@tuber/shared'
 import get_config from './business.logic/Configuration'
+import { get_default_theme_mode } from './business.logic/theme'
 
 const initConfObj = {
   /** App default theme mode. */
-  DEFAULT_THEME_MODE: 'dark' as TThemeMode,
+  DEFAULT_THEME_MODE: get_default_theme_mode() as TThemeMode,
   /** Indicates whether the app is in debug mode or not. */
   DEBUG: false,
   /** Indicates whether the app is in development mode or not. */

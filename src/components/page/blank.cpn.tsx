@@ -6,7 +6,6 @@ import type { AppDispatch, RootState } from '../../state'
 import Config from '../../config'
 import {
   ALLOWED_ATTEMPTS,
-  THEME_DEFAULT_MODE,
   THEME_MODE,
   type TThemeMode
 } from '@tuber/shared'
@@ -33,7 +32,7 @@ export default function PageBlank ({ instance: page }:{ instance: StatePage }) {
   useEffect(() => {
     if (!key) { return }
     if (!fetchingStateAllowed) { return }
-    const themeMode = Config.read<TThemeMode>(THEME_MODE, THEME_DEFAULT_MODE)
+    const themeMode = Config.read<TThemeMode>(THEME_MODE, Config.DEFAULT_THEME_MODE)
     const pageLoadAttempts = Config.read<number>(`${key}_load_attempts`, 0)
     if (pageLoadAttempts < ALLOWED_ATTEMPTS) {
       register_load_attempts_key(`${key}_load_attempts`)
