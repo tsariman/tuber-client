@@ -6,9 +6,11 @@ import type { TPlatform } from './tuber.interfaces'
 /** Setting for thumbnail load attempts total. */
 export const THUMB_LOAD_ATTEMPTS_CONF = 'thumbnail_Load_attempts_'
 
+/** @deprecated Use EP_BOOKMARKS from @tuber/shared instead */
 export const ENDPOINT = 'bookmarks'
 export const PLAYER_OPEN = 'playerOpen'
 export const SET_TO_PLAY = 'bookmarkToPlay'
+export const PLAYING_BOOKMARK_PAGE = 'playingBookmarkPage'
 export const SHOW_THUMBNAIL = 'showThumbnail'
 export const GREATER_THAN_MID = 'greaterThanMid'
 

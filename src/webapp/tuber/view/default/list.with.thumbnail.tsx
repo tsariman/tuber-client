@@ -14,6 +14,7 @@ import { StateDataPagesRange } from 'src/controllers'
 import BookmarkWithThumbnail from './bookmark.with.thumbnail'
 import { EP_BOOKMARKS } from '@tuber/shared'
 import { useBookmarkListScrollRestore } from './list.scroll.restore'
+import JsonapiPaginationLinks from 'src/business.logic/JsonapiPaginationLinks'
 
 const BookmarkListWrapper = styled('div')(({ theme }) => ({
   height: 'calc(100vh - 128px)',
@@ -53,6 +54,7 @@ export default function BookmarkListThumbnailed() {
   // Memoize state selectors
   const dataState = useSelector((state: RootState) => state.data)
   const dataPagesRange = useSelector((state: RootState) => state.dataPagesRange)
+  const bookmarksLinks = useSelector((state: RootState) => state.topLevelLinks.bookmarks)
   const data = useMemo(() => new StateData(dataState), [dataState])
 
   // Track page range for scroll position adjustment
@@ -67,6 +69,11 @@ export default function BookmarkListThumbnailed() {
   }, [dataPagesRange])
 
   const prevFirstPageRef = useRef(pageRangeInfo.firstPage)
+  const pageSize = useMemo(() => {
+    const links = new JsonapiPaginationLinks(bookmarksLinks)
+    const size = links.pageSize
+    return Number.isInteger(size) && size > 0 ? size : 25
+  }, [bookmarksLinks])
 
   // Adjust scroll position when earliest page is removed
   useEffect(() => {
@@ -142,6 +149,9 @@ export default function BookmarkListThumbnailed() {
           if (!bookmark) {
             return null
           }
+          const sourcePage = pageRangeInfo.firstPage > 0
+            ? pageRangeInfo.firstPage + Math.floor(virtualItem.index / pageSize)
+            : undefined
           return (
             <VirtualItem
               key={virtualItem.key}
@@ -153,6 +163,7 @@ export default function BookmarkListThumbnailed() {
             >
               <BookmarkWithThumbnail
                 index={virtualItem.index}
+                sourcePage={sourcePage}
               >
                 {bookmark}
               </BookmarkWithThumbnail>

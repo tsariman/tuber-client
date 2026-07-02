@@ -11,7 +11,7 @@ const EMPTY_PAGES_RANGE: ILoadedPagesRange = {
 
 /** Wrapper (controller) class for the `dataPagesRange` state. */
 export default class StateDataPagesRange extends AbstractState {
-  private _pagesRangeState: IStateDataPagesRange
+  private _state: IStateDataPagesRange
   private _parent?: State
   private _maxLoadedPages?: number
   private _endpoint?: string
@@ -21,11 +21,11 @@ export default class StateDataPagesRange extends AbstractState {
 
   constructor(pagesRangeState: IStateDataPagesRange, parent?: State) {
     super()
-    this._pagesRangeState = pagesRangeState
+    this._state = pagesRangeState
     this._parent = parent
   }
 
-  get state(): unknown { return this._pagesRangeState }
+  get state(): IStateDataPagesRange { return this._state }
   get parent(): State { return this._parent ?? (this._parent = new State(get_state())) }
   get props(): unknown { return this.die('Method not implemented.', {}) }
 
@@ -36,6 +36,45 @@ export default class StateDataPagesRange extends AbstractState {
     this._endpoint = endpoint
     this._pageSize = pageSize
     return this
+  }
+
+  private _resetTransientState(): void {
+    this._pageToBeDropped = undefined
+    this._newPageRange = undefined
+  }
+
+  private _parsePageNumber(value: string | undefined, field: 'first' | 'last'): number | false {
+    const page = Number.parseInt(value ?? '', 10)
+    if (Number.isNaN(page) || page < 0) {
+      return this.notice(
+        `StateDataPagesRange: invalid ${field} page value \`${value ?? 'undefined'}\`. Falling back to 0.`,
+        false
+      )
+    }
+    return page
+  }
+
+  private _getNormalizedPageRange(): { firstPage: number, lastPage: number } {
+    const { first, last } = this._getPageRange()
+    const firstPage = this._parsePageNumber(first, 'first')
+    const lastPage = this._parsePageNumber(last, 'last')
+
+    if (firstPage === false || lastPage === false) {
+      return { firstPage: 0, lastPage: 0 }
+    }
+
+    if (firstPage === 0 && lastPage === 0) {
+      return { firstPage, lastPage }
+    }
+
+    if (firstPage > lastPage) {
+      return this.notice(
+        `StateDataPagesRange: invalid page range \`${first}-${last}\`. Falling back to empty range.`,
+        { firstPage: 0, lastPage: 0 }
+      )
+    }
+
+    return { firstPage, lastPage }
   }
 
   private _getPageSize(): number {
@@ -74,18 +113,21 @@ export default class StateDataPagesRange extends AbstractState {
         EMPTY_PAGES_RANGE
       )
     }
-    if (!this._pagesRangeState[this._endpoint]) {
+    if (!this._state[this._endpoint]) {
       return this.notice(
         'StateDataPagesRange: endpoint not found.',
         EMPTY_PAGES_RANGE
       )
     }
-    return this._pagesRangeState[this._endpoint] || EMPTY_PAGES_RANGE
+    return this._state[this._endpoint] || EMPTY_PAGES_RANGE
   }
 
   private _getLoadedPageTotal(): number | false {
-    const { first, last } = this._getPageRange()
-    return parseInt(last) - parseInt(first) + 1
+    const { firstPage, lastPage } = this._getNormalizedPageRange()
+    if (firstPage === 0 && lastPage === 0) {
+      return false
+    }
+    return lastPage - firstPage + 1
   }
 
   getLoadedPageTotal(): number | false {
@@ -93,11 +135,11 @@ export default class StateDataPagesRange extends AbstractState {
   }
 
   get firstPage(): number {
-    return parseInt(this._getPageRange().first)
+    return this._getNormalizedPageRange().firstPage
   }
 
   get lastPage(): number {
-    return parseInt(this._getPageRange().last)
+    return this._getNormalizedPageRange().lastPage
   }
 
   /**
@@ -107,9 +149,17 @@ export default class StateDataPagesRange extends AbstractState {
    * and last page.
    */
   pageToBeLoaded(page: number): this {
-    const { first, last } = this._getPageRange()
-    const firstPage = parseInt(first)
-    const lastPage = parseInt(last)
+    this._resetTransientState()
+
+    if (!Number.isInteger(page) || page < 1) {
+      this.notice(
+        `StateDataPagesRange: invalid page argument \`${page}\`.`,
+        undefined
+      )
+      return this
+    }
+
+    const { firstPage, lastPage } = this._getNormalizedPageRange()
 
     // If no page range was found (empty state)
     if (firstPage === 0 && lastPage === 0) {
@@ -187,9 +237,12 @@ export default class StateDataPagesRange extends AbstractState {
 
   /** Check if page is within range (returns false for empty range) */
   isPageInRange(page: number): boolean {
-    const { first, last } = this._getPageRange()
-    const firstPage = parseInt(first)
-    const lastPage = parseInt(last)
+    if (!Number.isInteger(page) || page < 1) {
+      return false
+    }
+
+    const { firstPage, lastPage } = this._getNormalizedPageRange()
+
     // Empty range (0,0) means no pages loaded yet
     if (firstPage === 0 && lastPage === 0) {
       return false

@@ -1,6 +1,16 @@
 
 # Development Changes Log
 
+## `202607021740` feat: Implement query-string synchronization for bookmarks and enhance state management
+
+- Added debounced URL syncing for shareable state in App component.
+- Introduced build_bookmarks_query_sync_path function for constructing bookmark query strings.
+- Created tests for query-string synchronization and bookmark state management.
+- Enhanced StateDataPagesRange to normalize page ranges and handle invalid inputs.
+- Updated StatePagesData to manage page state properties more effectively.
+- Refactored bookmark components to include sourcePage for tracking.
+- Improved pagination handling in list components with JsonapiPaginationLinks.
+
 ## `202606121924` feat: Enhance StateFormItem and related components
 
 - Added tests for StateFormItem to ensure proper handling of disabled states.

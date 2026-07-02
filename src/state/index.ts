@@ -44,7 +44,9 @@ import {
   STATE_RESET,
   type IJsonapiStateResponse,
   type TEventHandler,
-  type TO
+  type TO,
+  EP_BOOKMARKS,
+  type IJsonapiResponseResource
 } from '@tuber/shared'
 import type { IState, TNetState } from '../interfaces/localized'
 import Config from '../config'
@@ -350,14 +352,40 @@ export const bootstrap_app = (endpoint: string) => {
       dispatch({ type: 'app/appRequestStart' })
       const { app } = getState()
       const origin = get_origin_ending_cleaned(app.origin)
-      const url = `${origin}/${endpoint}`
+      const qs = window.location.search || ''
+      const url = `${origin}/${endpoint}${qs}`
       const response = await fetch(url, {
         method: 'post',
         credentials: 'include'
       })
       if (response.ok) {
-        const { state } = await response.json() as IJsonapiStateResponse
+        const { state, data, included } = await response.json() as IJsonapiStateResponse
         dispatch({ type: 'app/appRequestEnd' })
+        
+        // Store data (bookmarks collection) if present
+        if (data && Array.isArray(data)) {
+          dispatch(dataActions.dataStoreCol({
+            endpoint: EP_BOOKMARKS,
+            collection: data as IJsonapiResponseResource[]
+          }))
+        }
+        
+        // Accumulate included resources (votes) by type
+        if (Array.isArray(included)) {
+          const collectionsByType = included.reduce<Record<string, typeof included>>((acc, resource) => {
+            const collectionName = resource.type || 'unknown'
+            acc[collectionName] ??= []
+            acc[collectionName].push(resource)
+            return acc
+          }, {})
+          for (const [identifier, collection] of Object.entries(collectionsByType)) {
+            dispatch(includedActions.includedAccumulateByAppending({
+              identifier,
+              collection
+            }))
+          }
+        }
+        
         dispatch({ type: NET_STATE_PATCH, payload: state })
       } else {
         dispatch({ type: 'app/appRequestFailed' })

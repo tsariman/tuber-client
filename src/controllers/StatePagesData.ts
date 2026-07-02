@@ -3,7 +3,7 @@ import AbstractState from './AbstractState'
 import type State from './State'
 import type { IStatePagesDataConfig } from '../interfaces/IControllerConfiguration'
 
-/** Wrapper (controller) class for a page state data property */
+/** Wrapper (controller) class for page state data properties */
 export default class StatePagesData extends AbstractState {
   private _endpoint?: string
   private _state: TO

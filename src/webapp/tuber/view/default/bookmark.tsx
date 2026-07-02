@@ -7,6 +7,7 @@ import React, { Fragment, useCallback, useMemo } from 'react'
 import {
   ENDPOINT,
   PLAYER_OPEN,
+  PLAYING_BOOKMARK_PAGE,
   SET_TO_PLAY,
   SHORTENED_NOTE_MAX_LENGTH
 } from '../../tuber.config'
@@ -32,6 +33,7 @@ interface IBookmarkProps {
     => void
   index: number
   isExpanded: boolean
+  sourcePage?: number
 }
 
 const StyledListItem = styled(ListItem)(() => ({
@@ -106,7 +108,7 @@ const ExpandNoteIconWrapper = styled('a')<{ expanded: boolean }>(({ theme, expan
 const ExpandNoteIcon = React.memo(() => <StateJsxIcon name='play_arrow_outline' />)
 
 // Optimized Bookmark component with React.memo for performance
-const Bookmark = React.memo<IBookmarkProps>(({ children: bookmark, index: i, handleExpandDetailIconOnClick, isExpanded }) => {
+const Bookmark = React.memo<IBookmarkProps>(({ children: bookmark, index: i, handleExpandDetailIconOnClick, isExpanded, sourcePage }) => {
   const dispatch = useDispatch<AppDispatch>()
   const pagesDataState = useSelector((state: RootState) => state.pagesData)
   const reduxStore = useMemo(
@@ -145,6 +147,13 @@ const Bookmark = React.memo<IBookmarkProps>(({ children: bookmark, index: i, han
         key: SET_TO_PLAY,
         value: bookmark
       }))
+      if (typeof sourcePage === 'number' && Number.isInteger(sourcePage) && sourcePage > 0) {
+        dispatch(pagesDataAdd({
+          route: ENDPOINT,
+          key: PLAYING_BOOKMARK_PAGE,
+          value: sourcePage
+        }))
+      }
       dispatch(pagesDataAdd({
         route: ENDPOINT,
         key: PLAYER_OPEN,
@@ -154,7 +163,7 @@ const Bookmark = React.memo<IBookmarkProps>(({ children: bookmark, index: i, han
       const url = bookmark.url || gen_video_url(bookmark)
       window.open(url, '_blank')?.focus()
     }
-  }, [bookmark, dispatch, playerOpen])
+  }, [bookmark, dispatch, playerOpen, sourcePage])
 
   const handleExpandClick = useCallback((e: React.MouseEvent) => {
     handleExpandDetailIconOnClick(i)(e)

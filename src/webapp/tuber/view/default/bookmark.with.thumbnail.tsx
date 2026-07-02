@@ -17,12 +17,13 @@ import PlatformIcon from './platform.icon'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from 'src/state'
 import StatePagesData from 'src/controllers/StatePagesData'
-import { ENDPOINT, PLAYER_OPEN, SET_TO_PLAY } from '../../tuber.config'
+import { ENDPOINT, PLAYER_OPEN, PLAYING_BOOKMARK_PAGE, SET_TO_PLAY } from '../../tuber.config'
 import { pagesDataAdd } from 'src/slices/pagesData.slice'
 
 interface IBookmarkProps {
   children: IBookmark
   index: number
+  sourcePage?: number
 }
 
 const StyledListItem = styled(ListItem)(() => ({
@@ -86,7 +87,8 @@ const PlatformIconWrapper = styled('div')(() => ({
 // Optimized BookmarkWithThumbnail component with React.memo for performance
 const BookmarkWithThumbnail = React.memo<IBookmarkProps>(({ 
   children: bookmark, 
-  index: i
+  index: i,
+  sourcePage
 }) => {
   const dispatch = useDispatch<AppDispatch>()
   const pagesDataState = useSelector((state: RootState) => state.pagesData)
@@ -129,6 +131,13 @@ const BookmarkWithThumbnail = React.memo<IBookmarkProps>(({
         key: SET_TO_PLAY,
         value: bookmark
       }))
+      if (typeof sourcePage === 'number' && Number.isInteger(sourcePage) && sourcePage > 0) {
+        dispatch(pagesDataAdd({
+          route: ENDPOINT,
+          key: PLAYING_BOOKMARK_PAGE,
+          value: sourcePage
+        }))
+      }
       dispatch(pagesDataAdd({
         route: ENDPOINT,
         key: PLAYER_OPEN,
@@ -138,7 +147,7 @@ const BookmarkWithThumbnail = React.memo<IBookmarkProps>(({
       const url = bookmark.url || gen_video_url(bookmark)
       window.open(url, '_blank')?.focus()
     }
-  }, [bookmark, dispatch, playerOpen])
+  }, [bookmark, dispatch, playerOpen, sourcePage])
 
   return (
     <StyledListItem
