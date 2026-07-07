@@ -4,7 +4,7 @@ import StateDataPagesRange from '../../controllers/StateDataPagesRange'
 describe('StateDataPagesRange', () => {
   describe('constructor', () => {
     it('should create a state data pages range object', () => {
-      expect((new StateDataPagesRange({}) as any)._pagesRangeState).toEqual({})
+      expect(new StateDataPagesRange({}).state).toEqual({})
     })
   })
 

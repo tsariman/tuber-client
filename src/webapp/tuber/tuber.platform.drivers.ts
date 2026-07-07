@@ -16,6 +16,14 @@
  * to a moment in a video
  * so that users can quickly return to the point of interest without having to 
  * manually search for it.
+ * 
+ * Note: The following error codes are now vacant because the start time is no longer required for the respective platforms:
+ * error 1054 is now vacant because the start time is no longer required for YouTube videos.
+ * error 1056 is now vacant because the start time is no longer required for Rumble videos.
+ * error 1058 is now vacant because the start time is no longer required for Vimeo videos.
+ * error 1061 is now vacant because the start time is no longer required for Dailymotion videos.
+ * error 1064 is now vacant because the start time is no longer required for Twitch videos.
+ * error 1065 is now vacant because the start time is no longer required for Odysee videos.
  */
 
 import { error_id } from '../../business.logic/errors'
@@ -169,23 +177,7 @@ function $extract_data_from_youTube_url(url: string): IVideoData {
   const startStr = parsedUrl.searchParams.get('t')
     ?? parsedUrl.searchParams.get('start')
     ?? youtube_get_start_time(url)
-
-  if (!startStr) {
-    error_id(1054).remember_error({
-      code: 'MISSING_DATA',
-      title: 'youtube_get_video_start_time failed',
-      detail: `The "youtube_get_video_start_time" function failed to retieve`
-        + ` the video start time from the video URL.`,
-      source: { pointer: url }
-    }) // error 1054
-    return {
-      ...DATA_SKELETON,
-      urlCheck: {
-        message: NO_START_MSG,
-        valid: false
-      }
-    }
-  }
+    ?? '0'
 
   const start = get_start_time_in_seconds(startStr)
   if (!$is_valid_start(start)) {
@@ -230,25 +222,10 @@ function $extract_data_from_rumble_url(url: string): IVideoData {
     return DATA_SKELETON
   }
   const start = rumble_get_start_time(url)
-  if (!$is_valid_start(start)) {
-    error_id(1056).remember_error({
-      code: 'MISSING_DATA',
-      title: 'rumble_get_start_time failed',
-      detail: 'The "rumble_get_start_time" function failed to extract the video '
-        + 'start time from the URL.',
-      source: { pointer: url }
-    }) // error 1056
-    return {
-      ...DATA_SKELETON,
-      urlCheck: {
-        message: NO_START_MSG,
-        valid: false
-      }
-    }
-  }
+  const normalizedStart = $is_valid_start(start) ? start : 0
   const data: IVideoData = {
     ...DATA_SKELETON,
-    start,
+    start: normalizedStart,
     platform: 'rumble',
     slug,
     urlCheck: {
@@ -273,27 +250,12 @@ function $extract_data_from_vimeo_url(url: string): IVideoData {
     return DATA_SKELETON
   }
   const start = vimeo_get_start_time(url)
-  if (!$is_valid_start(start)) {
-    error_id(1058).remember_error({
-      code: 'MISSING_DATA',
-      title: 'vimeo_get_start_time failed',
-      detail: 'The "vimeo_get_start_time" function failed to extract the video '
-        + 'start time from the URL.',
-      source: { pointer: url }
-    }) // 1058
-    return {
-      ...DATA_SKELETON,
-      urlCheck: {
-        message: NO_START_MSG,
-        valid: false
-      }
-    }
-  }
+  const normalizedStart = $is_valid_start(start) ? start : 0
   const data: IVideoData = {
     ...DATA_SKELETON,
     platform: 'vimeo',
     id,
-    start,
+    start: normalizedStart,
     urlCheck: {
       message: 'OK',
       valid: true
@@ -349,21 +311,7 @@ function $extract_data_from_dailymotion_url(url: string): IVideoData {
 /** Example URL: https://odysee.com/@GameolioDan:6/diablo-4-playthrough-part-30-entombed:1?t=368 */
 function $extract_data_from_odysee_url(url: string): IVideoData {
   const { author, id , start } = odysee_get_url_data(url)
-  if (start === undefined || Number.isNaN(start)) {
-    error_id(1061).remember_error({
-      code: 'MISSING_DATA',
-      title: '[function] odysee_get_url_data() failed',
-      detail: 'Failed to extract the video start time from the URL.',
-      source: { pointer: url }
-    }) // error 1061
-    return {
-      ...DATA_SKELETON,
-      urlCheck: {
-        message: NO_START_MSG,
-        valid: false
-      }
-    }
-  }
+  const normalizedStart = $is_valid_start(start) ? start : 0
   if (!author || !id) {
     error_id(1062).remember_error({
       code: 'MISSING_DATA',
@@ -376,7 +324,7 @@ function $extract_data_from_odysee_url(url: string): IVideoData {
   const slug = `${author}/${id}`
   const data: IVideoData = {
     ...DATA_SKELETON,
-    start,
+    start: normalizedStart,
     platform: 'odysee',
     slug,
     urlCheck: {
@@ -400,21 +348,12 @@ function $extract_data_from_twitch_url(url: string): IVideoData {
     return DATA_SKELETON
   }
   const start = twitch_get_start_time(url)
-  if (!$is_valid_start(start)) {
-    error_id(1064).remember_error({
-      code: 'MISSING_DATA',
-      title: 'twitch_get_start_time failed',
-      detail: 'The "twitch_get_start_time" function failed to extract the video '
-        + 'start time from the URL.',
-      source: { pointer: url }
-    }) // error 1064
-    return DATA_SKELETON
-  }
+  const normalizedStart = $is_valid_start(start) ? start : 0
   const data: IVideoData = {
     ...DATA_SKELETON,
     id,
     platform: 'twitch',
-    start,
+    start: normalizedStart,
     urlCheck: {
       message: 'OK',
       valid: true

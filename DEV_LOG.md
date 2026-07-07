@@ -1,6 +1,16 @@
 
 # Development Changes Log
 
+## `202607071425` feat: Implement playing bookmark visibility and auto-scrolling
+
+- Added design documentation for playing bookmark visibility.
+- Updated `JsonapiPaginationLinks` to handle encoded bracket query parameters.
+- Enhanced `StateDataPagesRange` to remove unnecessary parent state.
+- Improved video URL parsing to accept platforms without start times, defaulting to zero.
+- Introduced fallback loading mechanism in `InfiniteScrollTrigger` for better user experience.
+- Implemented scroll restoration for playing bookmarks during bootstrap phase.
+- Updated bookmark list components to support new scroll restoration logic.
+
 ## `202607021740` feat: Implement query-string synchronization for bookmarks and enhance state management
 
 - Added debounced URL syncing for shareable state in App component.

@@ -17,6 +17,12 @@ type ScrollAnchorState = {
   bookmarkKey: string | null
 }
 
+type UseBookmarkListScrollRestoreOptions = {
+  bootstrapPhase?: boolean
+  centerPlayingBookmarkOnBootstrap?: boolean
+  playingBookmarkKey?: string | null
+}
+
 // Shared in-memory anchor so sibling list views can restore to the same bookmark.
 const bookmarkScrollAnchor: ScrollAnchorState = {
   bookmarkKey: null,
@@ -35,12 +41,60 @@ const getBookmarkKey = (bookmark: BookmarkListItem): string | null => {
 export function useBookmarkListScrollRestore(
   bookmarks: BookmarkListItem[],
   virtualizer: VirtualizerLike,
-  scrollContainerRef: RefObject<HTMLDivElement | null>
+  scrollContainerRef: RefObject<HTMLDivElement | null>,
+  options?: UseBookmarkListScrollRestoreOptions
 ) {
   const didRestoreRef = useRef(false)
+  const didBootstrapCenterRef = useRef(false)
+
+  useEffect(() => {
+    if (!options?.centerPlayingBookmarkOnBootstrap) {
+      didBootstrapCenterRef.current = true
+      return
+    }
+
+    if (didBootstrapCenterRef.current) return
+    if (!options.bootstrapPhase) return
+    if (!bookmarks.length) return
+
+    const targetKey = options.playingBookmarkKey
+    if (!targetKey) {
+      didBootstrapCenterRef.current = true
+      return
+    }
+
+    const targetIndex = bookmarks.findIndex(
+      (bookmark) => getBookmarkKey(bookmark) === targetKey
+    )
+
+    // If the key cannot be resolved, stop gating and allow normal restore flow.
+    if (targetIndex < 0) {
+      didBootstrapCenterRef.current = true
+      return
+    }
+
+    requestAnimationFrame(() => {
+      const visible = virtualizer
+        .getVirtualItems()
+        .some((virtualItem) => virtualItem.index === targetIndex)
+
+      if (!visible) {
+        virtualizer.scrollToIndex(targetIndex, { align: 'center' })
+      }
+
+      const targetBookmark = bookmarks[targetIndex]
+      if (targetBookmark) {
+        bookmarkScrollAnchor.bookmarkKey = getBookmarkKey(targetBookmark)
+      }
+
+      didBootstrapCenterRef.current = true
+      didRestoreRef.current = true
+    })
+  }, [bookmarks, options, virtualizer])
 
   useEffect(() => {
     if (didRestoreRef.current) return
+    if (options?.centerPlayingBookmarkOnBootstrap && !didBootstrapCenterRef.current) return
     if (!bookmarks.length) return
     if (!bookmarkScrollAnchor.bookmarkKey) return
 
@@ -54,7 +108,7 @@ export function useBookmarkListScrollRestore(
       })
       didRestoreRef.current = true
     }
-  }, [bookmarks, virtualizer])
+  }, [bookmarks, options?.centerPlayingBookmarkOnBootstrap, virtualizer])
 
   useEffect(() => {
     const updateAnchor = () => {

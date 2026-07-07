@@ -53,6 +53,8 @@ import Config from '../config'
 import initialState from './initial.state'
 import { clear_last_content_jsx } from '../business.logic/cache'
 import { get_origin_ending_cleaned, set_val } from '../business.logic/parsing'
+import JsonapiPaginationLinks from '../business.logic/JsonapiPaginationLinks'
+import StateDataPagesRange from '../controllers/StateDataPagesRange'
 
 const appReducer = combineReducers({
   app: infoReducer,
@@ -359,7 +361,7 @@ export const bootstrap_app = (endpoint: string) => {
         credentials: 'include'
       })
       if (response.ok) {
-        const { state, data, included } = await response.json() as IJsonapiStateResponse
+        const { state, data, included, links, meta } = await response.json() as IJsonapiStateResponse
         dispatch({ type: 'app/appRequestEnd' })
         
         // Store data (bookmarks collection) if present
@@ -383,6 +385,52 @@ export const bootstrap_app = (endpoint: string) => {
               identifier,
               collection
             }))
+          }
+        }
+
+        // Keep pagination links and loaded page range in sync with bootstrapped data.
+        if (links) {
+          dispatch(topLevelLinksActions.topLevelLinksStore({
+            endpoint: EP_BOOKMARKS,
+            links,
+          }))
+
+          const defaultMaxLoadedPages = Number.parseInt(
+            String(Config.MAX_LOADED_BOOKMARK_PAGES),
+            10
+          )
+          const parsedMaxLoadedPages = Number.parseInt(
+            String(meta?.max_loaded_pages ?? defaultMaxLoadedPages),
+            10
+          )
+          const maxLoadedPages = Number.isInteger(parsedMaxLoadedPages) && parsedMaxLoadedPages > 0
+            ? parsedMaxLoadedPages
+            : (Number.isInteger(defaultMaxLoadedPages) && defaultMaxLoadedPages > 0
+              ? defaultMaxLoadedPages
+              : 4)
+
+          const linksState = new JsonapiPaginationLinks(links)
+          const currentPage = linksState.selfPageNumber
+          const pageSize = linksState.pageSize
+
+          if (currentPage > 0 && pageSize > 0) {
+            const pageRangeManager = new StateDataPagesRange(getState().dataPagesRange)
+            pageRangeManager.configure({
+              endpoint: EP_BOOKMARKS,
+              pageSize,
+              maxLoadedPages,
+            })
+
+            const newRange = pageRangeManager
+              .pageToBeLoaded(currentPage)
+              .getNewPageRange()
+
+            if (newRange) {
+              dispatch(dataLoadedPagesActions.dataUpdateRange({
+                endpoint: EP_BOOKMARKS,
+                pageNumbers: newRange,
+              }))
+            }
           }
         }
         

@@ -147,6 +147,7 @@ export const InfiniteScrollTrigger = React.memo<IInfiniteScrollTriggerProps>(({ 
   
   const triggerRef = useRef<HTMLDivElement>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [showFallback, setShowFallback] = useState(false)
   const hasTriggeredRef = useRef(false) // Prevent duplicate triggers
   const lastScrollTopRef = useRef(0) // Track scroll position for direction detection
   const cooldownRef = useRef(false) // Prevent triggers during page removal
@@ -169,11 +170,26 @@ export const InfiniteScrollTrigger = React.memo<IInfiniteScrollTriggerProps>(({ 
   useEffect(() => {
     hasTriggeredRef.current = false
     cooldownRef.current = true
+    setShowFallback(false)
     const timer = setTimeout(() => {
       cooldownRef.current = false
     }, 500) // 500ms cooldown after page range changes
     return () => clearTimeout(timer)
   }, [targetPage, firstPage])
+
+  // Show a manual fallback if auto-load does not trigger soon after reaching the sentinel.
+  useEffect(() => {
+    if (!hasMorePages || appStatus === APP_IS_FETCHING_BOOKMARKS || isLoading) {
+      setShowFallback(false)
+      return
+    }
+
+    const timer = setTimeout(() => {
+      setShowFallback(true)
+    }, 1500)
+
+    return () => clearTimeout(timer)
+  }, [hasMorePages, appStatus, isLoading, targetPage])
 
   // Intersection Observer effect with proper root element
   useEffect(() => {
@@ -232,6 +248,14 @@ export const InfiniteScrollTrigger = React.memo<IInfiniteScrollTriggerProps>(({ 
     <div ref={triggerRef} style={{ height: '40px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       {(isLoading || isInitialLoad) && (
         <LoadingProgress text={isInitialLoad ? "Loading bookmarks..." : "Loading more bookmarks..."} />
+      )}
+      {!isLoading && !isInitialLoad && showFallback && hasMorePages && (
+        <BookmarkLoader
+          def={def}
+          direction='next'
+          text='Load More'
+          loadingText='Loading more bookmarks...'
+        />
       )}
     </div>
   )

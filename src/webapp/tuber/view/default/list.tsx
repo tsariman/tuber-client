@@ -10,11 +10,13 @@ import {
 } from './list.bookmark.loader'
 import type { IBookmark } from '../../tuber.interfaces'
 import StateData from 'src/controllers/StateData'
+import StatePagesData from 'src/controllers/StatePagesData'
 import { StateDataPagesRange } from 'src/controllers'
 import Bookmark from './bookmark'
-import { EP_BOOKMARKS } from '@tuber/shared'
+import { APP_IS_BOOTSTRAPPED, EP_BOOKMARKS } from '@tuber/shared'
 import { useBookmarkListScrollRestore } from './list.scroll.restore'
 import JsonapiPaginationLinks from 'src/business.logic/JsonapiPaginationLinks'
+import { SET_TO_PLAY } from '../../tuber.config'
 
 const BookmarkListWrapper = styled('div')(({ theme }) => ({
   height: 'calc(100vh - 128px)',
@@ -53,9 +55,22 @@ export default function BookmarkList() {
   
   // Memoize state selectors
   const dataState = useSelector((state: RootState) => state.data)
+  const pagesDataState = useSelector((state: RootState) => state.pagesData)
+  const appStatus = useSelector((state: RootState) => state.app.status)
   const dataPagesRange = useSelector((state: RootState) => state.dataPagesRange)
   const bookmarksLinks = useSelector((state: RootState) => state.topLevelLinks.bookmarks)
   const data = useMemo(() => new StateData(dataState), [dataState])
+  const pagesData = useMemo(() => new StatePagesData(pagesDataState), [pagesDataState])
+  pagesData.configure({ endpoint: EP_BOOKMARKS })
+  const bookmarkToPlay = pagesData.get<IBookmark | undefined>(SET_TO_PLAY)
+  const playingBookmarkKey = useMemo(() => {
+    const key = bookmarkToPlay?.id
+      ?? bookmarkToPlay?._id
+      ?? bookmarkToPlay?.videoid
+      ?? bookmarkToPlay?.slug
+      ?? bookmarkToPlay?.url
+    return key === undefined || key === null ? null : String(key)
+  }, [bookmarkToPlay])
   
   // Track page range for scroll position adjustment
   const pageRangeInfo = useMemo(() => {
@@ -142,7 +157,11 @@ export default function BookmarkList() {
     overscan: 5,
   })
 
-  useBookmarkListScrollRestore(bookmarks, virtualizer, parentRef)
+  useBookmarkListScrollRestore(bookmarks, virtualizer, parentRef, {
+    bootstrapPhase: appStatus === APP_IS_BOOTSTRAPPED,
+    centerPlayingBookmarkOnBootstrap: true,
+    playingBookmarkKey,
+  })
 
   return (
     <BookmarkListWrapper ref={parentRef}>

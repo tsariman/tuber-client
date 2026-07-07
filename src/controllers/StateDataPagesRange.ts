@@ -1,8 +1,6 @@
 import AbstractState from './AbstractState'
 import type { ILoadedPagesRange, IStateDataPagesRange } from '@tuber/shared'
 import type { IStateDataPagesRangConfig } from '../interfaces/IControllerConfiguration'
-import State from './State'
-import { get_state } from '../state'
 
 const EMPTY_PAGES_RANGE: ILoadedPagesRange = {
   first: '0',
@@ -12,21 +10,19 @@ const EMPTY_PAGES_RANGE: ILoadedPagesRange = {
 /** Wrapper (controller) class for the `dataPagesRange` state. */
 export default class StateDataPagesRange extends AbstractState {
   private _state: IStateDataPagesRange
-  private _parent?: State
   private _maxLoadedPages?: number
   private _endpoint?: string
   private _pageSize?: number
   private _pageToBeDropped?: string
   private _newPageRange?: ILoadedPagesRange
 
-  constructor(pagesRangeState: IStateDataPagesRange, parent?: State) {
+  constructor(pagesRangeState: IStateDataPagesRange) {
     super()
     this._state = pagesRangeState
-    this._parent = parent
   }
 
   get state(): IStateDataPagesRange { return this._state }
-  get parent(): State { return this._parent ?? (this._parent = new State(get_state())) }
+  get parent(): null { return this.die('StateDataPagesRange has no parent state.', null) }
   get props(): unknown { return this.die('Method not implemented.', {}) }
 
   /** Instance needs to be given specific information to function properly. */

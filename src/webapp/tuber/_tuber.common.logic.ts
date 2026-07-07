@@ -52,7 +52,7 @@ export function get_platform(url: string): TPlatform {
  * @see https://stackoverflow.com/a/27728417/1875859
  */
 export function youtube_get_video_id(url: string): string | undefined {
-  const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed|live\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]+).*/
+  const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|live\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]+).*/
   const match = url.match(regExp)
   if (!match) {
     ler(`youtube_get_video_id: Bad video URL: '${url}'`)
