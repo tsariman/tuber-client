@@ -33,7 +33,7 @@ const ToggleWrapper = styled('div')(({ theme: { breakpoints } }) => ({
   }
 }))
 
-const ResearchToolbar = React.memo<IResearchToolbarProps>(({ def: appbar }) => {
+const ResearchToolbar = React.memo<IResearchToolbarProps>(({ instance: appbar }) => {
 
   // Memoize state selectors
   const netState = useSelector((rootState: RootState) => rootState.net)
@@ -44,10 +44,10 @@ const ResearchToolbar = React.memo<IResearchToolbarProps>(({ def: appbar }) => {
       <ToggleWrapper>
         {sessionValid ? (
           <>
-            <AddBookmark def={appbar} />
-            <ShowThumbnailsToggle def={appbar} />
-            <IntegratedPlayerToggle def={appbar} includeRoute />
-            <Feedback def={appbar} />
+            <AddBookmark instance={appbar} />
+            <ShowThumbnailsToggle instance={appbar} />
+            <IntegratedPlayerToggle instance={appbar} includeRoute />
+            <Feedback instance={appbar} />
           </>
         ) : null}
       </ToggleWrapper>

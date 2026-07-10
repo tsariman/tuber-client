@@ -2,32 +2,13 @@
 // Encodes search mode, text, player state, and playing bookmark into URL params.
 // If reusing the framework, replace this entire module with your app's own builder.
 
-import { APP_REQUEST_FAILED, EP_BOOKMARKS } from '@tuber/shared'
-import {
-  PLAYER_OPEN,
-  SET_TO_PLAY,
-  SHOW_THUMBNAIL
-} from './tuber.config'
+import { APP_REQUEST_FAILED } from '@tuber/shared'
 import type { IBookmark } from './tuber.interfaces'
+import { PAGE_RESEARCH_APP_ID } from './tuber.config'
+import { safely_get_as } from 'src/business.logic/utility'
 
 const ALLOWED_SEARCH_MODES = new Set(['public', 'private', 'all'])
 const MAX_SEARCH_LENGTH = 255
-
-const getRouteKey = (route: string, homepage?: string): string => {
-  const normalize = (value?: string): string => {
-    if (!value) {
-      return ''
-    }
-    return value.startsWith('/')
-      ? value.slice(1)
-      : value
-  }
-
-  if (route === '/') {
-    return normalize(homepage)
-  }
-  return normalize(route)
-}
 
 const getPlayingBookmarkKey = (bookmark: unknown): string | undefined => {
   const candidate = bookmark as IBookmark | undefined
@@ -44,6 +25,18 @@ const getPlayingBookmarkKey = (bookmark: unknown): string | undefined => {
     : undefined
 }
 
+/** If pathname only contains a leading slash, return an empty string */
+const $normalize_pathname = (pathname: string): string => {
+  if (typeof pathname !== 'string') {
+    return ''
+  }
+  const trimmed = pathname.trim()
+  if (trimmed === '/') {
+    return ''
+  }
+  return trimmed
+}
+
 // [FRAMEWORK] Generic state shape passed to query builder from App.
 type TQuerySyncState = {
   app: {
@@ -51,8 +44,14 @@ type TQuerySyncState = {
     route?: string
     homepage?: string
   }
-  appbarQueries: Record<string, { value?: string } | undefined>
   pagesData: Record<string, unknown>
+  staticRegistry: Record<string, unknown>
+  routeKey?: string
+  searchMode?: string
+  playerOpen?: boolean
+  showThumbnail?: boolean
+  bookmarkToPlay?: IBookmark
+  appbarQueries: Record<string, { value?: string } | undefined>
 }
 
 // [APP-SPECIFIC] Tuber builder: accepts generic state shape, extracts tuber state,
@@ -66,16 +65,27 @@ export const build_bookmarks_query_sync_path = (
     return null
   }
 
-  const routeKey = getRouteKey(state.app.route ?? '', state.app.homepage)
-  const searchValue = state.appbarQueries[routeKey]?.value
+  const {
+    appbarQueries,
+    pagesData,
+    playerOpen,
+    showThumbnail,
+    bookmarkToPlay,
+    staticRegistry
+  } = state
+
+  const routeKey = staticRegistry[PAGE_RESEARCH_APP_ID] as string | undefined
+  if (!routeKey) {
+    return null
+  }
+  const searchValue = appbarQueries[routeKey]?.value
   const search = typeof searchValue === 'string' ? searchValue.trim() : ''
   if (!search || search.length > MAX_SEARCH_LENGTH) {
     return null
   }
 
-  const routePageData = state.pagesData[routeKey] as Record<string, unknown> | undefined
-  const pageData = state.pagesData[EP_BOOKMARKS] as Record<string, unknown> | undefined
-  const searchMode = routePageData?.searchMode ?? pageData?.searchMode
+  const searchMode = safely_get_as(pagesData, `${routeKey}.searchMode`, 'public')
+
   if (typeof searchMode !== 'string' || !ALLOWED_SEARCH_MODES.has(searchMode)) {
     return null
   }
@@ -84,19 +94,19 @@ export const build_bookmarks_query_sync_path = (
   params.set('filter[search_mode]', searchMode)
   params.set('filter[search]', search)
 
-  if (typeof pageData?.[PLAYER_OPEN] === 'boolean') {
-    params.set('filter[player_open]', String(pageData[PLAYER_OPEN]))
+  if (typeof playerOpen === 'boolean') {
+    params.set('filter[player_open]', String(playerOpen))
   }
-  if (typeof pageData?.[SHOW_THUMBNAIL] === 'boolean') {
-    params.set('filter[show_thumbnail]', String(pageData[SHOW_THUMBNAIL]))
+  if (typeof showThumbnail === 'boolean') {
+    params.set('filter[show_thumbnail]', String(showThumbnail))
   }
 
-  const playingBookmarkKey = getPlayingBookmarkKey(pageData?.[SET_TO_PLAY])
+  const playingBookmarkKey = getPlayingBookmarkKey(bookmarkToPlay)
   if (playingBookmarkKey) {
     params.set('filter[playing_bookmark_key]', playingBookmarkKey)
   }
 
   const query = params.toString()
-  const pathname = basePathname || '/'
+  const pathname = $normalize_pathname(basePathname)
   return query ? `${pathname}?${query}${baseHash}` : `${pathname}${baseHash}`
 }

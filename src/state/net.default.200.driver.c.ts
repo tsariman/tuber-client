@@ -2,11 +2,12 @@ import type { Dispatch } from 'redux'
 import {
   dataLimitQueueCol,
   dataLimitStackCol,
-  dataStoreCol
+  dataStoreCol,
+  dataRemoveCol
 } from '../slices/data.slice'
 import { includedAccumulateByAppending } from '../slices/included.slice'
 import { metaAdd } from '../slices/meta.slice'
-import { topLevelLinksStore } from '../slices/topLevelLinks.slice'
+import { topLevelLinksRemove, topLevelLinksStore } from '../slices/topLevelLinks.slice'
 import { appRequestSuccess, appRequestFailed } from '../slices/app.slice'
 import { bootstrap, type RootState } from '.'
 import StateDataPagesRange from '../controllers/StateDataPagesRange'
@@ -21,7 +22,7 @@ import type {
   IJsonapiResponseResource,
 } from '@tuber/shared'
 import { BOOTSTRAP_ATTEMPTS } from '@tuber/shared'
-import { dataUpdateRange } from '../slices/dataLoadedPages.slice'
+import { dataClearRange, dataUpdateRange } from '../slices/dataLoadedPages.slice'
 
 /**
  * Once the server response is received, this function can be used to process it.
@@ -37,6 +38,18 @@ export default function net_default_200_driver (
   } else {
     dispatch(appRequestFailed())
   }
+  const responseEndpoint = safely_get_as(response.meta, 'collection_endpoint', endpoint)
+  const collectionEndpoint = typeof responseEndpoint === 'string' && responseEndpoint.trim()
+    ? responseEndpoint.trim()
+    : endpoint
+  const replaceCollection = safely_get_as<boolean>(response.meta, 'replace_collection', false) === true
+
+  if (replaceCollection) {
+    dispatch(dataRemoveCol(collectionEndpoint))
+    dispatch(dataClearRange(collectionEndpoint))
+    dispatch(topLevelLinksRemove(collectionEndpoint))
+  }
+
   let insertPosition: 'beginning' | 'end' | '' = 'end'
   const maxLoadedPages = parseInt(safely_get_as(
     response.meta,
@@ -44,7 +57,7 @@ export default function net_default_200_driver (
     '4'
   ))
   const dataManager = new StateDataPagesRange(getState().dataPagesRange)
-  dataManager.configure({ endpoint })
+  dataManager.configure({ endpoint: collectionEndpoint })
   let currentPageNumber = 1
   let pageSize = 25
 
@@ -53,7 +66,7 @@ export default function net_default_200_driver (
     const links = new JsonapiPaginationLinks(response.links)
     pageSize = links.pageSize
     dataManager.configure({
-      endpoint,
+      endpoint: collectionEndpoint,
       pageSize,
       maxLoadedPages
     })
@@ -66,14 +79,14 @@ export default function net_default_200_driver (
     }
     // else: page is after current range OR first load - append (default 'end')
     if (insertPosition) {
-      dispatch(topLevelLinksStore({ endpoint, links: response.links }))
+      dispatch(topLevelLinksStore({ endpoint: collectionEndpoint, links: response.links }))
     }
     currentPageNumber = links.selfPageNumber
   }
 
   // meta member
   if (is_object(response.meta) && insertPosition) {
-    dispatch(metaAdd({ endpoint, meta: response.meta }))
+    dispatch(metaAdd({ endpoint: collectionEndpoint, meta: response.meta }))
     execute_directives(dispatch, response.meta)
   }
 
@@ -82,14 +95,14 @@ export default function net_default_200_driver (
     if (insertPosition === 'end') {
       dispatch(dataLimitQueueCol({
         collection: response.data as IJsonapiResponseResource[],
-        endpoint,
+        endpoint: collectionEndpoint,
         pageSize,
         limit: dataManager.getMaxLoadedPages()
       }))
     } else if (insertPosition === 'beginning') {
       dispatch(dataLimitStackCol({
         collection: response.data as IJsonapiResponseResource[],
-        endpoint,
+        endpoint: collectionEndpoint,
         pageSize,
         limit: dataManager.getMaxLoadedPages()
       }))
@@ -99,7 +112,7 @@ export default function net_default_200_driver (
       .getNewPageRange()
     if (newRange) {
       dispatch(dataUpdateRange({
-        endpoint,
+        endpoint: collectionEndpoint,
         pageNumbers: newRange
       }))
     }
@@ -107,7 +120,7 @@ export default function net_default_200_driver (
     // Handle single resource object if needed
     dispatch(dataStoreCol({
       collection: [response.data as IJsonapiResponseResource],
-      endpoint
+      endpoint: collectionEndpoint
     }))
   } else if (response.errors) {
     remember_jsonapi_errors(response.errors)

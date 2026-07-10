@@ -98,13 +98,13 @@ const VideoPlayer = memo<{ bookmark?: IBookmark }>(({ bookmark: receivedBookmark
 VideoPlayer.displayName = 'VideoPlayer'
 
 // Optimized TuberPlayer component with React.memo
-const TuberPlayer = memo<TTPlayer>(({ bookmark, toolbarDef }) => {
+const TuberPlayer = memo<TTPlayer>(({ bookmark, instance: appbar }) => {
   return (
     <Fragment>
       <VideoCanvas>
         <VideoPlayer bookmark={bookmark} />
       </VideoCanvas>
-      <ResearchToolbar def={toolbarDef} />
+      <ResearchToolbar instance={appbar} />
     </Fragment>
   )
 })

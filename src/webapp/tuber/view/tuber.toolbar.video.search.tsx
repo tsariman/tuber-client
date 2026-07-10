@@ -9,11 +9,10 @@ import type { RootState } from 'src/state'
 import { AddBookmark, Feedback, IntegratedPlayerToggle } from './tuber.toolbar.actions'
 
 const Toolbar = styled('div')(({ theme }) => ({
-  width: 'fit-content', // theme.spacing(50),
+  width: 'fit-content',
   margin: `${theme.spacing(1)} 0 0 auto`,
   padding: theme.spacing(0.5, 1, 0.5, 1),
   borderRadius: '2em',
-  // display: 'flex',
   position: 'fixed',
   bottom: 0,
   right: 0
@@ -29,7 +28,7 @@ const ToggleWrapper = styled('div')(({ theme: { breakpoints } }) => ({
 }))
 
 const ResearchToolbarFixed = React.memo<IResearchToolbarProps>((props) => {
-  const { def: appbar } = props
+  const { instance: appbar } = props
   
   // Memoize state selectors
   const netState = useSelector((rootState: RootState) => rootState.net)
@@ -40,9 +39,9 @@ const ResearchToolbarFixed = React.memo<IResearchToolbarProps>((props) => {
       <ToggleWrapper>
         {sessionValid ? (
           <>
-            <AddBookmark def={appbar} />
-            <IntegratedPlayerToggle def={appbar} />
-            <Feedback def={appbar} />
+            <AddBookmark instance={appbar} />
+            <IntegratedPlayerToggle instance={appbar} />
+            <Feedback instance={appbar} />
           </>
         ) : null}
       </ToggleWrapper>

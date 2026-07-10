@@ -11,7 +11,7 @@ import { ENDPOINT, PLAYER_OPEN, SHOW_THUMBNAIL } from '../tuber.config'
 
 interface IToolbarIcon {
 	/** Parent definition for state links. It is required. */
-	def: StatePageAppbar
+	instance: StatePageAppbar
 }
 
 interface IIntegratedPlayerToggleProps extends IToolbarIcon {
@@ -20,7 +20,7 @@ interface IIntegratedPlayerToggleProps extends IToolbarIcon {
 }
 
 /** When clicked, this icon displays an interface to create a new video bookmark. */
-export const AddBookmark = React.memo<IToolbarIcon>(({ def: appbar }) => {
+export const AddBookmark = React.memo<IToolbarIcon>(({ instance: appbar }) => {
 	const iconDef = useMemo(() => new StateLink({
 		'type': 'icon',
 		'props': {
@@ -43,7 +43,7 @@ export const AddBookmark = React.memo<IToolbarIcon>(({ def: appbar }) => {
 
 AddBookmark.displayName = 'AddBookmark'
 
-export const ShowThumbnailsToggle = React.memo<IToolbarIcon>(({ def: appbar }) => {
+export const ShowThumbnailsToggle = React.memo<IToolbarIcon>(({ instance: appbar }) => {
 	const iconDef = useMemo(() => new StateLink({
 		'type': 'icon',
 		'props': {
@@ -76,7 +76,7 @@ export const ShowThumbnailsToggle = React.memo<IToolbarIcon>(({ def: appbar }) =
 
 ShowThumbnailsToggle.displayName = 'ShowThumbnailsToggle'
 
-export const IntegratedPlayerToggle = React.memo<IIntegratedPlayerToggleProps>(({ def: appbar, includeRoute = false }) => {
+export const IntegratedPlayerToggle = React.memo<IIntegratedPlayerToggleProps>(({ instance: appbar, includeRoute = false }) => {
 	const theme = useTheme()
 	const greaterThanMid = useMediaQuery(theme.breakpoints.up('md'))
 
@@ -121,7 +121,7 @@ export const IntegratedPlayerToggle = React.memo<IIntegratedPlayerToggleProps>((
 
 IntegratedPlayerToggle.displayName = 'IntegratedPlayerToggle'
 
-export const Feedback = React.memo<IToolbarIcon>(({ def: appbar }) => {
+export const Feedback = React.memo<IToolbarIcon>(({ instance: appbar }) => {
 	const iconDef = useMemo(() => new StateLink({
 		'type': 'icon',
 		'props': {

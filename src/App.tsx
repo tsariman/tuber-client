@@ -13,7 +13,6 @@ import CssBaseline from '@mui/material/CssBaseline'
 const AppGeneric = lazy(() => import('./mui/app.generic.cpn'))
 import {
   ALLOWED_ATTEMPTS,
-  APP_REQUEST_FAILED,
   BOOTSTRAP_ATTEMPTS,
   EP_AUTH,
   THEME_MODE,
@@ -23,9 +22,6 @@ import { get_bootstrap_key, get_cookie } from './business.logic/parsing'
 import StateApp from './controllers/StateApp'
 import Spinner from './mui/spinner.cpn'
 import SpinnerBootstrap from './mui/spinner.cpn.bootstrap'
-// [FRAMEWORK] Query-string sync builder from app layer.
-// [TO REUSE] Replace with app-specific builder or make generic builder configurable.
-import { build_bookmarks_query_sync_path } from './webapp/tuber/query.string.sync'
 
 type TAppBrowserEvent = {
   kind: 'patreon_oauth' | 'email_verification'
@@ -35,8 +31,6 @@ type TAppBrowserEvent = {
 }
 
 const APP_BROWSER_EVENT_KEY = 'tuber:browser-event'
-// [FRAMEWORK] Debounce duration for query-string syncing (configurable per app).
-const QUERY_SYNC_DEBOUNCE_MS = 150
 
 const applyBrowserEvent = (dispatch: AppDispatch, event: TAppBrowserEvent) => {
   if (event.kind === 'patreon_oauth') {
@@ -84,8 +78,6 @@ export default function App() {
   const appState = useSelector((state: RootState) => state.app)
   const app = new StateApp(appState)
   const themeState = useSelector((state: RootState) => state.theme)
-  const pagesDataState = useSelector((state: RootState) => state.pagesData)
-  const appbarQueriesState = useSelector((state: RootState) => state.appbarQueries)
 
   // Bootstrap the app from server
   useEffect(() => {
@@ -184,38 +176,6 @@ export default function App() {
       window.history.pushState(null, '', currentRoute)
     }
   }, [app.route])
-
-  // [FRAMEWORK] Debounced URL syncing pattern for shareable state.
-  // [BEHAVIOR] Collects state snapshot, builds URL via app-specific builder,
-  // debounces 150ms, diffs against current URL, and replaceState only if changed.
-  // [TO REUSE] Keep the debounce + diff + replaceState pattern; swap buildBookmarksQuerySyncPath
-  // for your app's own query builder. Adjust QUERY_SYNC_DEBOUNCE_MS if needed.
-  useEffect(() => {
-    const snapshot = {
-      app: appState,
-      pagesData: pagesDataState,
-      appbarQueries: appbarQueriesState,
-    }
-    // [APP-SPECIFIC] buildBookmarksQuerySyncPath extracts tuber bookmark state rules.
-    const nextUrl = build_bookmarks_query_sync_path(
-      snapshot,
-      window.location.pathname,
-      window.location.hash
-    )
-    if (!nextUrl || appState.status === APP_REQUEST_FAILED) {
-      return
-    }
-
-    const timer = window.setTimeout(() => {
-      const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`
-      // [FRAMEWORK] Diff guard: only call replaceState if URL changed.
-      if (currentUrl !== nextUrl) {
-        window.history.replaceState(null, '', nextUrl)
-      }
-    }, QUERY_SYNC_DEBOUNCE_MS)
-
-    return () => window.clearTimeout(timer)
-  }, [appState, appbarQueriesState, pagesDataState])
 
   if (app.isBootstrapped || !app.fetchingStateAllowed) {
     return (

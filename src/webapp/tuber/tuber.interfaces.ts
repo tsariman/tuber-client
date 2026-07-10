@@ -108,7 +108,7 @@ export interface IResearchToolbarProps {
   // bookmarkAddCallback: IStateLink['onClick']
   // toggleThumbnailsCallback: IStateLink['onClick']
   // /** Parent definition for state links. It is required. */
-  def: StatePageAppbar
+  instance: StatePageAppbar
 }
 
 export interface ITuberPlayer {
@@ -128,7 +128,7 @@ export interface ITuberProps {
 export type TTPlayerProps = TWithRequired<ITuberProps, 'toolbarProps'>
 
 export interface TTPlayer {
-  toolbarDef: StatePageAppbar
+  instance: StatePageAppbar
   bookmark?: IBookmark
 }
 

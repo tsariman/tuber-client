@@ -111,6 +111,7 @@ export default function form_submit_sign_in(redux: IRedux) {
       new JsonapiRequest(EP_AUTH.IN, { // signin
         'credentials': formData,
         'route': rootState.app.route,
+        'query': window.location.search,
         'theme_mode': themeMode
       }).build()
     ))
