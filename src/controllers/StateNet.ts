@@ -2,6 +2,7 @@ import {
   get_val,
   safely_get_as,
   get_head_meta_content,
+  non_empty_string,
   error_id,
   err
 } from '../business.logic'
@@ -106,13 +107,13 @@ export default class StateNet extends AbstractState implements IStateNet {
     }
   }
   get sessionValid(): boolean {
-    if (this._state.role && this._state.name) {
+    if (this.userLoggedIn) {
       return true
     }
     error_id(42).remember_possible_error({
       'code': 'AUTHENTICATION_REQUIRED',
       'title': 'Invalid session',
-      'detail': `User role and name are NOT defined.`,
+      'detail': 'User identity fields are invalid or incomplete (name, role, _id).',
       'meta': { 'context': this._state }
     }) // error 42
     return false
@@ -121,9 +122,9 @@ export default class StateNet extends AbstractState implements IStateNet {
    * Prevents some bugs by checking if the user is logged in.
    */
   get userLoggedIn(): boolean {
-    return !!this._state.name
-      && !!this._state.role
-      && !!this._state._id
+    return non_empty_string(this._state.name)
+      && non_empty_string(this._state.role)
+      && non_empty_string(this._state._id)
   }
 }
 

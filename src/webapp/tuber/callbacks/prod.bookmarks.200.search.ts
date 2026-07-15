@@ -58,18 +58,25 @@ export default function appbar_search_bookmarks (redux: IRedux) {
 
     dispatch(A.dataRemoveCol(endpoint))
     dispatch(A.dataClearRange(endpoint))
+    dispatch(A.topLevelLinksRemove(endpoint))
     dispatch(A.appSetFetchMessage(APP_IS_FETCHING_BOOKMARKS))
 
+    const searchMode = get_val(rootState.pagesData, `${pageKey}.searchMode`)
+    const queryValueTrimmed = queryObj.value.trim()
+    const isPrivateEmptySearch = searchMode === 'private' && queryValueTrimmed.length === 0
+
     // Prevent space-filled or empty search query requests
-    if (queryObj.value.replace(/\s+/, '').length < 2) {
+    if (!isPrivateEmptySearch && queryValueTrimmed.length < 2) {
       log('space-filled query detected')
       return
     }
 
     pre()
-    const encodedSearchQuery = encodeURIComponent(queryObj.value)
-    const searchMode = get_val(rootState.pagesData, `${pageKey}.searchMode`)
-    const args = [ `filter[search]=${encodedSearchQuery}` ]
+    const args: string[] = []
+    if (!isPrivateEmptySearch) {
+      const encodedSearchQuery = encodeURIComponent(queryObj.value)
+      args.push(`filter[search]=${encodedSearchQuery}`)
+    }
     if (searchMode) {
       args.push(`filter[mode]=${searchMode}`)
     }

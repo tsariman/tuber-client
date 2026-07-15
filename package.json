@@ -2,7 +2,7 @@
   "name": "tuber-client",
   "description": "Unbiased algorithm-free video searches",
   "private": true,
-  "version": "0.2.1-alpha",
+  "version": "0.3.0-alpha",
   "type": "module",
   "scripts": {
     "dev": "vite",

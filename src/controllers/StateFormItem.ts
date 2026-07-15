@@ -83,7 +83,8 @@ export default class StateFormItem<P = StateForm, T = unknown>
   get parent(): P { return this.parentDef }
   get props(): Record<string, unknown> {
     const stateProps = this.itemState.props as Record<string, unknown> | undefined
-    const { disabled: _ignoredDisabled, ...propsWithoutDisabled } = stateProps || {}
+    const propsWithoutDisabled = { ...(stateProps || {}) }
+    delete propsWithoutDisabled.disabled
 
     if (this.itemDisabled) {
       return { ...propsWithoutDisabled, disabled: true }

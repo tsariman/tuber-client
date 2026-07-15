@@ -80,7 +80,7 @@ export const build_bookmarks_query_sync_path = (
   }
   const searchValue = appbarQueries[routeKey]?.value
   const search = typeof searchValue === 'string' ? searchValue.trim() : ''
-  if (!search || search.length > MAX_SEARCH_LENGTH) {
+  if (search.length > MAX_SEARCH_LENGTH) {
     return null
   }
 
@@ -90,9 +90,16 @@ export const build_bookmarks_query_sync_path = (
     return null
   }
 
+  const hasSearch = search.length > 0
+  if (!hasSearch && (searchMode === 'public' || searchMode === 'all')) {
+    return null
+  }
+
   const params = new URLSearchParams()
   params.set('filter[search_mode]', searchMode)
-  params.set('filter[search]', search)
+  if (hasSearch) {
+    params.set('filter[search]', search)
+  }
 
   if (typeof playerOpen === 'boolean') {
     params.set('filter[player_open]', String(playerOpen))

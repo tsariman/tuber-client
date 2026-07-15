@@ -101,7 +101,10 @@ function $form_submit_feedback(redux: IRedux) {
     if (!data) { return }
 
     const { formData, formName } = data
-    const { data: { account: _account, ...restData }, net: _net, ...restState } = rootState
+    const { data: rootData, net, ...restState } = rootState
+    const { account, ...restData } = rootData
+    void net
+    void account
     const redactedState = { ...restState, data: restData }
     const requestBody = new JsonapiRequest(endpoint, {
       category: formData.category,

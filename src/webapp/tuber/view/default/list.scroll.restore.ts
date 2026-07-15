@@ -28,6 +28,10 @@ const bookmarkScrollAnchor: ScrollAnchorState = {
   bookmarkKey: null,
 }
 
+export function resetBookmarkListScrollAnchorForTests() {
+  bookmarkScrollAnchor.bookmarkKey = null
+}
+
 const getBookmarkKey = (bookmark: BookmarkListItem): string | null => {
   if (bookmark.id !== undefined && bookmark.id !== null) {
     return String(bookmark.id)
@@ -57,7 +61,7 @@ export function useBookmarkListScrollRestore(
     if (!options.bootstrapPhase) return
     if (!bookmarks.length) return
 
-    const targetKey = options.playingBookmarkKey
+    const targetKey = bookmarkScrollAnchor.bookmarkKey ?? options.playingBookmarkKey
     if (!targetKey) {
       didBootstrapCenterRef.current = true
       return
@@ -69,14 +73,16 @@ export function useBookmarkListScrollRestore(
 
     // If the key cannot be resolved, stop gating and allow normal restore flow.
     if (targetIndex < 0) {
-      didBootstrapCenterRef.current = true
       return
     }
 
     requestAnimationFrame(() => {
-      const visible = virtualizer
-        .getVirtualItems()
-        .some((virtualItem) => virtualItem.index === targetIndex)
+      const shouldCenterTarget = bookmarkScrollAnchor.bookmarkKey !== null
+      const visible = shouldCenterTarget
+        ? false
+        : virtualizer
+            .getVirtualItems()
+            .some((virtualItem) => virtualItem.index === targetIndex)
 
       if (!visible) {
         virtualizer.scrollToIndex(targetIndex, { align: 'center' })
@@ -94,7 +100,6 @@ export function useBookmarkListScrollRestore(
 
   useEffect(() => {
     if (didRestoreRef.current) return
-    if (options?.centerPlayingBookmarkOnBootstrap && !didBootstrapCenterRef.current) return
     if (!bookmarks.length) return
     if (!bookmarkScrollAnchor.bookmarkKey) return
 
@@ -104,11 +109,11 @@ export function useBookmarkListScrollRestore(
 
     if (targetIndex >= 0) {
       requestAnimationFrame(() => {
-        virtualizer.scrollToIndex(targetIndex, { align: 'start' })
+        virtualizer.scrollToIndex(targetIndex, { align: 'center' })
       })
       didRestoreRef.current = true
     }
-  }, [bookmarks, options?.centerPlayingBookmarkOnBootstrap, virtualizer])
+  }, [bookmarks, virtualizer])
 
   useEffect(() => {
     const updateAnchor = () => {
